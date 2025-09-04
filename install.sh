@@ -1,4 +1,3 @@
 #!/bin/bash
-python3 -m venv env
-source env/bin/activate
-pip install -r requirements.txt
+sudo apt install mingw-w64
+python3 app.py
