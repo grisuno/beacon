@@ -1,7 +1,7 @@
 # 🔥 === beacon-GEN v1.2 ===
 
 ## 🔍 INFO
-- **GitHub Repository: https://github.com/grisuno/hellbird
+- **GitHub Repository: https://github.com/grisuno/beacon
 - **License: GNU General Public License v3.0 (GPLv3)
 - **Author**: grisun0
 - **Target Platform**: Windows (x64)
@@ -11,9 +11,9 @@
 > ⚠️ This project is released under GPLv3. See the DISCLAIMER section for full legal terms. 
 
 ## 🔍 Overview
-beacon-GEN is a next-generation Bash-based configuration engine designed to generate highly customizable, stealthy C2 beacons for offensive operations. Built as the core orchestration layer of the HELLBIRD framework, it enables red teams to dynamically configure malleable C2 profiles, AES-256 encrypted communication, multi-UA rotation, and client-side persistence logic — all through a clean, CLI-driven interface.
+beacon-GEN is a next-generation Bash-based configuration engine designed to generate highly customizable, stealthy C2 beacons for offensive operations. Built as the core orchestration layer of the LazyOwn RedTeam framework, it enables red teams to dynamically configure malleable C2 profiles, AES-256 encrypted communication, multi-UA rotation, and client-side persistence logic — all through a clean, CLI-driven interface.
 
-This script generates the foundational configuration for advanced implants that leverage direct NT API syscalls, manual PEB walking, APC injection, and anti-analysis routines to evade modern EDR solutions.
+This script generates the foundational configuration for advanced implants that leverage, APC injection, and anti-analysis routines to evade modern EDR solutions.
 
 Intended for ethical hacking, penetration testing, and academic research, this tool supports seamless integration into automated attack chains and red team infrastructure.
 
