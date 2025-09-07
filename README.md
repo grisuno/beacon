@@ -82,6 +82,38 @@ rule hellbird_Runtime_Behavior {
 }
 ```
 
+![image](https://github.com/user-attachments/assets/4e114c5c-d28d-4570-9e02-6868bb838dd2)
+
+## **Available beacon commands**:
+ - **stealth_off** stop being stealthy, Disables stealth mode, allowing normal operations.
+ - **stealth_on** enter ninja mode, Enables stealth mode, minimizing activity to avoid detection.
+ - **download:** download:[filename] Downloads a file from the C2 to the compromised host.
+ - **upload:** [filename]: Uploads a file from the compromised host to the C2.
+ - **rev:** Establishes a reverse shell to the C2 using the configured port.
+ - **exfil:** Exfiltrates sensitive data (e.g., SSH keys, AWS credentials, command histories).
+ - **download_exec:** download_exec:[url]: Downloads and executes a binary from a URL (Linux only, stored in /dev/shm).
+ - **obfuscate:** [filename]: Obfuscates file timestamps to hinder forensic analysis.
+ - **cleanlogs:** Clears system logs (e.g., /var/log/syslog on Linux, event logs on Windows).
+ - **discover:** Performs network discovery, identifying live hosts via ping.
+ - **adversary:**[id_atomic]: Executes an adversary emulation test (MITRE ATT&CK) using downloaded atomic redteam framework scripts.
+ - **softenum:** Enumerates useful software on the host (e.g., docker, nc, python).
+ - **netconfig:** Captures and exfiltrates network configuration (e.g., ipconfig on Windows, ifconfig on Linux).
+ - **escalatelin:** Attempts privilege escalation on Linux (e.g., via sudo -n or SUID binaries).
+ - **proxy:**[listenip]:[listenport]:[targetip]:[targetport] Starts a TCP proxy redirecting traffic from listenAddr to targetAddr.
+ - **stop_proxy:**[listenaddr] Stops a TCP proxy on the specified address.
+ - **portscan:** Scans ports on discovered hosts and the configured rhost.
+ - **compressdir:**[directory]: Compresses a directory into a .tar.gz file and exfiltrates it.
+ - **sandbox:** Get info about the system if it's a sandbox or not.
+ - **isvm:** Get info about the system if it's a virtual machine or not.
+ - **debug:** Get info about the system if the target is debugged or not.
+ - **persist:** Try to persist mechanism in the target system.
+ - **simulate:** Execute a simulation of a legit web page like youtube.
+ - **migrate:** Inject a payload into a suspended process and resume it. If no payload is specified, the current process is injected (self-migration).
+ - **shellcode:** Download and execute a shellcode in memory. Supports multiple operative systems and formats msfvenom friendly (in windows the technique used is Early brid APC Injection).
+ - **amsi:** Bypass AMSI (Anti-Malware Scan Interface) on Windows systems to evade detection by PowerShell, WMI, and other scripting engines.
+ - **load_module:** load dll on Windows systems to evade detection loading in memory from an url
+ - **terminate:** Terminates the implant or beacon, removing files and persistence mechanisms.
+
 ## 🎓 Educational Purpose
 This project is intended to:
 
