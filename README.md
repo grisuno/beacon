@@ -114,6 +114,13 @@ rule hellbird_Runtime_Behavior {
  - **load_module:** load dll on Windows systems to evade detection loading in memory from an url
  - **terminate:** Terminates the implant or beacon, removing files and persistence mechanisms.
 
+## 🔥 Modules
+This beacon have load_module command you need pass a url to an dll module, for now we have 3 modules, revshell, Metasploit meterpreter, and screenshot.
+- **Reverse Shell** : gen_dll_rev.sh
+- **Metasploit Meterpreter**: gen_dll.sh
+- **Screenshot**: gen_dll_ss.sh
+
+
 ## 🎓 Educational Purpose
 This project is intended to:
 
