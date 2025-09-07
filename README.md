@@ -119,7 +119,7 @@ This beacon have load_module command you need pass a url to an dll module, for n
 - **Reverse Shell** : gen_dll_rev.sh
 - **Metasploit Meterpreter**: gen_dll.sh
 - **Screenshot**: gen_dll_ss.sh
-
+- **Keylogger**: gen_key.sh
 
 ## 🎓 Educational Purpose
 This project is intended to:
