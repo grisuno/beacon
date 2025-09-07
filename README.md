@@ -115,11 +115,12 @@ rule hellbird_Runtime_Behavior {
  - **terminate:** Terminates the implant or beacon, removing files and persistence mechanisms.
 
 ## 🔥 Modules
-This beacon have load_module command you need pass a url to an dll module, for now we have 4 modules, revshell, Metasploit meterpreter, Keylogger and screenshot.
+This beacon have load_module command you need pass a url to an dll module, for now we have 5 modules, revshell, Metasploit meterpreter, Keylogger, Stealth Command and Screenshot.
 - **Reverse Shell** : gen_dll_rev.sh
 - **Metasploit Meterpreter**: gen_dll.sh
 - **Screenshot**: gen_dll_ss.sh
 - **Keylogger**: gen_key.sh
+- **Stealth Command**: gen_module.sh
 
 ## 🎓 Educational Purpose
 This project is intended to:
