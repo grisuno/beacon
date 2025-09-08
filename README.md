@@ -1,4 +1,4 @@
-# 🔥 === Black Basalt Beacon-GEN v2 ===
+# 🔥 === Black Basalt Beacon-GEN v0.2.0 ===
 <img width="1664" height="928" alt="image" src="https://github.com/user-attachments/assets/e76ce510-dad2-4c6c-9910-c245ff71c9f4" />
 
 ## 🔍 INFO
