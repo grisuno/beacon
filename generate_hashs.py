@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-BOF Bindings Generator for Cobalt Strike
+BOF Bindings Generator for LazyOwn RedTeam Framework - Black Basalt Beacon
 Author: Gris Iscomeback
-Email: grisiscomeback@gmail.com
-Creation Date: 13/08/2024
+Creation Date: 13/09/2025
 License: GPL v3
 
-This script generates C code bindings for BOF (Beacon Object Files) used in Cobalt Strike.
+This script generates C code bindings for BOF (Beacon Object Files) used in Cobalt Strike 
+Style for LazyOwn RedTeam Framework - Black Basalt Beacon.
 It creates function pointer mappings from imported functions with DJB2 hashing and includes
 usage examples for each function using proper casting syntax.
 
