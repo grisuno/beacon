@@ -387,8 +387,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - https://medium.com/@lazyown.redteam
 - https://discord.gg/V3usU8yH
 - https://ko-fi.com/Y8Y2Z73AV
-- https://medium.com/@lazyown.redteam/the-ebird3-chronicles-when-your-calculator-gets-a-phd-in-cybercrime-and-why-thats-perfectly-cc1738a3affc
-- https://github.com/grisuno/LazyOwn/archive/refs/tags/release/0.2.59.tar.gz
+- https://medium.com/@lazyown.redteam/black-basalt-beacon-when-your-coff-loader-becomes-a-silent-operator-and-why-thats-by-design-not-4094c92a73a5
+- https://github.com/grisuno/LazyOwn/archive/refs/tags/release/0.2.61.tar.gz
 
 ![jimeng-2025-06-29-179-Cyberpunk-style logo for 'LazyOwn RedTeam', hacking_pen-testing tool  Colors_ ](https://github.com/user-attachments/assets/83d366ef-f899-4416-8559-20bd9fd34ef4)
 
