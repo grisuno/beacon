@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
 """
-BOF Bindings Generator for LazyOwn RedTeam Framework - Black Basalt Beacon
+BOF Bindings Generator for bofs style Cobalt Strike for Black Basalt Beacon & LazyOwn RedTeam Freamework, the first C2 powered by AI
 Author: Gris Iscomeback
-Creation Date: 13/09/2025
+Creation Date: 11/09/2025
 License: GPL v3
 
-This script generates C code bindings for BOF (Beacon Object Files) used in Cobalt Strike 
-Style for LazyOwn RedTeam Framework - Black Basalt Beacon.
+This script generates C code bindings for BOF (Beacon Object Files) used in Cobalt Strike and LazyOwn.
 It creates function pointer mappings from imported functions with DJB2 hashing and includes
 usage examples for each function using proper casting syntax.
 
 Usage:
     python generate_bof_bindings.py                     # prints colored C code to stdout
     python generate_bof_bindings.py -o bindings.c       # saves to file
+    python generate_bof_bindings.py --loader-includes   # genera symbols_loader.inc
+    python generate_bof_bindings.py --bof-template      # genera template_bof.inc
+    python generate_bof_bindings.py --check-orphans     # revisa símbolos huérfanos en COFFLoader.c
 """
 
 import argparse
 import sys
+import re
+
 from pygments import highlight
 from pygments.lexers import CLexer
 from pygments.formatters import Terminal256Formatter
@@ -50,6 +54,12 @@ imp_functions = [
     "__imp_FileTimeToSystemTime",
     "__imp_SystemTimeToVariantTime",
     "__imp_GetComputerNameA",
+    "__imp_OpenProcess",
+    "__imp_OpenProcessToken",
+    "__imp_DuplicateTokenEx",
+    "__imp_ImpersonateLoggedOnUser",
+    "__imp_RevertToSelf",
+    "__imp_GetCurrentProcessId",
     "wcscpy",
     "wcsncpy",
     "mbstowcs",
@@ -210,6 +220,88 @@ function_signatures = {
 }
 
 
+# ---------- GENERADORES NUEVOS ----------
+def generate_loader_includes():
+    """Genera #pragma, externs y tabla de hashes para __imp_*"""
+    lines = []
+    imp_only = [f for f in imp_functions if f.startswith("__imp_")]
+
+    lines.append("// === AUTO-GENERADO DESDE imp_functions ===")
+    lines.append("// 1. Pragmas para linker")
+    for func in imp_only:
+        lines.append(f'#pragma comment(linker, "/INCLUDE:{func}")')
+
+    lines.append("\n// 2. Referencias externas")
+    for func in imp_only:
+        lines.append(f"extern PVOID {func};")
+
+    lines.append("\n// 3. Tabla de hashes (__imp_ + alias sin prefijo)")
+    lines.append("static SymbolHash g_symbol_table[] = {")
+    for func in imp_only:
+        alias = func.replace("__imp_", "")
+        hash_val = djb2(func)
+        hash_alias = djb2(alias)
+        lines.append(f'    {{ 0x{hash_val:08X}, (void*)&{func} }}, // "{func}"')
+        lines.append(f'    {{ 0x{hash_alias:08X}, (void*)&{func} }}, // "{alias}"')
+    lines.append("    {0, NULL} // terminador")
+    lines.append("};")
+
+    return "\n".join(lines)
+
+
+def generate_bof_template():
+    """Genera extern FARPROC __imp_* y ejemplos de uso para BOFs"""
+    lines = []
+    imp_only = [f for f in imp_functions if f.startswith("__imp_")]
+
+    lines.append("// ================================")
+    lines.append("// IMPORTS DIRECTOS (AUTO-GENERADO)")
+    lines.append("// ================================")
+    for func in imp_only:
+        lines.append(f"extern FARPROC {func};")
+
+    lines.append("\n// ================================")
+    lines.append("// EJEMPLO DE USO")
+    lines.append("// ================================")
+    for func in imp_only:
+        sig = function_signatures.get(func)
+        if not sig:
+            continue
+        func_type = sig["type"]
+        clean = func.replace("__imp_", "")
+        lines.append(f"// {clean}:")
+        lines.append(f'(({func_type}){func})("example");')
+    return "\n".join(lines)
+
+
+def check_orphan_symbols():
+    """Revisa si hay símbolos huérfanos en COFFLoader.c"""
+    try:
+        with open("COFFLoader.c") as f:
+            content = f.read()
+    except FileNotFoundError:
+        print("⚠️  COFFLoader.c no encontrado.")
+        return
+
+    orphans = []
+    for line in content.splitlines():
+        line = line.strip()
+        if "__imp_" in line and ("extern" in line or "#pragma" in line):
+            match = re.search(r"__imp_\w+", line)
+            if match:
+                symbol = match.group(0)
+                if symbol not in imp_functions:
+                    orphans.append(symbol)
+
+    if orphans:
+        print("⚠️  Símbolos huérfanos detectados en COFFLoader.c:")
+        for sym in orphans:
+            print(f"   - {sym}")
+    else:
+        print("✅ No hay símbolos huérfanos.")
+
+
+# ---------- GENERADOR ORIGINAL ----------
 def generate_c_code():
     """Generate full C binding code with hashes and usage examples."""
     output_lines = []
@@ -277,15 +369,14 @@ def generate_c_code():
             output_lines.append(f"extern FARPROC {func};")
         output_lines.append("\n")
 
-    # === ESTRUCTURAS COFF MÍNIMAS CON PRAGMA Y EXTERN DENTRO === (¡ESTO ES LO QUE PEDISTE!)
+    # === ESTRUCTURAS COFF MÍNIMAS CON PRAGMA Y EXTERN DENTRO ===
     output_lines.append("// === Estructuras COFF mínimas ===\n")
     output_lines.append("#pragma pack(push, 1)\n")
 
-
-    output_lines.append("#pragma comment(linker, \"/INCLUDE:__imp_GetModuleHandleA\")")
-    output_lines.append("#pragma comment(linker, \"/INCLUDE:__imp_GetProcAddress\")")
-    output_lines.append("#pragma comment(linker, \"/INCLUDE:__imp_LoadLibraryA\")")
-    output_lines.append("#pragma comment(linker, \"/INCLUDE:__imp_GetComputerNameA\")")
+    output_lines.append('#pragma comment(linker, "/INCLUDE:__imp_GetModuleHandleA")')
+    output_lines.append('#pragma comment(linker, "/INCLUDE:__imp_GetProcAddress")')
+    output_lines.append('#pragma comment(linker, "/INCLUDE:__imp_LoadLibraryA")')
+    output_lines.append('#pragma comment(linker, "/INCLUDE:__imp_GetComputerNameA")')
     output_lines.append("// Declarar las referencias externas")
     output_lines.append("extern PVOID __imp_GetModuleHandleA;")
     output_lines.append("extern PVOID __imp_GetProcAddress;")
@@ -340,24 +431,35 @@ def generate_c_code():
     return "\n".join(output_lines)
 
 
+# ---------- MAIN ----------
 def main():
-    parser = argparse.ArgumentParser(add_help=False)  # ¡Desactivamos help!
+    parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("-o", "--output", help="Output .c file (if not specified, prints to stdout)")
+    parser.add_argument("--loader-includes", action="store_true", help="Genera symbols_loader.inc")
+    parser.add_argument("--bof-template", action="store_true", help="Genera template_bof.inc")
+    parser.add_argument("--check-orphans", action="store_true", help="Revisa símbolos huérfanos en COFFLoader.c")
 
     args = parser.parse_args()
 
-    code = generate_c_code()
-
-    if args.output:
-        with open(args.output, "w", encoding="utf-8") as f:
-            f.write(code)
-        print(f"[+] Generated bindings saved to: {args.output}")
+    if args.loader_includes:
+        print(generate_loader_includes())
+    elif args.bof_template:
+        print(generate_bof_template())
+    elif args.check_orphans:
+        check_orphan_symbols()
     else:
-        try:
-            highlighted = highlight(code, CLexer(), Terminal256Formatter(style='monokai'))
-            print(highlighted, end="")
-        except ImportError:
-            print(code)
+        code = generate_c_code()
+        if args.output:
+            with open(args.output, "w", encoding="utf-8") as f:
+                f.write(code)
+            print(f"[+] Generated bindings saved to: {args.output}")
+        else:
+            try:
+                highlighted = highlight(code, CLexer(), Terminal256Formatter(style='monokai'))
+                print(highlighted, end="")
+            except ImportError:
+                print(code)
+
 
 if __name__ == "__main__":
     main()
