@@ -230,6 +230,129 @@ bof:http://localhost:8080/mybof.x64.o "Hello World"
 **whoami.c**: Retrieves current username and computer name — perfect for testing symbol resolution.
 **Test.c**:  Test BOF to start develops or test the loader.
 
+### 🧠 generate_hashes.py — The Symbol Hash Generator
+> Automatically regenerates the g_symbol_table[] in COFFLoader.c to ensure 100% symbol resolution accuracy for your BOFs. 
+
+This script is not just a convenience — it’s a critical component of your loader’s reliability. It eliminates human error in hash calculation and ensures that every external function your BOF needs is pre-resolved with surgical precision.
+
+### 🎯 Why This Script Exists
+When you compile a BOF with x86_64-w64-mingw32-gcc -c -fPIC, the compiler generates undefined external symbols (e.g., __imp_GetModuleHandleA, BeaconPrintf). Your loader (COFFLoader.c) must resolve these symbols at runtime by matching their name to a precomputed DJB2 hash.
+
+Manually calculating and updating these hashes is:
+
+- ❌ Error-prone (one wrong bit = crash).
+- ❌ Tedious (dozens of symbols).
+- ❌ Unsustainable (every new BOF or API requires updates).
+generate_hashes.py automates this process, guaranteeing that your g_symbol_table[] is always in sync with your BOF’s requirements.
+
+### 🔍 How It Works — Step by Step
+1. The DJB2 Hash Algorithm
+The script implements the Daniel J. Bernstein hash function (DJB2), which is:
+
+- ✅ Fast.
+- ✅ Case-sensitive (critical for Windows API names).
+- ✅ Produces 32-bit values (perfect for your SymbolHash struct).
+
+```python
+def djb2(s):
+    h = 5381
+    for c in s:
+        h = ((h << 5) + h) + ord(c)  # h * 33 + c
+    return h & 0xFFFFFFFF             # Ensure 32-bit result
+```
+
+2. The Symbol List
+The imp_functions list contains every external symbol your BOFs might need. It includes:
+
+- Beacon APIs (e.g., __imp_BeaconPrintf, BeaconOutput).
+- Critical Win32 APIs (e.g., __imp_LoadLibraryA, __imp_GetModuleHandleA).
+- COM/OLE APIs (e.g., __imp_CoInitializeEx, __imp_VariantClear).
+- CRT/String APIs (e.g., wcslen, memcpy, sprintf).
+
+```python
+imp_functions = [
+    "__imp_BeaconPrintf",
+    "__imp_LoadLibraryA",
+    "__imp_GetModuleHandleA",
+    # ... 30+ more symbols
+    "BeaconOutput",
+]
+```
+
+### 3. Output Format
+The script prints C code snippets ready to be copy-pasted directly into COFFLoader.c:
+```c
+{ 0x700d8660, (void*)BeaconPrintf }, // "__imp_BeaconPrintf"
+{ 0x266a0b1e, (void*)LoadLibraryA }, // "__imp_LoadLibraryA"
+{ 0x3eb5b2fb, (void*)GetModuleHandleA }, // "__imp_GetModuleHandleA"
+```
+> Note the pattern:
+> { 0x<hex_hash>, (void*)<FunctionNameWithout__imp_> }, // "<OriginalSymbolName>" 
+
+This format is exactly what your loader expects in g_symbol_table[].
+
+### 🛠️ How to Use It — The Professional Workflow
+Step 1: Add New Symbols
+If you write a new BOF that uses, say, __imp_CreateFileA, add it to the imp_functions list:
+```c
+imp_functions = [
+    # ... existing symbols ...
+    "__imp_CreateFileA",  # ← Add this line
+]
+```
+step 2: copy and paste into the COFFLoader3.c in g_symbol_table
+Step 3: Verify in Your BOF
+In your BOF source code (e.g., Test.c), ensure you declare the import correctly:
+```c
+extern FARPROC __imp_CreateFileA; // ← Must match the name in imp_functions
+```
+### 🧩 Why the __imp_ Prefix Matters
+Windows uses import thunks — small stubs that jump to the real function in a DLL. When your BOF is compiled, it references __imp_GetModuleHandleA, not GetModuleHandleA.
+
+Your loader must resolve the thunk address, not the function address. That’s why the script generates:
+```c
+{ 0x3eb5b2fb, (void*)GetModuleHandleA }, // "__imp_GetModuleHandleA"
+```
+Here:
+
+- 0x3eb5b2fb is the hash of "__imp_GetModuleHandleA" (the symbol your BOF actually uses).
+- (void*)GetModuleHandleA is the address of the thunk (which you declared with extern PVOID __imp_GetModuleHandleA; in beacon.c).
+If you skip the __imp_ prefix in your hash table, your BOF will crash with 0x9090... or 0x7ff7... — because it’s reading garbage from an uninitialized thunk.
+
+### 🪲 Common Pitfalls & Fixes
+
+- ❌ SÍMBOLO NO RESUELTO: '__imp_GetModuleHandleA'
+Symbol missing from imp_functions Add it to the list and rerun generate_hashes.py
+
+- GetModuleHandleA = 0x90900001233a25ff
+Hash table has wrong symbol name (e.g., used "GetModuleHandleA" instead of "__imp_GetModuleHandleA" )
+Ensure the comment in the hash table entry matches the BOF’s symbol name.
+Crash on first API call Forgot to declare extern PVOID __imp_FunctionName; in beacon.c
+
+### ✅ Best Practices for Symbol Management
+- Keep imp_functions Comprehensive: Add every API you might ever use — it’s cheaper than debugging a crash.
+- Run the Script Religiously: Make it part of your gen_beacon.sh:
+- Use Meaningful Comments: The // "__imp_FunctionName" comment is your lifeline during debugging.
+- Validate with objdump: After compiling your BOF, run:
+
+
+```bash
+x86_64-w64-mingw32-objdump -t your_borf.x64.o | grep "UND"
+```
+
+### 🚀 Pro Tip: Dynamic Hash Generation (Advanced)
+For maximum flexibility, you could modify RunCOFF to calculate hashes on-the-fly instead of using a static table. However, this:
+
+- ⚠️ Adds runtime overhead.
+- ⚠️ Increases code size.
+- ⚠️ Makes debugging harder.
+  
+The static table approach (powered by generate_hashes.py) is faster, smaller, and more reliable — perfect for post-exploitation tooling.
+
+### 📎 Final Note
+This script is the bridge between your high-level BOF code and the low-level Windows loader. It’s a small piece of Python, but it’s responsible for the stability of your entire operation.
+
+Treat it with respect. Update it religiously. And never, ever, calculate a DJB2 hash by hand again.
 
 ## 🎓 Educational Purpose
 This project is intended to:
