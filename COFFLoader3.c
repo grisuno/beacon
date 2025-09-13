@@ -16,7 +16,7 @@ extern PVOID __imp_GetModuleHandleA;
 extern PVOID __imp_GetProcAddress;
 extern PVOID __imp_LoadLibraryA;
 extern PVOID __imp_GetComputerNameA;
-// Definiciones completas de relocaciones x64 (agrega esto arriba de todo, cerca de otros #include o #define)
+// Definiciones completas de relocaciones x64 
 #define IMAGE_REL_AMD64_ABSOLUTE    0x0000
 #define IMAGE_REL_AMD64_ADDR64      0x0001
 #define IMAGE_REL_AMD64_ADDR32      0x0002
@@ -350,7 +350,7 @@ static void call_go_aligned(void* func, char* arg1, int arg2) {
     
 }
 
-// === Cargador COFF MEJORADO ===
+// === Cargador COFF ===
 int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char* argumentdata, int argumentSize) {
     BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Entrando en RunCOFF - coff_data=%p, filesize=%u", coff_data, filesize);
     if (!coff_data || filesize < sizeof(COFFHeader)) return 1;
