@@ -125,6 +125,8 @@ This beacon have load_module command you need pass a url to an dll module, for n
 
 ## 🚀 Feature: bof: — Execute COFF BOF Objects In-Memory (Cobalt Strike Style)
 
+<img width="1328" height="1328" alt="image" src="https://github.com/user-attachments/assets/22e3d203-764e-4c7f-8f74-83797c4440fd" />
+
 Evade EDR/AV detection by loading and executing position-independent BOF (Binary Object File) payloads directly from a remote URL — without touching disk, without LoadLibrary, and without traditional PE loaders. 
 
 This feature is inspired by — but goes beyond — industry-standard tools like TrustedSec’s COFFLoader and CoffeeLdr . It’s engineered for stealth, reliability, and deep Windows internals compliance.
