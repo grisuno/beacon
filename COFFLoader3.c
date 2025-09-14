@@ -11,12 +11,14 @@
 #pragma comment(linker, "/INCLUDE:__imp_GetProcAddress")
 #pragma comment(linker, "/INCLUDE:__imp_LoadLibraryA")
 #pragma comment(linker, "/INCLUDE:__imp_GetComputerNameA")
+#pragma comment(linker, "/INCLUDE:__imp_CloseHandle")
 // Declarar las referencias externas
 extern PVOID __imp_GetModuleHandleA;
 extern PVOID __imp_GetProcAddress;
 extern PVOID __imp_LoadLibraryA;
 extern PVOID __imp_GetComputerNameA;
-// Definiciones completas de relocaciones x64 
+extern PVOID __imp_CloseHandle;
+// Definiciones completas de relocaciones x64 (agrega esto arriba de todo, cerca de otros #include o #define)
 #define IMAGE_REL_AMD64_ABSOLUTE    0x0000
 #define IMAGE_REL_AMD64_ADDR64      0x0001
 #define IMAGE_REL_AMD64_ADDR32      0x0002
@@ -113,6 +115,7 @@ static SymbolHash g_symbol_table[] = {
     { 0xe8caea02, (void*)&__imp_GetProcAddress },            // "KERNEL32$GetProcAddress"
     { 0x266a0b1e, (void*)&__imp_LoadLibraryA },              // "__imp_LoadLibraryA"
     { 0x8f043359, (void*)&__imp_GetComputerNameA }, // "__imp_GetComputerNameA"
+    { 0xE15EABCA, (void*)&__imp_CloseHandle }, // "__imp_CloseHandle"
 
     { 0xdb66bdc9, (void*)CoInitializeEx },            // "OLE32$CoInitializeEx"
     { 0x087cf3a9, (void*)IIDFromString },             // "OLE32$IIDFromString"
@@ -154,14 +157,14 @@ static int   g_trampoline_offset = 0;
 
 static void* create_trampoline(void* target) {
     if (!target) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ create_trampoline llamado con target=NULL");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ create_trampoline nulled target=NULL\n");
         return NULL;
     }
 
     // Allocate executable memory for trampoline
     void* trampoline = VirtualAlloc(NULL, 16, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
     if (!trampoline) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ No se pudo asignar memoria para trampolín");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ can't assign memory to trampolín\n");
         return NULL;
     }
     
@@ -176,40 +179,40 @@ static void* create_trampoline(void* target) {
     code[10] = 0xFF; // JMP
     code[11] = 0xE0; // /4 rax
     
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🚀 Trampolín creado en %p -> %p", trampoline, target);
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🚀 Trampolín created in %p -> %p \n", trampoline, target);
     return trampoline;
 }
 BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target, 
                       void** sections, const char* sym_name, void* base_addr) {
     
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🔧 Aplicando reloc tipo %d en 0x%p -> 0x%p", 
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🔧 Apply reloc type %d in 0x%p -> 0x%p \n", 
                 rel->Type, patch_addr, target);
     
     switch (rel->Type) {
         case IMAGE_REL_AMD64_ABSOLUTE: {
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_ABSOLUTE (ignored)");
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_ABSOLUTE (ignored) \n");
             return TRUE;
         }
         
         case IMAGE_REL_AMD64_ADDR64: {
             DWORD oldProtect;
             if (!VirtualProtect(patch_addr, sizeof(uint64_t), PAGE_READWRITE, &oldProtect)) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ No se pudo cambiar protección para ADDR64");
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ can't change the protection to ADDR64 \n");
                 return FALSE;
             }
             *(uint64_t*)patch_addr = (uint64_t)target;
             VirtualProtect(patch_addr, sizeof(uint64_t), oldProtect, &oldProtect);
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_ADDR64: 0x%llX", (uint64_t)target);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_ADDR64: 0x%llX \n", (uint64_t)target);
             return TRUE;
         }
         
         case IMAGE_REL_AMD64_ADDR32: {
             if ((uint64_t)target > 0xFFFFFFFF) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ ADDR32: dirección fuera de rango 32-bit");
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ ADDR32: addres out of range 32-bit\n");
                 return FALSE;
             }
             *(uint32_t*)patch_addr = (uint32_t)(uintptr_t)target;
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_ADDR32: 0x%X", (uint32_t)(uintptr_t)target);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_ADDR32: 0x%X \n", (uint32_t)(uintptr_t)target);
             return TRUE;
         }
         
@@ -221,7 +224,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
                 rva = (uint32_t)((char*)target - (char*)sections[0]);
             }
             *(uint32_t*)patch_addr = rva;
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_ADDR32NB: 0x%X", rva);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_ADDR32NB: 0x%X \n", rva);
             return TRUE;
         }
         
@@ -230,73 +233,73 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
             if (offset < INT32_MIN || offset > INT32_MAX) {
                 void* trampoline = create_trampoline(target);
                 if (!trampoline) {
-                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Trampolín falló para '%s'", sym_name);
+                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Trampolín failed to '%s' \n", sym_name);
                     return FALSE;
                 }
                 offset = (int64_t)trampoline - ((int64_t)patch_addr + 4);
                 if (offset < INT32_MIN || offset > INT32_MAX) {
-                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Trampolín también fuera de rango para '%s'", sym_name);
+                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Trampolín out range to '%s' \n", sym_name);
                     return FALSE;
                 }
-                BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🚀 Usando trampolín para '%s': %p", sym_name, trampoline);
+                BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🚀 doing trampolin '%s': %p \n", sym_name, trampoline);
             }
             *(int32_t*)patch_addr = (int32_t)offset;
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32: 0x%X", (int32_t)offset);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32: 0x%X \n", (int32_t)offset);
             return TRUE;
         }
         
         case IMAGE_REL_AMD64_REL32_1: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 5);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_1 fuera de rango para '%s'", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_1 out range to '%s' \n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_1: 0x%X", (int32_t)offset);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_1: 0x%X \n", (int32_t)offset);
             return TRUE;
         }
         
         case IMAGE_REL_AMD64_REL32_2: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 6);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_2 fuera de rango para '%s'", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_2 out range to '%s' \n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_2: 0x%X", (int32_t)offset);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_2: 0x%X \n", (int32_t)offset);
             return TRUE;
         }
         
         case IMAGE_REL_AMD64_REL32_3: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 7);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_3 fuera de rango para '%s'", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_3 out range to '%s'\n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_3: 0x%X", (int32_t)offset);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_3: 0x%X \n", (int32_t)offset);
             return TRUE;
         }
         
         case IMAGE_REL_AMD64_REL32_4: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 8);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_4 fuera de rango para '%s'", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_4 out range to '%s'\n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_4: 0x%X", (int32_t)offset);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_4: 0x%X \n", (int32_t)offset);
             return TRUE;
         }
         
         case IMAGE_REL_AMD64_REL32_5: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 9);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_5 fuera de rango para '%s'", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_5 out range to '%s' \n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_5: 0x%X", (int32_t)offset);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32_5: 0x%X \n", (int32_t)offset);
             return TRUE;
         }
         
@@ -307,12 +310,12 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         case IMAGE_REL_AMD64_SREL32:
         case IMAGE_REL_AMD64_PAIR:
         case IMAGE_REL_AMD64_SSPAN32: {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Tipo %d no implementado para '%s'", rel->Type, sym_name);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Type %d not implemented to '%s'\n", rel->Type, sym_name);
             return FALSE;
         }
         
         default: {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Tipo de reubicación x64 desconocido: %d para '%s'", 
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Type of rellocation x64 unknown: %d para '%s'\n", 
                         rel->Type, sym_name);
             return FALSE;
         }
@@ -350,9 +353,9 @@ static void call_go_aligned(void* func, char* arg1, int arg2) {
     
 }
 
-// === Cargador COFF ===
+// === Cargador COFF MEJORADO ===
 int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char* argumentdata, int argumentSize) {
-    BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Entrando en RunCOFF - coff_data=%p, filesize=%u", coff_data, filesize);
+    BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Begining RunCOFF - coff_data=%p, filesize=%u \n", coff_data, filesize);
     if (!coff_data || filesize < sizeof(COFFHeader)) return 1;
 
     COFFHeader* hdr = (COFFHeader*)coff_data;
@@ -362,11 +365,11 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
     char* strtab = (strtab_offset < filesize) ? (char*)(coff_data + strtab_offset) : NULL;
     uint32_t strtab_size = strtab ? (filesize - strtab_offset) : 0;
 
-    BeaconPrintf(CALLBACK_ERROR, "[BOF] sections: %d", hdr->NumberOfSections);
+    BeaconPrintf(CALLBACK_ERROR, "[BOF] sections: %d \n", hdr->NumberOfSections);
 
     void** sections = calloc(hdr->NumberOfSections, sizeof(void*));
     if (!sections) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ calloc falló");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ calloc failed \n");
         return 1;
     }
 
@@ -375,54 +378,54 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         size_t size = sect[i].SizeOfRawData;
         if (size == 0) size = 1;
 
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] VirtualAlloc sección %d (size: %zu)", i, size);
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] VirtualAlloc section %d (size: %zu)\n", i, size);
         sections[i] = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
         if (!sections[i]) {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ VirtualAlloc falló para sección %d", i);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ VirtualAlloc failed to section %d \n", i);
             goto cleanup;
         }
 
         if (sect[i].PointerToRawData && sect[i].SizeOfRawData > 0) {
             if (sect[i].PointerToRawData + sect[i].SizeOfRawData > filesize) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Datos fuera de rango en sección %d", i);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ DAta out of range %d \n", i);
                 goto cleanup;
             }
             memcpy(sections[i], coff_data + sect[i].PointerToRawData, sect[i].SizeOfRawData);
         }
     }
 
-    BeaconPrintf(CALLBACK_ERROR, "[BOF] relocations");
+    BeaconPrintf(CALLBACK_ERROR, "[BOF] relocations \n");
 
     // Procesar relocalizaciones
     for (int i = 0; i < hdr->NumberOfSections; i++) {
         if (!sect[i].PointerToRelocations || sect[i].NumberOfRelocations == 0) continue;
 
         if (sect[i].PointerToRelocations >= filesize) {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ PointerToRelocations fuera de rango sección %d", i);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ PointerToRelocations section out of range %d \n", i);
             continue;
         }
 
         size_t total_reloc_size = (size_t)sect[i].NumberOfRelocations * sizeof(COFFRelocation);
         if (sect[i].PointerToRelocations + total_reloc_size > filesize) {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Buffer insuficiente reubicaciones sección %d", i);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Buffer to small to rellocate section %d \n", i);
             continue;
         }
 
         COFFRelocation* rel_start = (COFFRelocation*)(coff_data + sect[i].PointerToRelocations);
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] Procesando %d reubicaciones en sección %d", sect[i].NumberOfRelocations, i);
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] Proccessing %d rellocation in section %d \n", sect[i].NumberOfRelocations, i);
 
         for (int j = 0; j < sect[i].NumberOfRelocations; j++) {
             COFFRelocation* rel = &rel_start[j];
 
             if (rel->SymbolTableIndex >= hdr->NumberOfSymbols) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ SymbolTableIndex %d fuera de rango", rel->SymbolTableIndex);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ SymbolTableIndex %d out of range \n", rel->SymbolTableIndex);
                 continue;
             }
 
             COFFSymbol* s = &sym[rel->SymbolTableIndex];
             char* sym_name = get_symbol_name(s, strtab, strtab_size);
             if (!sym_name) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Nombre de símbolo CORRUPTO (índice %d)", rel->SymbolTableIndex);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Simbol name CORRUPT (index %d) \n", rel->SymbolTableIndex);
                 continue;
             }
 
@@ -448,14 +451,14 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
 
             // ✅ LOG DEL HASH — ¡CRUCIAL PARA DEPURAR!
             uint32_t name_hash = djb2_hash(search_name);
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🔍 Buscando símbolo: '%s' (original: '%s') → HASH=0x%08X", search_name, sym_name, name_hash);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🔍 Searching Simbol: '%s' (original: '%s') → HASH=0x%08X \n", search_name, sym_name, name_hash);
 
             void* target = NULL;
             char* patch_addr = (char*)sections[i] + rel->VirtualAddress;
 
             if (s->SectionNumber > 0) {
                 if (s->SectionNumber - 1 >= hdr->NumberOfSections) {
-                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ SectionNumber %d inválida", s->SectionNumber);
+                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ SectionNumber %d invalid \n", s->SectionNumber);
                     continue;
                 }
                 
@@ -463,7 +466,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 int32_t addend = *(int32_t*)patch_addr;
                 target = (char*)sections[s->SectionNumber - 1] + s->Value + addend;
                 
-                BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Símbolo interno '%s' → sección %d + offset 0x%X + addend 0x%X = %p",
+                BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Simbol intern '%s' → section %d + offset 0x%X + addend 0x%X = %p \n",
                             search_name, s->SectionNumber, s->Value, addend, target);
             } else {
                 // Resolver símbolo externo por hash
@@ -476,14 +479,14 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
             }
 
             if (!target) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ SÍMBOLO NO RESUELTO: '%s' (hash=0x%08X)", search_name, name_hash);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ SIMBOL NOT SOLVED: '%s' (hash=0x%08X) \n", search_name, name_hash);
                 continue;
             } else {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ✅ Resuelto '%s' → %p", search_name, target);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ✅ Solved '%s' → %p", search_name, target);
             }
 
             if (rel->VirtualAddress >= sect[i].SizeOfRawData) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ VirtualAddress fuera de rango sección %d", i);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ VirtualAddress out of range %d \n", i);
                 continue;
             }
 
@@ -491,7 +494,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
             int32_t current_offset = *(int32_t*)patch_addr;
             int32_t expected_offset = (int32_t)((int64_t)target - ((int64_t)patch_addr + 4));
             if (current_offset == expected_offset) {
-                BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Reloc %d ya aplicada (offset=0x%X), saltando", j, current_offset);
+                BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Reloc %d applied (offset=0x%X), jumping \n", j, current_offset);
                 continue;
             }
 
@@ -499,48 +502,48 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
 #ifdef _WIN64
             const char* resolved_sym_name = sym_name; // Usamos el nombre que ya obtuvimos antes
             if (!handle_relocation(rel, patch_addr, target, sections, resolved_sym_name, /*base_addr*/ NULL)) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Falló reubicación tipo %d", rel->Type);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Failed rellocation type %d \n", rel->Type);
                 continue;
             }
 #else
             if (rel->Type == 6) { // IMAGE_REL_I386_REL32
                 *(int32_t*)patch_addr = (int32_t)((char*)target - (patch_addr + 4));
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] Applied IMAGE_REL_I386_REL32");
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Applied IMAGE_REL_I386_REL32 \n");
             } else if (rel->Type == 2) { // IMAGE_REL_I386_DIR32
                 *(uint32_t*)patch_addr = (uint32_t)target;
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] Applied IMAGE_REL_I386_DIR32");
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Applied IMAGE_REL_I386_DIR32 \n");
             } else {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Tipo de reubicación x86 desconocido: %d", rel->Type);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Type of rellocation x86 unknown: %d \n", rel->Type);
             }
 #endif
         }
     }
 
     // 🕵️‍♂️ DEBUG: Listar todos los símbolos
-    BeaconPrintf(CALLBACK_ERROR, "[BOF] === LISTA DE SÍMBOLOS ===");
+    BeaconPrintf(CALLBACK_ERROR, "[BOF] === LIST OF SIMBOLS === \n");
     for (int i = 0; i < hdr->NumberOfSymbols; i++) {
         char* sym_name = get_symbol_name(&sym[i], strtab, strtab_size);
         if (!sym_name) {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] Símbolo %d: <nombre CORRUPTO>", i);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] Simbol %d: <CORRUPT name> \n", i);
             continue;
         }
         int valid = 1;
         for (int j = 0; sym_name[j] != 0 && j < 255; j++) {
             if (sym_name[j] < 32 || sym_name[j] > 126) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] Símbolo %d: <nombre con caracteres inválidos>", i);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Simbol %d: <invalid char in name> \n", i);
                 valid = 0;
                 break;
             }
         }
         if (valid) {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] Símbolo %d: '%s' (Sección: %d, Valor: 0x%X)", 
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] Simbol %d: '%s' (Section: %d, Value: 0x%X)\n", 
                         i, sym_name, sym[i].SectionNumber, sym[i].Value);
         }
     }
-    BeaconPrintf(CALLBACK_ERROR, "[BOF] === FIN LISTA ===");
+    BeaconPrintf(CALLBACK_ERROR, "[BOF] === END LIST ===\n");
 
     // BUSCAR FUNCIÓN DE ENTRADA
-    BeaconPrintf(CALLBACK_ERROR, "[BOF] Buscando función '%s'...", functionname);
+    BeaconPrintf(CALLBACK_ERROR, "[BOF] Searching FUNC '%s'...\n", functionname);
     bof_func_t go = NULL;
     for (int i = 0; i < hdr->NumberOfSymbols; i++) {
         char* sym_name = get_symbol_name(&sym[i], strtab, strtab_size);
@@ -548,11 +551,11 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
 
         if (strcmp(sym_name, functionname) == 0) {
             if (sym[i].SectionNumber <= 0 || sym[i].SectionNumber > hdr->NumberOfSections) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Sección inválida para '%s': %d", functionname, sym[i].SectionNumber);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Invalid section to '%s': %d \n", functionname, sym[i].SectionNumber);
                 continue;
             }
             go = (bof_func_t)((char*)sections[sym[i].SectionNumber - 1] + sym[i].Value);
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ✅ Función '%s' encontrada en sección %d, offset 0x%X → %p", 
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] ✅ Func '%s' found in section %d, offset 0x%X → %p \n", 
                         functionname, sym[i].SectionNumber, sym[i].Value, go);
             break;
         }
@@ -560,28 +563,28 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
 
     // EJECUTAR FUNCIÓN
     if (go) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Ejecutando go en %p", go);
-        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Bytes en go: %02X %02X %02X %02X %02X %02X %02X %02X",
+        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Exec go on %p \n", go);
+        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Bytes in go: %02X %02X %02X %02X %02X %02X %02X %02X \n",
             ((uint8_t*)go)[0], ((uint8_t*)go)[1], ((uint8_t*)go)[2], ((uint8_t*)go)[3],
             ((uint8_t*)go)[4], ((uint8_t*)go)[5], ((uint8_t*)go)[6], ((uint8_t*)go)[7]);
         DWORD old;
         VirtualProtect(go, 0x1000, PAGE_EXECUTE_READWRITE, &old);
-        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] code page prot changed to RWX");
+        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] code page prot changed to RWX \n");
 
         MEMORY_BASIC_INFORMATION mbi;
         VirtualQuery(go, &mbi, sizeof(mbi));
-        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] code  : base=%p  size=%p  prot=%08X",
+        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] code  : base=%p  size=%p  prot=%08X \n",
                     mbi.BaseAddress, mbi.RegionSize, mbi.Protect);
 
         VirtualQuery((void*)((uintptr_t)&mbi & ~0xFFF), &mbi, sizeof(mbi));
-        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] stack: base=%p  size=%p  prot=%08X",
+        BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] stack: base=%p  size=%p  prot=%08X \n",
                     mbi.BaseAddress, mbi.RegionSize, mbi.Protect);
         // ✅ Llamada ALINEADA — ¡CRUCIAL PARA BOFs GRANDES!
         call_go_aligned(go, (char*)argumentdata, argumentSize);
 
-        BeaconPrintf(CALLBACK_OUTPUT, "[COFF] ✅ Terminó '%s'", functionname);
+        BeaconPrintf(CALLBACK_OUTPUT, "[COFF] ✅ End '%s'\n", functionname);
     } else {
-        BeaconPrintf(CALLBACK_ERROR, "[COFF] ❌ Función '%s' no encontrada", functionname);
+        BeaconPrintf(CALLBACK_ERROR, "[COFF] ❌ Func '%s' not found\n", functionname);
     }
 
 cleanup:
@@ -596,6 +599,6 @@ cleanup:
         g_trampoline_offset = 0;
     }
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Saliendo de RunCOFF");
+    BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Exiting RunCOFF \n");
     return go ? 0 : 1;
 }
