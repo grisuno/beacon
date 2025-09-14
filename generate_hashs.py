@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-BOF Bindings Generator for bofs style Cobalt Strike for Black Basalt Beacon & LazyOwn RedTeam Freamework, the first C2 powered by AI
+BOF Bindings Generator for Cobalt Strike
 Author: Gris Iscomeback
-Creation Date: 11/09/2025
+Email: grisiscomeback@gmail.com
+Creation Date: 13/08/2024
 License: GPL v3
 
-This script generates C code bindings for BOF (Beacon Object Files) used in Cobalt Strike and LazyOwn.
+This script generates C code bindings for BOF (Beacon Object Files) used in Cobalt Strike.
 It creates function pointer mappings from imported functions with DJB2 hashing and includes
 usage examples for each function using proper casting syntax.
 
@@ -60,6 +61,7 @@ imp_functions = [
     "__imp_ImpersonateLoggedOnUser",
     "__imp_RevertToSelf",
     "__imp_GetCurrentProcessId",
+    "__imp_CloseHandle",
     "wcscpy",
     "wcsncpy",
     "mbstowcs",
@@ -101,6 +103,10 @@ function_signatures = {
         "type": "HRESULT(WINAPI*)(LPVOID, DWORD)",
         "example": 'CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);'
     },
+    "__imp_CloseHandle": {
+        "type": "BOOL (WINAPI *CloseHandle_t)(HANDLE)",
+        "example": "pCloseHandle(pi.hProcess);"
+    },  
     "__imp_CoUninitialize": {
         "type": "void(WINAPI*)()",
         "example": 'CoUninitialize();'
