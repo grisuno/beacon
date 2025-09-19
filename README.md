@@ -120,7 +120,7 @@ rule hellbird_Runtime_Behavior {
  - **amsi:** Bypass AMSI (Anti-Malware Scan Interface) on Windows systems to evade detection by PowerShell, WMI, and other scripting engines.
  - **load_module:** load dll on Windows systems to evade detection loading in memory from an url
  - **bof:** load COFF BOF object file on Windows systems to evade detection loading in memory from an url (COFFLoader3 inspired in [COFFLoader] (https://github.com/trustedsec/COFFLoader/) & [CoffeeLdr](https://github.com/Cracked5pider/CoffeeLdr)) (Like Cobalt Strike)
- - **hook:** Get syscalls hooked by AV/EDR/OTHER
+ - **hook:** Get syscalls hooked by AV/EDR/OTHER (Using direct syscalls to invoke CreateFileA, such as in CreateFileA_Unhooked.)
  - **terminate:** Terminates the implant or beacon, removing files and persistence mechanisms.
 
 ## 🔥 Modules
