@@ -6,3 +6,5 @@ cd ../../
 chmod +x bof/whoami/build.sh && cd bof/whoami && ./build.sh
 cd ../../
 chmod +x bof/calc/build.sh && cd bof/calc && ./build.sh
+cd ../../
+chmod +x bof/etw/build.sh && cd bof/etw && ./build.sh
