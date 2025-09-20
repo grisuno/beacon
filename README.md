@@ -251,8 +251,16 @@ bof:http://localhost:8080/mybof.x64.o "Hello World"
 - Never use string literals for DLL names — use stack buffers: char k32[] = {'k','e','r','n','e','l','3','2','.','d','l','l',0};
 
 ### 🧪 Example BOFs Included
-**whoami.c**: Retrieves current username and computer name — perfect for testing symbol resolution.
-**Test.c**:  Test BOF to start develops or test the loader.
+
+- **whoami.c**: Retrieves current username and computer name — perfect for testing symbol resolution.
+- **Test.c**:  Test BOF to start develops or test the loader.
+- **calc.c**:  Start a calc.
+- **etw.c**:  Etw patch in memory.
+- **cmdwhoami.c**:  Run command and save the result (whoami).
+- **getenv.c**:  Get environment vars.
+- **persist.c**:  Add a entry reg to persist the beacon.exe.
+- **shellcode.c**:  Run shellcode in memory.
+- **winver.c**:  Show the windows versión on screen.
 
 <img width="1682" height="699" alt="image" src="https://github.com/user-attachments/assets/781cddd4-e3f6-4f3b-b032-dda2b82962a5" />
 <img width="877" height="762" alt="image" src="https://github.com/user-attachments/assets/f1e3259d-8695-4885-96f8-e005aadce6ee" />
