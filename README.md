@@ -261,7 +261,8 @@ bof:http://localhost:8080/mybof.x64.o "Hello World"
 - **persist.c**:  Add a entry reg to persist the beacon.exe.
 - **shellcode.c**:  Run shellcode in memory.
 - **winver.c**:  Show the windows versión on screen.
-
+- **scan_shellcode.c**:  Check for any memory block that is protected with RWX to execute a shellcode
+  
 <img width="1682" height="699" alt="image" src="https://github.com/user-attachments/assets/781cddd4-e3f6-4f3b-b032-dda2b82962a5" />
 <img width="877" height="762" alt="image" src="https://github.com/user-attachments/assets/f1e3259d-8695-4885-96f8-e005aadce6ee" />
 <img width="1710" height="731" alt="image" src="https://github.com/user-attachments/assets/af25330a-005c-4a19-9d53-8bd7a59c21ce" />
