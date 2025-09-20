@@ -4,3 +4,5 @@ x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector winver.c -o winver.x64.
 x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector getenv.c -o getenv.x64.o
 x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector cmdwhoami.c -o cmdwhoami.x64.o
 x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector shellcode.c -o shellcode.x64.o
+x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector persist.c -o persist.x64.o
+
