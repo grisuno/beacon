@@ -177,7 +177,7 @@ Your BOF doesn’t call GetModuleHandleA directly — it calls __imp_GetModuleHa
 <img width="856" height="981" alt="image" src="https://github.com/user-attachments/assets/b3d7279b-092a-48b4-90b5-1b82a7b6d424" />
 
 ### ✅ Our loader does this correctly by:
-
+![descarga](https://github.com/user-attachments/assets/34b3fc18-9a3e-45b7-a1e7-c7d70a0f0c7f)<svg aria-roledescription="flowchart-v2" role="graphics-document document" viewBox="-28 -28 2763.356689453125 3519.65625" style="max-width: 2699.356689453125px;" class="flowchart" xmlns="http://www.w3.org/2000/svg" width="2763.356689453125" id="mermaid-1eec05c6-8365-4a09-b178-c1613f7251ab" height="3519.65625"><rect x="-28" y="-28" width="2763.356689453125" height="3519.65625" fill="#191919"/>
 - Including both versions in the symbol hash table:
 
 ```c
