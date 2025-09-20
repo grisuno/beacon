@@ -208,9 +208,9 @@ Your BOF doesn’t call GetModuleHandleA directly — it calls __imp_GetModuleHa
 #include "beacon.h"
 
 // Declare imports correctly — THIS IS CRITICAL
-extern FARPROC __imp_GetModuleHandleA;
-extern FARPROC __imp_GetProcAddress;
-extern FARPROC __imp_LoadLibraryA;
+extern PVOID __imp_GetModuleHandleA;
+extern PVOID __imp_GetProcAddress;
+extern PVOID __imp_LoadLibraryA;
 
 void go(char *args, int alen) {
     BeaconPrintf(CALLBACK_OUTPUT, "[MYBOF] Started with args: %.*s", alen, args);
