@@ -9,3 +9,8 @@ x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector scan_shellcode.c -o sca
 x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector disablelog.c -o disablelog.x64.o
 x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector vncrelay.c -o vncrelay.x64.o
 x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector loadvnc.c -o loadvnc.x64.o
+x86_64-w64-mingw32-gcc -c -fPIC -O2 -fno-stack-protector uacbypass.c -o uacbypass.x64.o
+
+
+
+
