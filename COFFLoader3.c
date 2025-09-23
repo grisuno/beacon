@@ -666,12 +666,11 @@ typedef struct {
 static SymbolHash g_symbol_table[] = {
     // === Funciones Beacon ===
     { 0xE2494BA2, (void*)BeaconDataParse },                  // "BeaconDataParse"
-    { 0x1a2b3c4d, (void*)BeaconDataInt },                    // "BeaconDataInt"
-    { 0x5e6f7a8b, (void*)BeaconDataShort },                  // "BeaconDataShort"
+    { 0xAF1AFDD2, (void*)BeaconDataInt },                    // "BeaconDataInt"
+    { 0xE2835EF7, (void*)BeaconDataShort },                  // "BeaconDataShort"
     { 0x80D46722, (void*)BeaconDataExtract },                // "BeaconDataExtract"
-    { 0x700d8660, (void*)BeaconPrintf },                     // "BeaconPrintf"
-    { 0x36b7a083, (void*)BeaconPrintf },
-    { 0x6df4b81e, (void*)BeaconOutput },                     // "BeaconOutput"
+    { 0x700D8660, (void*)BeaconPrintf },                     // "BeaconPrintf"
+    { 0x6DF4B81E, (void*)BeaconOutput },                     // "BeaconOutput"
     
     // === Funciones del sistema ===
     { 0x266A0B1E, (void*)&__imp_LoadLibraryA },
