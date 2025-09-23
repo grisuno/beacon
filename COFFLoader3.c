@@ -1334,7 +1334,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         }
     }
 
-    // EJECUTAR FUNCIÓN
+    // EJECUTAR FUNCIÓN l337
     if (go) {
         BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Exec go on %p \n", go);
         BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Bytes in go: %02X %02X %02X %02X %02X %02X %02X %02X \n",
