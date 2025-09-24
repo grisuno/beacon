@@ -6031,7 +6031,7 @@ int main() {
 }
 EOF
 
-
+python3 bof/test/tel.py &
 
 echo "[+] Generated beacon.c"
 make windows
