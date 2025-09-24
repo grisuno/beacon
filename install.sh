@@ -1,5 +1,6 @@
 #!/bin/bash
 sudo apt install mingw-w64
+pip3 install -r requirements.txt
 python3 app.py
 
 read -t 10 -p "   [?] do you wanna install the C2 ? (y/n): " respuesta
