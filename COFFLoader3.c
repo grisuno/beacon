@@ -79,25 +79,7 @@
  * │ © 2025 LazyOwn Project — GPLv3                                               │
  * │ For authorized red team use only.                                            │
  * └──────────────────────────────────────────────────────────────────────────────┘
- *
- *	This file is part of Black Basalt Beacon.
- *
- *	Black Basalt Beacon is free software: you can redistribute it and/or modify
- *	it under the terms of the GNU General Public License as published by
- *	the Free Software Foundation, either version 3 of the License, or
- *	(at your option) any later version.
- *
- *	Black Basalt Beacon is distributed in the hope that it will be useful,
- *	but WITHOUT ANY WARRANTY; without even the implied warranty of
- *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *	GNU General Public License for more details.
- *
- *	You should have received a copy of the GNU General Public License
- *	along with Black Basalt Beacon.  If not, see <https://www.gnu.org/licenses/>.
- *
- *	Copyright (c) LazyOwn RedTeam 2025. All rights reserved.
  */
-
 
 #include <windows.h>
 #include <stdio.h>
@@ -666,11 +648,12 @@ typedef struct {
 static SymbolHash g_symbol_table[] = {
     // === Funciones Beacon ===
     { 0xE2494BA2, (void*)BeaconDataParse },                  // "BeaconDataParse"
-    { 0xAF1AFDD2, (void*)BeaconDataInt },                    // "BeaconDataInt"
-    { 0xE2835EF7, (void*)BeaconDataShort },                  // "BeaconDataShort"
+    { 0x1a2b3c4d, (void*)BeaconDataInt },                    // "BeaconDataInt"
+    { 0x5e6f7a8b, (void*)BeaconDataShort },                  // "BeaconDataShort"
     { 0x80D46722, (void*)BeaconDataExtract },                // "BeaconDataExtract"
-    { 0x700D8660, (void*)BeaconPrintf },                     // "BeaconPrintf"
-    { 0x6DF4B81E, (void*)BeaconOutput },                     // "BeaconOutput"
+    { 0x700d8660, (void*)BeaconPrintf },                     // "BeaconPrintf"
+    { 0x36b7a083, (void*)BeaconPrintf },
+    { 0x6df4b81e, (void*)BeaconOutput },                     // "BeaconOutput"
     
     // === Funciones del sistema ===
     { 0x266A0B1E, (void*)&__imp_LoadLibraryA },
@@ -1125,10 +1108,13 @@ static void call_go_aligned(void* func, char* arg1, int arg2) {
     
 }
 
-// === Cargador COFF MEJORADO ===
+// === Cargador COFF  ===
 int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char* argumentdata, int argumentSize) {
     BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Begining RunCOFF - coff_data=%p, filesize=%u \n", coff_data, filesize);
-    if (!coff_data || filesize < sizeof(COFFHeader)) return 1;
+    if (filesize < sizeof(COFFHeader)) {
+        BeaconPrintf(CALLBACK_ERROR, "[BOF][x] File too small\n");
+        return 1;
+    }
 
     COFFHeader* hdr = (COFFHeader*)coff_data;
     COFFSection* sect = (COFFSection*)(coff_data + sizeof(COFFHeader));
@@ -1137,6 +1123,30 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
     char* strtab = (strtab_offset < filesize) ? (char*)(coff_data + strtab_offset) : NULL;
     uint32_t strtab_size = strtab ? (filesize - strtab_offset) : 0;
 
+
+    // Machine must be x64 (0x8664)
+    if (hdr->Machine != 0x8664) {
+        BeaconPrintf(CALLBACK_ERROR, "[BOF][x] Invalid machine: 0x%04X (need 0x8664)\n", hdr->Machine);
+        return 1;
+    }
+
+    // Número de secciones razonable
+    if (hdr->NumberOfSections == 0 || hdr->NumberOfSections > 32) {
+        BeaconPrintf(CALLBACK_ERROR, "[BOF][x] Invalid section count: %d\n", hdr->NumberOfSections);
+        return 1;
+    }
+
+    // PointerToSymbolTable debe estar dentro del archivo
+    if (hdr->PointerToSymbolTable >= filesize) {
+        BeaconPrintf(CALLBACK_ERROR, "[BOF][x] Symbol table out of bounds\n");
+        return 1;
+    }
+
+    // NumberOfSymbols razonable
+    if (hdr->NumberOfSymbols > 1000) {
+        BeaconPrintf(CALLBACK_ERROR, "[BOF][x] Too many symbols: %d\n", hdr->NumberOfSymbols);
+        return 1;
+    }
     BeaconPrintf(CALLBACK_ERROR, "[BOF] sections: %d \n", hdr->NumberOfSections);
 
     void** sections = calloc(hdr->NumberOfSections, sizeof(void*));
@@ -1333,7 +1343,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         }
     }
 
-    // EJECUTAR FUNCIÓN l337
+    // EJECUTAR FUNCIÓN
     if (go) {
         BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Exec go on %p \n", go);
         BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Bytes in go: %02X %02X %02X %02X %02X %02X %02X %02X \n",
