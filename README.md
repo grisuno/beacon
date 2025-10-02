@@ -269,6 +269,7 @@ bof:http://localhost:8080/mybof.x64.o "Hello World"
 - **persistsvc.c**:  Add a service to persist the beacon.exe.
 - **loadvnc.c**:  inject a vncserver dll into a process to execute a vnc server.
 - **sock5.c**:  One Shot Sock5 proxy, it's experimental and under develop.
+- **upload.c**:  Upload a file to a LazyOwn RedTeam Framework C2 ssl/aes.
   
 <img width="1682" height="699" alt="image" src="https://github.com/user-attachments/assets/781cddd4-e3f6-4f3b-b032-dda2b82962a5" />
 <img width="877" height="762" alt="image" src="https://github.com/user-attachments/assets/f1e3259d-8695-4885-96f8-e005aadce6ee" />
