@@ -1,0 +1,493 @@
+# Subsystem: root
+
+## COFFLoader.h
+- Layer: utility
+- Language: h
+- Symbols:
+  - `COFFLOADER_H` (macro, line 21)
+
+## COFFLoader3.c
+- Layer: utility
+- Language: c
+- Symbols:
+  - `djb2_hash` (function, line 632) `static uint32_t djb2_hash(const char* str)`
+  - `create_trampoline` (function, line 912) `static void* create_trampoline(void* target)`
+  - `handle_relocation` (function, line 940) `BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target, 
+                    ...`
+  - `get_symbol_name` (function, line 1079) `static char* get_symbol_name(COFFSymbol* s, char* strtab, uint32_t strtab_size)`
+  - `__attribute__` (function, line 1102) `__attribute__((noinline))
+static void call_go_aligned(void* func, char* arg1, int arg2)`
+  - `RunCOFF` (function, line 1112) `int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char*...`
+  - `IMAGE_REL_AMD64_ABSOLUTE` (macro, line 568)
+  - `IMAGE_REL_AMD64_ADDR64` (macro, line 569)
+  - `IMAGE_REL_AMD64_ADDR32` (macro, line 570)
+  - `IMAGE_REL_AMD64_ADDR32NB` (macro, line 571)
+  - `IMAGE_REL_AMD64_REL32` (macro, line 572)
+  - `IMAGE_REL_AMD64_REL32_1` (macro, line 573)
+  - `IMAGE_REL_AMD64_REL32_2` (macro, line 574)
+  - `IMAGE_REL_AMD64_REL32_3` (macro, line 575)
+  - `IMAGE_REL_AMD64_REL32_4` (macro, line 576)
+  - `IMAGE_REL_AMD64_REL32_5` (macro, line 577)
+  - `IMAGE_REL_AMD64_SECTION` (macro, line 578)
+  - `IMAGE_REL_AMD64_SECREL` (macro, line 579)
+  - `IMAGE_REL_AMD64_SECREL7` (macro, line 580)
+  - `IMAGE_REL_AMD64_TOKEN` (macro, line 581)
+  - `IMAGE_REL_AMD64_SREL32` (macro, line 582)
+  - `IMAGE_REL_AMD64_PAIR` (macro, line 583)
+  - `IMAGE_REL_AMD64_SSPAN32` (macro, line 584)
+
+## aes.c
+- Layer: utility
+- Doc: aes.c - tiny-AES-c (https://github.com/kokke/tiny-AES-c) include "aes.h" include <string.h>  define Nb 4    define KEYLE
+- Language: c
+- Symbols:
+  - `getSBoxValue` (function, line 12) `static uint8_t getSBoxValue(uint8_t num)`
+  - `getSBoxInvert` (function, line 34) `static uint8_t getSBoxInvert(uint8_t num)`
+  - `Td0` (function, line 56) `static uint8_t Td0(int x)`
+  - `Td1` (function, line 58) `static uint8_t Td1(int x)`
+  - `Td2` (function, line 59) `static uint8_t Td2(int x)`
+  - `Td3` (function, line 60) `static uint8_t Td3(int x)`
+  - `Td4` (function, line 61) `static uint8_t Td4(int x)`
+  - `KeyExpansion` (function, line 166) `static void KeyExpansion(uint8_t* RoundKey, const uint8_t* Key)`
+  - `AES_init_ctx` (function, line 238) `void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key)`
+  - `AES_init_ctx_iv` (function, line 244) `void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv)`
+  - `AES_ctx_set_iv` (function, line 249) `void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv)`
+  - `AddRoundKey` (function, line 257) `static void AddRoundKey(uint8_t round, state_t* state, const uint8_t* RoundKey)`
+  - `SubBytes` (function, line 271) `static void SubBytes(state_t* state)`
+  - `ShiftRows` (function, line 286) `static void ShiftRows(state_t* state)`
+  - `xtime` (function, line 313) `static uint8_t xtime(uint8_t x)`
+  - `MixColumns` (function, line 320) `static void MixColumns(state_t* state)`
+  - `Multiply` (function, line 340) `static uint8_t Multiply(uint8_t x, uint8_t y)`
+  - `InvMixColumns` (function, line 370) `static void InvMixColumns(state_t* state)`
+  - `InvSubBytes` (function, line 391) `static void InvSubBytes(state_t* state)`
+  - `InvShiftRows` (function, line 402) `static void InvShiftRows(state_t* state)`
+  - `Cipher` (function, line 433) `static void Cipher(state_t* state, const uint8_t* RoundKey)`
+  - `InvCipher` (function, line 459) `static void InvCipher(state_t* state, const uint8_t* RoundKey)`
+  - `AES_ECB_encrypt` (function, line 488) `void AES_ECB_encrypt(const struct AES_ctx* ctx, uint8_t* buf)`
+  - `AES_ECB_decrypt` (function, line 495) `void AES_ECB_decrypt(const struct AES_ctx* ctx, uint8_t* buf)`
+  - `XorWithIv` (function, line 510) `static void XorWithIv(uint8_t* buf, const uint8_t* Iv)`
+  - `AES_CBC_encrypt_buffer` (function, line 520) `void AES_CBC_encrypt_buffer(struct AES_ctx *ctx, uint8_t* buf, size_t length)`
+  - `AES_CBC_decrypt_buffer` (function, line 535) `void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length)`
+  - `AES_CTR_xcrypt_buffer` (function, line 558) `void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length)`
+  - `Nb` (macro, line 4)
+  - `KEYLEN_256` (macro, line 6)
+  - `RKLENGTH` (macro, line 10)
+  - `BLOCKLEN` (macro, line 11)
+  - `Nb` (macro, line 67)
+  - `Nk` (macro, line 70)
+  - `Nr` (macro, line 71)
+  - `Nk` (macro, line 73)
+  - `Nr` (macro, line 74)
+  - `Nk` (macro, line 76)
+  - `Nr` (macro, line 77)
+  - `MULTIPLY_AS_A_FUNCTION` (macro, line 84)
+  - `getSBoxValue` (macro, line 163)
+  - `Multiply` (macro, line 349)
+  - `getSBoxInvert` (macro, line 365)
+
+## aes.h
+- Layer: utility
+- Doc: ifndef _AES_H_ define _AES_H_  include <stdint.h> include <stddef.h>  #define the macros below to 1/0 to enable/disable 
+- Language: h
+- Symbols:
+  - `AES_ctx` (struct, line 33)
+  - `_AES_H_` (macro, line 2)
+  - `CBC` (macro, line 9)
+  - `ECB` (macro, line 12)
+  - `CTR` (macro, line 15)
+  - `AES256` (macro, line 17)
+  - `AES_BLOCKLEN` (macro, line 19)
+  - `AES_KEYLEN` (macro, line 23)
+  - `AES_keyExpSize` (macro, line 24)
+  - `AES_KEYLEN` (macro, line 26)
+  - `AES_keyExpSize` (macro, line 27)
+  - `AES_KEYLEN` (macro, line 29)
+  - `AES_keyExpSize` (macro, line 30)
+
+## app.py
+- Layer: utility
+- Doc: _*_ coding: utf8 _*_   This file is part of Black Basalt Beacon.  Black Basalt Beacon is free software: you can redistri
+- Language: py
+
+## beacon.c
+- Layer: utility
+- Language: c
+- Symbols:
+  - `_PROCESS_BASIC_INFORMATION` (struct, line 129)
+  - `_UNICODE_STRING` (struct, line 262)
+  - `_LDR_DATA_TABLE_ENTRY` (struct, line 268)
+  - `_PEB_LDR_DATA` (struct, line 278)
+  - `_PEB` (struct, line 287)
+  - `ExceptionFilter` (function, line 253) `static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo)`
+  - `get_shell_cmd` (function, line 334) `const char* get_shell_cmd()`
+  - `__declspec` (function, line 416) `__declspec(dllexport) void BeaconDataParse(datap * parser, char * buffer, int size)`
+  - `__declspec` (function, line 422) `__declspec(dllexport) char * BeaconDataPtr(datap * parser, int size)`
+  - `__declspec` (function, line 430) `__declspec(dllexport) int BeaconDataInt(datap * parser)`
+  - `__declspec` (function, line 435) `__declspec(dllexport) short BeaconDataShort(datap * parser)`
+  - `__declspec` (function, line 440) `__declspec(dllexport) int BeaconDataLength(datap * parser)`
+  - `__declspec` (function, line 445) `__declspec(dllexport) char * BeaconDataExtract(datap * parser, int * size)`
+  - `__declspec` (function, line 455) `__declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...)`
+  - `__declspec` (function, line 503) `__declspec(dllexport) void BeaconOutput(int type, const char * data, int len)`
+  - `MapDllNameToModule` (function, line 521) `HMODULE MapDllNameToModule(char* dllName)`
+  - `GetSyscallNumber` (function, line 548) `DWORD GetSyscallNumber(PVOID func_addr)`
+  - `HellsGate` (function, line 560) `DWORD HellsGate(DWORD ssn)`
+  - `__attribute__` (function, line 565) `__attribute__((naked))
+NTSTATUS HellDescent(
+    DWORD64 arg1, DWORD64 arg2, DWORD64 arg3,
+    DW...`
+  - `GetProcessIdByName` (function, line 581) `DWORD GetProcessIdByName(const char* processName)`
+  - `ExecuteTLSCallbacks` (function, line 600) `void ExecuteTLSCallbacks(PVOID moduleBase)`
+  - `MapModuleToMemory` (function, line 617) `PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)`
+  - `ExecuteModule` (function, line 706) `BOOL ExecuteModule(PVOID moduleBase)`
+  - `LoadModuleFromURL` (function, line 751) `BOOL LoadModuleFromURL(const char* url)`
+  - `xor_string` (function, line 915) `void xor_string(char* data, size_t len, char key)`
+  - `anti_analysis` (function, line 922) `BOOL anti_analysis()`
+  - `load_lazyconf` (function, line 945) `BOOL load_lazyconf()`
+  - `GetNtdllBase` (function, line 1183) `HMODULE GetNtdllBase()`
+  - `isVMByMAC` (function, line 1231) `BOOL isVMByMAC()`
+  - `extract_shellcode` (function, line 1303) `int extract_shellcode(const char* input, size_t len, unsigned char** out)`
+  - `hex_char_to_byte` (function, line 1334) `BYTE hex_char_to_byte(char c)`
+  - `hex_to_bytes` (function, line 1340) `void hex_to_bytes(const char* hex, BYTE* output, size_t len)`
+  - `executeLoader` (function, line 1348) `void executeLoader(void *arg)`
+  - `ReverseShell` (function, line 1404) `void __cdecl ReverseShell(void* arg)`
+  - `ReadFromProcess` (function, line 1513) `DWORD WINAPI ReadFromProcess(LPVOID lpParam)`
+  - `GetJitteredSleep` (function, line 1586) `DWORD GetJitteredSleep(DWORD base_ms)`
+  - `GetUsefulSoftware` (function, line 1591) `char* GetUsefulSoftware()`
+  - `base64_encode` (function, line 1626) `char* base64_encode(const unsigned char* data, size_t inputLen)`
+  - `base64_decode` (function, line 1662) `char* base64_decode(const char* input, size_t* out_len)`
+  - `discoverLocalHosts` (function, line 1695) `void discoverLocalHosts()`
+  - `initProxy` (function, line 1752) `void initProxy()`
+  - `relay_thread` (function, line 1763) `void WINAPI relay_thread(void* param)`
+  - `proxy_thread` (function, line 1784) `void WINAPI proxy_thread(void* param)`
+  - `proxy_accept_thread` (function, line 1855) `void WINAPI proxy_accept_thread(void* param)`
+  - `startProxy` (function, line 1922) `BOOL startProxy(const char* listenAddr, const char* targetAddr)`
+  - `stopProxy` (function, line 2009) `BOOL stopProxy(const char* listenAddr)`
+  - `cleanupProxy` (function, line 2061) `void cleanupProxy()`
+  - `compressDirectory` (function, line 2094) `BOOL compressDirectory(const char* dirPath)`
+  - `getNetworkConfig` (function, line 2104) `char* getNetworkConfig()`
+  - `UploadFileToC2` (function, line 2107) `BOOL UploadFileToC2(const char* url, const char* filePath)`
+  - `handleUpload` (function, line 2280) `BOOL handleUpload(const char* command)`
+  - `FileExistsA` (function, line 2301) `BOOL FileExistsA(const char* filePath)`
+  - `selfDestruct` (function, line 2306) `void selfDestruct()`
+  - `stristr` (function, line 2361) `char* stristr(const char* str, const char* pattern)`
+  - `isSensitiveFile` (function, line 2378) `int isSensitiveFile(const char* filename)`
+  - `searchCredentials` (function, line 2424) `char* searchCredentials(const char* basePath)`
+  - `UTF8ToWide` (function, line 2551) `WCHAR* UTF8ToWide(const char* utf8)`
+  - `obfuscateFileTimestamp` (function, line 2562) `BOOL obfuscateFileTimestamp(const char* filepath)`
+  - `obfuscateFileTimestamps` (function, line 2592) `void obfuscateFileTimestamps(const char* basePath, int depth)`
+  - `simulateLegitimateTraffic` (function, line 2656) `void simulateLegitimateTraffic(void* param)`
+  - `restartClient` (function, line 2734) `void restartClient()`
+  - `checkDebuggers` (function, line 2776) `BOOL checkDebuggers()`
+  - `MapPEToMemory` (function, line 2837) `unsigned char* MapPEToMemory(unsigned char* rawPE, DWORD rawSize, DWORD* mappedSize)`
+  - `downloadAndExecute` (function, line 2860) `BOOL downloadAndExecute(const char* url, const char* targetProcess)`
+  - `DecryptPacket` (function, line 2910) `BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len)`
+  - `GetIPs` (function, line 3006) `char* GetIPs()`
+  - `GetHostname` (function, line 3039) `char* GetHostname()`
+  - `GetUsername` (function, line 3056) `char* GetUsername()`
+  - `patchAMSI` (function, line 3072) `BOOL patchAMSI(void)`
+  - `get_nt_headers` (function, line 3092) `PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer)`
+  - `is_64bit` (function, line 3100) `BOOL is_64bit(BYTE* buffer)`
+  - `get_image_size` (function, line 3106) `DWORD get_image_size(BYTE* buffer)`
+  - `get_entry_point_rva` (function, line 3112) `DWORD get_entry_point_rva(BYTE* buffer)`
+  - `pe_buffer_to_virtual_image` (function, line 3117) `BYTE* pe_buffer_to_virtual_image(BYTE* raw_buffer, DWORD* out_size)`
+  - `create_suspended_process` (function, line 3148) `BOOL create_suspended_process(char* path, PROCESS_INFORMATION* pi)`
+  - `get_remote_image_base` (function, line 3154) `ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target)`
+  - `update_remote_entry_point` (function, line 3249) `BOOL update_remote_entry_point(PROCESS_INFORMATION* pi, ULONGLONG entry_point_va, BOOL is_32bit)`
+  - `overWrite` (function, line 3277) `void overWrite(const char* targetPath, const char* payloadPath)`
+  - `cleanSystemLogs` (function, line 3384) `void cleanSystemLogs()`
+  - `ensurePersistence` (function, line 3421) `BOOL ensurePersistence()`
+  - `isSandboxEnvironment` (function, line 3482) `BOOL isSandboxEnvironment()`
+  - `tryPrivilegeEscalation` (function, line 3551) `void tryPrivilegeEscalation()`
+  - `executeUACBypass` (function, line 3556) `BOOL executeUACBypass(const char* payloadPath)`
+  - `scanPort` (function, line 3610) `void scanPort(void* arg)`
+  - `PortScanner` (function, line 3661) `void PortScanner(char* targetIP, int* ports, int numPorts)`
+  - `PortScannerWrapper` (function, line 3705) `void PortScannerWrapper(void* arg)`
+  - `EarlyBirdInject` (function, line 3729) `BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)`
+  - `init_aes_context` (function, line 3898) `PacketEncryptionContext* init_aes_context(const char* key_hex)`
+  - `retry_http_request` (function, line 3918) `char* retry_http_request(const char* url, const char* method, const char* data, int max_retries)`
+  - `exec_cmd` (function, line 4172) `char* exec_cmd(const char* cmd)`
+  - `GetC2Command` (function, line 4200) `char* GetC2Command(const char* host, const char* path)`
+  - `DownloadToBuffer` (function, line 4346) `unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize)`
+  - `DownloadFromURL` (function, line 4422) `BOOL DownloadFromURL(const char* url, const char* filepath)`
+  - `encrypt_data` (function, line 4452) `char* encrypt_data(const char* data)`
+  - `isValidUUID` (function, line 4511) `BOOL isValidUUID(const char* uuid)`
+  - `deleteFilesDelay` (function, line 4536) `void deleteFilesDelay(void* arg)`
+  - `executeCommand` (function, line 4550) `void executeCommand(void* cmdPtr)`
+  - `handleAtomic` (function, line 4559) `void handleAtomic(char* command)`
+  - `handleDownload` (function, line 4683) `BOOL handleDownload(const char* command)`
+  - `SerializeBeaconString` (function, line 4702) `void SerializeBeaconString(char* buffer, int* offset, const char* str)`
+  - `BeaconDataSerializeString` (function, line 4711) `void BeaconDataSerializeString(char* buffer, int* offset, const char* str)`
+  - `go` (function, line 4719) `void go(unsigned char * bof_data, int bof_size, char * args, int args_len)`
+  - `handleAdversary` (function, line 4738) `void handleAdversary(char* command)`
+  - `main` (function, line 5233) `int main()`
+  - `PSAPI_VERSION` (macro, line 19)
+  - `WIN32_LEAN_AND_MEAN` (macro, line 21)
+  - `XOR_KEY` (macro, line 71)
+  - `DEBUG` (macro, line 72)
+  - `TIMEOUT` (macro, line 73)
+  - `MAX_RESPONSE_SIZE` (macro, line 74)
+  - `C2_URL` (macro, line 75)
+  - `MALEABLE` (macro, line 76)
+  - `CLIENT_ID` (macro, line 77)
+  - `SLEEP_BASE` (macro, line 78)
+  - `MIN_JITTER` (macro, line 79)
+  - `MAX_JITTER` (macro, line 80)
+  - `MAX_RETRIES` (macro, line 81)
+  - `C2_HOST` (macro, line 82)
+  - `LC2_HOST` (macro, line 83)
+  - `C2_USER` (macro, line 84)
+  - `C2_PASS` (macro, line 85)
+  - `C2_PORT` (macro, line 86)
+  - `CONFIG_PATH` (macro, line 87)
+  - `C2_PATH` (macro, line 88)
+  - `LC2_PATH` (macro, line 89)
+  - `min` (macro, line 91)
+  - `SECURITY_FLAG_IGNORE_REVOCATION` (macro, line 94)
+  - `INVALID_SOCKET` (macro, line 97)
+  - `USER_AGENT` (macro, line 99)
+  - `USER_AGENT_A` (macro, line 100)
+  - `IMAGE_DOS_SIGNATURE` (macro, line 101)
+  - `IMAGE_NT_SIGNATURE` (macro, line 102)
+  - `IMAGE_NT_OPTIONAL_HDR32_MAGIC` (macro, line 103)
+  - `IMAGE_NT_OPTIONAL_HDR64_MAGIC` (macro, line 104)
+  - `SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE` (macro, line 106)
+  - `SECURITY_FLAG_IGNORE_INVALID_POLICY` (macro, line 109)
+  - `_SECURITY_PACKAGE_DEFINITION_` (macro, line 112)
+  - `_PROCESS_BASIC_INFORMATION_` (macro, line 115)
+  - `_SP_LSA_MODE_INITIALIZE_DEFINED_` (macro, line 117)
+  - `ProcessBasicInformation` (macro, line 123)
+  - `CHECK_ERROR` (macro, line 125)
+  - `NUM_USER_AGENTS` (macro, line 231)
+  - `NUM_URLS` (macro, line 240)
+  - `NUM_UAS` (macro, line 247)
+  - `NT_SUCCESS` (macro, line 300)
+
+## beacon.h
+- Layer: utility
+- Language: h
+- Symbols:
+  - `BEACON_H` (macro, line 21)
+  - `CALLBACK_OUTPUT` (macro, line 40)
+  - `CALLBACK_ERROR` (macro, line 42)
+
+## cJSON.c
+- Layer: utility
+- Language: c
+- Symbols:
+  - `internal_hooks` (struct, line 157)
+  - `CJSON_PUBLIC` (function, line 94) `CJSON_PUBLIC(const char *) cJSON_GetErrorPtr(void)`
+  - `CJSON_PUBLIC` (function, line 99) `CJSON_PUBLIC(char *) cJSON_GetStringValue(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 109) `CJSON_PUBLIC(double) cJSON_GetNumberValue(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 124) `CJSON_PUBLIC(const char*) cJSON_Version(void)`
+  - `case_insensitive_strcmp` (function, line 134) `static int case_insensitive_strcmp(const unsigned char *string1, const unsigned char *string2)`
+  - `internal_malloc` (function, line 166) `static void * CJSON_CDECL internal_malloc(size_t size)`
+  - `internal_free` (function, line 170) `static void CJSON_CDECL internal_free(void *pointer)`
+  - `internal_realloc` (function, line 174) `static void * CJSON_CDECL internal_realloc(void *pointer, size_t size)`
+  - `cJSON_strdup` (function, line 188) `static unsigned char* cJSON_strdup(const unsigned char* string, const internal_hooks * const hooks)`
+  - `CJSON_PUBLIC` (function, line 209) `CJSON_PUBLIC(void) cJSON_InitHooks(cJSON_Hooks* hooks)`
+  - `cJSON_New_Item` (function, line 242) `static cJSON *cJSON_New_Item(const internal_hooks * const hooks)`
+  - `get_decimal_point` (function, line 281) `static unsigned char get_decimal_point(void)`
+  - `parse_number` (function, line 309) `static cJSON_bool parse_number(cJSON * const item, parse_buffer * const input_buffer)`
+  - `ensure` (function, line 494) `static unsigned char* ensure(printbuffer * const p, size_t needed)`
+  - `update_offset` (function, line 579) `static void update_offset(printbuffer * const buffer)`
+  - `compare_double` (function, line 592) `static cJSON_bool compare_double(double a, double b)`
+  - `print_number` (function, line 599) `static cJSON_bool print_number(const cJSON * const item, printbuffer * const output_buffer)`
+  - `parse_hex4` (function, line 669) `static unsigned parse_hex4(const unsigned char * const input)`
+  - `utf16_literal_to_utf8` (function, line 706) `static unsigned char utf16_literal_to_utf8(const unsigned char * const input_pointer, const unsig...`
+  - `parse_string` (function, line 827) `static cJSON_bool parse_string(cJSON * const item, parse_buffer * const input_buffer)`
+  - `print_string_ptr` (function, line 957) `static cJSON_bool print_string_ptr(const unsigned char * const input, printbuffer * const output_...`
+  - `print_string` (function, line 1079) `static cJSON_bool print_string(const cJSON * const item, printbuffer * const p)`
+  - `buffer_skip_whitespace` (function, line 1093) `static parse_buffer *buffer_skip_whitespace(parse_buffer * const buffer)`
+  - `skip_utf8_bom` (function, line 1119) `static parse_buffer *skip_utf8_bom(parse_buffer * const buffer)`
+  - `CJSON_PUBLIC` (function, line 1133) `CJSON_PUBLIC(cJSON *) cJSON_ParseWithOpts(const char *value, const char **return_parse_end, cJSON...`
+  - `CJSON_PUBLIC` (function, line 1235) `CJSON_PUBLIC(cJSON *) cJSON_ParseWithLength(const char *value, size_t buffer_length)`
+  - `print` (function, line 1242) `static unsigned char *print(const cJSON * const item, cJSON_bool format, const internal_hooks * c...`
+  - `CJSON_PUBLIC` (function, line 1315) `CJSON_PUBLIC(char *) cJSON_PrintUnformatted(const cJSON *item)`
+  - `CJSON_PUBLIC` (function, line 1320) `CJSON_PUBLIC(char *) cJSON_PrintBuffered(const cJSON *item, int prebuffer, cJSON_bool fmt)`
+  - `CJSON_PUBLIC` (function, line 1351) `CJSON_PUBLIC(cJSON_bool) cJSON_PrintPreallocated(cJSON *item, char *buffer, const int length, con...`
+  - `parse_value` (function, line 1372) `static cJSON_bool parse_value(cJSON * const item, parse_buffer * const input_buffer)`
+  - `print_value` (function, line 1427) `static cJSON_bool print_value(const cJSON * const item, printbuffer * const output_buffer)`
+  - `parse_array` (function, line 1501) `static cJSON_bool parse_array(cJSON * const item, parse_buffer * const input_buffer)`
+  - `print_array` (function, line 1599) `static cJSON_bool print_array(const cJSON * const item, printbuffer * const output_buffer)`
+  - `parse_object` (function, line 1661) `static cJSON_bool parse_object(cJSON * const item, parse_buffer * const input_buffer)`
+  - `print_object` (function, line 1780) `static cJSON_bool print_object(const cJSON * const item, printbuffer * const output_buffer)`
+  - `get_array_item` (function, line 1915) `static cJSON* get_array_item(const cJSON *array, size_t index)`
+  - `CJSON_PUBLIC` (function, line 1934) `CJSON_PUBLIC(cJSON *) cJSON_GetArrayItem(const cJSON *array, int index)`
+  - `get_object_item` (function, line 1944) `static cJSON *get_object_item(const cJSON * const object, const char * const name, const cJSON_bo...`
+  - `CJSON_PUBLIC` (function, line 1976) `CJSON_PUBLIC(cJSON *) cJSON_GetObjectItem(const cJSON * const object, const char * const string)`
+  - `CJSON_PUBLIC` (function, line 1981) `CJSON_PUBLIC(cJSON *) cJSON_GetObjectItemCaseSensitive(const cJSON * const object, const char * c...`
+  - `CJSON_PUBLIC` (function, line 1986) `CJSON_PUBLIC(cJSON_bool) cJSON_HasObjectItem(const cJSON *object, const char *string)`
+  - `suffix_object` (function, line 1993) `static void suffix_object(cJSON *prev, cJSON *item)`
+  - `create_reference` (function, line 2000) `static cJSON *create_reference(const cJSON *item, const internal_hooks * const hooks)`
+  - `add_item_to_array` (function, line 2020) `static cJSON_bool add_item_to_array(cJSON *array, cJSON *item)`
+  - `cast_away_const` (function, line 2066) `static void* cast_away_const(const void* string)`
+  - `add_item_to_object` (function, line 2073) `static cJSON_bool add_item_to_object(cJSON * const object, const char * const string, cJSON * con...`
+  - `CJSON_PUBLIC` (function, line 2111) `CJSON_PUBLIC(cJSON_bool) cJSON_AddItemToObject(cJSON *object, const char *string, cJSON *item)`
+  - `CJSON_PUBLIC` (function, line 2122) `CJSON_PUBLIC(cJSON_bool) cJSON_AddItemReferenceToArray(cJSON *array, cJSON *item)`
+  - `CJSON_PUBLIC` (function, line 2132) `CJSON_PUBLIC(cJSON_bool) cJSON_AddItemReferenceToObject(cJSON *object, const char *string, cJSON ...`
+  - `CJSON_PUBLIC` (function, line 2142) `CJSON_PUBLIC(cJSON*) cJSON_AddNullToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2154) `CJSON_PUBLIC(cJSON*) cJSON_AddTrueToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2166) `CJSON_PUBLIC(cJSON*) cJSON_AddFalseToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2178) `CJSON_PUBLIC(cJSON*) cJSON_AddBoolToObject(cJSON * const object, const char * const name, const c...`
+  - `CJSON_PUBLIC` (function, line 2190) `CJSON_PUBLIC(cJSON*) cJSON_AddNumberToObject(cJSON * const object, const char * const name, const...`
+  - `CJSON_PUBLIC` (function, line 2202) `CJSON_PUBLIC(cJSON*) cJSON_AddStringToObject(cJSON * const object, const char * const name, const...`
+  - `CJSON_PUBLIC` (function, line 2214) `CJSON_PUBLIC(cJSON*) cJSON_AddRawToObject(cJSON * const object, const char * const name, const ch...`
+  - `CJSON_PUBLIC` (function, line 2226) `CJSON_PUBLIC(cJSON*) cJSON_AddObjectToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2238) `CJSON_PUBLIC(cJSON*) cJSON_AddArrayToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2250) `CJSON_PUBLIC(cJSON *) cJSON_DetachItemViaPointer(cJSON *parent, cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 2286) `CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromArray(cJSON *array, int which)`
+  - `CJSON_PUBLIC` (function, line 2296) `CJSON_PUBLIC(void) cJSON_DeleteItemFromArray(cJSON *array, int which)`
+  - `CJSON_PUBLIC` (function, line 2301) `CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObject(cJSON *object, const char *string)`
+  - `CJSON_PUBLIC` (function, line 2308) `CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObjectCaseSensitive(cJSON *object, const char *string)`
+  - `CJSON_PUBLIC` (function, line 2315) `CJSON_PUBLIC(void) cJSON_DeleteItemFromObject(cJSON *object, const char *string)`
+  - `CJSON_PUBLIC` (function, line 2320) `CJSON_PUBLIC(void) cJSON_DeleteItemFromObjectCaseSensitive(cJSON *object, const char *string)`
+  - `CJSON_PUBLIC` (function, line 2362) `CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemViaPointer(cJSON * const parent, cJSON * const item, cJ...`
+  - `CJSON_PUBLIC` (function, line 2412) `CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInArray(cJSON *array, int which, cJSON *newitem)`
+  - `replace_item_in_object` (function, line 2422) `static cJSON_bool replace_item_in_object(cJSON *object, const char *string, cJSON *replacement, c...`
+  - `CJSON_PUBLIC` (function, line 2445) `CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInObject(cJSON *object, const char *string, cJSON *newi...`
+  - `CJSON_PUBLIC` (function, line 2450) `CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInObjectCaseSensitive(cJSON *object, const char *string...`
+  - `CJSON_PUBLIC` (function, line 2467) `CJSON_PUBLIC(cJSON *) cJSON_CreateTrue(void)`
+  - `CJSON_PUBLIC` (function, line 2478) `CJSON_PUBLIC(cJSON *) cJSON_CreateFalse(void)`
+  - `CJSON_PUBLIC` (function, line 2489) `CJSON_PUBLIC(cJSON *) cJSON_CreateBool(cJSON_bool boolean)`
+  - `CJSON_PUBLIC` (function, line 2500) `CJSON_PUBLIC(cJSON *) cJSON_CreateNumber(double num)`
+  - `CJSON_PUBLIC` (function, line 2525) `CJSON_PUBLIC(cJSON *) cJSON_CreateString(const char *string)`
+  - `CJSON_PUBLIC` (function, line 2542) `CJSON_PUBLIC(cJSON *) cJSON_CreateStringReference(const char *string)`
+  - `CJSON_PUBLIC` (function, line 2554) `CJSON_PUBLIC(cJSON *) cJSON_CreateObjectReference(const cJSON *child)`
+  - `CJSON_PUBLIC` (function, line 2566) `CJSON_PUBLIC(cJSON *) cJSON_CreateArrayReference(const cJSON *child)`
+  - `CJSON_PUBLIC` (function, line 2578) `CJSON_PUBLIC(cJSON *) cJSON_CreateRaw(const char *raw)`
+  - `CJSON_PUBLIC` (function, line 2595) `CJSON_PUBLIC(cJSON *) cJSON_CreateArray(void)`
+  - `CJSON_PUBLIC` (function, line 2606) `CJSON_PUBLIC(cJSON *) cJSON_CreateObject(void)`
+  - `CJSON_PUBLIC` (function, line 2658) `CJSON_PUBLIC(cJSON *) cJSON_CreateFloatArray(const float *numbers, int count)`
+  - `CJSON_PUBLIC` (function, line 2698) `CJSON_PUBLIC(cJSON *) cJSON_CreateDoubleArray(const double *numbers, int count)`
+  - `CJSON_PUBLIC` (function, line 2738) `CJSON_PUBLIC(cJSON *) cJSON_CreateStringArray(const char *const *strings, int count)`
+  - `cJSON_Duplicate_rec` (function, line 2785) `cJSON * cJSON_Duplicate_rec(const cJSON *item, size_t depth, cJSON_bool recurse)`
+  - `skip_oneline_comment` (function, line 2872) `static void skip_oneline_comment(char **input)`
+  - `skip_multiline_comment` (function, line 2885) `static void skip_multiline_comment(char **input)`
+  - `minify_string` (function, line 2899) `static void minify_string(char **input, char **output)`
+  - `CJSON_PUBLIC` (function, line 2921) `CJSON_PUBLIC(void) cJSON_Minify(char *json)`
+  - `CJSON_PUBLIC` (function, line 2971) `CJSON_PUBLIC(cJSON_bool) cJSON_IsInvalid(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 2981) `CJSON_PUBLIC(cJSON_bool) cJSON_IsFalse(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 2991) `CJSON_PUBLIC(cJSON_bool) cJSON_IsTrue(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3001) `CJSON_PUBLIC(cJSON_bool) cJSON_IsBool(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3011) `CJSON_PUBLIC(cJSON_bool) cJSON_IsNull(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3021) `CJSON_PUBLIC(cJSON_bool) cJSON_IsNumber(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3031) `CJSON_PUBLIC(cJSON_bool) cJSON_IsString(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3041) `CJSON_PUBLIC(cJSON_bool) cJSON_IsArray(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3051) `CJSON_PUBLIC(cJSON_bool) cJSON_IsObject(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3061) `CJSON_PUBLIC(cJSON_bool) cJSON_IsRaw(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3071) `CJSON_PUBLIC(cJSON_bool) cJSON_Compare(const cJSON * const a, const cJSON * const b, const cJSON_...`
+  - `cJSON_ArrayForEach` (function, line 3157) `cJSON_ArrayForEach(a_element, a)`
+  - `cJSON_ArrayForEach` (function, line 3173) `cJSON_ArrayForEach(b_element, b)`
+  - `CJSON_PUBLIC` (function, line 3193) `CJSON_PUBLIC(void *) cJSON_malloc(size_t size)`
+  - `CJSON_PUBLIC` (function, line 3198) `CJSON_PUBLIC(void) cJSON_free(void *object)`
+  - `_CRT_SECURE_NO_DEPRECATE` (macro, line 28)
+  - `true` (macro, line 65)
+  - `false` (macro, line 70)
+  - `isinf` (macro, line 74)
+  - `isnan` (macro, line 77)
+  - `NAN` (macro, line 82)
+  - `NAN` (macro, line 84)
+  - `internal_malloc` (macro, line 179)
+  - `internal_free` (macro, line 180)
+  - `internal_realloc` (macro, line 181)
+  - `static_strlen` (macro, line 185)
+  - `can_read` (macro, line 301)
+  - `can_access_at_index` (macro, line 303)
+  - `cannot_access_at_index` (macro, line 304)
+  - `buffer_at_offset` (macro, line 306)
+  - `cjson_min` (macro, line 1240)
+
+## cJSON.h
+- Layer: utility
+- Language: h
+- Symbols:
+  - `cJSON` (struct, line 92)
+  - `cJSON_Hooks` (struct, line 114)
+  - `cJSON__h` (macro, line 24)
+  - `__WINDOWS__` (macro, line 32)
+  - `CJSON_CDECL` (macro, line 43)
+  - `CJSON_STDCALL` (macro, line 45)
+  - `CJSON_EXPORT_SYMBOLS` (macro, line 49)
+  - `CJSON_PUBLIC` (macro, line 53)
+  - `CJSON_PUBLIC` (macro, line 55)
+  - `CJSON_PUBLIC` (macro, line 57)
+  - `CJSON_CDECL` (macro, line 60)
+  - `CJSON_STDCALL` (macro, line 61)
+  - `CJSON_PUBLIC` (macro, line 64)
+  - `CJSON_PUBLIC` (macro, line 66)
+  - `CJSON_VERSION_MAJOR` (macro, line 71)
+  - `CJSON_VERSION_MINOR` (macro, line 72)
+  - `CJSON_VERSION_PATCH` (macro, line 73)
+  - `cJSON_Invalid` (macro, line 78)
+  - `cJSON_False` (macro, line 79)
+  - `cJSON_True` (macro, line 80)
+  - `cJSON_NULL` (macro, line 81)
+  - `cJSON_Number` (macro, line 82)
+  - `cJSON_String` (macro, line 83)
+  - `cJSON_Array` (macro, line 84)
+  - `cJSON_Object` (macro, line 85)
+  - `cJSON_Raw` (macro, line 86)
+  - `cJSON_IsReference` (macro, line 87)
+  - `cJSON_StringIsConst` (macro, line 89)
+  - `CJSON_NESTING_LIMIT` (macro, line 126)
+  - `CJSON_CIRCULAR_LIMIT` (macro, line 132)
+  - `cJSON_SetIntValue` (macro, line 270)
+  - `cJSON_SetNumberValue` (macro, line 273)
+  - `cJSON_SetBoolValue` (macro, line 278)
+  - `cJSON_ArrayForEach` (macro, line 285)
+
+## gen_beacon.sh
+- Layer: utility
+- Doc: === beacon-GEN v1.2 ===
+- Language: sh
+- Symbols:
+  - `show_help` (function, line 34)
+  - `xor_string` (function, line 138)
+  - `crc32` (function, line 5916)
+
+## gen_dll.sh
+- Layer: utility
+- Doc: 1. Generar DLL
+- Language: sh
+
+## gen_dll_rev.sh
+- Layer: utility
+- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Language: sh
+- Symbols:
+  - `usage` (function, line 12)
+
+## gen_dll_ss.sh
+- Layer: utility
+- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Language: sh
+- Symbols:
+  - `usage` (function, line 10)
+
+## gen_key.sh
+- Layer: utility
+- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Language: sh
+- Symbols:
+  - `usage` (function, line 10)
+
+## gen_module.sh
+- Layer: utility
+- Doc: === gen_cmd_dll.sh v1.0 === Genera DLL y shellcode ofuscado para ejecutar un comando Uso: ./gen_cmd_dll.sh --cmd "powers
+- Language: sh
+- Symbols:
+  - `show_help` (function, line 18)
+  - `xor_obfuscate` (function, line 35)
+
+## generate_hashs.py
+- Layer: utility
+- Language: py
+- Symbols:
+  - `djb2` (function, line 23) `def djb2(s)`
+  - `generate_coff_loader` (function, line 223) `def generate_coff_loader()`
+  - `generate_bof_test` (function, line 491) `def generate_bof_test()`
+  - `main` (function, line 553) `def main()`
+
+## install.sh
+- Layer: utility
+- Language: sh
