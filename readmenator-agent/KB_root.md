@@ -1,0 +1,890 @@
+# Subsystem: root
+
+## COFFLoader.h
+- Layer: utility
+- Language: h
+- Symbols:
+  - `Copyright` (function, line 16) `Copyright (c) LazyOwn RedTeam 2025. All rights reserved. */ #ifndef COFFLOADER_H #define COFFLOADER_H #include <windows.h> int RunCOFF(char* functionname, unsigned char* coff_data, uint32_t filesize, `
+  - `COFFLOADER_H` (macro, line 21) `#define COFFLOADER_H`
+- Imported by: `beacon.c`
+
+## COFFLoader3.c
+- Layer: utility
+- Language: c
+- Symbols:
+  - `COFFSection` (struct, line 586)
+  - `COFFRelocation` (struct, line 599)
+  - `COFFHeader` (struct, line 620)
+  - `SymbolHash` (struct, line 642)
+  - `djb2_hash` (function, line 632) `static uint32_t djb2_hash(const char* str)`
+  - `create_trampoline` (function, line 912) `static void* create_trampoline(void* target)`
+  - `handle_relocation` (function, line 940) `BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target, 
+                    ...`
+  - `get_symbol_name` (function, line 1079) `static char* get_symbol_name(COFFSymbol* s, char* strtab, uint32_t strtab_size)`
+  - `__attribute__` (function, line 1102) `__attribute__((noinline))
+static void call_go_aligned(void* func, char* arg1, int arg2)`
+  - `RunCOFF` (function, line 1112) `int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char*...`
+  - `void` (function, line 906) `typedef void (__attribute__((ms_abi)) * bof_func_t)(char*, int);`
+  - `BeaconPrintf` (function, line 915) `BeaconPrintf(CALLBACK_ERROR, "[BOF] create_trampoline nulled target=NULL\n");`
+  - `VirtualProtect` (function, line 959) `VirtualProtect(patch_addr, sizeof(uint64_t), oldProtect, &oldProtect);`
+  - `memcpy` (function, line 1092) `memcpy(short_name, s->Name, 8);`
+  - `f` (function, line 1107) `f(arg1, arg2);`
+  - `VirtualQuery` (function, line 1357) `VirtualQuery(go, &mbi, sizeof(mbi));`
+  - `call_go_aligned` (function, line 1365) `call_go_aligned(go, (char*)argumentdata, argumentSize);`
+  - `free` (function, line 1376) `free(sections);`
+  - `VirtualFree` (function, line 1379) `VirtualFree(g_trampoline_page, 0, MEM_RELEASE);`
+  - `__imp_BeaconPrintf` (variable, line 328) `extern PVOID __imp_BeaconPrintf;`
+  - `__imp_BeaconOutput` (variable, line 333) `extern PVOID __imp_BeaconOutput;`
+  - `__imp_BeaconDataParse` (variable, line 334) `extern PVOID __imp_BeaconDataParse;`
+  - `__imp_BeaconDataInt` (variable, line 335) `extern PVOID __imp_BeaconDataInt;`
+  - `__imp_BeaconDataShort` (variable, line 336) `extern PVOID __imp_BeaconDataShort;`
+  - `__imp_BeaconDataExtract` (variable, line 337) `extern PVOID __imp_BeaconDataExtract;`
+  - `__imp_LoadLibraryA` (variable, line 338) `extern PVOID __imp_LoadLibraryA;`
+  - `__imp_LoadLibraryW` (variable, line 339) `extern PVOID __imp_LoadLibraryW;`
+  - `__imp_GetModuleHandleA` (variable, line 340) `extern PVOID __imp_GetModuleHandleA;`
+  - `__imp_GetModuleHandleW` (variable, line 341) `extern PVOID __imp_GetModuleHandleW;`
+  - `__imp_GetProcAddress` (variable, line 342) `extern PVOID __imp_GetProcAddress;`
+  - `__imp_GetLastError` (variable, line 343) `extern PVOID __imp_GetLastError;`
+  - `__imp_CloseHandle` (variable, line 344) `extern PVOID __imp_CloseHandle;`
+  - `__imp_ExitProcess` (variable, line 345) `extern PVOID __imp_ExitProcess;`
+  - `__imp_ExitThread` (variable, line 346) `extern PVOID __imp_ExitThread;`
+  - `__imp_Sleep` (variable, line 347) `extern PVOID __imp_Sleep;`
+  - `__imp_CreateThread` (variable, line 348) `extern PVOID __imp_CreateThread;`
+  - `__imp_GetCurrentProcess` (variable, line 349) `extern PVOID __imp_GetCurrentProcess;`
+  - `__imp_GetCurrentProcessId` (variable, line 350) `extern PVOID __imp_GetCurrentProcessId;`
+  - `__imp_GetCurrentThreadId` (variable, line 351) `extern PVOID __imp_GetCurrentThreadId;`
+  - `__imp_GetTickCount` (variable, line 352) `extern PVOID __imp_GetTickCount;`
+  - `__imp_GetTickCount64` (variable, line 353) `extern PVOID __imp_GetTickCount64;`
+  - `__imp_CreateFileA` (variable, line 354) `extern PVOID __imp_CreateFileA;`
+  - `__imp_CreateFileW` (variable, line 355) `extern PVOID __imp_CreateFileW;`
+  - `__imp_ReadFile` (variable, line 356) `extern PVOID __imp_ReadFile;`
+  - `__imp_WriteFile` (variable, line 357) `extern PVOID __imp_WriteFile;`
+  - `__imp_SetFilePointer` (variable, line 358) `extern PVOID __imp_SetFilePointer;`
+  - `__imp_SetEndOfFile` (variable, line 359) `extern PVOID __imp_SetEndOfFile;`
+  - `__imp_DeleteFileA` (variable, line 360) `extern PVOID __imp_DeleteFileA;`
+  - `__imp_DeleteFileW` (variable, line 361) `extern PVOID __imp_DeleteFileW;`
+  - `__imp_MoveFileA` (variable, line 362) `extern PVOID __imp_MoveFileA;`
+  - `__imp_MoveFileW` (variable, line 363) `extern PVOID __imp_MoveFileW;`
+  - `__imp_CopyFileA` (variable, line 364) `extern PVOID __imp_CopyFileA;`
+  - `__imp_CopyFileW` (variable, line 365) `extern PVOID __imp_CopyFileW;`
+  - `__imp_GetFileSize` (variable, line 366) `extern PVOID __imp_GetFileSize;`
+  - `__imp_GetFileSizeEx` (variable, line 367) `extern PVOID __imp_GetFileSizeEx;`
+  - `__imp_CreateDirectoryA` (variable, line 368) `extern PVOID __imp_CreateDirectoryA;`
+  - `__imp_CreateDirectoryW` (variable, line 369) `extern PVOID __imp_CreateDirectoryW;`
+  - `__imp_RemoveDirectoryA` (variable, line 370) `extern PVOID __imp_RemoveDirectoryA;`
+  - `__imp_RemoveDirectoryW` (variable, line 371) `extern PVOID __imp_RemoveDirectoryW;`
+  - `__imp_FindFirstFileA` (variable, line 372) `extern PVOID __imp_FindFirstFileA;`
+  - `__imp_FindFirstFileW` (variable, line 373) `extern PVOID __imp_FindFirstFileW;`
+  - `__imp_FindNextFileA` (variable, line 374) `extern PVOID __imp_FindNextFileA;`
+  - `__imp_FindNextFileW` (variable, line 375) `extern PVOID __imp_FindNextFileW;`
+  - `__imp_FindClose` (variable, line 376) `extern PVOID __imp_FindClose;`
+  - `__imp_GetFileAttributesA` (variable, line 377) `extern PVOID __imp_GetFileAttributesA;`
+  - `__imp_GetFileAttributesW` (variable, line 378) `extern PVOID __imp_GetFileAttributesW;`
+  - `__imp_SetFileAttributesA` (variable, line 379) `extern PVOID __imp_SetFileAttributesA;`
+  - `__imp_SetFileAttributesW` (variable, line 380) `extern PVOID __imp_SetFileAttributesW;`
+  - `__imp_GetSystemDirectoryA` (variable, line 381) `extern PVOID __imp_GetSystemDirectoryA;`
+  - `__imp_GetSystemDirectoryW` (variable, line 382) `extern PVOID __imp_GetSystemDirectoryW;`
+  - `__imp_GetWindowsDirectoryA` (variable, line 383) `extern PVOID __imp_GetWindowsDirectoryA;`
+  - `__imp_GetWindowsDirectoryW` (variable, line 384) `extern PVOID __imp_GetWindowsDirectoryW;`
+  - `__imp_GetTempPathA` (variable, line 385) `extern PVOID __imp_GetTempPathA;`
+  - `__imp_GetTempPathW` (variable, line 386) `extern PVOID __imp_GetTempPathW;`
+  - `__imp_GetComputerNameA` (variable, line 387) `extern PVOID __imp_GetComputerNameA;`
+  - `__imp_GetComputerNameW` (variable, line 388) `extern PVOID __imp_GetComputerNameW;`
+  - `__imp_GetUserNameA` (variable, line 389) `extern PVOID __imp_GetUserNameA;`
+  - `__imp_GetUserNameW` (variable, line 390) `extern PVOID __imp_GetUserNameW;`
+  - `__imp_GetVersionExA` (variable, line 391) `extern PVOID __imp_GetVersionExA;`
+  - `__imp_GetVersionExW` (variable, line 392) `extern PVOID __imp_GetVersionExW;`
+  - `__imp_GetNativeSystemInfo` (variable, line 393) `extern PVOID __imp_GetNativeSystemInfo;`
+  - `__imp_VirtualAlloc` (variable, line 394) `extern PVOID __imp_VirtualAlloc;`
+  - `__imp_VirtualFree` (variable, line 395) `extern PVOID __imp_VirtualFree;`
+  - `__imp_VirtualProtect` (variable, line 396) `extern PVOID __imp_VirtualProtect;`
+  - `__imp_VirtualQuery` (variable, line 397) `extern PVOID __imp_VirtualQuery;`
+  - `__imp_HeapAlloc` (variable, line 398) `extern PVOID __imp_HeapAlloc;`
+  - `__imp_HeapFree` (variable, line 399) `extern PVOID __imp_HeapFree;`
+  - `__imp_LocalAlloc` (variable, line 400) `extern PVOID __imp_LocalAlloc;`
+  - `__imp_LocalFree` (variable, line 401) `extern PVOID __imp_LocalFree;`
+  - `__imp_GlobalAlloc` (variable, line 402) `extern PVOID __imp_GlobalAlloc;`
+  - `__imp_GlobalFree` (variable, line 403) `extern PVOID __imp_GlobalFree;`
+  - `__imp_RtlMoveMemory` (variable, line 404) `extern PVOID __imp_RtlMoveMemory;`
+  - `__imp_RtlCopyMemory` (variable, line 405) `extern PVOID __imp_RtlCopyMemory;`
+  - `__imp_RtlFillMemory` (variable, line 406) `extern PVOID __imp_RtlFillMemory;`
+  - `__imp_RtlZeroMemory` (variable, line 407) `extern PVOID __imp_RtlZeroMemory;`
+  - `__imp_lstrlenA` (variable, line 408) `extern PVOID __imp_lstrlenA;`
+  - `__imp_lstrlenW` (variable, line 409) `extern PVOID __imp_lstrlenW;`
+  - `__imp_lstrcpyA` (variable, line 410) `extern PVOID __imp_lstrcpyA;`
+  - `__imp_lstrcpyW` (variable, line 411) `extern PVOID __imp_lstrcpyW;`
+  - `__imp_lstrcatA` (variable, line 412) `extern PVOID __imp_lstrcatA;`
+  - `__imp_lstrcatW` (variable, line 413) `extern PVOID __imp_lstrcatW;`
+  - `__imp_lstrcmpA` (variable, line 414) `extern PVOID __imp_lstrcmpA;`
+  - `__imp_lstrcmpW` (variable, line 415) `extern PVOID __imp_lstrcmpW;`
+  - `__imp_lstrcmpiA` (variable, line 416) `extern PVOID __imp_lstrcmpiA;`
+  - `__imp_lstrcmpiW` (variable, line 417) `extern PVOID __imp_lstrcmpiW;`
+  - `__imp_MultiByteToWideChar` (variable, line 418) `extern PVOID __imp_MultiByteToWideChar;`
+  - `__imp_WideCharToMultiByte` (variable, line 419) `extern PVOID __imp_WideCharToMultiByte;`
+  - `__imp_FormatMessageA` (variable, line 420) `extern PVOID __imp_FormatMessageA;`
+  - `__imp_FormatMessageW` (variable, line 421) `extern PVOID __imp_FormatMessageW;`
+  - `__imp_GetEnvironmentVariableA` (variable, line 422) `extern PVOID __imp_GetEnvironmentVariableA;`
+  - `__imp_GetEnvironmentVariableW` (variable, line 423) `extern PVOID __imp_GetEnvironmentVariableW;`
+  - `__imp_SetEnvironmentVariableA` (variable, line 424) `extern PVOID __imp_SetEnvironmentVariableA;`
+  - `__imp_SetEnvironmentVariableW` (variable, line 425) `extern PVOID __imp_SetEnvironmentVariableW;`
+  - `__imp_ExpandEnvironmentStringsA` (variable, line 426) `extern PVOID __imp_ExpandEnvironmentStringsA;`
+  - `__imp_ExpandEnvironmentStringsW` (variable, line 427) `extern PVOID __imp_ExpandEnvironmentStringsW;`
+  - `__imp_GetCommandLineA` (variable, line 428) `extern PVOID __imp_GetCommandLineA;`
+  - `__imp_GetCommandLineW` (variable, line 429) `extern PVOID __imp_GetCommandLineW;`
+  - `__imp_GetModuleFileNameA` (variable, line 430) `extern PVOID __imp_GetModuleFileNameA;`
+  - `__imp_GetModuleFileNameW` (variable, line 431) `extern PVOID __imp_GetModuleFileNameW;`
+  - `__imp_GetStartupInfoA` (variable, line 432) `extern PVOID __imp_GetStartupInfoA;`
+  - `__imp_GetStartupInfoW` (variable, line 433) `extern PVOID __imp_GetStartupInfoW;`
+  - `__imp_FreeLibrary` (variable, line 434) `extern PVOID __imp_FreeLibrary;`
+  - `__imp_GetConsoleWindow` (variable, line 435) `extern PVOID __imp_GetConsoleWindow;`
+  - `__imp_AllocConsole` (variable, line 436) `extern PVOID __imp_AllocConsole;`
+  - `__imp_FreeConsole` (variable, line 437) `extern PVOID __imp_FreeConsole;`
+  - `__imp_AttachConsole` (variable, line 438) `extern PVOID __imp_AttachConsole;`
+  - `__imp_IsDebuggerPresent` (variable, line 439) `extern PVOID __imp_IsDebuggerPresent;`
+  - `__imp_CheckRemoteDebuggerPresent` (variable, line 440) `extern PVOID __imp_CheckRemoteDebuggerPresent;`
+  - `__imp_OutputDebugStringA` (variable, line 441) `extern PVOID __imp_OutputDebugStringA;`
+  - `__imp_OutputDebugStringW` (variable, line 442) `extern PVOID __imp_OutputDebugStringW;`
+  - `__imp_OpenProcess` (variable, line 443) `extern PVOID __imp_OpenProcess;`
+  - `__imp_OpenProcessToken` (variable, line 444) `extern PVOID __imp_OpenProcessToken;`
+  - `__imp_DuplicateTokenEx` (variable, line 445) `extern PVOID __imp_DuplicateTokenEx;`
+  - `__imp_ImpersonateLoggedOnUser` (variable, line 446) `extern PVOID __imp_ImpersonateLoggedOnUser;`
+  - `__imp_RevertToSelf` (variable, line 447) `extern PVOID __imp_RevertToSelf;`
+  - `__imp_LookupPrivilegeValueA` (variable, line 448) `extern PVOID __imp_LookupPrivilegeValueA;`
+  - `__imp_LookupPrivilegeValueW` (variable, line 449) `extern PVOID __imp_LookupPrivilegeValueW;`
+  - `__imp_AdjustTokenPrivileges` (variable, line 450) `extern PVOID __imp_AdjustTokenPrivileges;`
+  - `__imp_CreateProcessAsUserA` (variable, line 451) `extern PVOID __imp_CreateProcessAsUserA;`
+  - `__imp_CreateProcessAsUserW` (variable, line 452) `extern PVOID __imp_CreateProcessAsUserW;`
+  - `__imp_RegOpenKeyExA` (variable, line 453) `extern PVOID __imp_RegOpenKeyExA;`
+  - `__imp_RegOpenKeyExW` (variable, line 454) `extern PVOID __imp_RegOpenKeyExW;`
+  - `__imp_RegCreateKeyExA` (variable, line 455) `extern PVOID __imp_RegCreateKeyExA;`
+  - `__imp_RegCreateKeyExW` (variable, line 456) `extern PVOID __imp_RegCreateKeyExW;`
+  - `__imp_RegSetValueExA` (variable, line 457) `extern PVOID __imp_RegSetValueExA;`
+  - `__imp_RegSetValueExW` (variable, line 458) `extern PVOID __imp_RegSetValueExW;`
+  - `__imp_RegQueryValueExA` (variable, line 459) `extern PVOID __imp_RegQueryValueExA;`
+  - `__imp_RegQueryValueExW` (variable, line 460) `extern PVOID __imp_RegQueryValueExW;`
+  - `__imp_RegDeleteValueA` (variable, line 461) `extern PVOID __imp_RegDeleteValueA;`
+  - `__imp_RegDeleteValueW` (variable, line 462) `extern PVOID __imp_RegDeleteValueW;`
+  - `__imp_RegCloseKey` (variable, line 463) `extern PVOID __imp_RegCloseKey;`
+  - `__imp_RegEnumKeyExA` (variable, line 464) `extern PVOID __imp_RegEnumKeyExA;`
+  - `__imp_RegEnumKeyExW` (variable, line 465) `extern PVOID __imp_RegEnumKeyExW;`
+  - `__imp_RegEnumValueA` (variable, line 466) `extern PVOID __imp_RegEnumValueA;`
+  - `__imp_RegEnumValueW` (variable, line 467) `extern PVOID __imp_RegEnumValueW;`
+  - `__imp_CryptAcquireContextA` (variable, line 468) `extern PVOID __imp_CryptAcquireContextA;`
+  - `__imp_CryptAcquireContextW` (variable, line 469) `extern PVOID __imp_CryptAcquireContextW;`
+  - `__imp_CryptCreateHash` (variable, line 470) `extern PVOID __imp_CryptCreateHash;`
+  - `__imp_CryptHashData` (variable, line 471) `extern PVOID __imp_CryptHashData;`
+  - `__imp_CryptDeriveKey` (variable, line 472) `extern PVOID __imp_CryptDeriveKey;`
+  - `__imp_CryptEncrypt` (variable, line 473) `extern PVOID __imp_CryptEncrypt;`
+  - `__imp_CryptDecrypt` (variable, line 474) `extern PVOID __imp_CryptDecrypt;`
+  - `__imp_CryptReleaseContext` (variable, line 475) `extern PVOID __imp_CryptReleaseContext;`
+  - `__imp_CryptDestroyHash` (variable, line 476) `extern PVOID __imp_CryptDestroyHash;`
+  - `__imp_CryptDestroyKey` (variable, line 477) `extern PVOID __imp_CryptDestroyKey;`
+  - `__imp_CryptGenRandom` (variable, line 478) `extern PVOID __imp_CryptGenRandom;`
+  - `__imp_CoInitializeEx` (variable, line 479) `extern PVOID __imp_CoInitializeEx;`
+  - `__imp_CoUninitialize` (variable, line 480) `extern PVOID __imp_CoUninitialize;`
+  - `__imp_CoCreateInstance` (variable, line 481) `extern PVOID __imp_CoCreateInstance;`
+  - `__imp_CoTaskMemFree` (variable, line 482) `extern PVOID __imp_CoTaskMemFree;`
+  - `__imp_IIDFromString` (variable, line 483) `extern PVOID __imp_IIDFromString;`
+  - `__imp_StringFromGUID2` (variable, line 484) `extern PVOID __imp_StringFromGUID2;`
+  - `__imp_VariantInit` (variable, line 485) `extern PVOID __imp_VariantInit;`
+  - `__imp_VariantClear` (variable, line 486) `extern PVOID __imp_VariantClear;`
+  - `__imp_VariantChangeType` (variable, line 487) `extern PVOID __imp_VariantChangeType;`
+  - `__imp_SysAllocString` (variable, line 488) `extern PVOID __imp_SysAllocString;`
+  - `__imp_SysFreeString` (variable, line 489) `extern PVOID __imp_SysFreeString;`
+  - `__imp_SysStringLen` (variable, line 490) `extern PVOID __imp_SysStringLen;`
+  - `__imp_SHGetFolderPathA` (variable, line 491) `extern PVOID __imp_SHGetFolderPathA;`
+  - `__imp_SHGetFolderPathW` (variable, line 492) `extern PVOID __imp_SHGetFolderPathW;`
+  - `__imp_SHGetKnownFolderPath` (variable, line 493) `extern PVOID __imp_SHGetKnownFolderPath;`
+  - `__imp_PathFileExistsA` (variable, line 494) `extern PVOID __imp_PathFileExistsA;`
+  - `__imp_PathFileExistsW` (variable, line 495) `extern PVOID __imp_PathFileExistsW;`
+  - `__imp_PathCombineA` (variable, line 496) `extern PVOID __imp_PathCombineA;`
+  - `__imp_PathCombineW` (variable, line 497) `extern PVOID __imp_PathCombineW;`
+  - `__imp_GetDesktopWindow` (variable, line 498) `extern PVOID __imp_GetDesktopWindow;`
+  - `__imp_GetShellWindow` (variable, line 499) `extern PVOID __imp_GetShellWindow;`
+  - `__imp_FindWindowA` (variable, line 500) `extern PVOID __imp_FindWindowA;`
+  - `__imp_FindWindowW` (variable, line 501) `extern PVOID __imp_FindWindowW;`
+  - `__imp_EnumWindows` (variable, line 502) `extern PVOID __imp_EnumWindows;`
+  - `__imp_GetWindowTextA` (variable, line 503) `extern PVOID __imp_GetWindowTextA;`
+  - `__imp_GetWindowTextW` (variable, line 504) `extern PVOID __imp_GetWindowTextW;`
+  - `__imp_GetClassNameA` (variable, line 505) `extern PVOID __imp_GetClassNameA;`
+  - `__imp_GetClassNameW` (variable, line 506) `extern PVOID __imp_GetClassNameW;`
+  - `__imp_SendMessageA` (variable, line 507) `extern PVOID __imp_SendMessageA;`
+  - `__imp_SendMessageW` (variable, line 508) `extern PVOID __imp_SendMessageW;`
+  - `__imp_EnumProcesses` (variable, line 509) `extern PVOID __imp_EnumProcesses;`
+  - `__imp_EnumProcessModules` (variable, line 510) `extern PVOID __imp_EnumProcessModules;`
+  - `__imp_GetModuleBaseNameA` (variable, line 511) `extern PVOID __imp_GetModuleBaseNameA;`
+  - `__imp_GetModuleBaseNameW` (variable, line 512) `extern PVOID __imp_GetModuleBaseNameW;`
+  - `__imp_GetModuleInformation` (variable, line 513) `extern PVOID __imp_GetModuleInformation;`
+  - `__imp_WSASocketA` (variable, line 514) `extern PVOID __imp_WSASocketA;`
+  - `__imp_WSASocketW` (variable, line 515) `extern PVOID __imp_WSASocketW;`
+  - `__imp_WSAStartup` (variable, line 516) `extern PVOID __imp_WSAStartup;`
+  - `__imp_WSACleanup` (variable, line 517) `extern PVOID __imp_WSACleanup;`
+  - `__imp_bind` (variable, line 518) `extern PVOID __imp_bind;`
+  - `__imp_listen` (variable, line 519) `extern PVOID __imp_listen;`
+  - `__imp_accept` (variable, line 520) `extern PVOID __imp_accept;`
+  - `__imp_connect` (variable, line 521) `extern PVOID __imp_connect;`
+  - `__imp_send` (variable, line 522) `extern PVOID __imp_send;`
+  - `__imp_recv` (variable, line 523) `extern PVOID __imp_recv;`
+  - `__imp_closesocket` (variable, line 524) `extern PVOID __imp_closesocket;`
+  - `__imp_ioctlsocket` (variable, line 525) `extern PVOID __imp_ioctlsocket;`
+  - `__imp_gethostname` (variable, line 526) `extern PVOID __imp_gethostname;`
+  - `__imp_gethostbyname` (variable, line 527) `extern PVOID __imp_gethostbyname;`
+  - `__imp_getaddrinfo` (variable, line 528) `extern PVOID __imp_getaddrinfo;`
+  - `__imp_freeaddrinfo` (variable, line 529) `extern PVOID __imp_freeaddrinfo;`
+  - `__imp_htons` (variable, line 530) `extern PVOID __imp_htons;`
+  - `__imp_ntohs` (variable, line 531) `extern PVOID __imp_ntohs;`
+  - `__imp_htonl` (variable, line 532) `extern PVOID __imp_htonl;`
+  - `__imp_ntohl` (variable, line 533) `extern PVOID __imp_ntohl;`
+  - `__imp_NetUserEnum` (variable, line 534) `extern PVOID __imp_NetUserEnum;`
+  - `__imp_NetLocalGroupEnum` (variable, line 535) `extern PVOID __imp_NetLocalGroupEnum;`
+  - `__imp_NetShareEnum` (variable, line 536) `extern PVOID __imp_NetShareEnum;`
+  - `__imp_NetWkstaUserEnum` (variable, line 537) `extern PVOID __imp_NetWkstaUserEnum;`
+  - `__imp_NetSessionEnum` (variable, line 538) `extern PVOID __imp_NetSessionEnum;`
+  - `__imp_NetApiBufferFree` (variable, line 539) `extern PVOID __imp_NetApiBufferFree;`
+  - `__imp_WNetOpenEnumA` (variable, line 540) `extern PVOID __imp_WNetOpenEnumA;`
+  - `__imp_WNetOpenEnumW` (variable, line 541) `extern PVOID __imp_WNetOpenEnumW;`
+  - `__imp_WNetEnumResourceA` (variable, line 542) `extern PVOID __imp_WNetEnumResourceA;`
+  - `__imp_WNetEnumResourceW` (variable, line 543) `extern PVOID __imp_WNetEnumResourceW;`
+  - `__imp_WNetCloseEnum` (variable, line 544) `extern PVOID __imp_WNetCloseEnum;`
+  - `__imp__stricmp` (variable, line 545) `extern PVOID __imp__stricmp;`
+  - `__imp_Process32Next` (variable, line 546) `extern PVOID __imp_Process32Next;`
+  - `__imp_IsWow64Process` (variable, line 547) `extern PVOID __imp_IsWow64Process;`
+  - `__imp_Process32First` (variable, line 548) `extern PVOID __imp_Process32First;`
+  - `__imp_CreateToolhelp32Snapshot` (variable, line 549) `extern PVOID __imp_CreateToolhelp32Snapshot;`
+  - `__imp_select` (variable, line 550) `extern PVOID __imp_select;`
+  - `__imp_CreateProcessA` (variable, line 551) `extern PVOID __imp_CreateProcessA;`
+  - `__imp_CreateProcessW` (variable, line 552) `extern PVOID __imp_CreateProcessW;`
+  - `__imp_SuspendThread` (variable, line 553) `extern PVOID __imp_SuspendThread;`
+  - `__imp_OpenThread` (variable, line 554) `extern PVOID __imp_OpenThread;`
+  - `__imp_Thread32First` (variable, line 555) `extern PVOID __imp_Thread32First;`
+  - `__imp_Thread32Next` (variable, line 556) `extern PVOID __imp_Thread32Next;`
+  - `__imp_NtQueryInformationThread` (variable, line 557) `extern PVOID __imp_NtQueryInformationThread;`
+  - `g_pNtCreateFileUnhooked` (variable, line 558) `extern PVOID g_pNtCreateFileUnhooked;`
+  - `g_pNtWriteVirtualMemoryUnhooked` (variable, line 562) `extern PVOID g_pNtWriteVirtualMemoryUnhooked;`
+  - `g_pNtProtectVirtualMemoryUnhooked` (variable, line 563) `extern PVOID g_pNtProtectVirtualMemoryUnhooked;`
+  - `g_pNtResumeThreadUnhooked` (variable, line 564) `extern PVOID g_pNtResumeThreadUnhooked;`
+  - `g_pNtCreateThreadExUnhooked` (variable, line 565) `extern PVOID g_pNtCreateThreadExUnhooked;`
+  - `IMAGE_REL_AMD64_ABSOLUTE` (macro, line 568) `#define IMAGE_REL_AMD64_ABSOLUTE`
+  - `IMAGE_REL_AMD64_ADDR64` (macro, line 569) `#define IMAGE_REL_AMD64_ADDR64`
+  - `IMAGE_REL_AMD64_ADDR32` (macro, line 570) `#define IMAGE_REL_AMD64_ADDR32`
+  - `IMAGE_REL_AMD64_ADDR32NB` (macro, line 571) `#define IMAGE_REL_AMD64_ADDR32NB`
+  - `IMAGE_REL_AMD64_REL32` (macro, line 572) `#define IMAGE_REL_AMD64_REL32`
+  - `IMAGE_REL_AMD64_REL32_1` (macro, line 573) `#define IMAGE_REL_AMD64_REL32_1`
+  - `IMAGE_REL_AMD64_REL32_2` (macro, line 574) `#define IMAGE_REL_AMD64_REL32_2`
+  - `IMAGE_REL_AMD64_REL32_3` (macro, line 575) `#define IMAGE_REL_AMD64_REL32_3`
+  - `IMAGE_REL_AMD64_REL32_4` (macro, line 576) `#define IMAGE_REL_AMD64_REL32_4`
+  - `IMAGE_REL_AMD64_REL32_5` (macro, line 577) `#define IMAGE_REL_AMD64_REL32_5`
+  - `IMAGE_REL_AMD64_SECTION` (macro, line 578) `#define IMAGE_REL_AMD64_SECTION`
+  - `IMAGE_REL_AMD64_SECREL` (macro, line 579) `#define IMAGE_REL_AMD64_SECREL`
+  - `IMAGE_REL_AMD64_SECREL7` (macro, line 580) `#define IMAGE_REL_AMD64_SECREL7`
+  - `IMAGE_REL_AMD64_TOKEN` (macro, line 581) `#define IMAGE_REL_AMD64_TOKEN`
+  - `IMAGE_REL_AMD64_SREL32` (macro, line 582) `#define IMAGE_REL_AMD64_SREL32`
+  - `IMAGE_REL_AMD64_PAIR` (macro, line 583) `#define IMAGE_REL_AMD64_PAIR`
+  - `IMAGE_REL_AMD64_SSPAN32` (macro, line 584) `#define IMAGE_REL_AMD64_SSPAN32`
+- Depends on: `beacon.h`
+
+## aes.c
+- Layer: utility
+- Doc: aes.c - tiny-AES-c (https://github.com/kokke/tiny-AES-c) include "aes.h" include <string.h>  define Nb 4    define KEYLE
+- Language: c
+- Symbols:
+  - `getSBoxValue` (function, line 12) `static uint8_t getSBoxValue(uint8_t num)`
+  - `getSBoxInvert` (function, line 34) `static uint8_t getSBoxInvert(uint8_t num)`
+  - `Td0` (function, line 56) `static uint8_t Td0(int x)`
+  - `Td1` (function, line 58) `static uint8_t Td1(int x)`
+  - `Td2` (function, line 59) `static uint8_t Td2(int x)`
+  - `Td3` (function, line 60) `static uint8_t Td3(int x)`
+  - `Td4` (function, line 61) `static uint8_t Td4(int x)`
+  - `KeyExpansion` (function, line 166) `static void KeyExpansion(uint8_t* RoundKey, const uint8_t* Key)`
+  - `AES_init_ctx` (function, line 238) `void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key)`
+  - `AES_init_ctx_iv` (function, line 244) `void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv)`
+  - `AES_ctx_set_iv` (function, line 249) `void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv)`
+  - `AddRoundKey` (function, line 257) `static void AddRoundKey(uint8_t round, state_t* state, const uint8_t* RoundKey)`
+  - `SubBytes` (function, line 271) `static void SubBytes(state_t* state)`
+  - `ShiftRows` (function, line 286) `static void ShiftRows(state_t* state)`
+  - `xtime` (function, line 313) `static uint8_t xtime(uint8_t x)`
+  - `MixColumns` (function, line 320) `static void MixColumns(state_t* state)`
+  - `Multiply` (function, line 340) `static uint8_t Multiply(uint8_t x, uint8_t y)`
+  - `InvMixColumns` (function, line 370) `static void InvMixColumns(state_t* state)`
+  - `InvSubBytes` (function, line 391) `static void InvSubBytes(state_t* state)`
+  - `InvShiftRows` (function, line 402) `static void InvShiftRows(state_t* state)`
+  - `Cipher` (function, line 433) `static void Cipher(state_t* state, const uint8_t* RoundKey)`
+  - `InvCipher` (function, line 459) `static void InvCipher(state_t* state, const uint8_t* RoundKey)`
+  - `AES_ECB_encrypt` (function, line 488) `void AES_ECB_encrypt(const struct AES_ctx* ctx, uint8_t* buf)`
+  - `AES_ECB_decrypt` (function, line 495) `void AES_ECB_decrypt(const struct AES_ctx* ctx, uint8_t* buf)`
+  - `XorWithIv` (function, line 510) `static void XorWithIv(uint8_t* buf, const uint8_t* Iv)`
+  - `AES_CBC_encrypt_buffer` (function, line 520) `void AES_CBC_encrypt_buffer(struct AES_ctx *ctx, uint8_t* buf, size_t length)`
+  - `AES_CBC_decrypt_buffer` (function, line 535) `void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length)`
+  - `AES_CTR_xcrypt_buffer` (function, line 558) `void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length)`
+  - `memcpy` (function, line 247) `memcpy (ctx->Iv, iv, AES_BLOCKLEN);`
+  - `Nb` (macro, line 4) `#define Nb`
+  - `KEYLEN_256` (macro, line 6) `#define KEYLEN_256`
+  - `RKLENGTH` (macro, line 10) `#define RKLENGTH`
+  - `BLOCKLEN` (macro, line 11) `#define BLOCKLEN`
+  - `Nb` (macro, line 67) `#define Nb`
+  - `Nk` (macro, line 70) `#define Nk`
+  - `Nr` (macro, line 71) `#define Nr`
+  - `Nk` (macro, line 73) `#define Nk`
+  - `Nr` (macro, line 74) `#define Nr`
+  - `Nk` (macro, line 76) `#define Nk`
+  - `Nr` (macro, line 77) `#define Nr`
+  - `MULTIPLY_AS_A_FUNCTION` (macro, line 84) `#define MULTIPLY_AS_A_FUNCTION`
+  - `getSBoxValue` (macro, line 163) `#define getSBoxValue(num)`
+  - `Multiply` (macro, line 349) `#define Multiply(x, y)`
+  - `getSBoxInvert` (macro, line 365) `#define getSBoxInvert(num)`
+- Depends on: `aes.h`
+
+## aes.h
+- Layer: utility
+- Doc: ifndef _AES_H_ define _AES_H_  include <stdint.h> include <stddef.h>  #define the macros below to 1/0 to enable/disable 
+- Language: h
+- Symbols:
+  - `AES_ctx` (struct, line 33)
+  - `AES_init_ctx` (function, line 40) `void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key);`
+  - `AES_init_ctx_iv` (function, line 43) `void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv);`
+  - `AES_ctx_set_iv` (function, line 44) `void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv);`
+  - `AES_ECB_encrypt` (function, line 48) `void AES_ECB_encrypt(const struct AES_ctx* ctx, uint8_t* buf);`
+  - `AES_ECB_decrypt` (function, line 49) `void AES_ECB_decrypt(const struct AES_ctx* ctx, uint8_t* buf);`
+  - `AES_CBC_encrypt_buffer` (function, line 53) `void AES_CBC_encrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);`
+  - `AES_CBC_decrypt_buffer` (function, line 54) `void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);`
+  - `AES_CTR_xcrypt_buffer` (function, line 58) `void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);`
+  - `_AES_H_` (macro, line 2) `#define _AES_H_`
+  - `CBC` (macro, line 9) `#define CBC`
+  - `ECB` (macro, line 12) `#define ECB`
+  - `CTR` (macro, line 15) `#define CTR`
+  - `AES256` (macro, line 17) `#define AES256`
+  - `AES_BLOCKLEN` (macro, line 19) `#define AES_BLOCKLEN`
+  - `AES_KEYLEN` (macro, line 23) `#define AES_KEYLEN`
+  - `AES_keyExpSize` (macro, line 24) `#define AES_keyExpSize`
+  - `AES_KEYLEN` (macro, line 26) `#define AES_KEYLEN`
+  - `AES_keyExpSize` (macro, line 27) `#define AES_keyExpSize`
+  - `AES_KEYLEN` (macro, line 29) `#define AES_KEYLEN`
+  - `AES_keyExpSize` (macro, line 30) `#define AES_keyExpSize`
+- Imported by: `aes.c`, `beacon.c`
+
+## app.py
+- Layer: utility
+- Doc: _*_ coding: utf8 _*_   This file is part of Black Basalt Beacon.  Black Basalt Beacon is free software: you can redistri
+- Language: py
+
+## beacon.c
+- Layer: utility
+- Language: c
+- Symbols:
+  - `_PROCESS_BASIC_INFORMATION` (struct, line 129)
+  - `_UNICODE_STRING` (struct, line 262)
+  - `_LDR_DATA_TABLE_ENTRY` (struct, line 268)
+  - `_PEB_LDR_DATA` (struct, line 278)
+  - `_PEB` (struct, line 287)
+  - `ProxySession` (struct, line 139)
+  - `ProxyThreadData` (struct, line 147)
+  - `ReverseArgs` (struct, line 156)
+  - `PortScannerArgs` (struct, line 161)
+  - `LazyDataType` (struct, line 168)
+  - `ProxyListener` (struct, line 176)
+  - `PacketEncryptionContext` (struct, line 329)
+  - `PortResult` (struct, line 343)
+  - `ExitStatus` (type_alias, line 127) `typedef struct _PROCESS_BASIC_INFORMATION { LONG ExitStatus;`
+  - `Length` (type_alias, line 262) `typedef struct _UNICODE_STRING { USHORT Length;`
+  - `InMemoryOrderLinks` (type_alias, line 267) `typedef struct _LDR_DATA_TABLE_ENTRY { LIST_ENTRY InMemoryOrderLinks;`
+  - `Length` (type_alias, line 277) `typedef struct _PEB_LDR_DATA { DWORD Length;`
+  - `Reserved1` (type_alias, line 286) `typedef struct _PEB { BYTE Reserved1[2];`
+  - `NTSTATUS` (type_alias, line 296) `typedef LONG NTSTATUS;`
+  - `NTSTATUS` (type_alias, line 304) `typedef LONG NTSTATUS;`
+  - `ExceptionFilter` (function, line 253) `static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo)`
+  - `get_shell_cmd` (function, line 334) `const char* get_shell_cmd()`
+  - `__declspec` (function, line 416) `__declspec(dllexport) void BeaconDataParse(datap * parser, char * buffer, int size)`
+  - `__declspec` (function, line 422) `__declspec(dllexport) char * BeaconDataPtr(datap * parser, int size)`
+  - `__declspec` (function, line 430) `__declspec(dllexport) int BeaconDataInt(datap * parser)`
+  - `__declspec` (function, line 435) `__declspec(dllexport) short BeaconDataShort(datap * parser)`
+  - `__declspec` (function, line 440) `__declspec(dllexport) int BeaconDataLength(datap * parser)`
+  - `__declspec` (function, line 445) `__declspec(dllexport) char * BeaconDataExtract(datap * parser, int * size)`
+  - `__declspec` (function, line 455) `__declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...)`
+  - `__declspec` (function, line 503) `__declspec(dllexport) void BeaconOutput(int type, const char * data, int len)`
+  - `MapDllNameToModule` (function, line 521) `HMODULE MapDllNameToModule(char* dllName)`
+  - `GetSyscallNumber` (function, line 548) `DWORD GetSyscallNumber(PVOID func_addr)`
+  - `HellsGate` (function, line 560) `DWORD HellsGate(DWORD ssn)`
+  - `__attribute__` (function, line 565) `__attribute__((naked))
+NTSTATUS HellDescent(
+    DWORD64 arg1, DWORD64 arg2, DWORD64 arg3,
+    DW...`
+  - `GetProcessIdByName` (function, line 581) `DWORD GetProcessIdByName(const char* processName)`
+  - `ExecuteTLSCallbacks` (function, line 600) `void ExecuteTLSCallbacks(PVOID moduleBase)`
+  - `MapModuleToMemory` (function, line 617) `PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)`
+  - `ExecuteModule` (function, line 706) `BOOL ExecuteModule(PVOID moduleBase)`
+  - `LoadModuleFromURL` (function, line 751) `BOOL LoadModuleFromURL(const char* url)`
+  - `xor_string` (function, line 915) `void xor_string(char* data, size_t len, char key)`
+  - `anti_analysis` (function, line 922) `BOOL anti_analysis()`
+  - `load_lazyconf` (function, line 945) `BOOL load_lazyconf()`
+  - `GetNtdllBase` (function, line 1183) `HMODULE GetNtdllBase()`
+  - `isVMByMAC` (function, line 1231) `BOOL isVMByMAC()`
+  - `extract_shellcode` (function, line 1303) `int extract_shellcode(const char* input, size_t len, unsigned char** out)`
+  - `hex_char_to_byte` (function, line 1334) `BYTE hex_char_to_byte(char c)`
+  - `hex_to_bytes` (function, line 1340) `void hex_to_bytes(const char* hex, BYTE* output, size_t len)`
+  - `executeLoader` (function, line 1348) `void executeLoader(void *arg)`
+  - `ReverseShell` (function, line 1404) `void __cdecl ReverseShell(void* arg)`
+  - `ReadFromProcess` (function, line 1513) `DWORD WINAPI ReadFromProcess(LPVOID lpParam)`
+  - `GetJitteredSleep` (function, line 1586) `DWORD GetJitteredSleep(DWORD base_ms)`
+  - `GetUsefulSoftware` (function, line 1591) `char* GetUsefulSoftware()`
+  - `base64_encode` (function, line 1626) `char* base64_encode(const unsigned char* data, size_t inputLen)`
+  - `base64_decode` (function, line 1662) `char* base64_decode(const char* input, size_t* out_len)`
+  - `discoverLocalHosts` (function, line 1695) `void discoverLocalHosts()`
+  - `initProxy` (function, line 1752) `void initProxy()`
+  - `relay_thread` (function, line 1763) `void WINAPI relay_thread(void* param)`
+  - `proxy_thread` (function, line 1784) `void WINAPI proxy_thread(void* param)`
+  - `proxy_accept_thread` (function, line 1855) `void WINAPI proxy_accept_thread(void* param)`
+  - `startProxy` (function, line 1922) `BOOL startProxy(const char* listenAddr, const char* targetAddr)`
+  - `stopProxy` (function, line 2009) `BOOL stopProxy(const char* listenAddr)`
+  - `cleanupProxy` (function, line 2061) `void cleanupProxy()`
+  - `compressDirectory` (function, line 2094) `BOOL compressDirectory(const char* dirPath)`
+  - `getNetworkConfig` (function, line 2104) `char* getNetworkConfig()`
+  - `UploadFileToC2` (function, line 2107) `BOOL UploadFileToC2(const char* url, const char* filePath)`
+  - `handleUpload` (function, line 2280) `BOOL handleUpload(const char* command)`
+  - `FileExistsA` (function, line 2301) `BOOL FileExistsA(const char* filePath)`
+  - `selfDestruct` (function, line 2306) `void selfDestruct()`
+  - `stristr` (function, line 2361) `char* stristr(const char* str, const char* pattern)`
+  - `isSensitiveFile` (function, line 2378) `int isSensitiveFile(const char* filename)`
+  - `searchCredentials` (function, line 2424) `char* searchCredentials(const char* basePath)`
+  - `UTF8ToWide` (function, line 2551) `WCHAR* UTF8ToWide(const char* utf8)`
+  - `obfuscateFileTimestamp` (function, line 2562) `BOOL obfuscateFileTimestamp(const char* filepath)`
+  - `obfuscateFileTimestamps` (function, line 2592) `void obfuscateFileTimestamps(const char* basePath, int depth)`
+  - `simulateLegitimateTraffic` (function, line 2656) `void simulateLegitimateTraffic(void* param)`
+  - `restartClient` (function, line 2734) `void restartClient()`
+  - `checkDebuggers` (function, line 2776) `BOOL checkDebuggers()`
+  - `MapPEToMemory` (function, line 2837) `unsigned char* MapPEToMemory(unsigned char* rawPE, DWORD rawSize, DWORD* mappedSize)`
+  - `downloadAndExecute` (function, line 2860) `BOOL downloadAndExecute(const char* url, const char* targetProcess)`
+  - `DecryptPacket` (function, line 2910) `BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len)`
+  - `GetIPs` (function, line 3006) `char* GetIPs()`
+  - `GetHostname` (function, line 3039) `char* GetHostname()`
+  - `GetUsername` (function, line 3056) `char* GetUsername()`
+  - `patchAMSI` (function, line 3072) `BOOL patchAMSI(void)`
+  - `get_nt_headers` (function, line 3092) `PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer)`
+  - `is_64bit` (function, line 3100) `BOOL is_64bit(BYTE* buffer)`
+  - `get_image_size` (function, line 3106) `DWORD get_image_size(BYTE* buffer)`
+  - `get_entry_point_rva` (function, line 3112) `DWORD get_entry_point_rva(BYTE* buffer)`
+  - `pe_buffer_to_virtual_image` (function, line 3117) `BYTE* pe_buffer_to_virtual_image(BYTE* raw_buffer, DWORD* out_size)`
+  - `create_suspended_process` (function, line 3148) `BOOL create_suspended_process(char* path, PROCESS_INFORMATION* pi)`
+  - `get_remote_image_base` (function, line 3154) `ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target)`
+  - `update_remote_entry_point` (function, line 3249) `BOOL update_remote_entry_point(PROCESS_INFORMATION* pi, ULONGLONG entry_point_va, BOOL is_32bit)`
+  - `overWrite` (function, line 3277) `void overWrite(const char* targetPath, const char* payloadPath)`
+  - `cleanSystemLogs` (function, line 3384) `void cleanSystemLogs()`
+  - `ensurePersistence` (function, line 3421) `BOOL ensurePersistence()`
+  - `isSandboxEnvironment` (function, line 3482) `BOOL isSandboxEnvironment()`
+  - `tryPrivilegeEscalation` (function, line 3551) `void tryPrivilegeEscalation()`
+  - `executeUACBypass` (function, line 3556) `BOOL executeUACBypass(const char* payloadPath)`
+  - `scanPort` (function, line 3610) `void scanPort(void* arg)`
+  - `PortScanner` (function, line 3661) `void PortScanner(char* targetIP, int* ports, int numPorts)`
+  - `PortScannerWrapper` (function, line 3705) `void PortScannerWrapper(void* arg)`
+  - `EarlyBirdInject` (function, line 3729) `BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)`
+  - `init_aes_context` (function, line 3898) `PacketEncryptionContext* init_aes_context(const char* key_hex)`
+  - `retry_http_request` (function, line 3918) `char* retry_http_request(const char* url, const char* method, const char* data, int max_retries)`
+  - `exec_cmd` (function, line 4172) `char* exec_cmd(const char* cmd)`
+  - `GetC2Command` (function, line 4200) `char* GetC2Command(const char* host, const char* path)`
+  - `DownloadToBuffer` (function, line 4346) `unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize)`
+  - `DownloadFromURL` (function, line 4422) `BOOL DownloadFromURL(const char* url, const char* filepath)`
+  - `encrypt_data` (function, line 4452) `char* encrypt_data(const char* data)`
+  - `isValidUUID` (function, line 4511) `BOOL isValidUUID(const char* uuid)`
+  - `deleteFilesDelay` (function, line 4536) `void deleteFilesDelay(void* arg)`
+  - `executeCommand` (function, line 4550) `void executeCommand(void* cmdPtr)`
+  - `handleAtomic` (function, line 4559) `void handleAtomic(char* command)`
+  - `handleDownload` (function, line 4683) `BOOL handleDownload(const char* command)`
+  - `SerializeBeaconString` (function, line 4702) `void SerializeBeaconString(char* buffer, int* offset, const char* str)`
+  - `BeaconDataSerializeString` (function, line 4711) `void BeaconDataSerializeString(char* buffer, int* offset, const char* str)`
+  - `go` (function, line 4719) `void go(unsigned char * bof_data, int bof_size, char * args, int args_len)`
+  - `handleAdversary` (function, line 4738) `void handleAdversary(char* command)`
+  - `main` (function, line 5233) `int main()`
+  - `NTSTATUS` (function, line 198) `typedef NTSTATUS (NTAPI *SpLsaModeInitialize_t)( ULONG LsaVersion, PULONG PackageVersion, void** ppTables, PULONG pcTables );`
+  - `longjmp` (function, line 256) `longjmp(exceptionJump, 1);`
+  - `VOID` (function, line 302) `typedef VOID (NTAPI *PAPCFUNC)(ULONG_PTR);`
+  - `va_start` (function, line 461) `va_start(args, fmt);`
+  - `va_end` (function, line 464) `va_end(args);`
+  - `fprintf` (function, line 468) `fprintf(stderr, "[ERROR] vsnprintf failed\n");`
+  - `fputs` (function, line 477) `fputs(buffer, stdout);`
+  - `fflush` (function, line 479) `fflush(stdout);`
+  - `memcpy` (function, line 507) `memcpy(copy, data, len);`
+  - `free` (function, line 515) `free(copy);`
+  - `GetModuleHandleA` (function, line 523) `return GetModuleHandleA("ucrtbase.dll");`
+  - `LoadLibraryA` (function, line 546) `return LoadLibraryA(dllName);`
+  - `volatile` (function, line 571) `__asm__ volatile ( "movq %%rcx, %%r10\n\t" "movl __syscall_ssn(%%rip), %%eax\n\t" "syscall\n\t" "ret\n\t" : : : "rax", "r10", "rcx" );`
+  - `CloseHandle` (function, line 591) `CloseHandle(hSnapshot);`
+  - `printf` (function, line 671) `printf("[I] Cargando DLL: %s\n", dllName);`
+  - `VirtualFree` (function, line 678) `VirtualFree(baseAddress, 0, MEM_RELEASE);`
+  - `BOOL` (function, line 721) `typedef BOOL (WINAPI *DllMain_t)(HINSTANCE, DWORD, LPVOID);`
+  - `WaitForSingleObject` (function, line 740) `WaitForSingleObject(hThread, INFINITE);`
+  - `GetTempPathA` (function, line 780) `GetTempPathA(MAX_PATH, tempPath);`
+  - `strcat_s` (function, line 781) `strcat_s(tempPath, MAX_PATH, "mimilib.dll");`
+  - `WriteFile` (function, line 798) `WriteFile(hFile, dllBuffer, fileSize, &written, NULL);`
+  - `VirtualFreeEx` (function, line 824) `VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);`
+  - `pStartW` (function, line 907) `pStartW();`
+  - `RegCloseKey` (function, line 937) `RegCloseKey(hKey);`
+  - `Sleep` (function, line 972) `Sleep(1000);`
+  - `strncpy` (function, line 994) `strncpy(host, host_start, host_len);`
+  - `strcpy` (function, line 998) `strcpy(path, path_start);`
+  - `WinHttpCloseHandle` (function, line 1019) `WinHttpCloseHandle(hSession);`
+  - `WinHttpQueryHeaders` (function, line 1092) `WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER, NULL, &statusCode, &size, NULL);`
+  - `cJSON_Delete` (function, line 1173) `cJSON_Delete(root);`
+  - `snprintf` (function, line 1280) `snprintf(mac_str, sizeof(mac_str), "%02X:%02X:%02X", adapter->Address[0], adapter->Address[1], adapter->Address[2]);`
+  - `_endthread` (function, line 1408) `_endthread();`
+  - `WSACleanup` (function, line 1432) `WSACleanup();`
+  - `closesocket` (function, line 1446) `closesocket(s);`
+  - `send` (function, line 1520) `send(s, buffer, n, 0);`
+  - `memmove` (function, line 1551) `memmove(buffer + r, buffer + r - 1, 1);`
+  - `FlushFileBuffers` (function, line 1570) `FlushFileBuffers(hInWrite);`
+  - `strcat` (function, line 1612) `strcat(result, binaries[i]);`
+  - `IcmpCloseHandle` (function, line 1741) `IcmpCloseHandle(hIcmp);`
+  - `InitializeCriticalSection` (function, line 1755) `InitializeCriticalSection(&proxyMutex);`
+  - `memset` (function, line 1756) `memset(proxySessions, 0, sizeof(proxySessions));`
+  - `shutdown` (function, line 1776) `shutdown(from, SD_BOTH);`
+  - `EnterCriticalSection` (function, line 1806) `EnterCriticalSection(&proxyMutex);`
+  - `LeaveCriticalSection` (function, line 1808) `LeaveCriticalSection(&proxyMutex);`
+  - `WaitForMultipleObjects` (function, line 1829) `WaitForMultipleObjects(2, threads, FALSE, INFINITE);`
+  - `_beginthread` (function, line 1903) `_beginthread(proxy_thread, 0, (void*)data);`
+  - `setsockopt` (function, line 1979) `setsockopt(listenSock, SOL_SOCKET, SO_REUSEADDR, (char*)&opt, sizeof(opt));`
+  - `DeleteCriticalSection` (function, line 2089) `DeleteCriticalSection(&proxyMutex);`
+  - `fseek` (function, line 2115) `fseek(fp, 0, SEEK_END);`
+  - `fclose` (function, line 2122) `fclose(fp);`
+  - `fread` (function, line 2125) `fread(fileData, 1, fileSize, fp);`
+  - `WinHttpSetOption` (function, line 2232) `WinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &flags, sizeof(flags));`
+  - `MultiByteToWideChar` (function, line 2239) `MultiByteToWideChar(CP_UTF8, 0, contentType, -1, wContentType, 512);`
+  - `RegDeleteValueA` (function, line 2321) `RegDeleteValueA(hKey, "SystemMaintenance");`
+  - `system` (function, line 2326) `system("schtasks /delete /tn \"SystemMaintenanceTask\" /f > nul 2>&1");`
+  - `ExitProcess` (function, line 2358) `ExitProcess(0);`
+  - `FindClose` (function, line 2454) `FindClose(hFind);`
+  - `GetSystemTimeAsFileTime` (function, line 2579) `GetSystemTimeAsFileTime(&ftNow);`
+  - `WinHttpReceiveResponse` (function, line 2721) `WinHttpReceiveResponse(hRequest, NULL);`
+  - `DeleteFileA` (function, line 2895) `DeleteFileA(filename);`
+  - `AES_init_ctx` (function, line 2949) `AES_init_ctx(&ctx, aes_key);`
+  - `AES_ECB_encrypt` (function, line 2960) `AES_ECB_encrypt(&ctx, keystream);`
+  - `GetAdaptersInfo` (function, line 3017) `GetAdaptersInfo(adapterInfo, &len);`
+  - `WriteProcessMemory` (function, line 3084) `WriteProcessMemory(GetCurrentProcess(), (LPVOID)scan_buffer_addr, patch, sizeof(patch), NULL);`
+  - `VirtualProtect` (function, line 3085) `VirtualProtect((LPVOID)scan_buffer_addr, 1, old_protect, &old_protect);`
+  - `FreeLibrary` (function, line 3086) `FreeLibrary(amsi_dll);`
+  - `CreateProcessA` (function, line 3152) `return CreateProcessA(path, NULL, NULL, NULL, FALSE, CREATE_SUSPENDED, NULL, NULL, &si, pi);`
+  - `Wow64SetThreadContext` (function, line 3257) `return Wow64SetThreadContext(pi->hThread, &ctx);`
+  - `SetThreadContext` (function, line 3263) `return SetThreadContext(pi->hThread, &ctx);`
+  - `fwrite` (function, line 3295) `fwrite(downloaded, 1, fileSize, fp);`
+  - `ReadFile` (function, line 3315) `ReadFile(hFile, rawBuffer, rawSize, &read, NULL);`
+  - `HeapFree` (function, line 3320) `HeapFree(GetProcessHeap(), 0, rawBuffer);`
+  - `TerminateProcess` (function, line 3346) `TerminateProcess(pi.hProcess, 1);`
+  - `ResumeThread` (function, line 3374) `ResumeThread(pi.hThread);`
+  - `WriteConsoleA` (function, line 3398) `WriteConsoleA(hConOut, "\x1b[2J\x1b[H", 7, &written, NULL);`
+  - `AdjustTokenPrivileges` (function, line 3410) `AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(tp), NULL, NULL);`
+  - `ExpandEnvironmentStringsA` (function, line 3460) `ExpandEnvironmentStringsA("%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\svchost.bat", startupPath, sizeof(startupPath));`
+  - `SetFileAttributesA` (function, line 3471) `SetFileAttributesA(startupPath, FILE_ATTRIBUTE_HIDDEN);`
+  - `GetSystemInfo` (function, line 3487) `GetSystemInfo(&sysInfo);`
+  - `strlwr` (function, line 3538) `strlwr(vendor);`
+  - `RegOpenKeyA` (function, line 3603) `RegOpenKeyA(HKEY_CURRENT_USER, regKey, &hKey);`
+  - `inet_pton` (function, line 3631) `inet_pton(AF_INET, result->ip, &sa.sin_addr);`
+  - `ioctlsocket` (function, line 3635) `ioctlsocket(s, FIONBIO, &blocking_mode);`
+  - `connect` (function, line 3636) `connect(s, (SOCKADDR*)&sa, sizeof(sa));`
+  - `FD_ZERO` (function, line 3640) `FD_ZERO(&write_set);`
+  - `FD_SET` (function, line 3641) `FD_SET(s, &write_set);`
+  - `getsockopt` (function, line 3649) `getsockopt(s, SOL_SOCKET, SO_ERROR, (char*)&so_error, &len);`
+  - `_pclose` (function, line 4190) `_pclose(fp);`
+  - `CryptGenRandom` (function, line 4473) `CryptGenRandom(hProv, 16, iv);`
+  - `CryptReleaseContext` (function, line 4474) `CryptReleaseContext(hProv, 0);`
+  - `BeaconPrintf` (function, line 4721) `BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Descargado: %d bytes", bof_size);`
+  - `cJSON_AddStringToObject` (function, line 5172) `cJSON_AddStringToObject(json_obj, "id", "windows" && strlen("windows") > 0 ? "windows" : "windows");`
+  - `cJSON_AddNumberToObject` (function, line 5179) `cJSON_AddNumberToObject(json_obj, "pid", (double)GetCurrentProcessId());`
+  - `cJSON_free` (function, line 5224) `cJSON_free(json_str);`
+  - `srand` (function, line 5236) `srand(time(NULL));`
+  - `ShowWindow` (function, line 5239) `ShowWindow(GetConsoleWindow(), SW_HIDE);`
+  - `wcstombs` (function, line 5260) `wcstombs(lazyconf.rhost, LC2_HOST, sizeof(lazyconf.rhost) - 1);`
+  - `PSAPI_VERSION` (macro, line 19) `#define PSAPI_VERSION`
+  - `WIN32_LEAN_AND_MEAN` (macro, line 21) `#define WIN32_LEAN_AND_MEAN`
+  - `XOR_KEY` (macro, line 71) `#define XOR_KEY`
+  - `DEBUG` (macro, line 72) `#define DEBUG`
+  - `TIMEOUT` (macro, line 73) `#define TIMEOUT`
+  - `MAX_RESPONSE_SIZE` (macro, line 74) `#define MAX_RESPONSE_SIZE`
+  - `C2_URL` (macro, line 75) `#define C2_URL`
+  - `MALEABLE` (macro, line 76) `#define MALEABLE`
+  - `CLIENT_ID` (macro, line 77) `#define CLIENT_ID`
+  - `SLEEP_BASE` (macro, line 78) `#define SLEEP_BASE`
+  - `MIN_JITTER` (macro, line 79) `#define MIN_JITTER`
+  - `MAX_JITTER` (macro, line 80) `#define MAX_JITTER`
+  - `MAX_RETRIES` (macro, line 81) `#define MAX_RETRIES`
+  - `C2_HOST` (macro, line 82) `#define C2_HOST`
+  - `LC2_HOST` (macro, line 83) `#define LC2_HOST`
+  - `C2_USER` (macro, line 84) `#define C2_USER`
+  - `C2_PASS` (macro, line 85) `#define C2_PASS`
+  - `C2_PORT` (macro, line 86) `#define C2_PORT`
+  - `CONFIG_PATH` (macro, line 87) `#define CONFIG_PATH`
+  - `C2_PATH` (macro, line 88) `#define C2_PATH`
+  - `LC2_PATH` (macro, line 89) `#define LC2_PATH`
+  - `min` (macro, line 91) `#define min(a,b)`
+  - `SECURITY_FLAG_IGNORE_REVOCATION` (macro, line 94) `#define SECURITY_FLAG_IGNORE_REVOCATION`
+  - `INVALID_SOCKET` (macro, line 97) `#define INVALID_SOCKET`
+  - `USER_AGENT` (macro, line 99) `#define USER_AGENT`
+  - `USER_AGENT_A` (macro, line 100) `#define USER_AGENT_A`
+  - `IMAGE_DOS_SIGNATURE` (macro, line 101) `#define IMAGE_DOS_SIGNATURE`
+  - `IMAGE_NT_SIGNATURE` (macro, line 102) `#define IMAGE_NT_SIGNATURE`
+  - `IMAGE_NT_OPTIONAL_HDR32_MAGIC` (macro, line 103) `#define IMAGE_NT_OPTIONAL_HDR32_MAGIC`
+  - `IMAGE_NT_OPTIONAL_HDR64_MAGIC` (macro, line 104) `#define IMAGE_NT_OPTIONAL_HDR64_MAGIC`
+  - `SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE` (macro, line 106) `#define SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE`
+  - `SECURITY_FLAG_IGNORE_INVALID_POLICY` (macro, line 109) `#define SECURITY_FLAG_IGNORE_INVALID_POLICY`
+  - `_SECURITY_PACKAGE_DEFINITION_` (macro, line 112) `#define _SECURITY_PACKAGE_DEFINITION_`
+  - `_PROCESS_BASIC_INFORMATION_` (macro, line 115) `#define _PROCESS_BASIC_INFORMATION_`
+  - `_SP_LSA_MODE_INITIALIZE_DEFINED_` (macro, line 117) `#define _SP_LSA_MODE_INITIALIZE_DEFINED_`
+  - `ProcessBasicInformation` (macro, line 123) `#define ProcessBasicInformation`
+  - `CHECK_ERROR` (macro, line 125) `#define CHECK_ERROR(cond, msg)`
+  - `NUM_USER_AGENTS` (macro, line 231) `#define NUM_USER_AGENTS`
+  - `NUM_URLS` (macro, line 240) `#define NUM_URLS`
+  - `NUM_UAS` (macro, line 247) `#define NUM_UAS`
+  - `NT_SUCCESS` (macro, line 300) `#define NT_SUCCESS(Status)`
+- Depends on: `COFFLoader.h`, `aes.h`, `beacon.h`, `cJSON.h`
+
+## beacon.h
+- Layer: utility
+- Language: h
+- Symbols:
+  - `datap` (struct, line 25)
+  - `BEACON_H` (macro, line 21) `#define BEACON_H`
+  - `CALLBACK_OUTPUT` (macro, line 40) `#define CALLBACK_OUTPUT`
+  - `CALLBACK_ERROR` (macro, line 42) `#define CALLBACK_ERROR`
+- Imported by: `COFFLoader3.c`, `beacon.c`
+
+## cJSON.c
+- Layer: utility
+- Language: c
+- Symbols:
+  - `internal_hooks` (struct, line 157)
+  - `error` (struct, line 88)
+  - `parse_buffer` (struct, line 291)
+  - `printbuffer` (struct, line 482)
+  - `CJSON_PUBLIC` (function, line 94) `CJSON_PUBLIC(const char *) cJSON_GetErrorPtr(void)`
+  - `CJSON_PUBLIC` (function, line 99) `CJSON_PUBLIC(char *) cJSON_GetStringValue(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 109) `CJSON_PUBLIC(double) cJSON_GetNumberValue(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 124) `CJSON_PUBLIC(const char*) cJSON_Version(void)`
+  - `case_insensitive_strcmp` (function, line 134) `static int case_insensitive_strcmp(const unsigned char *string1, const unsigned char *string2)`
+  - `internal_malloc` (function, line 166) `static void * CJSON_CDECL internal_malloc(size_t size)`
+  - `internal_free` (function, line 170) `static void CJSON_CDECL internal_free(void *pointer)`
+  - `internal_realloc` (function, line 174) `static void * CJSON_CDECL internal_realloc(void *pointer, size_t size)`
+  - `cJSON_strdup` (function, line 188) `static unsigned char* cJSON_strdup(const unsigned char* string, const internal_hooks * const hooks)`
+  - `CJSON_PUBLIC` (function, line 209) `CJSON_PUBLIC(void) cJSON_InitHooks(cJSON_Hooks* hooks)`
+  - `cJSON_New_Item` (function, line 242) `static cJSON *cJSON_New_Item(const internal_hooks * const hooks)`
+  - `get_decimal_point` (function, line 281) `static unsigned char get_decimal_point(void)`
+  - `parse_number` (function, line 309) `static cJSON_bool parse_number(cJSON * const item, parse_buffer * const input_buffer)`
+  - `ensure` (function, line 494) `static unsigned char* ensure(printbuffer * const p, size_t needed)`
+  - `update_offset` (function, line 579) `static void update_offset(printbuffer * const buffer)`
+  - `compare_double` (function, line 592) `static cJSON_bool compare_double(double a, double b)`
+  - `print_number` (function, line 599) `static cJSON_bool print_number(const cJSON * const item, printbuffer * const output_buffer)`
+  - `parse_hex4` (function, line 669) `static unsigned parse_hex4(const unsigned char * const input)`
+  - `utf16_literal_to_utf8` (function, line 706) `static unsigned char utf16_literal_to_utf8(const unsigned char * const input_pointer, const unsig...`
+  - `parse_string` (function, line 827) `static cJSON_bool parse_string(cJSON * const item, parse_buffer * const input_buffer)`
+  - `print_string_ptr` (function, line 957) `static cJSON_bool print_string_ptr(const unsigned char * const input, printbuffer * const output_...`
+  - `print_string` (function, line 1079) `static cJSON_bool print_string(const cJSON * const item, printbuffer * const p)`
+  - `buffer_skip_whitespace` (function, line 1093) `static parse_buffer *buffer_skip_whitespace(parse_buffer * const buffer)`
+  - `skip_utf8_bom` (function, line 1119) `static parse_buffer *skip_utf8_bom(parse_buffer * const buffer)`
+  - `CJSON_PUBLIC` (function, line 1133) `CJSON_PUBLIC(cJSON *) cJSON_ParseWithOpts(const char *value, const char **return_parse_end, cJSON...`
+  - `CJSON_PUBLIC` (function, line 1235) `CJSON_PUBLIC(cJSON *) cJSON_ParseWithLength(const char *value, size_t buffer_length)`
+  - `print` (function, line 1242) `static unsigned char *print(const cJSON * const item, cJSON_bool format, const internal_hooks * c...`
+  - `CJSON_PUBLIC` (function, line 1315) `CJSON_PUBLIC(char *) cJSON_PrintUnformatted(const cJSON *item)`
+  - `CJSON_PUBLIC` (function, line 1320) `CJSON_PUBLIC(char *) cJSON_PrintBuffered(const cJSON *item, int prebuffer, cJSON_bool fmt)`
+  - `CJSON_PUBLIC` (function, line 1351) `CJSON_PUBLIC(cJSON_bool) cJSON_PrintPreallocated(cJSON *item, char *buffer, const int length, con...`
+  - `parse_value` (function, line 1372) `static cJSON_bool parse_value(cJSON * const item, parse_buffer * const input_buffer)`
+  - `print_value` (function, line 1427) `static cJSON_bool print_value(const cJSON * const item, printbuffer * const output_buffer)`
+  - `parse_array` (function, line 1501) `static cJSON_bool parse_array(cJSON * const item, parse_buffer * const input_buffer)`
+  - `print_array` (function, line 1599) `static cJSON_bool print_array(const cJSON * const item, printbuffer * const output_buffer)`
+  - `parse_object` (function, line 1661) `static cJSON_bool parse_object(cJSON * const item, parse_buffer * const input_buffer)`
+  - `print_object` (function, line 1780) `static cJSON_bool print_object(const cJSON * const item, printbuffer * const output_buffer)`
+  - `get_array_item` (function, line 1915) `static cJSON* get_array_item(const cJSON *array, size_t index)`
+  - `CJSON_PUBLIC` (function, line 1934) `CJSON_PUBLIC(cJSON *) cJSON_GetArrayItem(const cJSON *array, int index)`
+  - `get_object_item` (function, line 1944) `static cJSON *get_object_item(const cJSON * const object, const char * const name, const cJSON_bo...`
+  - `CJSON_PUBLIC` (function, line 1976) `CJSON_PUBLIC(cJSON *) cJSON_GetObjectItem(const cJSON * const object, const char * const string)`
+  - `CJSON_PUBLIC` (function, line 1981) `CJSON_PUBLIC(cJSON *) cJSON_GetObjectItemCaseSensitive(const cJSON * const object, const char * c...`
+  - `CJSON_PUBLIC` (function, line 1986) `CJSON_PUBLIC(cJSON_bool) cJSON_HasObjectItem(const cJSON *object, const char *string)`
+  - `suffix_object` (function, line 1993) `static void suffix_object(cJSON *prev, cJSON *item)`
+  - `create_reference` (function, line 2000) `static cJSON *create_reference(const cJSON *item, const internal_hooks * const hooks)`
+  - `add_item_to_array` (function, line 2020) `static cJSON_bool add_item_to_array(cJSON *array, cJSON *item)`
+  - `cast_away_const` (function, line 2066) `static void* cast_away_const(const void* string)`
+  - `add_item_to_object` (function, line 2073) `static cJSON_bool add_item_to_object(cJSON * const object, const char * const string, cJSON * con...`
+  - `CJSON_PUBLIC` (function, line 2111) `CJSON_PUBLIC(cJSON_bool) cJSON_AddItemToObject(cJSON *object, const char *string, cJSON *item)`
+  - `CJSON_PUBLIC` (function, line 2122) `CJSON_PUBLIC(cJSON_bool) cJSON_AddItemReferenceToArray(cJSON *array, cJSON *item)`
+  - `CJSON_PUBLIC` (function, line 2132) `CJSON_PUBLIC(cJSON_bool) cJSON_AddItemReferenceToObject(cJSON *object, const char *string, cJSON ...`
+  - `CJSON_PUBLIC` (function, line 2142) `CJSON_PUBLIC(cJSON*) cJSON_AddNullToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2154) `CJSON_PUBLIC(cJSON*) cJSON_AddTrueToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2166) `CJSON_PUBLIC(cJSON*) cJSON_AddFalseToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2178) `CJSON_PUBLIC(cJSON*) cJSON_AddBoolToObject(cJSON * const object, const char * const name, const c...`
+  - `CJSON_PUBLIC` (function, line 2190) `CJSON_PUBLIC(cJSON*) cJSON_AddNumberToObject(cJSON * const object, const char * const name, const...`
+  - `CJSON_PUBLIC` (function, line 2202) `CJSON_PUBLIC(cJSON*) cJSON_AddStringToObject(cJSON * const object, const char * const name, const...`
+  - `CJSON_PUBLIC` (function, line 2214) `CJSON_PUBLIC(cJSON*) cJSON_AddRawToObject(cJSON * const object, const char * const name, const ch...`
+  - `CJSON_PUBLIC` (function, line 2226) `CJSON_PUBLIC(cJSON*) cJSON_AddObjectToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2238) `CJSON_PUBLIC(cJSON*) cJSON_AddArrayToObject(cJSON * const object, const char * const name)`
+  - `CJSON_PUBLIC` (function, line 2250) `CJSON_PUBLIC(cJSON *) cJSON_DetachItemViaPointer(cJSON *parent, cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 2286) `CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromArray(cJSON *array, int which)`
+  - `CJSON_PUBLIC` (function, line 2296) `CJSON_PUBLIC(void) cJSON_DeleteItemFromArray(cJSON *array, int which)`
+  - `CJSON_PUBLIC` (function, line 2301) `CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObject(cJSON *object, const char *string)`
+  - `CJSON_PUBLIC` (function, line 2308) `CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObjectCaseSensitive(cJSON *object, const char *string)`
+  - `CJSON_PUBLIC` (function, line 2315) `CJSON_PUBLIC(void) cJSON_DeleteItemFromObject(cJSON *object, const char *string)`
+  - `CJSON_PUBLIC` (function, line 2320) `CJSON_PUBLIC(void) cJSON_DeleteItemFromObjectCaseSensitive(cJSON *object, const char *string)`
+  - `CJSON_PUBLIC` (function, line 2362) `CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemViaPointer(cJSON * const parent, cJSON * const item, cJ...`
+  - `CJSON_PUBLIC` (function, line 2412) `CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInArray(cJSON *array, int which, cJSON *newitem)`
+  - `replace_item_in_object` (function, line 2422) `static cJSON_bool replace_item_in_object(cJSON *object, const char *string, cJSON *replacement, c...`
+  - `CJSON_PUBLIC` (function, line 2445) `CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInObject(cJSON *object, const char *string, cJSON *newi...`
+  - `CJSON_PUBLIC` (function, line 2450) `CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInObjectCaseSensitive(cJSON *object, const char *string...`
+  - `CJSON_PUBLIC` (function, line 2467) `CJSON_PUBLIC(cJSON *) cJSON_CreateTrue(void)`
+  - `CJSON_PUBLIC` (function, line 2478) `CJSON_PUBLIC(cJSON *) cJSON_CreateFalse(void)`
+  - `CJSON_PUBLIC` (function, line 2489) `CJSON_PUBLIC(cJSON *) cJSON_CreateBool(cJSON_bool boolean)`
+  - `CJSON_PUBLIC` (function, line 2500) `CJSON_PUBLIC(cJSON *) cJSON_CreateNumber(double num)`
+  - `CJSON_PUBLIC` (function, line 2525) `CJSON_PUBLIC(cJSON *) cJSON_CreateString(const char *string)`
+  - `CJSON_PUBLIC` (function, line 2542) `CJSON_PUBLIC(cJSON *) cJSON_CreateStringReference(const char *string)`
+  - `CJSON_PUBLIC` (function, line 2554) `CJSON_PUBLIC(cJSON *) cJSON_CreateObjectReference(const cJSON *child)`
+  - `CJSON_PUBLIC` (function, line 2566) `CJSON_PUBLIC(cJSON *) cJSON_CreateArrayReference(const cJSON *child)`
+  - `CJSON_PUBLIC` (function, line 2578) `CJSON_PUBLIC(cJSON *) cJSON_CreateRaw(const char *raw)`
+  - `CJSON_PUBLIC` (function, line 2595) `CJSON_PUBLIC(cJSON *) cJSON_CreateArray(void)`
+  - `CJSON_PUBLIC` (function, line 2606) `CJSON_PUBLIC(cJSON *) cJSON_CreateObject(void)`
+  - `CJSON_PUBLIC` (function, line 2658) `CJSON_PUBLIC(cJSON *) cJSON_CreateFloatArray(const float *numbers, int count)`
+  - `CJSON_PUBLIC` (function, line 2698) `CJSON_PUBLIC(cJSON *) cJSON_CreateDoubleArray(const double *numbers, int count)`
+  - `CJSON_PUBLIC` (function, line 2738) `CJSON_PUBLIC(cJSON *) cJSON_CreateStringArray(const char *const *strings, int count)`
+  - `cJSON_Duplicate_rec` (function, line 2785) `cJSON * cJSON_Duplicate_rec(const cJSON *item, size_t depth, cJSON_bool recurse)`
+  - `skip_oneline_comment` (function, line 2872) `static void skip_oneline_comment(char **input)`
+  - `skip_multiline_comment` (function, line 2885) `static void skip_multiline_comment(char **input)`
+  - `minify_string` (function, line 2899) `static void minify_string(char **input, char **output)`
+  - `CJSON_PUBLIC` (function, line 2921) `CJSON_PUBLIC(void) cJSON_Minify(char *json)`
+  - `CJSON_PUBLIC` (function, line 2971) `CJSON_PUBLIC(cJSON_bool) cJSON_IsInvalid(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 2981) `CJSON_PUBLIC(cJSON_bool) cJSON_IsFalse(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 2991) `CJSON_PUBLIC(cJSON_bool) cJSON_IsTrue(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3001) `CJSON_PUBLIC(cJSON_bool) cJSON_IsBool(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3011) `CJSON_PUBLIC(cJSON_bool) cJSON_IsNull(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3021) `CJSON_PUBLIC(cJSON_bool) cJSON_IsNumber(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3031) `CJSON_PUBLIC(cJSON_bool) cJSON_IsString(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3041) `CJSON_PUBLIC(cJSON_bool) cJSON_IsArray(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3051) `CJSON_PUBLIC(cJSON_bool) cJSON_IsObject(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3061) `CJSON_PUBLIC(cJSON_bool) cJSON_IsRaw(const cJSON * const item)`
+  - `CJSON_PUBLIC` (function, line 3071) `CJSON_PUBLIC(cJSON_bool) cJSON_Compare(const cJSON * const a, const cJSON * const b, const cJSON_...`
+  - `cJSON_ArrayForEach` (function, line 3157) `cJSON_ArrayForEach(a_element, a)`
+  - `cJSON_ArrayForEach` (function, line 3173) `cJSON_ArrayForEach(b_element, b)`
+  - `CJSON_PUBLIC` (function, line 3193) `CJSON_PUBLIC(void *) cJSON_malloc(size_t size)`
+  - `CJSON_PUBLIC` (function, line 3198) `CJSON_PUBLIC(void) cJSON_free(void *object)`
+  - `sprintf` (function, line 128) `sprintf(version, "%i.%i.%i", CJSON_VERSION_MAJOR, CJSON_VERSION_MINOR, CJSON_VERSION_PATCH);`
+  - `tolower` (function, line 153) `return tolower(*string1) - tolower(*string2);`
+  - `void` (function, line 160) `void (CJSON_CDECL *deallocate)(void *pointer);`
+  - `malloc` (function, line 168) `return malloc(size);`
+  - `free` (function, line 172) `free(pointer);`
+  - `realloc` (function, line 176) `return realloc(pointer, size);`
+  - `memcpy` (function, line 205) `memcpy(copy, string, length);`
+  - `memset` (function, line 247) `memset(node, '\0', sizeof(cJSON));`
+  - `cJSON_Delete` (function, line 262) `cJSON_Delete(item->child);`
+  - `strcpy` (function, line 464) `strcpy(object->valuestring, valuestring);`
+  - `cJSON_free` (function, line 475) `cJSON_free(object->valuestring);`
+  - `cJSON_ParseWithLengthOpts` (function, line 1145) `return cJSON_ParseWithLengthOpts(value, buffer_length, return_parse_end, require_null_terminated);`
+  - `cJSON_ParseWithOpts` (function, line 1233) `return cJSON_ParseWithOpts(value, 0, 0);`
+  - `cJSON_DetachItemViaPointer` (function, line 2293) `return cJSON_DetachItemViaPointer(array, get_array_item(array, (size_t)which));`
+  - `cJSON_ReplaceItemViaPointer` (function, line 2419) `return cJSON_ReplaceItemViaPointer(array, get_array_item(array, (size_t)which), newitem);`
+  - `_CRT_SECURE_NO_DEPRECATE` (macro, line 28) `#define _CRT_SECURE_NO_DEPRECATE`
+  - `true` (macro, line 65) `#define true`
+  - `false` (macro, line 70) `#define false`
+  - `isinf` (macro, line 74) `#define isinf(d)`
+  - `isnan` (macro, line 77) `#define isnan(d)`
+  - `NAN` (macro, line 82) `#define NAN`
+  - `NAN` (macro, line 84) `#define NAN`
+  - `internal_malloc` (macro, line 179) `#define internal_malloc`
+  - `internal_free` (macro, line 180) `#define internal_free`
+  - `internal_realloc` (macro, line 181) `#define internal_realloc`
+  - `static_strlen` (macro, line 185) `#define static_strlen(string_literal)`
+  - `can_read` (macro, line 301) `#define can_read(buffer, size)`
+  - `can_access_at_index` (macro, line 303) `#define can_access_at_index(buffer, index)`
+  - `cannot_access_at_index` (macro, line 304) `#define cannot_access_at_index(buffer, index)`
+  - `buffer_at_offset` (macro, line 306) `#define buffer_at_offset(buffer)`
+  - `cjson_min` (macro, line 1240) `#define cjson_min(a, b)`
+- Depends on: `cJSON.h`
+
+## cJSON.h
+- Layer: utility
+- Language: h
+- Symbols:
+  - `cJSON` (struct, line 92)
+  - `cJSON_Hooks` (struct, line 114)
+  - `cJSON_bool` (type_alias, line 120) `typedef int cJSON_bool;`
+  - `void` (function, line 118) `void (CJSON_CDECL *free_fn)(void *ptr);`
+  - `sensitive` (function, line 249) `* case_sensitive determines if object keys are treated case sensitive (1) or case insensitive (0) */ CJSON_PUBLIC(cJSON_bool) cJSON_Compare(const cJSON * const a, const cJSON * const b, const cJSON_bo`
+  - `next` (variable, line 27) `extern "C" { #endif #if !defined(__WINDOWS__) && (defined(WIN32) || defined(WIN64) || defined(_MSC_VER) || defined(_WIN32)) #define __WINDOWS__ #endif #ifdef __WINDOWS__ /* When compiling for windows,`
+  - `cJSON__h` (macro, line 24) `#define cJSON__h`
+  - `__WINDOWS__` (macro, line 32) `#define __WINDOWS__`
+  - `CJSON_CDECL` (macro, line 43) `#define CJSON_CDECL`
+  - `CJSON_STDCALL` (macro, line 45) `#define CJSON_STDCALL`
+  - `CJSON_EXPORT_SYMBOLS` (macro, line 49) `#define CJSON_EXPORT_SYMBOLS`
+  - `CJSON_PUBLIC` (macro, line 53) `#define CJSON_PUBLIC(type)`
+  - `CJSON_PUBLIC` (macro, line 55) `#define CJSON_PUBLIC(type)`
+  - `CJSON_PUBLIC` (macro, line 57) `#define CJSON_PUBLIC(type)`
+  - `CJSON_CDECL` (macro, line 60) `#define CJSON_CDECL`
+  - `CJSON_STDCALL` (macro, line 61) `#define CJSON_STDCALL`
+  - `CJSON_PUBLIC` (macro, line 64) `#define CJSON_PUBLIC(type)`
+  - `CJSON_PUBLIC` (macro, line 66) `#define CJSON_PUBLIC(type)`
+  - `CJSON_VERSION_MAJOR` (macro, line 71) `#define CJSON_VERSION_MAJOR`
+  - `CJSON_VERSION_MINOR` (macro, line 72) `#define CJSON_VERSION_MINOR`
+  - `CJSON_VERSION_PATCH` (macro, line 73) `#define CJSON_VERSION_PATCH`
+  - `cJSON_Invalid` (macro, line 78) `#define cJSON_Invalid`
+  - `cJSON_False` (macro, line 79) `#define cJSON_False`
+  - `cJSON_True` (macro, line 80) `#define cJSON_True`
+  - `cJSON_NULL` (macro, line 81) `#define cJSON_NULL`
+  - `cJSON_Number` (macro, line 82) `#define cJSON_Number`
+  - `cJSON_String` (macro, line 83) `#define cJSON_String`
+  - `cJSON_Array` (macro, line 84) `#define cJSON_Array`
+  - `cJSON_Object` (macro, line 85) `#define cJSON_Object`
+  - `cJSON_Raw` (macro, line 86) `#define cJSON_Raw`
+  - `cJSON_IsReference` (macro, line 87) `#define cJSON_IsReference`
+  - `cJSON_StringIsConst` (macro, line 89) `#define cJSON_StringIsConst`
+  - `CJSON_NESTING_LIMIT` (macro, line 126) `#define CJSON_NESTING_LIMIT`
+  - `CJSON_CIRCULAR_LIMIT` (macro, line 132) `#define CJSON_CIRCULAR_LIMIT`
+  - `cJSON_SetIntValue` (macro, line 270) `#define cJSON_SetIntValue(object, number)`
+  - `cJSON_SetNumberValue` (macro, line 273) `#define cJSON_SetNumberValue(object, number)`
+  - `cJSON_SetBoolValue` (macro, line 278) `#define cJSON_SetBoolValue(object, boolValue)`
+  - `cJSON_ArrayForEach` (macro, line 285) `#define cJSON_ArrayForEach(element, array)`
+- Imported by: `beacon.c`, `cJSON.c`
+
+## gen_beacon.sh
+- Layer: utility
+- Doc: === beacon-GEN v1.2 ===
+- Language: sh
+- Symbols:
+  - `show_help` (function, line 34)
+  - `xor_string` (function, line 138)
+  - `crc32` (function, line 5916)
+
+## gen_dll.sh
+- Layer: utility
+- Doc: 1. Generar DLL
+- Language: sh
+
+## gen_dll_rev.sh
+- Layer: utility
+- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Language: sh
+- Symbols:
+  - `usage` (function, line 12)
+
+## gen_dll_ss.sh
+- Layer: utility
+- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Language: sh
+- Symbols:
+  - `usage` (function, line 10)
+
+## gen_key.sh
+- Layer: utility
+- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Language: sh
+- Symbols:
+  - `usage` (function, line 10)
+
+## gen_module.sh
+- Layer: utility
+- Doc: === gen_cmd_dll.sh v1.0 === Genera DLL y shellcode ofuscado para ejecutar un comando Uso: ./gen_cmd_dll.sh --cmd "powers
+- Language: sh
+- Symbols:
+  - `show_help` (function, line 18)
+  - `xor_obfuscate` (function, line 35)
+
+## generate_hashs.py
+- Layer: utility
+- Language: py
+- Symbols:
+  - `djb2` (function, line 23) `def djb2(s)`
+  - `generate_coff_loader` (function, line 223) `def generate_coff_loader()`
+  - `generate_bof_test` (function, line 491) `def generate_bof_test()`
+  - `main` (function, line 553) `def main()`
+
+## install.sh
+- Layer: utility
+- Language: sh
