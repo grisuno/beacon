@@ -1,0 +1,25 @@
+{
+  "tool": "readmenator",
+  "generated_at": "2026-09-18T06:53:41Z",
+  "project_root": "/tmp/push_beacon_20260918_033829",
+  "files": 41,
+  "symbols": 856,
+  "imports": 203,
+  "resolved_imports": 25,
+  "security_findings": 0,
+  "languages": {
+    "h": 8,
+    "c": 23,
+    "py": 3,
+    "sh": 7
+  },
+  "entrypoints": [],
+  "start_here": "INDEX.md",
+  "workflow": [
+    "ls *.md readmenator-*/  # orient: docs first, ignore build noise",
+    "grep -n '<keyword>' INDEX.md",
+    "cat KB_<subsystem>.md",
+    "grep -n '<file>' ARCHITECTURE.md SYMBOLS.md"
+  ],
+  "regenerate": "readmenator . --rebuild"
+}
