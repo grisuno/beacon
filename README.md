@@ -22,6 +22,9 @@ This script generates the foundational configuration for advanced implants that 
 Intended for ethical hacking, penetration testing, and academic research, this tool supports seamless integration into automated attack chains and red team infrastructure.
 <img width="735" height="994" alt="image" src="https://github.com/user-attachments/assets/2cecaa04-2720-4e7f-9a7a-42e77f14f700" />
 
+## TeamServer
+
+you can use [BlackObsidianC2](https://github.com/grisuno/BlackObsidianC2) or LazyC2 from [LazyOwn](https://github.com/grisuno/LazyOwn)
 
 ## For RedTeamers
 ```bash
