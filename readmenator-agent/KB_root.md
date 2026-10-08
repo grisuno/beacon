@@ -1,0 +1,362 @@
+# Subsystem: root (page 1 of 2)
+Pages: [KB_root.md](KB_root.md), [KB_root_p2.md](KB_root_p2.md)
+
+## COFFLoader.h
+- Layer: utility
+- Language: h
+- Symbols:
+  - `COFFLOADER_H` (macro, line 21) `#define COFFLOADER_H`
+- Imported by: `beacon.c`
+
+## COFFLoader3.c
+- Doc: SymbolHash: === Tabla de símbolos por hash ===
+- Layer: utility
+- Language: c
+- Symbols:
+  - `COFFSection` (struct, line 586)
+  - `COFFRelocation` (struct, line 599)
+  - `COFFHeader` (struct, line 620)
+  - `SymbolHash` (struct, line 642)
+  - `djb2_hash` (function, line 632) `static uint32_t djb2_hash(const char* str)`
+  - `create_trampoline` (function, line 913) `static void* create_trampoline(void* target)`
+  - `handle_relocation` (function, line 940) `BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target, 
+                    ...`
+  - `get_symbol_name` (function, line 1080) `static char* get_symbol_name(COFFSymbol* s, char* strtab, uint32_t strtab_size)`
+  - `__attribute__` (function, line 1103) `__attribute__((noinline))
+static void call_go_aligned(void* func, char* arg1, int arg2)`
+  - `RunCOFF` (function, line 1112) `int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char*...`
+  - `__imp_BeaconPrintf` (variable, line 332) `extern PVOID __imp_BeaconPrintf;`
+  - `__imp_BeaconOutput` (variable, line 333) `extern PVOID __imp_BeaconOutput;`
+  - `__imp_BeaconDataParse` (variable, line 334) `extern PVOID __imp_BeaconDataParse;`
+  - `__imp_BeaconDataInt` (variable, line 335) `extern PVOID __imp_BeaconDataInt;`
+  - `__imp_BeaconDataShort` (variable, line 336) `extern PVOID __imp_BeaconDataShort;`
+  - `__imp_BeaconDataExtract` (variable, line 337) `extern PVOID __imp_BeaconDataExtract;`
+  - `__imp_LoadLibraryA` (variable, line 338) `extern PVOID __imp_LoadLibraryA;`
+  - `__imp_LoadLibraryW` (variable, line 339) `extern PVOID __imp_LoadLibraryW;`
+  - `__imp_GetModuleHandleA` (variable, line 340) `extern PVOID __imp_GetModuleHandleA;`
+  - `__imp_GetModuleHandleW` (variable, line 341) `extern PVOID __imp_GetModuleHandleW;`
+  - `__imp_GetProcAddress` (variable, line 342) `extern PVOID __imp_GetProcAddress;`
+  - `__imp_GetLastError` (variable, line 343) `extern PVOID __imp_GetLastError;`
+  - `__imp_CloseHandle` (variable, line 344) `extern PVOID __imp_CloseHandle;`
+  - `__imp_ExitProcess` (variable, line 345) `extern PVOID __imp_ExitProcess;`
+  - `__imp_ExitThread` (variable, line 346) `extern PVOID __imp_ExitThread;`
+  - `__imp_Sleep` (variable, line 347) `extern PVOID __imp_Sleep;`
+  - `__imp_CreateThread` (variable, line 348) `extern PVOID __imp_CreateThread;`
+  - `__imp_GetCurrentProcess` (variable, line 349) `extern PVOID __imp_GetCurrentProcess;`
+  - `__imp_GetCurrentProcessId` (variable, line 350) `extern PVOID __imp_GetCurrentProcessId;`
+  - `__imp_GetCurrentThreadId` (variable, line 351) `extern PVOID __imp_GetCurrentThreadId;`
+  - `__imp_GetTickCount` (variable, line 352) `extern PVOID __imp_GetTickCount;`
+  - `__imp_GetTickCount64` (variable, line 353) `extern PVOID __imp_GetTickCount64;`
+  - `__imp_CreateFileA` (variable, line 354) `extern PVOID __imp_CreateFileA;`
+  - `__imp_CreateFileW` (variable, line 355) `extern PVOID __imp_CreateFileW;`
+  - `__imp_ReadFile` (variable, line 356) `extern PVOID __imp_ReadFile;`
+  - `__imp_WriteFile` (variable, line 357) `extern PVOID __imp_WriteFile;`
+  - `__imp_SetFilePointer` (variable, line 358) `extern PVOID __imp_SetFilePointer;`
+  - `__imp_SetEndOfFile` (variable, line 359) `extern PVOID __imp_SetEndOfFile;`
+  - `__imp_DeleteFileA` (variable, line 360) `extern PVOID __imp_DeleteFileA;`
+  - `__imp_DeleteFileW` (variable, line 361) `extern PVOID __imp_DeleteFileW;`
+  - `__imp_MoveFileA` (variable, line 362) `extern PVOID __imp_MoveFileA;`
+  - `__imp_MoveFileW` (variable, line 363) `extern PVOID __imp_MoveFileW;`
+  - `__imp_CopyFileA` (variable, line 364) `extern PVOID __imp_CopyFileA;`
+  - `__imp_CopyFileW` (variable, line 365) `extern PVOID __imp_CopyFileW;`
+  - `__imp_GetFileSize` (variable, line 366) `extern PVOID __imp_GetFileSize;`
+  - `__imp_GetFileSizeEx` (variable, line 367) `extern PVOID __imp_GetFileSizeEx;`
+  - `__imp_CreateDirectoryA` (variable, line 368) `extern PVOID __imp_CreateDirectoryA;`
+  - `__imp_CreateDirectoryW` (variable, line 369) `extern PVOID __imp_CreateDirectoryW;`
+  - `__imp_RemoveDirectoryA` (variable, line 370) `extern PVOID __imp_RemoveDirectoryA;`
+  - `__imp_RemoveDirectoryW` (variable, line 371) `extern PVOID __imp_RemoveDirectoryW;`
+  - `__imp_FindFirstFileA` (variable, line 372) `extern PVOID __imp_FindFirstFileA;`
+  - `__imp_FindFirstFileW` (variable, line 373) `extern PVOID __imp_FindFirstFileW;`
+  - `__imp_FindNextFileA` (variable, line 374) `extern PVOID __imp_FindNextFileA;`
+  - `__imp_FindNextFileW` (variable, line 375) `extern PVOID __imp_FindNextFileW;`
+  - `__imp_FindClose` (variable, line 376) `extern PVOID __imp_FindClose;`
+  - `__imp_GetFileAttributesA` (variable, line 377) `extern PVOID __imp_GetFileAttributesA;`
+  - `__imp_GetFileAttributesW` (variable, line 378) `extern PVOID __imp_GetFileAttributesW;`
+  - `__imp_SetFileAttributesA` (variable, line 379) `extern PVOID __imp_SetFileAttributesA;`
+  - `__imp_SetFileAttributesW` (variable, line 380) `extern PVOID __imp_SetFileAttributesW;`
+  - `__imp_GetSystemDirectoryA` (variable, line 381) `extern PVOID __imp_GetSystemDirectoryA;`
+  - `__imp_GetSystemDirectoryW` (variable, line 382) `extern PVOID __imp_GetSystemDirectoryW;`
+  - `__imp_GetWindowsDirectoryA` (variable, line 383) `extern PVOID __imp_GetWindowsDirectoryA;`
+  - `__imp_GetWindowsDirectoryW` (variable, line 384) `extern PVOID __imp_GetWindowsDirectoryW;`
+  - `__imp_GetTempPathA` (variable, line 385) `extern PVOID __imp_GetTempPathA;`
+  - `__imp_GetTempPathW` (variable, line 386) `extern PVOID __imp_GetTempPathW;`
+  - `__imp_GetComputerNameA` (variable, line 387) `extern PVOID __imp_GetComputerNameA;`
+  - `__imp_GetComputerNameW` (variable, line 388) `extern PVOID __imp_GetComputerNameW;`
+  - `__imp_GetUserNameA` (variable, line 389) `extern PVOID __imp_GetUserNameA;`
+  - `__imp_GetUserNameW` (variable, line 390) `extern PVOID __imp_GetUserNameW;`
+  - `__imp_GetVersionExA` (variable, line 391) `extern PVOID __imp_GetVersionExA;`
+  - `__imp_GetVersionExW` (variable, line 392) `extern PVOID __imp_GetVersionExW;`
+  - `__imp_GetNativeSystemInfo` (variable, line 393) `extern PVOID __imp_GetNativeSystemInfo;`
+  - `__imp_VirtualAlloc` (variable, line 394) `extern PVOID __imp_VirtualAlloc;`
+  - `__imp_VirtualFree` (variable, line 395) `extern PVOID __imp_VirtualFree;`
+  - `__imp_VirtualProtect` (variable, line 396) `extern PVOID __imp_VirtualProtect;`
+  - `__imp_VirtualQuery` (variable, line 397) `extern PVOID __imp_VirtualQuery;`
+  - `__imp_HeapAlloc` (variable, line 398) `extern PVOID __imp_HeapAlloc;`
+  - `__imp_HeapFree` (variable, line 399) `extern PVOID __imp_HeapFree;`
+  - `__imp_LocalAlloc` (variable, line 400) `extern PVOID __imp_LocalAlloc;`
+  - `__imp_LocalFree` (variable, line 401) `extern PVOID __imp_LocalFree;`
+  - `__imp_GlobalAlloc` (variable, line 402) `extern PVOID __imp_GlobalAlloc;`
+  - `__imp_GlobalFree` (variable, line 403) `extern PVOID __imp_GlobalFree;`
+  - `__imp_RtlMoveMemory` (variable, line 404) `extern PVOID __imp_RtlMoveMemory;`
+  - `__imp_RtlCopyMemory` (variable, line 405) `extern PVOID __imp_RtlCopyMemory;`
+  - `__imp_RtlFillMemory` (variable, line 406) `extern PVOID __imp_RtlFillMemory;`
+  - `__imp_RtlZeroMemory` (variable, line 407) `extern PVOID __imp_RtlZeroMemory;`
+  - `__imp_lstrlenA` (variable, line 408) `extern PVOID __imp_lstrlenA;`
+  - `__imp_lstrlenW` (variable, line 409) `extern PVOID __imp_lstrlenW;`
+  - `__imp_lstrcpyA` (variable, line 410) `extern PVOID __imp_lstrcpyA;`
+  - `__imp_lstrcpyW` (variable, line 411) `extern PVOID __imp_lstrcpyW;`
+  - `__imp_lstrcatA` (variable, line 412) `extern PVOID __imp_lstrcatA;`
+  - `__imp_lstrcatW` (variable, line 413) `extern PVOID __imp_lstrcatW;`
+  - `__imp_lstrcmpA` (variable, line 414) `extern PVOID __imp_lstrcmpA;`
+  - `__imp_lstrcmpW` (variable, line 415) `extern PVOID __imp_lstrcmpW;`
+  - `__imp_lstrcmpiA` (variable, line 416) `extern PVOID __imp_lstrcmpiA;`
+  - `__imp_lstrcmpiW` (variable, line 417) `extern PVOID __imp_lstrcmpiW;`
+  - `__imp_MultiByteToWideChar` (variable, line 418) `extern PVOID __imp_MultiByteToWideChar;`
+  - `__imp_WideCharToMultiByte` (variable, line 419) `extern PVOID __imp_WideCharToMultiByte;`
+  - `__imp_FormatMessageA` (variable, line 420) `extern PVOID __imp_FormatMessageA;`
+  - `__imp_FormatMessageW` (variable, line 421) `extern PVOID __imp_FormatMessageW;`
+  - `__imp_GetEnvironmentVariableA` (variable, line 422) `extern PVOID __imp_GetEnvironmentVariableA;`
+  - `__imp_GetEnvironmentVariableW` (variable, line 423) `extern PVOID __imp_GetEnvironmentVariableW;`
+  - `__imp_SetEnvironmentVariableA` (variable, line 424) `extern PVOID __imp_SetEnvironmentVariableA;`
+  - `__imp_SetEnvironmentVariableW` (variable, line 425) `extern PVOID __imp_SetEnvironmentVariableW;`
+  - `__imp_ExpandEnvironmentStringsA` (variable, line 426) `extern PVOID __imp_ExpandEnvironmentStringsA;`
+  - `__imp_ExpandEnvironmentStringsW` (variable, line 427) `extern PVOID __imp_ExpandEnvironmentStringsW;`
+  - `__imp_GetCommandLineA` (variable, line 428) `extern PVOID __imp_GetCommandLineA;`
+  - `__imp_GetCommandLineW` (variable, line 429) `extern PVOID __imp_GetCommandLineW;`
+  - `__imp_GetModuleFileNameA` (variable, line 430) `extern PVOID __imp_GetModuleFileNameA;`
+  - `__imp_GetModuleFileNameW` (variable, line 431) `extern PVOID __imp_GetModuleFileNameW;`
+  - `__imp_GetStartupInfoA` (variable, line 432) `extern PVOID __imp_GetStartupInfoA;`
+  - `__imp_GetStartupInfoW` (variable, line 433) `extern PVOID __imp_GetStartupInfoW;`
+  - `__imp_FreeLibrary` (variable, line 434) `extern PVOID __imp_FreeLibrary;`
+  - `__imp_GetConsoleWindow` (variable, line 435) `extern PVOID __imp_GetConsoleWindow;`
+  - `__imp_AllocConsole` (variable, line 436) `extern PVOID __imp_AllocConsole;`
+  - `__imp_FreeConsole` (variable, line 437) `extern PVOID __imp_FreeConsole;`
+  - `__imp_AttachConsole` (variable, line 438) `extern PVOID __imp_AttachConsole;`
+  - `__imp_IsDebuggerPresent` (variable, line 439) `extern PVOID __imp_IsDebuggerPresent;`
+  - `__imp_CheckRemoteDebuggerPresent` (variable, line 440) `extern PVOID __imp_CheckRemoteDebuggerPresent;`
+  - `__imp_OutputDebugStringA` (variable, line 441) `extern PVOID __imp_OutputDebugStringA;`
+  - `__imp_OutputDebugStringW` (variable, line 442) `extern PVOID __imp_OutputDebugStringW;`
+  - `__imp_OpenProcess` (variable, line 443) `extern PVOID __imp_OpenProcess;`
+  - `__imp_OpenProcessToken` (variable, line 444) `extern PVOID __imp_OpenProcessToken;`
+  - `__imp_DuplicateTokenEx` (variable, line 445) `extern PVOID __imp_DuplicateTokenEx;`
+  - `__imp_ImpersonateLoggedOnUser` (variable, line 446) `extern PVOID __imp_ImpersonateLoggedOnUser;`
+  - `__imp_RevertToSelf` (variable, line 447) `extern PVOID __imp_RevertToSelf;`
+  - `__imp_LookupPrivilegeValueA` (variable, line 448) `extern PVOID __imp_LookupPrivilegeValueA;`
+  - `__imp_LookupPrivilegeValueW` (variable, line 449) `extern PVOID __imp_LookupPrivilegeValueW;`
+  - `__imp_AdjustTokenPrivileges` (variable, line 450) `extern PVOID __imp_AdjustTokenPrivileges;`
+  - `__imp_CreateProcessAsUserA` (variable, line 451) `extern PVOID __imp_CreateProcessAsUserA;`
+  - `__imp_CreateProcessAsUserW` (variable, line 452) `extern PVOID __imp_CreateProcessAsUserW;`
+  - `__imp_RegOpenKeyExA` (variable, line 453) `extern PVOID __imp_RegOpenKeyExA;`
+  - `__imp_RegOpenKeyExW` (variable, line 454) `extern PVOID __imp_RegOpenKeyExW;`
+  - `__imp_RegCreateKeyExA` (variable, line 455) `extern PVOID __imp_RegCreateKeyExA;`
+  - `__imp_RegCreateKeyExW` (variable, line 456) `extern PVOID __imp_RegCreateKeyExW;`
+  - `__imp_RegSetValueExA` (variable, line 457) `extern PVOID __imp_RegSetValueExA;`
+  - `__imp_RegSetValueExW` (variable, line 458) `extern PVOID __imp_RegSetValueExW;`
+  - `__imp_RegQueryValueExA` (variable, line 459) `extern PVOID __imp_RegQueryValueExA;`
+  - `__imp_RegQueryValueExW` (variable, line 460) `extern PVOID __imp_RegQueryValueExW;`
+  - `__imp_RegDeleteValueA` (variable, line 461) `extern PVOID __imp_RegDeleteValueA;`
+  - `__imp_RegDeleteValueW` (variable, line 462) `extern PVOID __imp_RegDeleteValueW;`
+  - `__imp_RegCloseKey` (variable, line 463) `extern PVOID __imp_RegCloseKey;`
+  - `__imp_RegEnumKeyExA` (variable, line 464) `extern PVOID __imp_RegEnumKeyExA;`
+  - `__imp_RegEnumKeyExW` (variable, line 465) `extern PVOID __imp_RegEnumKeyExW;`
+  - `__imp_RegEnumValueA` (variable, line 466) `extern PVOID __imp_RegEnumValueA;`
+  - `__imp_RegEnumValueW` (variable, line 467) `extern PVOID __imp_RegEnumValueW;`
+  - `__imp_CryptAcquireContextA` (variable, line 468) `extern PVOID __imp_CryptAcquireContextA;`
+  - `__imp_CryptAcquireContextW` (variable, line 469) `extern PVOID __imp_CryptAcquireContextW;`
+  - `__imp_CryptCreateHash` (variable, line 470) `extern PVOID __imp_CryptCreateHash;`
+  - `__imp_CryptHashData` (variable, line 471) `extern PVOID __imp_CryptHashData;`
+  - `__imp_CryptDeriveKey` (variable, line 472) `extern PVOID __imp_CryptDeriveKey;`
+  - `__imp_CryptEncrypt` (variable, line 473) `extern PVOID __imp_CryptEncrypt;`
+  - `__imp_CryptDecrypt` (variable, line 474) `extern PVOID __imp_CryptDecrypt;`
+  - `__imp_CryptReleaseContext` (variable, line 475) `extern PVOID __imp_CryptReleaseContext;`
+  - `__imp_CryptDestroyHash` (variable, line 476) `extern PVOID __imp_CryptDestroyHash;`
+  - `__imp_CryptDestroyKey` (variable, line 477) `extern PVOID __imp_CryptDestroyKey;`
+  - `__imp_CryptGenRandom` (variable, line 478) `extern PVOID __imp_CryptGenRandom;`
+  - `__imp_CoInitializeEx` (variable, line 479) `extern PVOID __imp_CoInitializeEx;`
+  - `__imp_CoUninitialize` (variable, line 480) `extern PVOID __imp_CoUninitialize;`
+  - `__imp_CoCreateInstance` (variable, line 481) `extern PVOID __imp_CoCreateInstance;`
+  - `__imp_CoTaskMemFree` (variable, line 482) `extern PVOID __imp_CoTaskMemFree;`
+  - `__imp_IIDFromString` (variable, line 483) `extern PVOID __imp_IIDFromString;`
+  - `__imp_StringFromGUID2` (variable, line 484) `extern PVOID __imp_StringFromGUID2;`
+  - `__imp_VariantInit` (variable, line 485) `extern PVOID __imp_VariantInit;`
+  - `__imp_VariantClear` (variable, line 486) `extern PVOID __imp_VariantClear;`
+  - `__imp_VariantChangeType` (variable, line 487) `extern PVOID __imp_VariantChangeType;`
+  - `__imp_SysAllocString` (variable, line 488) `extern PVOID __imp_SysAllocString;`
+  - `__imp_SysFreeString` (variable, line 489) `extern PVOID __imp_SysFreeString;`
+  - `__imp_SysStringLen` (variable, line 490) `extern PVOID __imp_SysStringLen;`
+  - `__imp_SHGetFolderPathA` (variable, line 491) `extern PVOID __imp_SHGetFolderPathA;`
+  - `__imp_SHGetFolderPathW` (variable, line 492) `extern PVOID __imp_SHGetFolderPathW;`
+  - `__imp_SHGetKnownFolderPath` (variable, line 493) `extern PVOID __imp_SHGetKnownFolderPath;`
+  - `__imp_PathFileExistsA` (variable, line 494) `extern PVOID __imp_PathFileExistsA;`
+  - `__imp_PathFileExistsW` (variable, line 495) `extern PVOID __imp_PathFileExistsW;`
+  - `__imp_PathCombineA` (variable, line 496) `extern PVOID __imp_PathCombineA;`
+  - `__imp_PathCombineW` (variable, line 497) `extern PVOID __imp_PathCombineW;`
+  - `__imp_GetDesktopWindow` (variable, line 498) `extern PVOID __imp_GetDesktopWindow;`
+  - `__imp_GetShellWindow` (variable, line 499) `extern PVOID __imp_GetShellWindow;`
+  - `__imp_FindWindowA` (variable, line 500) `extern PVOID __imp_FindWindowA;`
+  - `__imp_FindWindowW` (variable, line 501) `extern PVOID __imp_FindWindowW;`
+  - `__imp_EnumWindows` (variable, line 502) `extern PVOID __imp_EnumWindows;`
+  - `__imp_GetWindowTextA` (variable, line 503) `extern PVOID __imp_GetWindowTextA;`
+  - `__imp_GetWindowTextW` (variable, line 504) `extern PVOID __imp_GetWindowTextW;`
+  - `__imp_GetClassNameA` (variable, line 505) `extern PVOID __imp_GetClassNameA;`
+  - `__imp_GetClassNameW` (variable, line 506) `extern PVOID __imp_GetClassNameW;`
+  - `__imp_SendMessageA` (variable, line 507) `extern PVOID __imp_SendMessageA;`
+  - `__imp_SendMessageW` (variable, line 508) `extern PVOID __imp_SendMessageW;`
+  - `__imp_EnumProcesses` (variable, line 509) `extern PVOID __imp_EnumProcesses;`
+  - `__imp_EnumProcessModules` (variable, line 510) `extern PVOID __imp_EnumProcessModules;`
+  - `__imp_GetModuleBaseNameA` (variable, line 511) `extern PVOID __imp_GetModuleBaseNameA;`
+  - `__imp_GetModuleBaseNameW` (variable, line 512) `extern PVOID __imp_GetModuleBaseNameW;`
+  - `__imp_GetModuleInformation` (variable, line 513) `extern PVOID __imp_GetModuleInformation;`
+  - `__imp_WSASocketA` (variable, line 514) `extern PVOID __imp_WSASocketA;`
+  - `__imp_WSASocketW` (variable, line 515) `extern PVOID __imp_WSASocketW;`
+  - `__imp_WSAStartup` (variable, line 516) `extern PVOID __imp_WSAStartup;`
+  - `__imp_WSACleanup` (variable, line 517) `extern PVOID __imp_WSACleanup;`
+  - `__imp_bind` (variable, line 518) `extern PVOID __imp_bind;`
+  - `__imp_listen` (variable, line 519) `extern PVOID __imp_listen;`
+  - `__imp_accept` (variable, line 520) `extern PVOID __imp_accept;`
+  - `__imp_connect` (variable, line 521) `extern PVOID __imp_connect;`
+  - `__imp_send` (variable, line 522) `extern PVOID __imp_send;`
+  - `__imp_recv` (variable, line 523) `extern PVOID __imp_recv;`
+  - `__imp_closesocket` (variable, line 524) `extern PVOID __imp_closesocket;`
+  - `__imp_ioctlsocket` (variable, line 525) `extern PVOID __imp_ioctlsocket;`
+  - `__imp_gethostname` (variable, line 526) `extern PVOID __imp_gethostname;`
+  - `__imp_gethostbyname` (variable, line 527) `extern PVOID __imp_gethostbyname;`
+  - `__imp_getaddrinfo` (variable, line 528) `extern PVOID __imp_getaddrinfo;`
+  - `__imp_freeaddrinfo` (variable, line 529) `extern PVOID __imp_freeaddrinfo;`
+  - `__imp_htons` (variable, line 530) `extern PVOID __imp_htons;`
+  - `__imp_ntohs` (variable, line 531) `extern PVOID __imp_ntohs;`
+  - `__imp_htonl` (variable, line 532) `extern PVOID __imp_htonl;`
+  - `__imp_ntohl` (variable, line 533) `extern PVOID __imp_ntohl;`
+  - `__imp_NetUserEnum` (variable, line 534) `extern PVOID __imp_NetUserEnum;`
+  - `__imp_NetLocalGroupEnum` (variable, line 535) `extern PVOID __imp_NetLocalGroupEnum;`
+  - `__imp_NetShareEnum` (variable, line 536) `extern PVOID __imp_NetShareEnum;`
+  - `__imp_NetWkstaUserEnum` (variable, line 537) `extern PVOID __imp_NetWkstaUserEnum;`
+  - `__imp_NetSessionEnum` (variable, line 538) `extern PVOID __imp_NetSessionEnum;`
+  - `__imp_NetApiBufferFree` (variable, line 539) `extern PVOID __imp_NetApiBufferFree;`
+  - `__imp_WNetOpenEnumA` (variable, line 540) `extern PVOID __imp_WNetOpenEnumA;`
+  - `__imp_WNetOpenEnumW` (variable, line 541) `extern PVOID __imp_WNetOpenEnumW;`
+  - `__imp_WNetEnumResourceA` (variable, line 542) `extern PVOID __imp_WNetEnumResourceA;`
+  - `__imp_WNetEnumResourceW` (variable, line 543) `extern PVOID __imp_WNetEnumResourceW;`
+  - `__imp_WNetCloseEnum` (variable, line 544) `extern PVOID __imp_WNetCloseEnum;`
+  - `__imp__stricmp` (variable, line 545) `extern PVOID __imp__stricmp;`
+  - `__imp_Process32Next` (variable, line 546) `extern PVOID __imp_Process32Next;`
+  - `__imp_IsWow64Process` (variable, line 547) `extern PVOID __imp_IsWow64Process;`
+  - `__imp_Process32First` (variable, line 548) `extern PVOID __imp_Process32First;`
+  - `__imp_CreateToolhelp32Snapshot` (variable, line 549) `extern PVOID __imp_CreateToolhelp32Snapshot;`
+  - `__imp_select` (variable, line 550) `extern PVOID __imp_select;`
+  - `__imp_CreateProcessA` (variable, line 551) `extern PVOID __imp_CreateProcessA;`
+  - `__imp_CreateProcessW` (variable, line 552) `extern PVOID __imp_CreateProcessW;`
+  - `__imp_SuspendThread` (variable, line 553) `extern PVOID __imp_SuspendThread;`
+  - `__imp_OpenThread` (variable, line 554) `extern PVOID __imp_OpenThread;`
+  - `__imp_Thread32First` (variable, line 555) `extern PVOID __imp_Thread32First;`
+  - `__imp_Thread32Next` (variable, line 556) `extern PVOID __imp_Thread32Next;`
+  - `__imp_NtQueryInformationThread` (variable, line 557) `extern PVOID __imp_NtQueryInformationThread;`
+  - `g_pNtCreateFileUnhooked` (variable, line 561) `extern PVOID g_pNtCreateFileUnhooked;`
+  - `g_pNtWriteVirtualMemoryUnhooked` (variable, line 562) `extern PVOID g_pNtWriteVirtualMemoryUnhooked;`
+  - `g_pNtProtectVirtualMemoryUnhooked` (variable, line 563) `extern PVOID g_pNtProtectVirtualMemoryUnhooked;`
+  - `g_pNtResumeThreadUnhooked` (variable, line 564) `extern PVOID g_pNtResumeThreadUnhooked;`
+  - `g_pNtCreateThreadExUnhooked` (variable, line 565) `extern PVOID g_pNtCreateThreadExUnhooked;`
+  - `IMAGE_REL_AMD64_ABSOLUTE` (macro, line 568) `#define IMAGE_REL_AMD64_ABSOLUTE`
+  - `IMAGE_REL_AMD64_ADDR64` (macro, line 569) `#define IMAGE_REL_AMD64_ADDR64`
+  - `IMAGE_REL_AMD64_ADDR32` (macro, line 570) `#define IMAGE_REL_AMD64_ADDR32`
+  - `IMAGE_REL_AMD64_ADDR32NB` (macro, line 571) `#define IMAGE_REL_AMD64_ADDR32NB`
+  - `IMAGE_REL_AMD64_REL32` (macro, line 572) `#define IMAGE_REL_AMD64_REL32`
+  - `IMAGE_REL_AMD64_REL32_1` (macro, line 573) `#define IMAGE_REL_AMD64_REL32_1`
+  - `IMAGE_REL_AMD64_REL32_2` (macro, line 574) `#define IMAGE_REL_AMD64_REL32_2`
+  - `IMAGE_REL_AMD64_REL32_3` (macro, line 575) `#define IMAGE_REL_AMD64_REL32_3`
+  - `IMAGE_REL_AMD64_REL32_4` (macro, line 576) `#define IMAGE_REL_AMD64_REL32_4`
+  - `IMAGE_REL_AMD64_REL32_5` (macro, line 577) `#define IMAGE_REL_AMD64_REL32_5`
+  - `IMAGE_REL_AMD64_SECTION` (macro, line 578) `#define IMAGE_REL_AMD64_SECTION`
+  - `IMAGE_REL_AMD64_SECREL` (macro, line 579) `#define IMAGE_REL_AMD64_SECREL`
+  - `IMAGE_REL_AMD64_SECREL7` (macro, line 580) `#define IMAGE_REL_AMD64_SECREL7`
+  - `IMAGE_REL_AMD64_TOKEN` (macro, line 581) `#define IMAGE_REL_AMD64_TOKEN`
+  - `IMAGE_REL_AMD64_SREL32` (macro, line 582) `#define IMAGE_REL_AMD64_SREL32`
+  - `IMAGE_REL_AMD64_PAIR` (macro, line 583) `#define IMAGE_REL_AMD64_PAIR`
+  - `IMAGE_REL_AMD64_SSPAN32` (macro, line 584) `#define IMAGE_REL_AMD64_SSPAN32`
+- Depends on: `beacon.h`
+
+## aes.c
+- Doc: tiny-AES-c (https://github.com/kokke/tiny-AES-c)
+- Layer: utility
+- Language: c
+- Symbols:
+  - `getSBoxValue` (function, line 13) `static uint8_t getSBoxValue(uint8_t num)`
+  - `getSBoxInvert` (function, line 35) `static uint8_t getSBoxInvert(uint8_t num)`
+  - `Td0` (function, line 57) `static uint8_t Td0(int x)`
+  - `Td1` (function, line 58) `static uint8_t Td1(int x)`
+  - `Td2` (function, line 59) `static uint8_t Td2(int x)`
+  - `Td3` (function, line 60) `static uint8_t Td3(int x)`
+  - `Td4` (function, line 61) `static uint8_t Td4(int x)`
+  - `KeyExpansion` (function, line 166) `static void KeyExpansion(uint8_t* RoundKey, const uint8_t* Key)`
+  - `AES_init_ctx` (function, line 239) `void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key)`
+  - `AES_init_ctx_iv` (function, line 244) `void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv)`
+  - `AES_ctx_set_iv` (function, line 249) `void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv)`
+  - `AddRoundKey` (function, line 257) `static void AddRoundKey(uint8_t round, state_t* state, const uint8_t* RoundKey)`
+  - `SubBytes` (function, line 271) `static void SubBytes(state_t* state)`
+  - `ShiftRows` (function, line 286) `static void ShiftRows(state_t* state)`
+  - `xtime` (function, line 314) `static uint8_t xtime(uint8_t x)`
+  - `MixColumns` (function, line 320) `static void MixColumns(state_t* state)`
+  - `Multiply` (function, line 340) `static uint8_t Multiply(uint8_t x, uint8_t y)`
+  - `InvMixColumns` (function, line 370) `static void InvMixColumns(state_t* state)`
+  - `InvSubBytes` (function, line 391) `static void InvSubBytes(state_t* state)`
+  - `InvShiftRows` (function, line 403) `static void InvShiftRows(state_t* state)`
+  - `Cipher` (function, line 433) `static void Cipher(state_t* state, const uint8_t* RoundKey)`
+  - `InvCipher` (function, line 459) `static void InvCipher(state_t* state, const uint8_t* RoundKey)`
+  - `AES_ECB_encrypt` (function, line 490) `void AES_ECB_encrypt(const struct AES_ctx* ctx, uint8_t* buf)`
+  - `AES_ECB_decrypt` (function, line 496) `void AES_ECB_decrypt(const struct AES_ctx* ctx, uint8_t* buf)`
+  - `XorWithIv` (function, line 512) `static void XorWithIv(uint8_t* buf, const uint8_t* Iv)`
+  - `AES_CBC_encrypt_buffer` (function, line 521) `void AES_CBC_encrypt_buffer(struct AES_ctx *ctx, uint8_t* buf, size_t length)`
+  - `AES_CBC_decrypt_buffer` (function, line 536) `void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length)`
+  - `AES_CTR_xcrypt_buffer` (function, line 558) `void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length)`
+  - `Nb` (macro, line 5) `#define Nb`
+  - `KEYLEN_256` (macro, line 9) `#define KEYLEN_256`
+  - `RKLENGTH` (macro, line 10) `#define RKLENGTH`
+  - `BLOCKLEN` (macro, line 11) `#define BLOCKLEN`
+  - `Nb` (macro, line 67) `#define Nb`
+  - `Nk` (macro, line 70) `#define Nk`
+  - `Nr` (macro, line 71) `#define Nr`
+  - `Nk` (macro, line 73) `#define Nk`
+  - `Nr` (macro, line 74) `#define Nr`
+  - `Nk` (macro, line 76) `#define Nk`
+  - `Nr` (macro, line 77) `#define Nr`
+  - `MULTIPLY_AS_A_FUNCTION` (macro, line 84) `#define MULTIPLY_AS_A_FUNCTION`
+  - `getSBoxValue` (macro, line 163) `#define getSBoxValue(num)`
+  - `Multiply` (macro, line 349) `#define Multiply(x, y)`
+  - `getSBoxInvert` (macro, line 365) `#define getSBoxInvert(num)`
+- Depends on: `aes.h`
+
+## aes.h
+- Doc: #define the macros below to 1/0 to enable/disable the mode of operation.
+- Layer: utility
+- Language: h
+- Symbols:
+  - `AES_ctx` (struct, line 33)
+  - `AES_init_ctx` (function, line 41) `void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key);`
+  - `AES_init_ctx_iv` (function, line 43) `void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv);`
+  - `AES_ctx_set_iv` (function, line 44) `void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv);`
+  - `AES_ECB_encrypt` (function, line 48) `void AES_ECB_encrypt(const struct AES_ctx* ctx, uint8_t* buf);`
+  - `AES_ECB_decrypt` (function, line 49) `void AES_ECB_decrypt(const struct AES_ctx* ctx, uint8_t* buf);`
+  - `AES_CBC_encrypt_buffer` (function, line 53) `void AES_CBC_encrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);`
+  - `AES_CBC_decrypt_buffer` (function, line 54) `void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);`
+  - `AES_CTR_xcrypt_buffer` (function, line 58) `void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);`
+  - `_AES_H_` (macro, line 2) `#define _AES_H_`
+  - `CBC` (macro, line 9) `#define CBC`
+  - `ECB` (macro, line 12) `#define ECB`
+  - `CTR` (macro, line 15) `#define CTR`
+  - `AES256` (macro, line 18) `#define AES256`
+  - `AES_BLOCKLEN` (macro, line 20) `#define AES_BLOCKLEN`
+  - `AES_KEYLEN` (macro, line 23) `#define AES_KEYLEN`
+  - `AES_keyExpSize` (macro, line 24) `#define AES_keyExpSize`
+  - `AES_KEYLEN` (macro, line 26) `#define AES_KEYLEN`
+  - `AES_keyExpSize` (macro, line 27) `#define AES_keyExpSize`
+  - `AES_KEYLEN` (macro, line 29) `#define AES_KEYLEN`
+  - `AES_keyExpSize` (macro, line 30) `#define AES_keyExpSize`
+- Imported by: `aes.c`, `beacon.c`
+
+## app.py
+- Doc: This file is part of Black Basalt Beacon.
+- Layer: utility
+- Language: py
+
+
+Next: [KB_root_p2.md](KB_root_p2.md)
