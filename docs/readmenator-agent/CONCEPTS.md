@@ -1,0 +1,120 @@
+# Concepts
+
+Nouns map atomically to file sets (EXTRACTED); verbs aggregate structural edges (INFERRED).
+
+- `bof` | files=25 | mentions=30 | `bof/calc/beacon.h`, `bof/calc/calc.c`, `bof/etw/beacon.h`, `bof/etw/etw.c`, `bof/test/Test.c`, `bof/test/amsibypass.c`, `bof/test/beacon.h`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/getenv.c`
+- `get` | files=20 | mentions=98 | `COFFLoader3.c`, `aes.c`, `beacon.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/getenv.c`, `bof/test/loadvnc.c`
+- `imp` | files=18 | mentions=286 | `COFFLoader3.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/getenv.c`, `bof/test/loadvnc.c`, `bof/test/persist.c`, `bof/test/persistsvc.c`
+- `address` | files=15 | mentions=15 | `COFFLoader3.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`
+- `load` | files=14 | mentions=16 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`
+- `proc` | files=14 | mentions=14 | `COFFLoader3.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`
+- `library` | files=13 | mentions=15 | `COFFLoader3.c`, `bof/calc/calc.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`, `bof/test/uacbypass.c`
+- `handle` | files=12 | mentions=26 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/loadvnc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`, `bof/test/uacbypass.c`
+- `funci` | files=12 | mentions=23 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/test/amsibypass.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/tel.py`, `bof/test/uacbypass.c`, `bof/test/upload.c`, `bof/test/vncrelay.c`
+- `beacon` | files=11 | mentions=39 | `COFFLoader3.c`, `app.py`, `beacon.c`, `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/etw/etw.c`, `bof/test/beacon.h`, `bof/test/sock5.c`, `bof/whoami/beacon.h`
+- `close` | files=10 | mentions=16 | `COFFLoader3.c`, `bof/calc/calc.c`, `bof/test/cmdwhoami.c`, `bof/test/disablelog.c`, `bof/test/loadvnc.c`, `bof/test/persist.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`, `bof/test/uacbypass.c`, `bof/test/vncrelay.c`
+- `imports` | files=10 | mentions=11 | `bof/calc/calc.c`, `bof/test/amsibypass.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/sock5.c`, `bof/test/uacbypass.c`, `bof/test/upload.c`, `bof/test/vncrelay.c`, `bof/whoami/whoami.c`, `generate_hashs.py`
+- `principal` | files=10 | mentions=11 | `beacon.c`, `bof/calc/calc.c`, `bof/test/amsibypass.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/sock5.c`, `bof/test/uacbypass.c`, `bof/test/upload.c`, `bof/test/vncrelay.c`, `bof/whoami/whoami.c`
+- `output` | files=9 | mentions=37 | `COFFLoader3.c`, `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/test/beacon.h`, `bof/test/sock5.c`, `bof/whoami/beacon.h`, `cJSON.c`, `gen_module.sh`
+- `error` | files=9 | mentions=14 | `COFFLoader3.c`, `beacon.c`, `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/test/beacon.h`, `bof/test/sock5.c`, `bof/whoami/beacon.h`, `cJSON.c`
+- `key` | files=8 | mentions=25 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/persist.c`, `bof/test/upload.c`, `gen_key.sh`, `gen_module.sh`
+- `version` | files=8 | mentions=22 | `COFFLoader3.c`, `app.py`, `beacon.c`, `bof/test/sock5.c`, `bof/test/tel.py`, `bof/test/winver.c`, `cJSON.c`, `cJSON.h`
+- `directos` | files=8 | mentions=9 | `bof/calc/calc.c`, `bof/test/amsibypass.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/uacbypass.c`, `bof/test/upload.c`, `bof/test/vncrelay.c`, `bof/whoami/whoami.c`
+- `buffer` | files=7 | mentions=94 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/sock5.c`, `bof/test/upload.c`, `cJSON.c`
+- `module` | files=7 | mentions=17 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/disablelog.c`, `bof/whoami/whoami.c`, `gen_module.sh`
+- `gen` | files=7 | mentions=16 | `COFFLoader3.c`, `gen_beacon.sh`, `gen_dll.sh`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_key.sh`, `gen_module.sh`
+- `virtual` | files=7 | mentions=14 | `COFFLoader3.c`, `beacon.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/shellcode.c`, `bof/test/sock5.c`, `bof/test/vncrelay.c`
+- `set` | files=6 | mentions=42 | `COFFLoader3.c`, `aes.c`, `aes.h`, `bof/test/persist.c`, `bof/test/sock5.c`, `cJSON.h`
+- `define` | files=6 | mentions=25 | `aes.h`, `beacon.c`, `bof/test/loadvnc.c`, `bof/test/sock5.c`, `cJSON.c`, `cJSON.h`
+- `size` | files=6 | mentions=24 | `COFFLoader3.c`, `aes.h`, `beacon.c`, `bof/test/loadvnc.c`, `bof/test/sock5.c`, `cJSON.c`
+- `name` | files=6 | mentions=18 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/test/sock5.c`, `bof/test/upload.c`, `bof/whoami/whoami.c`
+- `callback` | files=6 | mentions=13 | `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/test/beacon.h`, `bof/test/sock5.c`, `bof/whoami/beacon.h`
+- `bytes` | files=6 | mentions=10 | `aes.c`, `beacon.c`, `bof/test/sock5.c`, `bof/test/upload.c`, `cJSON.c`, `gen_beacon.sh`
+- `next` | files=6 | mentions=10 | `COFFLoader3.c`, `aes.c`, `bof/test/scan_shellcode.c`, `bof/test/upload.c`, `cJSON.c`, `cJSON.h`
+- `copy` | files=6 | mentions=8 | `COFFLoader3.c`, `app.py`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/shellcode.c`, `cJSON.c`
+- `lean` | files=6 | mentions=7 | `beacon.c`, `bof/test/disablelog.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`, `bof/test/upload.c`
+- `mean` | files=6 | mentions=7 | `beacon.c`, `bof/test/disablelog.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`, `bof/test/upload.c`
+- `win32` | files=6 | mentions=7 | `beacon.c`, `bof/test/disablelog.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c`, `bof/test/upload.c`
+- `aes` | files=5 | mentions=44 | `aes.c`, `aes.h`, `beacon.c`, `bof/test/tel.py`, `bof/test/upload.c`
+- `string` | files=5 | mentions=41 | `COFFLoader3.c`, `beacon.c`, `cJSON.c`, `cJSON.h`, `gen_beacon.sh`
+- `value` | files=5 | mentions=22 | `COFFLoader3.c`, `aes.c`, `bof/test/persist.c`, `cJSON.c`, `cJSON.h`
+- `process` | files=5 | mentions=20 | `COFFLoader3.c`, `beacon.c`, `bof/test/disablelog.c`, `bof/test/scan_shellcode.c`, `cJSON.c`
+- `free` | files=5 | mentions=19 | `COFFLoader3.c`, `app.py`, `bof/test/sock5.c`, `bof/test/vncrelay.c`, `cJSON.c`
+- `dll` | files=5 | mentions=14 | `beacon.c`, `gen_dll.sh`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_module.sh`
+- `memory` | files=5 | mentions=12 | `COFFLoader3.c`, `beacon.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/shellcode.c`
+- `decrypt` | files=5 | mentions=9 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/tel.py`
+- `encrypt` | files=5 | mentions=7 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/upload.c`
+- `datap` | files=5 | mentions=5 | `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/test/beacon.h`, `bof/whoami/beacon.h`
+- `por` | files=5 | mentions=5 | `COFFLoader3.c`, `bof/test/tel.py`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_key.sh`
+- `uso` | files=5 | mentions=5 | `bof/test/tel.py`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_key.sh`, `gen_module.sh`
+- `char` | files=4 | mentions=22 | `COFFLoader3.c`, `beacon.c`, `bof/test/sock5.c`, `cJSON.c`
+- `create` | files=4 | mentions=20 | `COFFLoader3.c`, `beacon.c`, `bof/test/scan_shellcode.c`, `cJSON.c`
+- `defined` | files=4 | mentions=15 | `aes.c`, `aes.h`, `beacon.c`, `cJSON.c`
+- `number` | files=4 | mentions=11 | `aes.c`, `beacon.c`, `cJSON.c`, `cJSON.h`
+- `open` | files=4 | mentions=10 | `COFFLoader3.c`, `bof/test/disablelog.c`, `bof/test/persist.c`, `bof/test/scan_shellcode.c`
+
+## Verb Edges
+
+- `bof` --consumes--> `beacon` (strength 1.00)
+- `bof` --depends_on--> `beacon` (strength 1.00)
+- `bof` --consumes--> `callback` (strength 1.00)
+- `bof` --depends_on--> `callback` (strength 1.00)
+- `bof` --consumes--> `datap` (strength 1.00)
+- `bof` --depends_on--> `datap` (strength 1.00)
+- `bof` --consumes--> `error` (strength 1.00)
+- `bof` --depends_on--> `error` (strength 1.00)
+- `bof` --consumes--> `output` (strength 1.00)
+- `bof` --depends_on--> `output` (strength 1.00)
+- `imp` --consumes--> `beacon` (strength 1.00)
+- `imp` --depends_on--> `beacon` (strength 1.00)
+- `imp` --consumes--> `callback` (strength 1.00)
+- `imp` --depends_on--> `callback` (strength 1.00)
+- `imp` --consumes--> `datap` (strength 1.00)
+- `imp` --depends_on--> `datap` (strength 1.00)
+- `imp` --consumes--> `error` (strength 1.00)
+- `imp` --depends_on--> `error` (strength 1.00)
+- `imp` --consumes--> `output` (strength 1.00)
+- `imp` --depends_on--> `output` (strength 1.00)
+- `get` --consumes--> `beacon` (strength 0.94)
+- `get` --depends_on--> `beacon` (strength 0.94)
+- `get` --consumes--> `callback` (strength 0.94)
+- `get` --depends_on--> `callback` (strength 0.94)
+- `get` --consumes--> `datap` (strength 0.94)
+- `get` --depends_on--> `datap` (strength 0.94)
+- `get` --consumes--> `error` (strength 0.94)
+- `get` --depends_on--> `error` (strength 0.94)
+- `get` --consumes--> `output` (strength 0.94)
+- `get` --depends_on--> `output` (strength 0.94)
+- `imp` --depends_on--> `bof` (strength 0.94)
+- `get` --depends_on--> `bof` (strength 0.83)
+- `address` --consumes--> `beacon` (strength 0.78)
+- `address` --depends_on--> `beacon` (strength 0.78)
+- `address` --consumes--> `callback` (strength 0.78)
+- `address` --depends_on--> `callback` (strength 0.78)
+- `address` --consumes--> `datap` (strength 0.78)
+- `address` --depends_on--> `datap` (strength 0.78)
+- `address` --consumes--> `error` (strength 0.78)
+- `address` --depends_on--> `error` (strength 0.78)
+- `address` --consumes--> `output` (strength 0.78)
+- `address` --depends_on--> `output` (strength 0.78)
+- `load` --consumes--> `beacon` (strength 0.78)
+- `load` --depends_on--> `beacon` (strength 0.78)
+- `load` --consumes--> `callback` (strength 0.78)
+- `load` --depends_on--> `callback` (strength 0.78)
+- `load` --consumes--> `datap` (strength 0.78)
+- `load` --depends_on--> `datap` (strength 0.78)
+- `load` --consumes--> `error` (strength 0.78)
+- `load` --depends_on--> `error` (strength 0.78)
+
+## Dialectic
+
+- Thesis: `address` centralizes 15 files; Antithesis: `bof` pulls 25 files with 13 shared (Jaccard 0.48); Synthesis: should they merge, split by layer, or keep `depends_on` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `close` pulls 10 files with 9 shared (Jaccard 0.56); Synthesis: should they merge, split by layer, or keep `bridges` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `directos` pulls 8 files with 8 shared (Jaccard 0.53); Synthesis: should they merge, split by layer, or keep `bridges` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `funci` pulls 12 files with 9 shared (Jaccard 0.50); Synthesis: should they merge, split by layer, or keep `bridges` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `get` pulls 20 files with 15 shared (Jaccard 0.75); Synthesis: should they merge, split by layer, or keep `bridges` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `handle` pulls 12 files with 11 shared (Jaccard 0.69); Synthesis: should they merge, split by layer, or keep `bridges` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `imp` pulls 18 files with 14 shared (Jaccard 0.74); Synthesis: should they merge, split by layer, or keep `bridges` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `imports` pulls 10 files with 9 shared (Jaccard 0.56); Synthesis: should they merge, split by layer, or keep `bridges` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `lean` pulls 6 files with 5 shared (Jaccard 0.31); Synthesis: should they merge, split by layer, or keep `bridges` explicit?
+- Thesis: `address` centralizes 15 files; Antithesis: `library` pulls 13 files with 13 shared (Jaccard 0.87); Synthesis: should they merge, split by layer, or keep `bridges` explicit?

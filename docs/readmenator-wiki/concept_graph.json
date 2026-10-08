@@ -1,0 +1,2668 @@
+{
+  "concepts": [
+    {
+      "name": "bof",
+      "files": [
+        "bof/calc/beacon.h",
+        "bof/calc/calc.c",
+        "bof/etw/beacon.h",
+        "bof/etw/etw.c",
+        "bof/test/Test.c",
+        "bof/test/amsibypass.c",
+        "bof/test/beacon.h",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/getenv.c",
+        "bof/test/loadvnc.c",
+        "bof/test/make_table.c",
+        "bof/test/persist.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/tel.py",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/test/winver.c",
+        "bof/whoami/beacon.h",
+        "bof/whoami/whoami.c",
+        "generate_hashs.py"
+      ],
+      "mentions": 30,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "get",
+      "files": [
+        "COFFLoader3.c",
+        "aes.c",
+        "beacon.c",
+        "bof/calc/calc.c",
+        "bof/etw/etw.c",
+        "bof/test/amsibypass.c",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/getenv.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/tel.py",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/test/winver.c",
+        "bof/whoami/whoami.c",
+        "cJSON.c"
+      ],
+      "mentions": 98,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "imp",
+      "files": [
+        "COFFLoader3.c",
+        "bof/calc/calc.c",
+        "bof/etw/etw.c",
+        "bof/test/amsibypass.c",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/getenv.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persist.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/test/winver.c",
+        "bof/whoami/whoami.c"
+      ],
+      "mentions": 286,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "address",
+      "files": [
+        "COFFLoader3.c",
+        "bof/calc/calc.c",
+        "bof/etw/etw.c",
+        "bof/test/amsibypass.c",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c",
+        "cJSON.c"
+      ],
+      "mentions": 15,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "load",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/calc/calc.c",
+        "bof/test/amsibypass.c",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c"
+      ],
+      "mentions": 16,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "proc",
+      "files": [
+        "COFFLoader3.c",
+        "bof/calc/calc.c",
+        "bof/etw/etw.c",
+        "bof/test/amsibypass.c",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c"
+      ],
+      "mentions": 14,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "library",
+      "files": [
+        "COFFLoader3.c",
+        "bof/calc/calc.c",
+        "bof/test/amsibypass.c",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c"
+      ],
+      "mentions": 15,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "handle",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/calc/calc.c",
+        "bof/etw/etw.c",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/loadvnc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c"
+      ],
+      "mentions": 26,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "funci",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/calc/calc.c",
+        "bof/test/amsibypass.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/tel.py",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c",
+        "gen_module.sh"
+      ],
+      "mentions": 23,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "beacon",
+      "files": [
+        "COFFLoader3.c",
+        "app.py",
+        "beacon.c",
+        "beacon.h",
+        "bof/calc/beacon.h",
+        "bof/etw/beacon.h",
+        "bof/etw/etw.c",
+        "bof/test/beacon.h",
+        "bof/test/sock5.c",
+        "bof/whoami/beacon.h",
+        "gen_beacon.sh"
+      ],
+      "mentions": 39,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "close",
+      "files": [
+        "COFFLoader3.c",
+        "bof/calc/calc.c",
+        "bof/test/cmdwhoami.c",
+        "bof/test/disablelog.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persist.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/vncrelay.c"
+      ],
+      "mentions": 16,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "imports",
+      "files": [
+        "bof/calc/calc.c",
+        "bof/test/amsibypass.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c",
+        "generate_hashs.py"
+      ],
+      "mentions": 11,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "principal",
+      "files": [
+        "beacon.c",
+        "bof/calc/calc.c",
+        "bof/test/amsibypass.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/sock5.c",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c"
+      ],
+      "mentions": 11,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "output",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.h",
+        "bof/calc/beacon.h",
+        "bof/etw/beacon.h",
+        "bof/test/beacon.h",
+        "bof/test/sock5.c",
+        "bof/whoami/beacon.h",
+        "cJSON.c",
+        "gen_module.sh"
+      ],
+      "mentions": 37,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "error",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "beacon.h",
+        "bof/calc/beacon.h",
+        "bof/etw/beacon.h",
+        "bof/test/beacon.h",
+        "bof/test/sock5.c",
+        "bof/whoami/beacon.h",
+        "cJSON.c"
+      ],
+      "mentions": 14,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "key",
+      "files": [
+        "COFFLoader3.c",
+        "aes.c",
+        "aes.h",
+        "beacon.c",
+        "bof/test/persist.c",
+        "bof/test/upload.c",
+        "gen_key.sh",
+        "gen_module.sh"
+      ],
+      "mentions": 25,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "version",
+      "files": [
+        "COFFLoader3.c",
+        "app.py",
+        "beacon.c",
+        "bof/test/sock5.c",
+        "bof/test/tel.py",
+        "bof/test/winver.c",
+        "cJSON.c",
+        "cJSON.h"
+      ],
+      "mentions": 22,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "directos",
+      "files": [
+        "bof/calc/calc.c",
+        "bof/test/amsibypass.c",
+        "bof/test/loadvnc.c",
+        "bof/test/persistsvc.c",
+        "bof/test/uacbypass.c",
+        "bof/test/upload.c",
+        "bof/test/vncrelay.c",
+        "bof/whoami/whoami.c"
+      ],
+      "mentions": 9,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "buffer",
+      "files": [
+        "COFFLoader3.c",
+        "aes.c",
+        "aes.h",
+        "beacon.c",
+        "bof/test/sock5.c",
+        "bof/test/upload.c",
+        "cJSON.c"
+      ],
+      "mentions": 94,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "module",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/calc/calc.c",
+        "bof/etw/etw.c",
+        "bof/test/disablelog.c",
+        "bof/whoami/whoami.c",
+        "gen_module.sh"
+      ],
+      "mentions": 17,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "gen",
+      "files": [
+        "COFFLoader3.c",
+        "gen_beacon.sh",
+        "gen_dll.sh",
+        "gen_dll_rev.sh",
+        "gen_dll_ss.sh",
+        "gen_key.sh",
+        "gen_module.sh"
+      ],
+      "mentions": 16,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "virtual",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/etw/etw.c",
+        "bof/test/amsibypass.c",
+        "bof/test/shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/vncrelay.c"
+      ],
+      "mentions": 14,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "set",
+      "files": [
+        "COFFLoader3.c",
+        "aes.c",
+        "aes.h",
+        "bof/test/persist.c",
+        "bof/test/sock5.c",
+        "cJSON.h"
+      ],
+      "mentions": 42,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "define",
+      "files": [
+        "aes.h",
+        "beacon.c",
+        "bof/test/loadvnc.c",
+        "bof/test/sock5.c",
+        "cJSON.c",
+        "cJSON.h"
+      ],
+      "mentions": 25,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "size",
+      "files": [
+        "COFFLoader3.c",
+        "aes.h",
+        "beacon.c",
+        "bof/test/loadvnc.c",
+        "bof/test/sock5.c",
+        "cJSON.c"
+      ],
+      "mentions": 24,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "name",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/calc/calc.c",
+        "bof/test/sock5.c",
+        "bof/test/upload.c",
+        "bof/whoami/whoami.c"
+      ],
+      "mentions": 18,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "callback",
+      "files": [
+        "beacon.h",
+        "bof/calc/beacon.h",
+        "bof/etw/beacon.h",
+        "bof/test/beacon.h",
+        "bof/test/sock5.c",
+        "bof/whoami/beacon.h"
+      ],
+      "mentions": 13,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "bytes",
+      "files": [
+        "aes.c",
+        "beacon.c",
+        "bof/test/sock5.c",
+        "bof/test/upload.c",
+        "cJSON.c",
+        "gen_beacon.sh"
+      ],
+      "mentions": 10,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "next",
+      "files": [
+        "COFFLoader3.c",
+        "aes.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/upload.c",
+        "cJSON.c",
+        "cJSON.h"
+      ],
+      "mentions": 10,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "copy",
+      "files": [
+        "COFFLoader3.c",
+        "app.py",
+        "bof/etw/etw.c",
+        "bof/test/amsibypass.c",
+        "bof/test/shellcode.c",
+        "cJSON.c"
+      ],
+      "mentions": 8,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "lean",
+      "files": [
+        "beacon.c",
+        "bof/test/disablelog.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/upload.c"
+      ],
+      "mentions": 7,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "mean",
+      "files": [
+        "beacon.c",
+        "bof/test/disablelog.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/upload.c"
+      ],
+      "mentions": 7,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "win32",
+      "files": [
+        "beacon.c",
+        "bof/test/disablelog.c",
+        "bof/test/persistsvc.c",
+        "bof/test/scan_shellcode.c",
+        "bof/test/sock5.c",
+        "bof/test/upload.c"
+      ],
+      "mentions": 7,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "aes",
+      "files": [
+        "aes.c",
+        "aes.h",
+        "beacon.c",
+        "bof/test/tel.py",
+        "bof/test/upload.c"
+      ],
+      "mentions": 44,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "string",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "cJSON.c",
+        "cJSON.h",
+        "gen_beacon.sh"
+      ],
+      "mentions": 41,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "value",
+      "files": [
+        "COFFLoader3.c",
+        "aes.c",
+        "bof/test/persist.c",
+        "cJSON.c",
+        "cJSON.h"
+      ],
+      "mentions": 22,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "process",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/test/disablelog.c",
+        "bof/test/scan_shellcode.c",
+        "cJSON.c"
+      ],
+      "mentions": 20,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "free",
+      "files": [
+        "COFFLoader3.c",
+        "app.py",
+        "bof/test/sock5.c",
+        "bof/test/vncrelay.c",
+        "cJSON.c"
+      ],
+      "mentions": 19,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "dll",
+      "files": [
+        "beacon.c",
+        "gen_dll.sh",
+        "gen_dll_rev.sh",
+        "gen_dll_ss.sh",
+        "gen_module.sh"
+      ],
+      "mentions": 14,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "memory",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/etw/etw.c",
+        "bof/test/amsibypass.c",
+        "bof/test/shellcode.c"
+      ],
+      "mentions": 12,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "decrypt",
+      "files": [
+        "COFFLoader3.c",
+        "aes.c",
+        "aes.h",
+        "beacon.c",
+        "bof/test/tel.py"
+      ],
+      "mentions": 9,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "encrypt",
+      "files": [
+        "COFFLoader3.c",
+        "aes.c",
+        "aes.h",
+        "beacon.c",
+        "bof/test/upload.c"
+      ],
+      "mentions": 7,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "datap",
+      "files": [
+        "beacon.h",
+        "bof/calc/beacon.h",
+        "bof/etw/beacon.h",
+        "bof/test/beacon.h",
+        "bof/whoami/beacon.h"
+      ],
+      "mentions": 5,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "por",
+      "files": [
+        "COFFLoader3.c",
+        "bof/test/tel.py",
+        "gen_dll_rev.sh",
+        "gen_dll_ss.sh",
+        "gen_key.sh"
+      ],
+      "mentions": 5,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "uso",
+      "files": [
+        "bof/test/tel.py",
+        "gen_dll_rev.sh",
+        "gen_dll_ss.sh",
+        "gen_key.sh",
+        "gen_module.sh"
+      ],
+      "mentions": 5,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "char",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/test/sock5.c",
+        "cJSON.c"
+      ],
+      "mentions": 22,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "create",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/test/scan_shellcode.c",
+        "cJSON.c"
+      ],
+      "mentions": 20,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "defined",
+      "files": [
+        "aes.c",
+        "aes.h",
+        "beacon.c",
+        "cJSON.c"
+      ],
+      "mentions": 15,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "number",
+      "files": [
+        "aes.c",
+        "beacon.c",
+        "cJSON.c",
+        "cJSON.h"
+      ],
+      "mentions": 11,
+      "confidence": "EXTRACTED"
+    },
+    {
+      "name": "open",
+      "files": [
+        "COFFLoader3.c",
+        "bof/test/disablelog.c",
+        "bof/test/persist.c",
+        "bof/test/scan_shellcode.c"
+      ],
+      "mentions": 10,
+      "confidence": "EXTRACTED"
+    }
+  ],
+  "relations": [
+    {
+      "source": "bof",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/Test.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/Test.c->bof/test/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/Test.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/Test.c->bof/test/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/Test.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/Test.c->bof/test/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/Test.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/Test.c->bof/test/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/Test.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "bof",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/Test.c->bof/test/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 1.0,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/getenv.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "imp",
+      "target": "bof",
+      "verb": "depends_on",
+      "strength": 0.94,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "get",
+      "target": "bof",
+      "verb": "depends_on",
+      "strength": 0.83,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/getenv.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 0.78,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "address",
+      "target": "bof",
+      "verb": "depends_on",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "proc",
+      "target": "bof",
+      "verb": "depends_on",
+      "strength": 0.72,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/etw/etw.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h"
+      ]
+    },
+    {
+      "source": "handle",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/etw/etw.c->bof/etw/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "library",
+      "target": "bof",
+      "verb": "depends_on",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/upload.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "load",
+      "target": "bof",
+      "verb": "depends_on",
+      "strength": 0.67,
+      "confidence": "INFERRED",
+      "evidence": [
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/upload.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h",
+        "bof/test/vncrelay.c->beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/vncrelay.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h",
+        "bof/test/vncrelay.c->beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/vncrelay.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "datap",
+      "verb": "consumes",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h",
+        "bof/test/vncrelay.c->beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "datap",
+      "verb": "depends_on",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/vncrelay.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "error",
+      "verb": "consumes",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h",
+        "bof/test/vncrelay.c->beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "error",
+      "verb": "depends_on",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/vncrelay.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "output",
+      "verb": "consumes",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/cmdwhoami.c->beacon.h",
+        "bof/test/disablelog.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persist.c->beacon.h",
+        "bof/test/scan_shellcode.c->beacon.h",
+        "bof/test/sock5.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h",
+        "bof/test/vncrelay.c->beacon.h"
+      ]
+    },
+    {
+      "source": "close",
+      "target": "output",
+      "verb": "depends_on",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/cmdwhoami.c->bof/test/beacon.h",
+        "bof/test/disablelog.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persist.c->bof/test/beacon.h",
+        "bof/test/scan_shellcode.c->bof/test/beacon.h",
+        "bof/test/sock5.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/vncrelay.c->bof/test/beacon.h"
+      ]
+    },
+    {
+      "source": "funci",
+      "target": "beacon",
+      "verb": "consumes",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h",
+        "bof/test/upload.c->beacon.h",
+        "bof/test/vncrelay.c->beacon.h",
+        "bof/whoami/whoami.c->beacon.h"
+      ]
+    },
+    {
+      "source": "funci",
+      "target": "beacon",
+      "verb": "depends_on",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/upload.c->bof/test/beacon.h",
+        "bof/test/vncrelay.c->bof/test/beacon.h",
+        "bof/whoami/whoami.c->bof/whoami/beacon.h"
+      ]
+    },
+    {
+      "source": "funci",
+      "target": "callback",
+      "verb": "consumes",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->beacon.h",
+        "bof/test/amsibypass.c->beacon.h",
+        "bof/test/loadvnc.c->beacon.h",
+        "bof/test/persistsvc.c->beacon.h",
+        "bof/test/uacbypass.c->beacon.h",
+        "bof/test/upload.c->beacon.h",
+        "bof/test/vncrelay.c->beacon.h",
+        "bof/whoami/whoami.c->beacon.h"
+      ]
+    },
+    {
+      "source": "funci",
+      "target": "callback",
+      "verb": "depends_on",
+      "strength": 0.56,
+      "confidence": "INFERRED",
+      "evidence": [
+        "COFFLoader3.c->beacon.h",
+        "beacon.c->beacon.h",
+        "bof/calc/calc.c->bof/calc/beacon.h",
+        "bof/test/amsibypass.c->bof/test/beacon.h",
+        "bof/test/loadvnc.c->bof/test/beacon.h",
+        "bof/test/persistsvc.c->bof/test/beacon.h",
+        "bof/test/uacbypass.c->bof/test/beacon.h",
+        "bof/test/upload.c->bof/test/beacon.h",
+        "bof/test/vncrelay.c->bof/test/beacon.h",
+        "bof/whoami/whoami.c->bof/whoami/beacon.h"
+      ]
+    }
+  ],
+  "dialectic": [
+    "Thesis: `address` centralizes 15 files; Antithesis: `bof` pulls 25 files with 13 shared (Jaccard 0.48); Synthesis: should they merge, split by layer, or keep `depends_on` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `close` pulls 10 files with 9 shared (Jaccard 0.56); Synthesis: should they merge, split by layer, or keep `bridges` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `directos` pulls 8 files with 8 shared (Jaccard 0.53); Synthesis: should they merge, split by layer, or keep `bridges` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `funci` pulls 12 files with 9 shared (Jaccard 0.50); Synthesis: should they merge, split by layer, or keep `bridges` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `get` pulls 20 files with 15 shared (Jaccard 0.75); Synthesis: should they merge, split by layer, or keep `bridges` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `handle` pulls 12 files with 11 shared (Jaccard 0.69); Synthesis: should they merge, split by layer, or keep `bridges` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `imp` pulls 18 files with 14 shared (Jaccard 0.74); Synthesis: should they merge, split by layer, or keep `bridges` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `imports` pulls 10 files with 9 shared (Jaccard 0.56); Synthesis: should they merge, split by layer, or keep `bridges` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `lean` pulls 6 files with 5 shared (Jaccard 0.31); Synthesis: should they merge, split by layer, or keep `bridges` explicit?",
+    "Thesis: `address` centralizes 15 files; Antithesis: `library` pulls 13 files with 13 shared (Jaccard 0.87); Synthesis: should they merge, split by layer, or keep `bridges` explicit?"
+  ]
+}
