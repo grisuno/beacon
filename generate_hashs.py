@@ -4,7 +4,7 @@ BOF Bindings Generator for Cobalt Strike
 Author: Gris Iscomeback
 Email: grisiscomeback@gmail.com
 Creation Date: 13/08/2024
-License: GPL v3
+License: AGPL v3
 
 Generates:
   - COFFLoader3.c: full COFF loader with DJB2 hash table

