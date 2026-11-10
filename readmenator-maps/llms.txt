@@ -1,0 +1,58 @@
+# beacon
+
+> Static analysis knowledge base for beacon: 2 communities, 41 files, 108 imports, 4 languages, 875 symbols.
+
+Generated offline by readmenator (zero LLM tokens). Start with the wiki index for the big picture, then the agent INDEX for file lookup.
+
+## Wiki
+
+- [readmenator-wiki/index.md](md/readmenator-wiki/index.md): The codebase centres on beacon.h, bof/test/beacon.h, COFFLoader3.c. Architecturally it is 2 layers, dominant utility (23 files) across 3 import-based...
+- [readmenator-wiki/REPORT.md](md/readmenator-wiki/REPORT.md): Project: beacon | 2026-11-09 | offline, deterministic
+- [readmenator-wiki/community_0_bof_test.md](md/readmenator-wiki/community_0_bof_test.md): Community 0 | 24 files | cohesion 0.97
+- [readmenator-wiki/community_1_root.md](md/readmenator-wiki/community_1_root.md): Community 1 | 6 files | cohesion 0.83
+- [readmenator-wiki/community_2_orphans.md](md/readmenator-wiki/community_2_orphans.md): Community 2 | 11 files | cohesion 0.00
+- [readmenator-wiki/concepts.md](md/readmenator-wiki/concepts.md): Second-brain semantic layer: nouns map atomically to file sets (EXTRACTED); verbs aggregate structural edges (INFERRED).
+- [readmenator-wiki/queries.md](md/readmenator-wiki/queries.md): Log each answered question here so the wiki compounds. Format: question, answer, cited files.
+
+## GraphRAG
+
+- [readmenator-graphrag/REPORTS.md](md/readmenator-graphrag/REPORTS.md): Entities: 1009 | Relationships: 1447 | Communities: 3 | Themes: 2 | Text units: 877
+
+## Agent Docs
+
+- [readmenator-agent/INDEX.md](md/readmenator-agent/INDEX.md)
+- [readmenator-agent/GOTCHAS.md](md/readmenator-agent/GOTCHAS.md): These files have the most connections. Changes here have high blast radius.
+- [readmenator-agent/API.md](md/readmenator-agent/API.md): djb2hash (function) COFFLoader3.c:632 static uint32t djb2hash(const char str) -- === Función hash DJB2 ===
+- [readmenator-agent/ARCHITECTURE.md](md/readmenator-agent/ARCHITECTURE.md): COFFLoader3.c -> beacon.h
+- [readmenator-agent/CONCEPTS.md](md/readmenator-agent/CONCEPTS.md): Nouns map atomically to file sets (EXTRACTED); verbs aggregate structural edges (INFERRED).
+- [readmenator-agent/KB_calc.md](md/readmenator-agent/KB_calc.md): BEACONH (macro, line 21) #define BEACONH
+- [readmenator-agent/KB_etw.md](md/readmenator-agent/KB_etw.md): BEACONH (macro, line 21) #define BEACONH
+- [readmenator-agent/KB_root.md](md/readmenator-agent/KB_root.md): COFFLOADERH (macro, line 21) #define COFFLOADERH
+- [readmenator-agent/KB_root_p2.md](md/readmenator-agent/KB_root_p2.md): Doc: UTF8ToWide: Convierte UTF-8 a wide string
+- [readmenator-agent/KB_test.md](md/readmenator-agent/KB_test.md): go (function, line 3) void go(char args, int alen)
+- [readmenator-agent/KB_whoami.md](md/readmenator-agent/KB_whoami.md): BEACONH (macro, line 21) #define BEACONH
+- [readmenator-agent/MEMORY.md](md/readmenator-agent/MEMORY.md): Generated from 41 files at commit 0cda7db121d3. Read this first, then readmenator-wiki/index.md, then readmenator . ask "<question>" for anything specific.
+- [readmenator-agent/SECURITY.md](md/readmenator-agent/SECURITY.md)
+- [readmenator-agent/SYMBOLS.md](md/readmenator-agent/SYMBOLS.md)
+- [readmenator-agent/SYMBOLS_p2.md](md/readmenator-agent/SYMBOLS_p2.md)
+- [readmenator-agent/recipes/add-function.md](md/readmenator-agent/recipes/add-function.md): Find the target file by purpose: grep -in '<topic>' readmenator-agent/INDEX.md
+- [readmenator-agent/recipes/change-impact.md](md/readmenator-agent/recipes/change-impact.md): Riskiest file: aes.h (2 dependents)
+- [readmenator-agent/recipes/fix-cycle.md](md/readmenator-agent/recipes/fix-cycle.md): Read cycles: grep -A5 'Dependency Cycles' readmenator-agent/GOTCHAS.md
+- [readmenator-agent/recipes/fix-security.md](md/readmenator-agent/recipes/fix-security.md): Read findings: grep -n '<file>' readmenator-agent/SECURITY.md
+- [readmenator-agent/recipes/reduce-complexity.md](md/readmenator-agent/recipes/reduce-complexity.md): Target hotspot: beacon.c
+
+## Project Docs
+
+- [KNOWLEDGE_BASE.md](md/KNOWLEDGE_BASE.md): Start here: Statistics Dashboard for scope, God Nodes for blast radius, Architecture Reference for per-file API. Agents: prefer readmenator-agent/INDEX.md +...
+- [README.md](md/README.md): GitHub Repository: https://github.com/grisuno/beacon
+- [SECURITY.md](md/SECURITY.md): Use this section to tell people about which versions of your project are
+- [readmenator-diagrams/bof_test.md](md/readmenator-diagrams/bof_test.md): bof/test groups 24 files (c, h) around BEACONH, datap, CALLBACKOUTPUT, CALLBACKERROR, BEACONH. SymbolHash: === Tabla de símbolos por hash ===
+- [readmenator-diagrams/overview.md](md/readmenator-diagrams/overview.md): Static architecture map of 41 files (c, h, py, sh) in 2 components: bof/test, root. Structure is extracted statically without LLM calls; component prose may be...
+
+## Optional
+
+- [Runtime Architecture](architecture.html): Components, services, storage, and boundaries across layers. (interactive HTML)
+- [Data Flow](dataflow.html): Movement of data from sources through transforms to stores. (interactive HTML)
+- [Change Lifecycle](lifecycle.html): States, transitions, waits, and retry paths of change. (interactive HTML)
+- [Request Sequence](sequence.html): Ordered interaction between top participants over time. (interactive HTML)
+- [Delivery Workflow](workflow.html): Delivery path across lanes from entry to terminal outcomes. (interactive HTML)

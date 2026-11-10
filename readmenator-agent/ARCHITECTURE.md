@@ -35,7 +35,7 @@
 - `aes.c` -> string.h
 - `aes.h` -> stddef.h, stdint.h
 - `app.py` -> os
-- `beacon.c` -> bcrypt.h, icmpapi.h, io.h, iphlpapi.h, ntstatus.h, objbase.h, process.h, setjmp.h, shellapi.h, shlobj.h, stdio.h, stdlib.h, string.h, time.h, tlhelp32.h, wincrypt.h, windows.h, winhttp.h, winioctl.h, winnt.h, winsock2.h, ws2tcpip.h
+- `beacon.c` -> bcrypt.h, icmpapi.h, io.h, iphlpapi.h, ntstatus.h, objbase.h, process.h, psapi.h, setjmp.h, shellapi.h, shlobj.h, stdio.h, stdlib.h, string.h, time.h, tlhelp32.h, wincrypt.h, windows.h, winhttp.h, winioctl.h, winnt.h, winsock2.h, ws2tcpip.h
 - `beacon.h` -> windows.h
 - `bof/calc/beacon.h` -> windows.h
 - `bof/calc/calc.c` -> windows.h

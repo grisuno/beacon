@@ -2,173 +2,198 @@
 Previous: [KB_root.md](KB_root.md)
 
 ## beacon.c
-- Doc: MapDllNameToModule: === MAP DLL NAME TO REAL DLL ===
+- Doc: UTF8ToWide: Convierte UTF-8 a wide string
 - Layer: utility
 - Language: c
 - Symbols:
-  - `_PROCESS_BASIC_INFORMATION` (struct, line 129)
-  - `_UNICODE_STRING` (struct, line 262)
-  - `_LDR_DATA_TABLE_ENTRY` (struct, line 268)
-  - `_PEB_LDR_DATA` (struct, line 278)
-  - `_PEB` (struct, line 287)
-  - `ProxySession` (struct, line 139)
-  - `ProxyThreadData` (struct, line 147)
-  - `ReverseArgs` (struct, line 156)
-  - `PortScannerArgs` (struct, line 161)
-  - `LazyDataType` (struct, line 168)
-  - `ProxyListener` (struct, line 176)
-  - `PacketEncryptionContext` (struct, line 329)
-  - `PortResult` (struct, line 343)
-  - `ExitStatus` (type_alias, line 127) `typedef struct _PROCESS_BASIC_INFORMATION { LONG ExitStatus;`
-  - `Length` (type_alias, line 262) `typedef struct _UNICODE_STRING { USHORT Length;`
-  - `InMemoryOrderLinks` (type_alias, line 267) `typedef struct _LDR_DATA_TABLE_ENTRY { LIST_ENTRY InMemoryOrderLinks;`
-  - `Length` (type_alias, line 277) `typedef struct _PEB_LDR_DATA { DWORD Length;`
-  - `Reserved1` (type_alias, line 286) `typedef struct _PEB { BYTE Reserved1[2];`
-  - `NTSTATUS` (type_alias, line 296) `typedef LONG NTSTATUS;`
-  - `NTSTATUS` (type_alias, line 304) `typedef LONG NTSTATUS;`
-  - `ExceptionFilter` (function, line 253) `static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo)`
-  - `get_shell_cmd` (function, line 335) `const char* get_shell_cmd()`
-  - `__declspec` (function, line 417) `__declspec(dllexport) void BeaconDataParse(datap * parser, char * buffer, int size)`
-  - `__declspec` (function, line 423) `__declspec(dllexport) char * BeaconDataPtr(datap * parser, int size)`
-  - `__declspec` (function, line 431) `__declspec(dllexport) int BeaconDataInt(datap * parser)`
-  - `__declspec` (function, line 436) `__declspec(dllexport) short BeaconDataShort(datap * parser)`
-  - `__declspec` (function, line 441) `__declspec(dllexport) int BeaconDataLength(datap * parser)`
-  - `__declspec` (function, line 446) `__declspec(dllexport) char * BeaconDataExtract(datap * parser, int * size)`
-  - `__declspec` (function, line 456) `__declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...)`
-  - `__declspec` (function, line 504) `__declspec(dllexport) void BeaconOutput(int type, const char * data, int len)`
-  - `MapDllNameToModule` (function, line 521) `HMODULE MapDllNameToModule(char* dllName)`
-  - `GetSyscallNumber` (function, line 549) `DWORD GetSyscallNumber(PVOID func_addr)`
-  - `HellsGate` (function, line 561) `DWORD HellsGate(DWORD ssn)`
-  - `__attribute__` (function, line 566) `__attribute__((naked))
+  - `_UNICODE_STRING` (struct, line 54)
+  - `_OBJECT_ATTRIBUTES` (struct, line 60)
+  - `_IO_STATUS_BLOCK` (struct, line 69)
+  - `_PROCESS_BASIC_INFORMATION` (struct, line 183)
+  - `_LDR_DATA_TABLE_ENTRY` (struct, line 676)
+  - `_PEB_LDR_DATA` (struct, line 686)
+  - `_PEB` (struct, line 695)
+  - `ProxySession` (struct, line 193)
+  - `ProxyThreadData` (struct, line 201)
+  - `ReverseArgs` (struct, line 210)
+  - `PortScannerArgs` (struct, line 215)
+  - `LazyDataType` (struct, line 222)
+  - `ProxyListener` (struct, line 230)
+  - `PacketEncryptionContext` (struct, line 737)
+  - `PortResult` (struct, line 751)
+  - `NTSTATUS` (type_alias, line 36) `typedef LONG NTSTATUS;`
+  - `NTSTATUS` (type_alias, line 42) `typedef LONG NTSTATUS;`
+  - `Length` (type_alias, line 53) `typedef struct _UNICODE_STRING { USHORT Length;`
+  - `Length` (type_alias, line 59) `typedef struct _OBJECT_ATTRIBUTES { ULONG Length;`
+  - `Status` (type_alias, line 68) `typedef struct _IO_STATUS_BLOCK { union { NTSTATUS Status;`
+  - `ExitStatus` (type_alias, line 181) `typedef struct _PROCESS_BASIC_INFORMATION { LONG ExitStatus;`
+  - `InMemoryOrderLinks` (type_alias, line 674) `typedef struct _LDR_DATA_TABLE_ENTRY { LIST_ENTRY InMemoryOrderLinks;`
+  - `Length` (type_alias, line 685) `typedef struct _PEB_LDR_DATA { DWORD Length;`
+  - `Reserved1` (type_alias, line 694) `typedef struct _PEB { BYTE Reserved1[2];`
+  - `NTSTATUS` (type_alias, line 704) `typedef LONG NTSTATUS;`
+  - `NTSTATUS` (type_alias, line 712) `typedef LONG NTSTATUS;`
+  - `UTF8ToWide` (function, line 94) `WCHAR* UTF8ToWide(const char* utf8)`
+  - `RVAtoRawOffset` (function, line 334) `PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)`
+  - `GetSyscallStub` (function, line 340) `BOOL GetSyscallStub(
+    LPCSTR functionName,
+    PIMAGE_EXPORT_DIRECTORY exportDirectory,
+    LP...`
+  - `InitializeUnhookedSyscalls` (function, line 375) `BOOL InitializeUnhookedSyscalls()`
+  - `CreateFileA_Unhooked` (function, line 557) `HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURI...`
+  - `WriteProcessMemory_Unhooked` (function, line 609) `BOOL WriteProcessMemory_Unhooked(
+    HANDLE hProcess,
+    LPVOID lpBaseAddress,
+    LPCVOID lpBu...`
+  - `ExceptionFilter` (function, line 665) `static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo)`
+  - `get_shell_cmd` (function, line 743) `const char* get_shell_cmd()`
+  - `__declspec` (function, line 824) `__declspec(dllexport) void BeaconDataParse(datap *parser, char *buffer, int size)`
+  - `__declspec` (function, line 841) `__declspec(dllexport) char * BeaconDataPtr(datap * parser, int size)`
+  - `__declspec` (function, line 849) `__declspec(dllexport) int BeaconDataInt(datap * parser)`
+  - `__declspec` (function, line 854) `__declspec(dllexport) short BeaconDataShort(datap * parser)`
+  - `__declspec` (function, line 859) `__declspec(dllexport) int BeaconDataLength(datap * parser)`
+  - `__declspec` (function, line 864) `__declspec(dllexport) char * BeaconDataExtract(datap * parser, int * size)`
+  - `__declspec` (function, line 874) `__declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...)`
+  - `__declspec` (function, line 922) `__declspec(dllexport) void BeaconOutput(int type, const char * data, int len)`
+  - `MapDllNameToModule` (function, line 939) `HMODULE MapDllNameToModule(char* dllName)`
+  - `GetSyscallNumber` (function, line 967) `DWORD GetSyscallNumber(PVOID func_addr)`
+  - `HellsGate` (function, line 979) `DWORD HellsGate(DWORD ssn)`
+  - `__attribute__` (function, line 984) `__attribute__((naked))
 NTSTATUS HellDescent(
     DWORD64 arg1, DWORD64 arg2, DWORD64 arg3,
     DW...`
-  - `GetProcessIdByName` (function, line 582) `DWORD GetProcessIdByName(const char* processName)`
-  - `ExecuteTLSCallbacks` (function, line 600) `void ExecuteTLSCallbacks(PVOID moduleBase)`
-  - `MapModuleToMemory` (function, line 617) `PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)`
-  - `ExecuteModule` (function, line 706) `BOOL ExecuteModule(PVOID moduleBase)`
-  - `LoadModuleFromURL` (function, line 751) `BOOL LoadModuleFromURL(const char* url)`
-  - `xor_string` (function, line 915) `void xor_string(char* data, size_t len, char key)`
-  - `anti_analysis` (function, line 922) `BOOL anti_analysis()`
-  - `load_lazyconf` (function, line 946) `BOOL load_lazyconf()`
-  - `GetNtdllBase` (function, line 1184) `HMODULE GetNtdllBase()`
-  - `isVMByMAC` (function, line 1232) `BOOL isVMByMAC()`
-  - `extract_shellcode` (function, line 1303) `int extract_shellcode(const char* input, size_t len, unsigned char** out)`
-  - `hex_char_to_byte` (function, line 1334) `BYTE hex_char_to_byte(char c)`
-  - `hex_to_bytes` (function, line 1341) `void hex_to_bytes(const char* hex, BYTE* output, size_t len)`
-  - `executeLoader` (function, line 1348) `void executeLoader(void *arg)`
-  - `ReverseShell` (function, line 1404) `void __cdecl ReverseShell(void* arg)`
-  - `ReadFromProcess` (function, line 1513) `DWORD WINAPI ReadFromProcess(LPVOID lpParam)`
-  - `GetJitteredSleep` (function, line 1587) `DWORD GetJitteredSleep(DWORD base_ms)`
-  - `GetUsefulSoftware` (function, line 1592) `char* GetUsefulSoftware()`
-  - `base64_encode` (function, line 1627) `char* base64_encode(const unsigned char* data, size_t inputLen)`
-  - `base64_decode` (function, line 1663) `char* base64_decode(const char* input, size_t* out_len)`
-  - `discoverLocalHosts` (function, line 1696) `void discoverLocalHosts()`
-  - `initProxy` (function, line 1753) `void initProxy()`
-  - `relay_thread` (function, line 1763) `void WINAPI relay_thread(void* param)`
-  - `proxy_thread` (function, line 1784) `void WINAPI proxy_thread(void* param)`
-  - `proxy_accept_thread` (function, line 1855) `void WINAPI proxy_accept_thread(void* param)`
-  - `startProxy` (function, line 1923) `BOOL startProxy(const char* listenAddr, const char* targetAddr)`
-  - `stopProxy` (function, line 2010) `BOOL stopProxy(const char* listenAddr)`
-  - `cleanupProxy` (function, line 2062) `void cleanupProxy()`
-  - `compressDirectory` (function, line 2094) `BOOL compressDirectory(const char* dirPath)`
-  - `getNetworkConfig` (function, line 2104) `char* getNetworkConfig()`
-  - `UploadFileToC2` (function, line 2108) `BOOL UploadFileToC2(const char* url, const char* filePath)`
-  - `handleUpload` (function, line 2280) `BOOL handleUpload(const char* command)`
-  - `FileExistsA` (function, line 2301) `BOOL FileExistsA(const char* filePath)`
-  - `selfDestruct` (function, line 2306) `void selfDestruct()`
-  - `stristr` (function, line 2362) `char* stristr(const char* str, const char* pattern)`
-  - `isSensitiveFile` (function, line 2378) `int isSensitiveFile(const char* filename)`
-  - `searchCredentials` (function, line 2425) `char* searchCredentials(const char* basePath)`
-  - `UTF8ToWide` (function, line 2551) `WCHAR* UTF8ToWide(const char* utf8)`
-  - `obfuscateFileTimestamp` (function, line 2562) `BOOL obfuscateFileTimestamp(const char* filepath)`
-  - `obfuscateFileTimestamps` (function, line 2592) `void obfuscateFileTimestamps(const char* basePath, int depth)`
-  - `simulateLegitimateTraffic` (function, line 2656) `void simulateLegitimateTraffic(void* param)`
-  - `restartClient` (function, line 2735) `void restartClient()`
-  - `checkDebuggers` (function, line 2776) `BOOL checkDebuggers()`
-  - `MapPEToMemory` (function, line 2838) `unsigned char* MapPEToMemory(unsigned char* rawPE, DWORD rawSize, DWORD* mappedSize)`
-  - `downloadAndExecute` (function, line 2861) `BOOL downloadAndExecute(const char* url, const char* targetProcess)`
-  - `DecryptPacket` (function, line 2911) `BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len)`
-  - `GetIPs` (function, line 3007) `char* GetIPs()`
-  - `GetHostname` (function, line 3041) `char* GetHostname()`
-  - `GetUsername` (function, line 3057) `char* GetUsername()`
-  - `patchAMSI` (function, line 3074) `BOOL patchAMSI(void)`
-  - `get_nt_headers` (function, line 3092) `PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer)`
-  - `is_64bit` (function, line 3101) `BOOL is_64bit(BYTE* buffer)`
-  - `get_image_size` (function, line 3107) `DWORD get_image_size(BYTE* buffer)`
-  - `get_entry_point_rva` (function, line 3113) `DWORD get_entry_point_rva(BYTE* buffer)`
-  - `pe_buffer_to_virtual_image` (function, line 3119) `BYTE* pe_buffer_to_virtual_image(BYTE* raw_buffer, DWORD* out_size)`
-  - `create_suspended_process` (function, line 3149) `BOOL create_suspended_process(char* path, PROCESS_INFORMATION* pi)`
-  - `get_remote_image_base` (function, line 3156) `ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target)`
-  - `update_remote_entry_point` (function, line 3250) `BOOL update_remote_entry_point(PROCESS_INFORMATION* pi, ULONGLONG entry_point_va, BOOL is_32bit)`
-  - `overWrite` (function, line 3277) `void overWrite(const char* targetPath, const char* payloadPath)`
-  - `cleanSystemLogs` (function, line 3384) `void cleanSystemLogs()`
-  - `ensurePersistence` (function, line 3421) `BOOL ensurePersistence()`
-  - `isSandboxEnvironment` (function, line 3482) `BOOL isSandboxEnvironment()`
-  - `tryPrivilegeEscalation` (function, line 3552) `void tryPrivilegeEscalation()`
-  - `executeUACBypass` (function, line 3557) `BOOL executeUACBypass(const char* payloadPath)`
-  - `scanPort` (function, line 3610) `void scanPort(void* arg)`
-  - `PortScanner` (function, line 3661) `void PortScanner(char* targetIP, int* ports, int numPorts)`
-  - `PortScannerWrapper` (function, line 3706) `void PortScannerWrapper(void* arg)`
-  - `EarlyBirdInject` (function, line 3729) `BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)`
-  - `init_aes_context` (function, line 3900) `PacketEncryptionContext* init_aes_context(const char* key_hex)`
-  - `retry_http_request` (function, line 3918) `char* retry_http_request(const char* url, const char* method, const char* data, int max_retries)`
-  - `exec_cmd` (function, line 4172) `char* exec_cmd(const char* cmd)`
-  - `GetC2Command` (function, line 4200) `char* GetC2Command(const char* host, const char* path)`
-  - `DownloadToBuffer` (function, line 4347) `unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize)`
-  - `DownloadFromURL` (function, line 4423) `BOOL DownloadFromURL(const char* url, const char* filepath)`
-  - `encrypt_data` (function, line 4454) `char* encrypt_data(const char* data)`
-  - `isValidUUID` (function, line 4512) `BOOL isValidUUID(const char* uuid)`
-  - `deleteFilesDelay` (function, line 4537) `void deleteFilesDelay(void* arg)`
-  - `executeCommand` (function, line 4551) `void executeCommand(void* cmdPtr)`
-  - `handleAtomic` (function, line 4560) `void handleAtomic(char* command)`
-  - `handleDownload` (function, line 4683) `BOOL handleDownload(const char* command)`
-  - `SerializeBeaconString` (function, line 4703) `void SerializeBeaconString(char* buffer, int* offset, const char* str)`
-  - `BeaconDataSerializeString` (function, line 4712) `void BeaconDataSerializeString(char* buffer, int* offset, const char* str)`
-  - `go` (function, line 4720) `void go(unsigned char * bof_data, int bof_size, char * args, int args_len)`
-  - `handleAdversary` (function, line 4738) `void handleAdversary(char* command)`
-  - `main` (function, line 5233) `int main()`
-  - `PSAPI_VERSION` (macro, line 20) `#define PSAPI_VERSION`
-  - `WIN32_LEAN_AND_MEAN` (macro, line 21) `#define WIN32_LEAN_AND_MEAN`
-  - `XOR_KEY` (macro, line 71) `#define XOR_KEY`
-  - `DEBUG` (macro, line 72) `#define DEBUG`
-  - `TIMEOUT` (macro, line 73) `#define TIMEOUT`
-  - `MAX_RESPONSE_SIZE` (macro, line 74) `#define MAX_RESPONSE_SIZE`
-  - `C2_URL` (macro, line 75) `#define C2_URL`
-  - `MALEABLE` (macro, line 76) `#define MALEABLE`
-  - `CLIENT_ID` (macro, line 77) `#define CLIENT_ID`
-  - `SLEEP_BASE` (macro, line 78) `#define SLEEP_BASE`
-  - `MIN_JITTER` (macro, line 79) `#define MIN_JITTER`
-  - `MAX_JITTER` (macro, line 80) `#define MAX_JITTER`
-  - `MAX_RETRIES` (macro, line 81) `#define MAX_RETRIES`
-  - `C2_HOST` (macro, line 82) `#define C2_HOST`
-  - `LC2_HOST` (macro, line 83) `#define LC2_HOST`
-  - `C2_USER` (macro, line 84) `#define C2_USER`
-  - `C2_PASS` (macro, line 85) `#define C2_PASS`
-  - `C2_PORT` (macro, line 86) `#define C2_PORT`
-  - `CONFIG_PATH` (macro, line 87) `#define CONFIG_PATH`
-  - `C2_PATH` (macro, line 88) `#define C2_PATH`
-  - `LC2_PATH` (macro, line 89) `#define LC2_PATH`
-  - `min` (macro, line 91) `#define min(a,b)`
-  - `SECURITY_FLAG_IGNORE_REVOCATION` (macro, line 94) `#define SECURITY_FLAG_IGNORE_REVOCATION`
-  - `INVALID_SOCKET` (macro, line 97) `#define INVALID_SOCKET`
-  - `USER_AGENT` (macro, line 99) `#define USER_AGENT`
-  - `USER_AGENT_A` (macro, line 100) `#define USER_AGENT_A`
-  - `IMAGE_DOS_SIGNATURE` (macro, line 101) `#define IMAGE_DOS_SIGNATURE`
-  - `IMAGE_NT_SIGNATURE` (macro, line 102) `#define IMAGE_NT_SIGNATURE`
-  - `IMAGE_NT_OPTIONAL_HDR32_MAGIC` (macro, line 103) `#define IMAGE_NT_OPTIONAL_HDR32_MAGIC`
-  - `IMAGE_NT_OPTIONAL_HDR64_MAGIC` (macro, line 104) `#define IMAGE_NT_OPTIONAL_HDR64_MAGIC`
-  - `SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE` (macro, line 106) `#define SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE`
-  - `SECURITY_FLAG_IGNORE_INVALID_POLICY` (macro, line 109) `#define SECURITY_FLAG_IGNORE_INVALID_POLICY`
-  - `_SECURITY_PACKAGE_DEFINITION_` (macro, line 112) `#define _SECURITY_PACKAGE_DEFINITION_`
-  - `_PROCESS_BASIC_INFORMATION_` (macro, line 115) `#define _PROCESS_BASIC_INFORMATION_`
-  - `_SP_LSA_MODE_INITIALIZE_DEFINED_` (macro, line 117) `#define _SP_LSA_MODE_INITIALIZE_DEFINED_`
-  - `ProcessBasicInformation` (macro, line 123) `#define ProcessBasicInformation`
-  - `CHECK_ERROR` (macro, line 126) `#define CHECK_ERROR(cond, msg)`
-  - `NUM_USER_AGENTS` (macro, line 231) `#define NUM_USER_AGENTS`
-  - `NUM_URLS` (macro, line 240) `#define NUM_URLS`
-  - `NUM_UAS` (macro, line 247) `#define NUM_UAS`
-  - `NT_SUCCESS` (macro, line 300) `#define NT_SUCCESS(Status)`
+  - `GetProcessIdByName` (function, line 1000) `DWORD GetProcessIdByName(const char* processName)`
+  - `ExecuteTLSCallbacks` (function, line 1018) `void ExecuteTLSCallbacks(PVOID moduleBase)`
+  - `MapModuleToMemory` (function, line 1035) `PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)`
+  - `ExecuteModule` (function, line 1124) `BOOL ExecuteModule(PVOID moduleBase)`
+  - `LoadModuleFromURL` (function, line 1169) `BOOL LoadModuleFromURL(const char* url)`
+  - `xor_string` (function, line 1213) `void xor_string(char* data, size_t len, char key)`
+  - `anti_analysis` (function, line 1220) `BOOL anti_analysis()`
+  - `load_lazyconf` (function, line 1244) `BOOL load_lazyconf()`
+  - `GetNtdllBase` (function, line 1482) `HMODULE GetNtdllBase()`
+  - `isVMByMAC` (function, line 1530) `BOOL isVMByMAC()`
+  - `extract_shellcode` (function, line 1601) `int extract_shellcode(const char* input, size_t len, unsigned char** out)`
+  - `hex_char_to_byte` (function, line 1632) `BYTE hex_char_to_byte(char c)`
+  - `hex_to_bytes` (function, line 1639) `void hex_to_bytes(const char* hex, BYTE* output, size_t len)`
+  - `executeLoader` (function, line 1646) `void executeLoader(void *arg)`
+  - `ReverseShell` (function, line 1702) `void __cdecl ReverseShell(void* arg)`
+  - `ReadFromProcess` (function, line 1811) `DWORD WINAPI ReadFromProcess(LPVOID lpParam)`
+  - `GetJitteredSleep` (function, line 1885) `DWORD GetJitteredSleep(DWORD base_ms)`
+  - `GetUsefulSoftware` (function, line 1890) `char* GetUsefulSoftware()`
+  - `base64_encode` (function, line 1925) `char* base64_encode(const unsigned char* data, size_t inputLen)`
+  - `base64_decode` (function, line 1961) `char* base64_decode(const char* input, size_t* out_len)`
+  - `discoverLocalHosts` (function, line 1994) `void discoverLocalHosts()`
+  - `initProxy` (function, line 2051) `void initProxy()`
+  - `relay_thread` (function, line 2061) `void WINAPI relay_thread(void* param)`
+  - `proxy_thread` (function, line 2082) `void WINAPI proxy_thread(void* param)`
+  - `proxy_accept_thread` (function, line 2153) `void WINAPI proxy_accept_thread(void* param)`
+  - `startProxy` (function, line 2221) `BOOL startProxy(const char* listenAddr, const char* targetAddr)`
+  - `stopProxy` (function, line 2308) `BOOL stopProxy(const char* listenAddr)`
+  - `cleanupProxy` (function, line 2360) `void cleanupProxy()`
+  - `compressDirectory` (function, line 2392) `BOOL compressDirectory(const char* dirPath)`
+  - `getNetworkConfig` (function, line 2402) `char* getNetworkConfig()`
+  - `UploadFileToC2` (function, line 2406) `BOOL UploadFileToC2(const char* url, const char* filePath)`
+  - `handleUpload` (function, line 2578) `BOOL handleUpload(const char* command)`
+  - `FileExistsA` (function, line 2599) `BOOL FileExistsA(const char* filePath)`
+  - `selfDestruct` (function, line 2604) `void selfDestruct()`
+  - `stristr` (function, line 2660) `char* stristr(const char* str, const char* pattern)`
+  - `isSensitiveFile` (function, line 2676) `int isSensitiveFile(const char* filename)`
+  - `searchCredentials` (function, line 2723) `char* searchCredentials(const char* basePath)`
+  - `obfuscateFileTimestamp` (function, line 2852) `BOOL obfuscateFileTimestamp(const char* filepath)`
+  - `obfuscateFileTimestamps` (function, line 2882) `void obfuscateFileTimestamps(const char* basePath, int depth)`
+  - `simulateLegitimateTraffic` (function, line 2946) `void simulateLegitimateTraffic(void* param)`
+  - `restartClient` (function, line 3025) `void restartClient()`
+  - `checkDebuggers` (function, line 3066) `BOOL checkDebuggers()`
+  - `MapPEToMemory` (function, line 3128) `unsigned char* MapPEToMemory(unsigned char* rawPE, DWORD rawSize, DWORD* mappedSize)`
+  - `downloadAndExecute` (function, line 3151) `BOOL downloadAndExecute(const char* url, const char* targetProcess)`
+  - `DecryptPacket` (function, line 3201) `BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len)`
+  - `GetIPs` (function, line 3297) `char* GetIPs()`
+  - `GetHostname` (function, line 3331) `char* GetHostname()`
+  - `GetUsername` (function, line 3347) `char* GetUsername()`
+  - `patchAMSI` (function, line 3364) `BOOL patchAMSI(void)`
+  - `get_nt_headers` (function, line 3382) `PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer)`
+  - `is_64bit` (function, line 3391) `BOOL is_64bit(BYTE* buffer)`
+  - `get_image_size` (function, line 3397) `DWORD get_image_size(BYTE* buffer)`
+  - `get_entry_point_rva` (function, line 3403) `DWORD get_entry_point_rva(BYTE* buffer)`
+  - `pe_buffer_to_virtual_image` (function, line 3409) `BYTE* pe_buffer_to_virtual_image(BYTE* raw_buffer, DWORD* out_size)`
+  - `create_suspended_process` (function, line 3439) `BOOL create_suspended_process(char* path, PROCESS_INFORMATION* pi)`
+  - `get_remote_image_base` (function, line 3446) `ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target)`
+  - `update_remote_entry_point` (function, line 3540) `BOOL update_remote_entry_point(PROCESS_INFORMATION* pi, ULONGLONG entry_point_va, BOOL is_32bit)`
+  - `overWrite` (function, line 3567) `void overWrite(const char* targetPath, const char* payloadPath)`
+  - `cleanSystemLogs` (function, line 3674) `void cleanSystemLogs()`
+  - `ensurePersistence` (function, line 3711) `BOOL ensurePersistence()`
+  - `isSandboxEnvironment` (function, line 3772) `BOOL isSandboxEnvironment()`
+  - `tryPrivilegeEscalation` (function, line 3842) `void tryPrivilegeEscalation()`
+  - `executeUACBypass` (function, line 3847) `BOOL executeUACBypass(const char* payloadPath)`
+  - `scanPort` (function, line 3900) `void scanPort(void* arg)`
+  - `PortScanner` (function, line 3951) `void PortScanner(char* targetIP, int* ports, int numPorts)`
+  - `PortScannerWrapper` (function, line 3996) `void PortScannerWrapper(void* arg)`
+  - `EarlyBirdInject` (function, line 4019) `BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)`
+  - `init_aes_context` (function, line 4228) `PacketEncryptionContext* init_aes_context(const char* key_hex)`
+  - `retry_http_request` (function, line 4246) `char* retry_http_request(const char* url, const char* method, const char* data, int max_retries)`
+  - `exec_cmd` (function, line 4500) `char* exec_cmd(const char* cmd)`
+  - `GetC2Command` (function, line 4528) `char* GetC2Command(const char* host, const char* path)`
+  - `DownloadToBuffer` (function, line 4675) `unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize)`
+  - `DownloadFromURL` (function, line 4751) `BOOL DownloadFromURL(const char* url, const char* filepath)`
+  - `encrypt_data` (function, line 4782) `char* encrypt_data(const char* data)`
+  - `isValidUUID` (function, line 4840) `BOOL isValidUUID(const char* uuid)`
+  - `deleteFilesDelay` (function, line 4865) `void deleteFilesDelay(void* arg)`
+  - `executeCommand` (function, line 4879) `void executeCommand(void* cmdPtr)`
+  - `handleAtomic` (function, line 4888) `void handleAtomic(char* command)`
+  - `handleDownload` (function, line 5011) `BOOL handleDownload(const char* command)`
+  - `SerializeBeaconString` (function, line 5031) `void SerializeBeaconString(char* buffer, int* offset, const char* str)`
+  - `BeaconDataSerializeString` (function, line 5040) `void BeaconDataSerializeString(char* buffer, int* offset, const char* str)`
+  - `go` (function, line 5048) `void go(unsigned char * bof_data, int bof_size, char * args, int args_len)`
+  - `hooked` (function, line 5065) `int hooked()`
+  - `handleAdversary` (function, line 5132) `void handleAdversary(char* command)`
+  - `main` (function, line 5633) `int main()`
+  - `PSAPI_VERSION` (macro, line 1) `#define PSAPI_VERSION`
+  - `WIN32_LEAN_AND_MEAN` (macro, line 2) `#define WIN32_LEAN_AND_MEAN`
+  - `_NTSTATUS_DEFINED` (macro, line 41) `#define _NTSTATUS_DEFINED`
+  - `NT_SUCCESS` (macro, line 46) `#define NT_SUCCESS(Status)`
+  - `OBJ_CASE_INSENSITIVE` (macro, line 77) `#define OBJ_CASE_INSENSITIVE`
+  - `FILE_SYNCHRONOUS_IO_NONALERT` (macro, line 79) `#define FILE_SYNCHRONOUS_IO_NONALERT`
+  - `FILE_NON_DIRECTORY_FILE` (macro, line 81) `#define FILE_NON_DIRECTORY_FILE`
+  - `FILE_DIRECTORY_FILE` (macro, line 82) `#define FILE_DIRECTORY_FILE`
+  - `XOR_KEY` (macro, line 125) `#define XOR_KEY`
+  - `DEBUG` (macro, line 126) `#define DEBUG`
+  - `TIMEOUT` (macro, line 127) `#define TIMEOUT`
+  - `MAX_RESPONSE_SIZE` (macro, line 128) `#define MAX_RESPONSE_SIZE`
+  - `C2_URL` (macro, line 129) `#define C2_URL`
+  - `MALEABLE` (macro, line 130) `#define MALEABLE`
+  - `CLIENT_ID` (macro, line 131) `#define CLIENT_ID`
+  - `SLEEP_BASE` (macro, line 132) `#define SLEEP_BASE`
+  - `MIN_JITTER` (macro, line 133) `#define MIN_JITTER`
+  - `MAX_JITTER` (macro, line 134) `#define MAX_JITTER`
+  - `MAX_RETRIES` (macro, line 135) `#define MAX_RETRIES`
+  - `C2_HOST` (macro, line 136) `#define C2_HOST`
+  - `LC2_HOST` (macro, line 137) `#define LC2_HOST`
+  - `C2_USER` (macro, line 138) `#define C2_USER`
+  - `C2_PASS` (macro, line 139) `#define C2_PASS`
+  - `C2_PORT` (macro, line 140) `#define C2_PORT`
+  - `CONFIG_PATH` (macro, line 141) `#define CONFIG_PATH`
+  - `C2_PATH` (macro, line 142) `#define C2_PATH`
+  - `LC2_PATH` (macro, line 143) `#define LC2_PATH`
+  - `min` (macro, line 145) `#define min(a,b)`
+  - `SECURITY_FLAG_IGNORE_REVOCATION` (macro, line 148) `#define SECURITY_FLAG_IGNORE_REVOCATION`
+  - `INVALID_SOCKET` (macro, line 151) `#define INVALID_SOCKET`
+  - `USER_AGENT` (macro, line 153) `#define USER_AGENT`
+  - `USER_AGENT_A` (macro, line 154) `#define USER_AGENT_A`
+  - `IMAGE_DOS_SIGNATURE` (macro, line 155) `#define IMAGE_DOS_SIGNATURE`
+  - `IMAGE_NT_SIGNATURE` (macro, line 156) `#define IMAGE_NT_SIGNATURE`
+  - `IMAGE_NT_OPTIONAL_HDR32_MAGIC` (macro, line 157) `#define IMAGE_NT_OPTIONAL_HDR32_MAGIC`
+  - `IMAGE_NT_OPTIONAL_HDR64_MAGIC` (macro, line 158) `#define IMAGE_NT_OPTIONAL_HDR64_MAGIC`
+  - `SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE` (macro, line 160) `#define SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE`
+  - `SECURITY_FLAG_IGNORE_INVALID_POLICY` (macro, line 163) `#define SECURITY_FLAG_IGNORE_INVALID_POLICY`
+  - `_SECURITY_PACKAGE_DEFINITION_` (macro, line 166) `#define _SECURITY_PACKAGE_DEFINITION_`
+  - `_PROCESS_BASIC_INFORMATION_` (macro, line 169) `#define _PROCESS_BASIC_INFORMATION_`
+  - `_SP_LSA_MODE_INITIALIZE_DEFINED_` (macro, line 171) `#define _SP_LSA_MODE_INITIALIZE_DEFINED_`
+  - `ProcessBasicInformation` (macro, line 177) `#define ProcessBasicInformation`
+  - `CHECK_ERROR` (macro, line 180) `#define CHECK_ERROR(cond, msg)`
+  - `SYSCALL_STUB_SIZE` (macro, line 280) `#define SYSCALL_STUB_SIZE`
+  - `NUM_USER_AGENTS` (macro, line 643) `#define NUM_USER_AGENTS`
+  - `NUM_URLS` (macro, line 652) `#define NUM_URLS`
+  - `NUM_UAS` (macro, line 659) `#define NUM_UAS`
+  - `NT_SUCCESS` (macro, line 708) `#define NT_SUCCESS(Status)`
 - Depends on: `COFFLoader.h`, `aes.h`, `beacon.h`, `cJSON.h`
 
 ## beacon.h
@@ -362,9 +387,9 @@ NTSTATUS HellDescent(
 - Layer: utility
 - Language: sh
 - Symbols:
-  - `show_help` (function, line 34)
-  - `xor_string` (function, line 138)
-  - `crc32` (function, line 5916)
+  - `show_help` (function, line 46)
+  - `xor_string` (function, line 194)
+  - `crc32` (function, line 5979)
 
 ## gen_dll.sh
 - Doc: 1.

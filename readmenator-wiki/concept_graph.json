@@ -56,7 +56,7 @@
         "bof/whoami/whoami.c",
         "cJSON.c"
       ],
-      "mentions": 98,
+      "mentions": 99,
       "confidence": "EXTRACTED"
     },
     {
@@ -405,7 +405,7 @@
         "bof/test/sock5.c",
         "bof/test/vncrelay.c"
       ],
-      "mentions": 14,
+      "mentions": 15,
       "confidence": "EXTRACTED"
     },
     {
@@ -431,7 +431,7 @@
         "cJSON.c",
         "cJSON.h"
       ],
-      "mentions": 25,
+      "mentions": 26,
       "confidence": "EXTRACTED"
     },
     {
@@ -444,7 +444,7 @@
         "bof/test/sock5.c",
         "cJSON.c"
       ],
-      "mentions": 24,
+      "mentions": 25,
       "confidence": "EXTRACTED"
     },
     {
@@ -576,6 +576,18 @@
       "confidence": "EXTRACTED"
     },
     {
+      "name": "process",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/test/disablelog.c",
+        "bof/test/scan_shellcode.c",
+        "cJSON.c"
+      ],
+      "mentions": 22,
+      "confidence": "EXTRACTED"
+    },
+    {
       "name": "value",
       "files": [
         "COFFLoader3.c",
@@ -585,18 +597,6 @@
         "cJSON.h"
       ],
       "mentions": 22,
-      "confidence": "EXTRACTED"
-    },
-    {
-      "name": "process",
-      "files": [
-        "COFFLoader3.c",
-        "beacon.c",
-        "bof/test/disablelog.c",
-        "bof/test/scan_shellcode.c",
-        "cJSON.c"
-      ],
-      "mentions": 20,
       "confidence": "EXTRACTED"
     },
     {
@@ -612,6 +612,18 @@
       "confidence": "EXTRACTED"
     },
     {
+      "name": "memory",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/etw/etw.c",
+        "bof/test/amsibypass.c",
+        "bof/test/shellcode.c"
+      ],
+      "mentions": 15,
+      "confidence": "EXTRACTED"
+    },
+    {
       "name": "dll",
       "files": [
         "beacon.c",
@@ -621,18 +633,6 @@
         "gen_module.sh"
       ],
       "mentions": 14,
-      "confidence": "EXTRACTED"
-    },
-    {
-      "name": "memory",
-      "files": [
-        "COFFLoader3.c",
-        "beacon.c",
-        "bof/etw/etw.c",
-        "bof/test/amsibypass.c",
-        "bof/test/shellcode.c"
-      ],
-      "mentions": 12,
       "confidence": "EXTRACTED"
     },
     {
@@ -696,6 +696,17 @@
       "confidence": "EXTRACTED"
     },
     {
+      "name": "create",
+      "files": [
+        "COFFLoader3.c",
+        "beacon.c",
+        "bof/test/scan_shellcode.c",
+        "cJSON.c"
+      ],
+      "mentions": 24,
+      "confidence": "EXTRACTED"
+    },
+    {
       "name": "char",
       "files": [
         "COFFLoader3.c",
@@ -707,17 +718,6 @@
       "confidence": "EXTRACTED"
     },
     {
-      "name": "create",
-      "files": [
-        "COFFLoader3.c",
-        "beacon.c",
-        "bof/test/scan_shellcode.c",
-        "cJSON.c"
-      ],
-      "mentions": 20,
-      "confidence": "EXTRACTED"
-    },
-    {
       "name": "defined",
       "files": [
         "aes.c",
@@ -725,7 +725,7 @@
         "beacon.c",
         "cJSON.c"
       ],
-      "mentions": 15,
+      "mentions": 18,
       "confidence": "EXTRACTED"
     },
     {

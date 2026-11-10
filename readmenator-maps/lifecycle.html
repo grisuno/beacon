@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-preset="classic">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change Lifecycle | Live System Map</title>
+<link href="https://unpkg.com/vis-network@9/styles/vis-network.min.css" rel="stylesheet">
+<script src="https://unpkg.com/vis-network@9/standalone/umd/vis-network.min.js"></script>
+<style>
+:root{--canvas:#020617;--mask:#0f172a;--ink:#ffffff;--muted:#94a3b8;--border:#1e293b;--box:#0f172a;--boxink:#ffffff}
+html[data-theme="light"]{--canvas:#f8fafc;--mask:#ffffff;--ink:#0f172a;--muted:#475569;--border:#e2e8f0;--box:#ffffff;--boxink:#0f172a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.toolbar{display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--mask);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.brand{font-weight:700;font-size:14px;letter-spacing:.04em}
+.kind{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.live{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;border:1px solid var(--border);border-radius:999px;padding:3px 10px}
+.toolbar input{background:var(--canvas);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 10px;min-width:220px;font:inherit;font-size:12px}
+.toolbar button{background:var(--canvas);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font:inherit;font-size:12px;cursor:pointer;min-height:32px}
+.toolbar button:hover,.toolbar button:focus-visible{border-color:#22d3ee;outline:2px solid #22d3ee;outline-offset:2px}
+.home-link{color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:12px;text-decoration:none;background:var(--canvas)}
+.home-link:hover,.home-link:focus-visible{border-color:#22d3ee;outline:2px solid #22d3ee;outline-offset:2px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;min-height:calc(100vh - 53px)}
+.stage{position:relative;padding:16px;overflow:auto}
+#network{width:100%;height:78vh;min-height:520px;background:var(--canvas);border:1px solid var(--border);border-radius:16px}
+#network:focus-visible{outline:2px solid #22d3ee;outline-offset:3px}
+.symbols{font-size:11px;margin-top:10px;overflow:auto}
+.symbols table{width:100%;border-collapse:collapse}
+.symbols th{text-align:left;color:var(--muted);font-weight:400;border-bottom:1px solid var(--border);padding:3px 4px}
+.symbols td{border-bottom:1px solid var(--border);padding:3px 4px;vertical-align:top}
+.symbols code{font-size:11px}
+.symbols .filedoc{color:var(--muted);margin:0 0 8px;line-height:1.6}
+.symbols .neighbors{color:var(--muted);margin:8px 0 0;line-height:1.6}
+.passport{background:var(--mask);border-left:1px solid var(--border);padding:16px;overflow:auto}
+.passport h2{font-size:13px;margin:0 0 8px}
+.passport .row{font-size:12px;color:var(--muted);margin:6px 0;line-height:1.7}
+.counts{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.chip{border:1px solid var(--border);border-radius:999px;padding:3px 10px;font-size:11px;color:var(--ink);background:transparent;cursor:pointer;font:inherit}
+.legend-title{width:100%;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:6px 0 2px}
+.legend-item{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:transparent;color:var(--ink);border:1px solid transparent;border-radius:8px;padding:5px 6px;font:inherit;font-size:12px;cursor:pointer}
+.legend-item:hover,.legend-item:focus-visible{border-color:var(--border);background:var(--canvas);outline:none}
+.swatch{flex:none;width:12px;height:12px;border-radius:50%;box-shadow:0 0 10px currentColor}
+.views{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.views button{background:var(--canvas);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:6px 9px;font:inherit;font-size:11px;cursor:pointer}
+.journey{font-size:12px;line-height:1.7}
+.receipt{font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px;margin-top:10px}
+.routebox{display:flex;gap:6px;margin-top:8px}
+.routebox input{flex:1;background:var(--canvas);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:7px;font:inherit;font-size:12px;min-width:0}
+.routebox button{background:var(--canvas);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font:inherit;font-size:12px;cursor:pointer}
+.present .layout{grid-template-columns:minmax(0,1fr)}
+.present .passport{display:none}
+.passport.focused .guide{display:none!important}
+.filedoc.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.peek{position:fixed;z-index:20;pointer-events:none;max-width:340px;background:var(--mask);color:var(--ink);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:11.5px;line-height:1.55;box-shadow:0 18px 40px rgba(0,0,0,.35);display:none}
+.peek b{font-size:13px}
+.peek .m{color:var(--muted)}
+.peek .sw{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.peek ul{margin:6px 0 0;padding-left:16px}
+.peek .warn{color:#fbbf24}
+.insight{margin:6px 0;padding:6px 9px;border:1px solid var(--border);border-left:3px solid #22d3ee;border-radius:8px;font-size:11.5px;line-height:1.6;color:var(--ink);background:var(--canvas)}
+.insight.bad{border-left-color:#fb7185}
+.detail-nav{display:flex;gap:6px;margin:0 0 10px}
+.detail-nav button{background:var(--canvas);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:4px 9px;font:inherit;font-size:11px;cursor:pointer}
+.detail-nav button:disabled{opacity:.4;cursor:default}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+.tile{border:1px solid var(--border);border-radius:9px;padding:6px;background:var(--canvas);text-align:center}
+.tile b{display:block;font-size:15px}
+.tile span{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.ego{display:block;width:100%;height:auto;margin:6px 0 4px;border:1px solid var(--border);border-radius:10px;background:var(--canvas)}
+.ego g[data-node]{cursor:pointer}
+.ego g[data-node]:hover circle{stroke-width:3}
+.ego text{font-family:inherit;font-size:10.5px;fill:var(--ink)}
+.ego .cap{fill:var(--muted);font-size:9.5px;letter-spacing:.08em}
+.nbs{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0 8px}
+.nbs button{display:inline-flex;align-items:center;gap:5px;background:transparent;color:var(--ink);border:1px solid var(--border);border-radius:999px;padding:2px 9px;font:inherit;font-size:11px;cursor:pointer}
+.nbs button:hover,.nbs button:focus-visible{border-color:#22d3ee;outline:none}
+.nbs i{width:8px;height:8px;border-radius:50%}
+.sublabel{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:8px}
+.symfilter{width:100%;background:var(--canvas);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font:inherit;font-size:11.5px;margin:4px 0 6px}
+dialog{background:var(--mask);color:var(--ink);border:1px solid var(--border);border-radius:12px;max-width:520px}
+dialog kbd{border:1px solid var(--border);border-radius:6px;padding:1px 6px;font-size:11px}
+@media (max-width:960px){.layout{grid-template-columns:minmax(0,1fr)}.passport{border-left:none;border-top:1px solid var(--border)}}
+</style>
+</head>
+<body>
+<header class="toolbar" aria-label="Map controls">
+<span class="brand">System Maps</span>
+<span class="live">Live physics</span>
+<a class="home-link" href="index.html">Gallery</a>
+<span class="kind">lifecycle | Change Lifecycle</span>
+<input id="search" type="search" placeholder="Search nodes ( / )" aria-label="Search nodes" title="Filter nodes by label or id. Shortcut: /">
+<button type="button" data-action="reach-up" aria-label="Trace upstream reach" title="Show everything that reaches the focused node (authored relationships only)">Upstream</button>
+<button type="button" data-action="reach-down" aria-label="Trace downstream reach" title="Show everything the focused node reaches (authored relationships only)">Downstream</button>
+<button type="button" data-action="lens" aria-label="Compare roles" title="Highlight one semantic role and compare counts; activate again to clear">Lens</button>
+<button type="button" data-action="views-prev" aria-label="Previous chapter" title="Show the previous guided chapter ( [ )">Prev</button>
+<button type="button" data-action="views-next" aria-label="Next chapter" title="Show the next guided chapter ( ] )">Next</button>
+<button type="button" data-action="color" aria-label="Toggle color mode" title="Color nodes by code community or by architectural role ( C )">Color</button>
+<button type="button" data-action="show-all" aria-label="Show all nodes" title="Clear focus, lens, and filters ( Esc )">Show all</button>
+<button type="button" data-action="play" aria-label="Play guided story" title="Play all guided chapters in order">Play</button>
+<button type="button" data-action="stabilize" aria-label="Stabilize layout" title="Re-run the physics stabilization">Stabilize</button>
+<button type="button" data-action="physics" aria-label="Toggle physics" title="Freeze or resume the live physics engine">Physics</button>
+<button type="button" data-action="present" aria-label="Enter presentation stage" title="Hide the side panel for presenting">Present</button>
+<button type="button" data-action="style" aria-label="Cycle visual preset" title="Cycle visual preset: classic, flow, blueprint, editorial">Style</button>
+<button type="button" data-action="theme" aria-label="Toggle theme" title="Toggle dark and light themes">Theme</button>
+<button type="button" data-action="export" aria-label="Open export menu" title="Download a PNG snapshot or the typed JSON">Export</button>
+<button type="button" data-action="help" aria-label="Open diagram guide" title="Open the diagram guide with every shortcut">?</button>
+</header>
+<div class="layout">
+<main class="stage">
+<div id="network" tabindex="0" role="application" aria-label="Change Lifecycle live network. Drag nodes to rearrange them."></div>
+</main>
+<aside class="passport" aria-live="polite" aria-label="Semantic passport">
+<h2 id="passport-title">Diagram guide</h2>
+<div class="row" id="passport-meta"></div>
+<div class="views guide" id="chapters"></div>
+<div class="counts guide" id="role-counts"></div>
+<div class="row guide">Node size = number of links. Color = code community (press C for roles). Labels show the most connected files; zoom in for the rest.</div>
+<div class="row guide">1. Drag any node; physics settles the rest. 2. Click a node to focus it. 3. Upstream and Downstream trace authored reach. 4. Path probes the exact route between two ids. 5. Play walks the guided chapters. Press ? for every shortcut. This page loads its network engine from a CDN and needs network access.</div>
+<div class="routebox"><input id="route-from" placeholder="route from id" aria-label="Route source" title="Source node id for the route probe"><input id="route-to" placeholder="route to id" aria-label="Route target" title="Target node id for the route probe"><button type="button" data-action="route" aria-label="Probe directed route" title="Highlight the shortest authored directed path">Path</button></div>
+<div class="journey" id="journey"></div>
+<div class="symbols" id="node-symbols"></div>
+<div class="receipt" id="receipt"></div>
+</aside>
+</div>
+<dialog id="guide" aria-label="Diagram guide dialog">
+<h2>Diagram guide</h2>
+<p><kbd>/</kbd> search &middot; <kbd>R</kbd> route probe &middot; <kbd>L</kbd> role lens &middot; <kbd>P</kbd> play &middot; <kbd>[</kbd> <kbd>]</kbd> chapters &middot; <kbd>C</kbd> color by community or role &middot; <kbd>Esc</kbd> show all &middot; <kbd>F</kbd> present &middot; <kbd>S</kbd> style &middot; <kbd>T</kbd> theme &middot; <kbd>E</kbd> export &middot; <kbd>+</kbd> <kbd>-</kbd> <kbd>0</kbd> zoom &middot; <kbd>B</kbd> physics</p>
+<p>Drag nodes freely; Stabilize re-runs the physics engine and Physics freezes it. Reach, routes, lens, and chapters reuse authored relationships only. Deep links restore <code>#focus=id</code>, <code>#focus=id&amp;reach=upstream|downstream</code>, <code>#route=a~b</code>, <code>#lens=role</code>, and <code>#view=id</code>.</p>
+<button type="button" data-action="close-guide" title="Close the diagram guide">Close</button>
+</dialog>
+<dialog id="exports" aria-label="Export dialog">
+<h2>Export</h2>
+<p>PNG captures the live canvas; JSON carries the typed source.</p>
+<button type="button" data-action="export-png" title="Download a PNG snapshot of the live canvas">Download PNG</button>
+<button type="button" data-action="export-json" title="Download the typed JSON behind this diagram">Download typed JSON</button>
+<button type="button" data-action="close-exports" title="Close the export menu">Close</button>
+</dialog>
+<script type="application/json" id="vis-nodes">[{"id": "bof/test/beacon.h", "label": "beacon.h", "title": "\u003cb>beacon.h\u003c/b>\u003cbr>test | testing | h\u003cbr>symbols: 4 (BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR)", "group": "test", "language": "h", "doc": "", "symbols": [{"name": "BEACON_H", "kind": "macro", "line": "21", "signature": "#define BEACON_H", "doc": ""}, {"name": "datap", "kind": "struct", "line": "25", "signature": "", "doc": ""}, {"name": "CALLBACK_OUTPUT", "kind": "macro", "line": "41", "signature": "#define CALLBACK_OUTPUT", "doc": ""}, {"name": "CALLBACK_ERROR", "kind": "macro", "line": "42", "signature": "#define CALLBACK_ERROR", "doc": ""}], "symbolTotal": 4, "community": 0, "communityLabel": "bof/test"}, {"id": "beacon.c", "label": "beacon.c", "title": "\u003cb>beacon.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 179 (PSAPI_VERSION, WIN32_LEAN_AND_MEAN, NTSTATUS, _NTSTATUS_DEFINED, NTSTATUS +154 more)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "PSAPI_VERSION", "kind": "macro", "line": "1", "signature": "#define PSAPI_VERSION", "doc": ""}, {"name": "WIN32_LEAN_AND_MEAN", "kind": "macro", "line": "2", "signature": "#define WIN32_LEAN_AND_MEAN", "doc": ""}, {"name": "NTSTATUS", "kind": "type_alias", "line": "36", "signature": "typedef LONG NTSTATUS;", "doc": "================================================================================================= NTAPI TYPE DEFINITIONS (required for NtCreateFile) ================================================================================================= ifndef _NTDEF_"}, {"name": "_NTSTATUS_DEFINED", "kind": "macro", "line": "41", "signature": "#define _NTSTATUS_DEFINED", "doc": ""}, {"name": "NTSTATUS", "kind": "type_alias", "line": "42", "signature": "typedef LONG NTSTATUS;", "doc": "ifndef _NTSTATUS_DEFINED define _NTSTATUS_DEFINED"}, {"name": "NT_SUCCESS", "kind": "macro", "line": "46", "signature": "#define NT_SUCCESS(Status)", "doc": ""}, {"name": "Length", "kind": "type_alias", "line": "53", "signature": "typedef struct _UNICODE_STRING { USHORT Length;", "doc": ""}, {"name": "_UNICODE_STRING", "kind": "struct", "line": "54", "signature": "", "doc": ""}, {"name": "Length", "kind": "type_alias", "line": "59", "signature": "typedef struct _OBJECT_ATTRIBUTES { ULONG Length;", "doc": ""}, {"name": "_OBJECT_ATTRIBUTES", "kind": "struct", "line": "60", "signature": "", "doc": ""}, {"name": "Status", "kind": "type_alias", "line": "68", "signature": "typedef struct _IO_STATUS_BLOCK { union { NTSTATUS Status;", "doc": ""}, {"name": "_IO_STATUS_BLOCK", "kind": "struct", "line": "69", "signature": "", "doc": ""}, {"name": "OBJ_CASE_INSENSITIVE", "kind": "macro", "line": "77", "signature": "#define OBJ_CASE_INSENSITIVE", "doc": ""}, {"name": "FILE_SYNCHRONOUS_IO_NONALERT", "kind": "macro", "line": "79", "signature": "#define FILE_SYNCHRONOUS_IO_NONALERT", "doc": ""}, {"name": "FILE_NON_DIRECTORY_FILE", "kind": "macro", "line": "81", "signature": "#define FILE_NON_DIRECTORY_FILE", "doc": ""}, {"name": "FILE_DIRECTORY_FILE", "kind": "macro", "line": "82", "signature": "#define FILE_DIRECTORY_FILE", "doc": ""}, {"name": "UTF8ToWide", "kind": "function", "line": "94", "signature": "WCHAR* UTF8ToWide(const char* utf8)", "doc": "Convierte UTF-8 a wide string"}, {"name": "XOR_KEY", "kind": "macro", "line": "125", "signature": "#define XOR_KEY", "doc": ""}, {"name": "DEBUG", "kind": "macro", "line": "126", "signature": "#define DEBUG", "doc": ""}, {"name": "TIMEOUT", "kind": "macro", "line": "127", "signature": "#define TIMEOUT", "doc": ""}, {"name": "MAX_RESPONSE_SIZE", "kind": "macro", "line": "128", "signature": "#define MAX_RESPONSE_SIZE", "doc": ""}, {"name": "C2_URL", "kind": "macro", "line": "129", "signature": "#define C2_URL", "doc": ""}, {"name": "MALEABLE", "kind": "macro", "line": "130", "signature": "#define MALEABLE", "doc": ""}, {"name": "CLIENT_ID", "kind": "macro", "line": "131", "signature": "#define CLIENT_ID", "doc": ""}, {"name": "SLEEP_BASE", "kind": "macro", "line": "132", "signature": "#define SLEEP_BASE", "doc": ""}], "symbolTotal": 179, "community": 1, "communityLabel": "root"}, {"id": "cJSON.h", "label": "cJSON.h", "title": "\u003cb>cJSON.h\u003c/b>\u003cbr>core | utility | h\u003cbr>symbols: 37 (cJSON__h, next, __WINDOWS__, CJSON_CDECL, CJSON_STDCALL +12 more)", "group": "core", "language": "h", "doc": "", "symbols": [{"name": "cJSON__h", "kind": "macro", "line": "24", "signature": "#define cJSON__h", "doc": ""}, {"name": "next", "kind": "variable", "line": "27", "signature": "extern \"C\" { #endif #if !defined(__WINDOWS__) && (defined(WIN32) || defined(WIN64) || defined(_MSC_VER) || defined(_WIN32)) #define __WINDOWS__ #endif #ifdef __WINDOWS__ /* When compiling for windows,", "doc": "ifdef __cplusplus"}, {"name": "__WINDOWS__", "kind": "macro", "line": "32", "signature": "#define __WINDOWS__", "doc": ""}, {"name": "CJSON_CDECL", "kind": "macro", "line": "44", "signature": "#define CJSON_CDECL", "doc": ""}, {"name": "CJSON_STDCALL", "kind": "macro", "line": "45", "signature": "#define CJSON_STDCALL", "doc": ""}, {"name": "CJSON_EXPORT_SYMBOLS", "kind": "macro", "line": "49", "signature": "#define CJSON_EXPORT_SYMBOLS", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "macro", "line": "53", "signature": "#define CJSON_PUBLIC(type)", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "macro", "line": "55", "signature": "#define CJSON_PUBLIC(type)", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "macro", "line": "57", "signature": "#define CJSON_PUBLIC(type)", "doc": ""}, {"name": "CJSON_CDECL", "kind": "macro", "line": "60", "signature": "#define CJSON_CDECL", "doc": ""}, {"name": "CJSON_STDCALL", "kind": "macro", "line": "61", "signature": "#define CJSON_STDCALL", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "macro", "line": "64", "signature": "#define CJSON_PUBLIC(type)", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "macro", "line": "66", "signature": "#define CJSON_PUBLIC(type)", "doc": ""}, {"name": "CJSON_VERSION_MAJOR", "kind": "macro", "line": "71", "signature": "#define CJSON_VERSION_MAJOR", "doc": ""}, {"name": "CJSON_VERSION_MINOR", "kind": "macro", "line": "72", "signature": "#define CJSON_VERSION_MINOR", "doc": ""}, {"name": "CJSON_VERSION_PATCH", "kind": "macro", "line": "73", "signature": "#define CJSON_VERSION_PATCH", "doc": ""}, {"name": "cJSON_Invalid", "kind": "macro", "line": "78", "signature": "#define cJSON_Invalid", "doc": ""}, {"name": "cJSON_False", "kind": "macro", "line": "79", "signature": "#define cJSON_False", "doc": ""}, {"name": "cJSON_True", "kind": "macro", "line": "80", "signature": "#define cJSON_True", "doc": ""}, {"name": "cJSON_NULL", "kind": "macro", "line": "81", "signature": "#define cJSON_NULL", "doc": ""}, {"name": "cJSON_Number", "kind": "macro", "line": "82", "signature": "#define cJSON_Number", "doc": ""}, {"name": "cJSON_String", "kind": "macro", "line": "83", "signature": "#define cJSON_String", "doc": ""}, {"name": "cJSON_Array", "kind": "macro", "line": "84", "signature": "#define cJSON_Array", "doc": ""}, {"name": "cJSON_Object", "kind": "macro", "line": "85", "signature": "#define cJSON_Object", "doc": ""}, {"name": "cJSON_Raw", "kind": "macro", "line": "86", "signature": "#define cJSON_Raw", "doc": ""}], "symbolTotal": 37, "community": 1, "communityLabel": "root"}, {"id": "aes.h", "label": "aes.h", "title": "\u003cb>aes.h\u003c/b>\u003cbr>core | utility | h\u003cbr>#define the macros below to 1/0 to enable/disable the mode of operation.\u003cbr>symbols: 21 (_AES_H_, CBC, ECB, CTR, AES256)", "group": "core", "language": "h", "doc": "#define the macros below to 1/0 to enable/disable the mode of operation.", "symbols": [{"name": "_AES_H_", "kind": "macro", "line": "2", "signature": "#define _AES_H_", "doc": ""}, {"name": "CBC", "kind": "macro", "line": "9", "signature": "#define CBC", "doc": ""}, {"name": "ECB", "kind": "macro", "line": "12", "signature": "#define ECB", "doc": ""}, {"name": "CTR", "kind": "macro", "line": "15", "signature": "#define CTR", "doc": ""}, {"name": "AES256", "kind": "macro", "line": "18", "signature": "#define AES256", "doc": ""}, {"name": "AES_BLOCKLEN", "kind": "macro", "line": "20", "signature": "#define AES_BLOCKLEN", "doc": ""}, {"name": "AES_KEYLEN", "kind": "macro", "line": "23", "signature": "#define AES_KEYLEN", "doc": ""}, {"name": "AES_keyExpSize", "kind": "macro", "line": "24", "signature": "#define AES_keyExpSize", "doc": ""}, {"name": "AES_KEYLEN", "kind": "macro", "line": "26", "signature": "#define AES_KEYLEN", "doc": ""}, {"name": "AES_keyExpSize", "kind": "macro", "line": "27", "signature": "#define AES_keyExpSize", "doc": ""}, {"name": "AES_KEYLEN", "kind": "macro", "line": "29", "signature": "#define AES_KEYLEN", "doc": ""}, {"name": "AES_keyExpSize", "kind": "macro", "line": "30", "signature": "#define AES_keyExpSize", "doc": ""}, {"name": "AES_ctx", "kind": "struct", "line": "33", "signature": "", "doc": ""}, {"name": "AES_init_ctx", "kind": "function", "line": "41", "signature": "void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key);", "doc": ""}, {"name": "AES_init_ctx_iv", "kind": "function", "line": "43", "signature": "void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv);", "doc": "if (defined(CBC) && (CBC == 1)) || (defined(CTR) && (CTR == 1))"}, {"name": "AES_ctx_set_iv", "kind": "function", "line": "44", "signature": "void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv);", "doc": ""}, {"name": "AES_ECB_encrypt", "kind": "function", "line": "48", "signature": "void AES_ECB_encrypt(const struct AES_ctx* ctx, uint8_t* buf);", "doc": "if defined(ECB) && (ECB == 1)"}, {"name": "AES_ECB_decrypt", "kind": "function", "line": "49", "signature": "void AES_ECB_decrypt(const struct AES_ctx* ctx, uint8_t* buf);", "doc": ""}, {"name": "AES_CBC_encrypt_buffer", "kind": "function", "line": "53", "signature": "void AES_CBC_encrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);", "doc": "if defined(CBC) && (CBC == 1)"}, {"name": "AES_CBC_decrypt_buffer", "kind": "function", "line": "54", "signature": "void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);", "doc": ""}, {"name": "AES_CTR_xcrypt_buffer", "kind": "function", "line": "58", "signature": "void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length);", "doc": "if defined(CTR) && (CTR == 1)"}], "symbolTotal": 21, "community": 1, "communityLabel": "root"}, {"id": "beacon.h", "label": "beacon.h", "title": "\u003cb>beacon.h\u003c/b>\u003cbr>core | utility | h\u003cbr>symbols: 4 (BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR)", "group": "core", "language": "h", "doc": "", "symbols": [{"name": "BEACON_H", "kind": "macro", "line": "21", "signature": "#define BEACON_H", "doc": ""}, {"name": "datap", "kind": "struct", "line": "25", "signature": "", "doc": ""}, {"name": "CALLBACK_OUTPUT", "kind": "macro", "line": "41", "signature": "#define CALLBACK_OUTPUT", "doc": ""}, {"name": "CALLBACK_ERROR", "kind": "macro", "line": "42", "signature": "#define CALLBACK_ERROR", "doc": ""}], "symbolTotal": 4, "community": 0, "communityLabel": "bof/test"}, {"id": "COFFLoader3.c", "label": "COFFLoader3.c", "title": "\u003cb>COFFLoader3.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 258 (__imp_BeaconPrintf, __imp_BeaconOutput, __imp_BeaconDataParse, __imp_BeaconDataInt, __imp_BeaconDataShort +233 more)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_BeaconPrintf", "kind": "variable", "line": "332", "signature": "extern PVOID __imp_BeaconPrintf;", "doc": ""}, {"name": "__imp_BeaconOutput", "kind": "variable", "line": "333", "signature": "extern PVOID __imp_BeaconOutput;", "doc": ""}, {"name": "__imp_BeaconDataParse", "kind": "variable", "line": "334", "signature": "extern PVOID __imp_BeaconDataParse;", "doc": ""}, {"name": "__imp_BeaconDataInt", "kind": "variable", "line": "335", "signature": "extern PVOID __imp_BeaconDataInt;", "doc": ""}, {"name": "__imp_BeaconDataShort", "kind": "variable", "line": "336", "signature": "extern PVOID __imp_BeaconDataShort;", "doc": ""}, {"name": "__imp_BeaconDataExtract", "kind": "variable", "line": "337", "signature": "extern PVOID __imp_BeaconDataExtract;", "doc": ""}, {"name": "__imp_LoadLibraryA", "kind": "variable", "line": "338", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": ""}, {"name": "__imp_LoadLibraryW", "kind": "variable", "line": "339", "signature": "extern PVOID __imp_LoadLibraryW;", "doc": ""}, {"name": "__imp_GetModuleHandleA", "kind": "variable", "line": "340", "signature": "extern PVOID __imp_GetModuleHandleA;", "doc": ""}, {"name": "__imp_GetModuleHandleW", "kind": "variable", "line": "341", "signature": "extern PVOID __imp_GetModuleHandleW;", "doc": ""}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "342", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_GetLastError", "kind": "variable", "line": "343", "signature": "extern PVOID __imp_GetLastError;", "doc": ""}, {"name": "__imp_CloseHandle", "kind": "variable", "line": "344", "signature": "extern PVOID __imp_CloseHandle;", "doc": ""}, {"name": "__imp_ExitProcess", "kind": "variable", "line": "345", "signature": "extern PVOID __imp_ExitProcess;", "doc": ""}, {"name": "__imp_ExitThread", "kind": "variable", "line": "346", "signature": "extern PVOID __imp_ExitThread;", "doc": ""}, {"name": "__imp_Sleep", "kind": "variable", "line": "347", "signature": "extern PVOID __imp_Sleep;", "doc": ""}, {"name": "__imp_CreateThread", "kind": "variable", "line": "348", "signature": "extern PVOID __imp_CreateThread;", "doc": ""}, {"name": "__imp_GetCurrentProcess", "kind": "variable", "line": "349", "signature": "extern PVOID __imp_GetCurrentProcess;", "doc": ""}, {"name": "__imp_GetCurrentProcessId", "kind": "variable", "line": "350", "signature": "extern PVOID __imp_GetCurrentProcessId;", "doc": ""}, {"name": "__imp_GetCurrentThreadId", "kind": "variable", "line": "351", "signature": "extern PVOID __imp_GetCurrentThreadId;", "doc": ""}, {"name": "__imp_GetTickCount", "kind": "variable", "line": "352", "signature": "extern PVOID __imp_GetTickCount;", "doc": ""}, {"name": "__imp_GetTickCount64", "kind": "variable", "line": "353", "signature": "extern PVOID __imp_GetTickCount64;", "doc": ""}, {"name": "__imp_CreateFileA", "kind": "variable", "line": "354", "signature": "extern PVOID __imp_CreateFileA;", "doc": ""}, {"name": "__imp_CreateFileW", "kind": "variable", "line": "355", "signature": "extern PVOID __imp_CreateFileW;", "doc": ""}, {"name": "__imp_ReadFile", "kind": "variable", "line": "356", "signature": "extern PVOID __imp_ReadFile;", "doc": ""}], "symbolTotal": 258, "community": 0, "communityLabel": "bof/test"}, {"id": "cJSON.c", "label": "cJSON.c", "title": "\u003cb>cJSON.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 125 (_CRT_SECURE_NO_DEPRECATE, true, false, isinf, isnan +100 more)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "_CRT_SECURE_NO_DEPRECATE", "kind": "macro", "line": "28", "signature": "#define _CRT_SECURE_NO_DEPRECATE", "doc": ""}, {"name": "true", "kind": "macro", "line": "65", "signature": "#define true", "doc": ""}, {"name": "false", "kind": "macro", "line": "70", "signature": "#define false", "doc": ""}, {"name": "isinf", "kind": "macro", "line": "74", "signature": "#define isinf(d)", "doc": ""}, {"name": "isnan", "kind": "macro", "line": "77", "signature": "#define isnan(d)", "doc": ""}, {"name": "NAN", "kind": "macro", "line": "82", "signature": "#define NAN", "doc": ""}, {"name": "NAN", "kind": "macro", "line": "84", "signature": "#define NAN", "doc": ""}, {"name": "error", "kind": "struct", "line": "88", "signature": "", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "function", "line": "95", "signature": "CJSON_PUBLIC(const char *) cJSON_GetErrorPtr(void)", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "function", "line": "100", "signature": "CJSON_PUBLIC(char *) cJSON_GetStringValue(const cJSON * const item)", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "function", "line": "110", "signature": "CJSON_PUBLIC(double) cJSON_GetNumberValue(const cJSON * const item)", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "function", "line": "125", "signature": "CJSON_PUBLIC(const char*) cJSON_Version(void)", "doc": ""}, {"name": "case_insensitive_strcmp", "kind": "function", "line": "134", "signature": "static int case_insensitive_strcmp(const unsigned char *string1, const unsigned char *string2)", "doc": "/* This is a safeguard to prevent copy-pasters from using incompatible C and header files #if (CJSON_VERSION_MAJOR != 1) || (CJSON_VERSION_MINOR != 7) || (CJSON_VERSION_PATCH != 18) #error cJSON.h and cJSON.c have different versions. Make sure that both have the same. #endif CJSON_PUBLIC(const char*) cJSON_Version(void) { static char version[15]; sprintf(version, \"%i.%i.%i\", CJSON_VERSION_MAJOR, CJSON_VERSION_MINOR, CJSON_VERSION_PATCH); return version; } /* Case insensitive string comparison, doesn't consider two NULL pointers equal though"}, {"name": "internal_hooks", "kind": "struct", "line": "157", "signature": "", "doc": ""}, {"name": "internal_malloc", "kind": "function", "line": "166", "signature": "static void * CJSON_CDECL internal_malloc(size_t size)", "doc": "} return tolower(*string1) - tolower(*string2); } typedef struct internal_hooks { void *(CJSON_CDECL *allocate)(size_t size); void (CJSON_CDECL *deallocate)(void *pointer); void *(CJSON_CDECL *reallocate)(void *pointer, size_t size); } internal_hooks; #if defined(_MSC_VER) /* work around MSVC error C2322: '...' address of dllimport '...' is not static"}, {"name": "internal_free", "kind": "function", "line": "170", "signature": "static void CJSON_CDECL internal_free(void *pointer)", "doc": ""}, {"name": "internal_realloc", "kind": "function", "line": "174", "signature": "static void * CJSON_CDECL internal_realloc(void *pointer, size_t size)", "doc": ""}, {"name": "internal_malloc", "kind": "macro", "line": "179", "signature": "#define internal_malloc", "doc": ""}, {"name": "internal_free", "kind": "macro", "line": "180", "signature": "#define internal_free", "doc": ""}, {"name": "internal_realloc", "kind": "macro", "line": "181", "signature": "#define internal_realloc", "doc": ""}, {"name": "static_strlen", "kind": "macro", "line": "185", "signature": "#define static_strlen(string_literal)", "doc": ""}, {"name": "cJSON_strdup", "kind": "function", "line": "189", "signature": "static unsigned char* cJSON_strdup(const unsigned char* string, const internal_hooks * const hooks)", "doc": ""}, {"name": "CJSON_PUBLIC", "kind": "function", "line": "210", "signature": "CJSON_PUBLIC(void) cJSON_InitHooks(cJSON_Hooks* hooks)", "doc": ""}, {"name": "cJSON_New_Item", "kind": "function", "line": "242", "signature": "static cJSON *cJSON_New_Item(const internal_hooks * const hooks)", "doc": "if (hooks->free_fn != NULL) { global_hooks.deallocate = hooks->free_fn; } /* use realloc only if both free and malloc are used global_hooks.reallocate = NULL; if ((global_hooks.allocate == malloc) && (global_hooks.deallocate == free)) { global_hooks.reallocate = realloc; } } /* Internal constructor."}, {"name": "get_decimal_point", "kind": "function", "line": "281", "signature": "static unsigned char get_decimal_point(void)", "doc": "item->valuestring = NULL; } if (!(item->type & cJSON_StringIsConst) && (item->string != NULL)) { global_hooks.deallocate(item->string); item->string = NULL; } global_hooks.deallocate(item); item = next; } } /* get the decimal point character of the current locale"}], "symbolTotal": 125, "community": 1, "communityLabel": "root"}, {"id": "aes.c", "label": "aes.c", "title": "\u003cb>aes.c\u003c/b>\u003cbr>test | testing | c\u003cbr>aes.c - tiny-AES-c (https://github.com/kokke/tiny-AES-c)\u003cbr>symbols: 43 (Nb, KEYLEN_256, RKLENGTH, BLOCKLEN, getSBoxValue +18 more)", "group": "test", "language": "c", "doc": "aes.c - tiny-AES-c (https://github.com/kokke/tiny-AES-c)", "symbols": [{"name": "Nb", "kind": "macro", "line": "5", "signature": "#define Nb", "doc": ""}, {"name": "KEYLEN_256", "kind": "macro", "line": "9", "signature": "#define KEYLEN_256", "doc": ""}, {"name": "RKLENGTH", "kind": "macro", "line": "10", "signature": "#define RKLENGTH", "doc": ""}, {"name": "BLOCKLEN", "kind": "macro", "line": "11", "signature": "#define BLOCKLEN", "doc": ""}, {"name": "getSBoxValue", "kind": "function", "line": "13", "signature": "static uint8_t getSBoxValue(uint8_t num)", "doc": ""}, {"name": "getSBoxInvert", "kind": "function", "line": "35", "signature": "static uint8_t getSBoxInvert(uint8_t num)", "doc": ""}, {"name": "Td0", "kind": "function", "line": "57", "signature": "static uint8_t Td0(int x)", "doc": ""}, {"name": "Td1", "kind": "function", "line": "58", "signature": "static uint8_t Td1(int x)", "doc": ""}, {"name": "Td2", "kind": "function", "line": "59", "signature": "static uint8_t Td2(int x)", "doc": ""}, {"name": "Td3", "kind": "function", "line": "60", "signature": "static uint8_t Td3(int x)", "doc": ""}, {"name": "Td4", "kind": "function", "line": "61", "signature": "static uint8_t Td4(int x)", "doc": ""}, {"name": "Nb", "kind": "macro", "line": "67", "signature": "#define Nb", "doc": ""}, {"name": "Nk", "kind": "macro", "line": "70", "signature": "#define Nk", "doc": ""}, {"name": "Nr", "kind": "macro", "line": "71", "signature": "#define Nr", "doc": ""}, {"name": "Nk", "kind": "macro", "line": "73", "signature": "#define Nk", "doc": ""}, {"name": "Nr", "kind": "macro", "line": "74", "signature": "#define Nr", "doc": ""}, {"name": "Nk", "kind": "macro", "line": "76", "signature": "#define Nk", "doc": ""}, {"name": "Nr", "kind": "macro", "line": "77", "signature": "#define Nr", "doc": ""}, {"name": "MULTIPLY_AS_A_FUNCTION", "kind": "macro", "line": "84", "signature": "#define MULTIPLY_AS_A_FUNCTION", "doc": ""}, {"name": "getSBoxValue", "kind": "macro", "line": "163", "signature": "#define getSBoxValue(num)", "doc": ""}, {"name": "KeyExpansion", "kind": "function", "line": "166", "signature": "static void KeyExpansion(uint8_t* RoundKey, const uint8_t* Key)", "doc": "This function produces Nb(Nr+1) round keys. The round keys are used in each round to decrypt the states."}, {"name": "AES_init_ctx", "kind": "function", "line": "239", "signature": "void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key)", "doc": ""}, {"name": "AES_init_ctx_iv", "kind": "function", "line": "244", "signature": "void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv)", "doc": "if (defined(CBC) && (CBC == 1)) || (defined(CTR) && (CTR == 1))"}, {"name": "AES_ctx_set_iv", "kind": "function", "line": "249", "signature": "void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv)", "doc": ""}, {"name": "AddRoundKey", "kind": "function", "line": "257", "signature": "static void AddRoundKey(uint8_t round, state_t* state, const uint8_t* RoundKey)", "doc": "This function adds the round key to state. The round key is added to the state by an XOR function."}], "symbolTotal": 43, "community": 1, "communityLabel": "root"}, {"id": "bof/test/sock5.c", "label": "sock5.c", "title": "\u003cb>sock5.c\u003c/b>\u003cbr>test | testing | c\u003cbr>===== DECLARACIONES QUE FALTABAN =====\u003cbr>symbols: 41 (WIN32_LEAN_AND_MEAN, SOCKET, INVALID_SOCKET, SOCKET_ERROR, AF_INET +16 more)", "group": "test", "language": "c", "doc": "===== DECLARACIONES QUE FALTABAN =====", "symbols": [{"name": "WIN32_LEAN_AND_MEAN", "kind": "macro", "line": "1", "signature": "#define WIN32_LEAN_AND_MEAN", "doc": ""}, {"name": "SOCKET", "kind": "type_alias", "line": "6", "signature": "typedef unsigned __int64 SOCKET;", "doc": "#define WIN32_LEAN_AND_MEAN #include \u003cwindows.h> #include \"beacon.h\" /* ===== DECLARACIONES QUE FALTABAN ====="}, {"name": "INVALID_SOCKET", "kind": "macro", "line": "7", "signature": "#define INVALID_SOCKET", "doc": ""}, {"name": "SOCKET_ERROR", "kind": "macro", "line": "8", "signature": "#define SOCKET_ERROR", "doc": ""}, {"name": "AF_INET", "kind": "macro", "line": "9", "signature": "#define AF_INET", "doc": ""}, {"name": "SOCK_STREAM", "kind": "macro", "line": "10", "signature": "#define SOCK_STREAM", "doc": ""}, {"name": "IPPROTO_TCP", "kind": "macro", "line": "11", "signature": "#define IPPROTO_TCP", "doc": ""}, {"name": "INADDR_ANY", "kind": "macro", "line": "12", "signature": "#define INADDR_ANY", "doc": ""}, {"name": "INADDR_LOOPBACK", "kind": "macro", "line": "13", "signature": "#define INADDR_LOOPBACK", "doc": ""}, {"name": "WSAData", "kind": "struct", "line": "16", "signature": "", "doc": "pragma pack(push,1)"}, {"name": "wVersion", "kind": "type_alias", "line": "16", "signature": "typedef struct WSAData { WORD wVersion;", "doc": "pragma pack(push,1)"}, {"name": "fd_count", "kind": "type_alias", "line": "26", "signature": "typedef struct fd_set { unsigned int fd_count;", "doc": "pragma pack(pop)"}, {"name": "fd_set", "kind": "struct", "line": "27", "signature": "", "doc": ""}, {"name": "tv_sec", "kind": "type_alias", "line": "31", "signature": "typedef struct timeval { long tv_sec;", "doc": ""}, {"name": "timeval", "kind": "struct", "line": "32", "signature": "", "doc": ""}, {"name": "FD_SETSIZE", "kind": "macro", "line": "37", "signature": "#define FD_SETSIZE", "doc": ""}, {"name": "FD_CLR", "kind": "macro", "line": "38", "signature": "#define FD_CLR(fd,set)", "doc": ""}, {"name": "FD_SET", "kind": "macro", "line": "39", "signature": "#define FD_SET(fd,set)", "doc": ""}, {"name": "FD_ZERO", "kind": "macro", "line": "40", "signature": "#define FD_ZERO(set)", "doc": ""}, {"name": "FD_ISSET", "kind": "macro", "line": "41", "signature": "#define FD_ISSET(fd,set)", "doc": ""}, {"name": "u_short", "kind": "type_alias", "line": "42", "signature": "typedef unsigned short u_short;", "doc": "define FD_SETSIZE 64 define FD_CLR(fd,set) do { if ((set)->fd_count > 0) { u_int __i;for (__i=0;__i\u003c(set)->fd_count;__i++) { if ((set)->fd_array[__i] == (fd)) { while (__i \u003c (set)->fd_count-1) { (set)->fd_array[__i] = (set)->fd_array[__i+1];__i++;} (set)->fd_count--;break;}}}} while(0) define FD_SET(fd,set)   do { if ((set)->fd_count \u003c FD_SETSIZE) (set)->fd_array[(set)->fd_count++] = (fd); } while(0) define FD_ZERO(set)     (((set)->fd_count = 0)) define FD_ISSET(fd,set) (__builtin_memchr((set)->fd_array,(fd),(set)->fd_count*sizeof(SOCKET))!=NULL)"}, {"name": "u_int", "kind": "type_alias", "line": "44", "signature": "typedef unsigned int u_int;", "doc": ""}, {"name": "u_long", "kind": "type_alias", "line": "45", "signature": "typedef unsigned long u_long;", "doc": ""}, {"name": "in_addr", "kind": "struct", "line": "47", "signature": "", "doc": ""}, {"name": "sockaddr_in", "kind": "struct", "line": "49", "signature": "", "doc": ""}], "symbolTotal": 41, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/upload.c", "label": "upload.c", "title": "\u003cb>upload.c\u003c/b>\u003cbr>test | testing | c\u003cbr>================================ IMPORTS DIRECTOS ================================\u003cbr>symbols: 41 (WIN32_LEAN_AND_MEAN, __imp_LoadLibraryA, __imp_GetProcAddress, uint8_t, uint32_t +16 more)", "group": "test", "language": "c", "doc": "================================ IMPORTS DIRECTOS ================================", "symbols": [{"name": "WIN32_LEAN_AND_MEAN", "kind": "macro", "line": "1", "signature": "#define WIN32_LEAN_AND_MEAN", "doc": ""}, {"name": "__imp_LoadLibraryA", "kind": "variable", "line": "8", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": "================================ IMPORTS DIRECTOS ================================"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "9", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "uint8_t", "kind": "type_alias", "line": "14", "signature": "typedef unsigned char uint8_t;", "doc": "================================ TIPOS MANUALES ================================"}, {"name": "uint32_t", "kind": "type_alias", "line": "15", "signature": "typedef unsigned int uint32_t;", "doc": ""}, {"name": "HINTERNET", "kind": "type_alias", "line": "16", "signature": "typedef void* HINTERNET;", "doc": ""}, {"name": "INTERNET_PORT", "kind": "type_alias", "line": "17", "signature": "typedef WORD INTERNET_PORT;", "doc": ""}, {"name": "HCRYPTPROV", "kind": "type_alias", "line": "18", "signature": "typedef ULONG_PTR HCRYPTPROV;", "doc": ""}, {"name": "PROV_RSA_AES", "kind": "macro", "line": "20", "signature": "#define PROV_RSA_AES", "doc": ""}, {"name": "CRYPT_VERIFYCONTEXT", "kind": "macro", "line": "21", "signature": "#define CRYPT_VERIFYCONTEXT", "doc": ""}, {"name": "AES_BLOCKLEN", "kind": "macro", "line": "23", "signature": "#define AES_BLOCKLEN", "doc": ""}, {"name": "AES256_KEYLEN", "kind": "macro", "line": "24", "signature": "#define AES256_KEYLEN", "doc": ""}, {"name": "Nr", "kind": "macro", "line": "25", "signature": "#define Nr", "doc": ""}, {"name": "Nk", "kind": "macro", "line": "26", "signature": "#define Nk", "doc": ""}, {"name": "Nb", "kind": "macro", "line": "27", "signature": "#define Nb", "doc": ""}, {"name": "SECURITY_FLAG_IGNORE_UNKNOWN_CA", "kind": "macro", "line": "29", "signature": "#define SECURITY_FLAG_IGNORE_UNKNOWN_CA", "doc": ""}, {"name": "SECURITY_FLAG_IGNORE_CERT_CN_INVALID", "kind": "macro", "line": "30", "signature": "#define SECURITY_FLAG_IGNORE_CERT_CN_INVALID", "doc": ""}, {"name": "SECURITY_FLAG_IGNORE_CERT_DATE_INVALID", "kind": "macro", "line": "31", "signature": "#define SECURITY_FLAG_IGNORE_CERT_DATE_INVALID", "doc": ""}, {"name": "WINHTTP_OPTION_SECURITY_FLAGS", "kind": "macro", "line": "32", "signature": "#define WINHTTP_OPTION_SECURITY_FLAGS", "doc": ""}, {"name": "WINHTTP_ACCESS_TYPE_NO_PROXY", "kind": "macro", "line": "35", "signature": "#define WINHTTP_ACCESS_TYPE_NO_PROXY", "doc": ""}, {"name": "WINHTTP_NO_PROXY_NAME", "kind": "macro", "line": "39", "signature": "#define WINHTTP_NO_PROXY_NAME", "doc": ""}, {"name": "WINHTTP_NO_PROXY_BYPASS", "kind": "macro", "line": "43", "signature": "#define WINHTTP_NO_PROXY_BYPASS", "doc": ""}, {"name": "AES_ctx", "kind": "struct", "line": "46", "signature": "", "doc": ""}, {"name": "my_strlen", "kind": "function", "line": "53", "signature": "static int my_strlen(const char *s)", "doc": "================================ FUNCIONES AUXILIARES ================================"}, {"name": "my_memcpy", "kind": "function", "line": "59", "signature": "static void* my_memcpy(void* dst, const void* src, size_t len)", "doc": ""}], "symbolTotal": 41, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/persistsvc.c", "label": "persistsvc.c", "title": "\u003cb>persistsvc.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 13 (WIN32_LEAN_AND_MEAN, __imp_LoadLibraryA, __imp_GetProcAddress, my_memcpy, my_strlen)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "WIN32_LEAN_AND_MEAN", "kind": "macro", "line": "20", "signature": "#define WIN32_LEAN_AND_MEAN", "doc": ""}, {"name": "__imp_LoadLibraryA", "kind": "variable", "line": "27", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": "================================ IMPORTS DIRECTOS ================================"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "28", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "my_memcpy", "kind": "function", "line": "33", "signature": "static void* my_memcpy(void* dst, const void* src, size_t len)", "doc": "================================ FUNCIONES AUXILIARES ================================"}, {"name": "my_strlen", "kind": "function", "line": "40", "signature": "static int my_strlen(const char* str)", "doc": ""}, {"name": "my_strcat", "kind": "function", "line": "47", "signature": "static char* my_strcat(char* dest, const char* src)", "doc": ""}, {"name": "my_strcmp", "kind": "function", "line": "55", "signature": "static int my_strcmp(const char* s1, const char* s2)", "doc": ""}, {"name": "RESOLVE_API", "kind": "macro", "line": "65", "signature": "#define RESOLVE_API(lib, name, type)", "doc": ""}, {"name": "ServiceHandler", "kind": "function", "line": "82", "signature": "DWORD WINAPI ServiceHandler(DWORD dwControl, DWORD dwEventType, LPVOID lpEventData, LPVOID lpCont...", "doc": "================================ MANEJADOR DE CONTROL DEL SERVICIO ================================"}, {"name": "ServiceMain", "kind": "function", "line": "116", "signature": "VOID WINAPI ServiceMain(DWORD dwArgc, LPSTR *lpszArgv)", "doc": "================================ FUNCIÓN PRINCIPAL DEL SERVICIO ================================"}, {"name": "cleanup", "kind": "macro", "line": "131", "signature": "#define cleanup", "doc": ""}, {"name": "cleanup", "kind": "macro", "line": "183", "signature": "#define cleanup", "doc": ""}, {"name": "go", "kind": "function", "line": "251", "signature": "void go(char *args, int alen)", "doc": "================================ FUNCIÓN PRINCIPAL DEL BOF ================================"}], "symbolTotal": 13, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/disablelog.c", "label": "disablelog.c", "title": "\u003cb>disablelog.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 9 (WIN32_LEAN_AND_MEAN, __imp_LoadLibraryA, __imp_GetProcAddress, __imp_GetModuleHandleA, __imp_CloseHandle)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "WIN32_LEAN_AND_MEAN", "kind": "macro", "line": "20", "signature": "#define WIN32_LEAN_AND_MEAN", "doc": ""}, {"name": "__imp_LoadLibraryA", "kind": "variable", "line": "27", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": ""}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "28", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_GetModuleHandleA", "kind": "variable", "line": "29", "signature": "extern PVOID __imp_GetModuleHandleA;", "doc": ""}, {"name": "__imp_CloseHandle", "kind": "variable", "line": "30", "signature": "extern PVOID __imp_CloseHandle;", "doc": ""}, {"name": "__imp_OpenProcess", "kind": "variable", "line": "31", "signature": "extern PVOID __imp_OpenProcess;", "doc": ""}, {"name": "NT_SUCCESS", "kind": "macro", "line": "34", "signature": "#define NT_SUCCESS(x)", "doc": ""}, {"name": "my_wcscmp", "kind": "function", "line": "37", "signature": "static int my_wcscmp(const wchar_t *s1, const wchar_t *s2)", "doc": ""}, {"name": "go", "kind": "function", "line": "69", "signature": "void go(char *args, int alen)", "doc": ""}], "symbolTotal": 9, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/scan_shellcode.c", "label": "scan_shellcode.c", "title": "\u003cb>scan_shellcode.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 9 (WIN32_LEAN_AND_MEAN, __imp_LoadLibraryA, __imp_GetProcAddress, __imp_CreateToolhelp32Snapshot, __imp_Process32First)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "WIN32_LEAN_AND_MEAN", "kind": "macro", "line": "20", "signature": "#define WIN32_LEAN_AND_MEAN", "doc": ""}, {"name": "__imp_LoadLibraryA", "kind": "variable", "line": "26", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": "Símbolos"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "27", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_CreateToolhelp32Snapshot", "kind": "variable", "line": "28", "signature": "extern PVOID __imp_CreateToolhelp32Snapshot;", "doc": ""}, {"name": "__imp_Process32First", "kind": "variable", "line": "29", "signature": "extern PVOID __imp_Process32First;", "doc": ""}, {"name": "__imp_Process32Next", "kind": "variable", "line": "30", "signature": "extern PVOID __imp_Process32Next;", "doc": ""}, {"name": "__imp_OpenProcess", "kind": "variable", "line": "31", "signature": "extern PVOID __imp_OpenProcess;", "doc": ""}, {"name": "__imp_CloseHandle", "kind": "variable", "line": "32", "signature": "extern PVOID __imp_CloseHandle;", "doc": ""}, {"name": "go", "kind": "function", "line": "85", "signature": "void go(char *args, int alen)", "doc": ""}], "symbolTotal": 9, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/loadvnc.c", "label": "loadvnc.c", "title": "\u003cb>loadvnc.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 8 (__imp_LoadLibraryA, __imp_GetProcAddress, __imp_CloseHandle, TH32CS_SNAPPROCESS, dwSize)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_LoadLibraryA", "kind": "variable", "line": "26", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": "================================ IMPORTS DIRECTOS ================================"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "27", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_CloseHandle", "kind": "variable", "line": "28", "signature": "extern PVOID __imp_CloseHandle;", "doc": ""}, {"name": "TH32CS_SNAPPROCESS", "kind": "macro", "line": "33", "signature": "#define TH32CS_SNAPPROCESS", "doc": ""}, {"name": "dwSize", "kind": "type_alias", "line": "34", "signature": "typedef struct _PROCESSENTRY32 { DWORD dwSize;", "doc": "================================ DEFINICIONES MANUALES ================================ define TH32CS_SNAPPROCESS 0x00000002"}, {"name": "_PROCESSENTRY32", "kind": "struct", "line": "35", "signature": "", "doc": ""}, {"name": "execute_cmd_hidden", "kind": "function", "line": "51", "signature": "void execute_cmd_hidden(char* cmd)", "doc": "================================ FUNCIÓN AUX: EJECUTAR COMANDO OCULTO ================================"}, {"name": "go", "kind": "function", "line": "81", "signature": "void go(char *args, int alen)", "doc": "================================ FUNCIÓN PRINCIPAL ================================"}], "symbolTotal": 8, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/vncrelay.c", "label": "vncrelay.c", "title": "\u003cb>vncrelay.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 8 (__imp_LoadLibraryA, __imp_GetProcAddress, __imp_VirtualAlloc, __imp_VirtualFree, __imp_CloseHandle)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_LoadLibraryA", "kind": "variable", "line": "27", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": "================================ IMPORTS DIRECTOS ================================"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "28", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_VirtualAlloc", "kind": "variable", "line": "29", "signature": "extern PVOID __imp_VirtualAlloc;", "doc": ""}, {"name": "__imp_VirtualFree", "kind": "variable", "line": "30", "signature": "extern PVOID __imp_VirtualFree;", "doc": ""}, {"name": "__imp_CloseHandle", "kind": "variable", "line": "31", "signature": "extern PVOID __imp_CloseHandle;", "doc": ""}, {"name": "my_FD_ISSET", "kind": "function", "line": "62", "signature": "int my_FD_ISSET(SOCKET sock, fd_set *set)", "doc": "================================ FD_ISSET MANUAL ================================"}, {"name": "relay_traffic", "kind": "function", "line": "75", "signature": "void relay_traffic(SOCKET client_sock, SOCKET vnc_sock)", "doc": "================================ RELAY TRAFFIC ================================"}, {"name": "go", "kind": "function", "line": "132", "signature": "void go(char *args, int alen)", "doc": "================================ FUNCIÓN PRINCIPAL — ¡CORREGIDO! ================================"}], "symbolTotal": 8, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/calc/calc.c", "label": "calc.c", "title": "\u003cb>calc.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 6 (__imp_GetModuleHandleA, __imp_GetProcAddress, __imp_LoadLibraryA, __imp_GetComputerNameA, __imp_CloseHandle)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_GetModuleHandleA", "kind": "variable", "line": "26", "signature": "extern FARPROC __imp_GetModuleHandleA;", "doc": "================================ IMPORTS DIRECTOS ================================"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "27", "signature": "extern FARPROC __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_LoadLibraryA", "kind": "variable", "line": "28", "signature": "extern FARPROC __imp_LoadLibraryA;", "doc": ""}, {"name": "__imp_GetComputerNameA", "kind": "variable", "line": "29", "signature": "extern FARPROC __imp_GetComputerNameA;", "doc": ""}, {"name": "__imp_CloseHandle", "kind": "variable", "line": "30", "signature": "extern FARPROC __imp_CloseHandle;", "doc": ""}, {"name": "go", "kind": "function", "line": "34", "signature": "void go(char *args, int alen)", "doc": "================================ FUNCIÓN PRINCIPAL ================================"}], "symbolTotal": 6, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/etw/etw.c", "label": "etw.c", "title": "\u003cb>etw.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 5 (__imp_GetModuleHandleA, __imp_GetProcAddress, __imp_VirtualProtect, __imp_RtlCopyMemory, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_GetModuleHandleA", "kind": "variable", "line": "22", "signature": "extern PVOID __imp_GetModuleHandleA;", "doc": "include \u003cwindows.h> include \"beacon.h\""}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "23", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_VirtualProtect", "kind": "variable", "line": "24", "signature": "extern PVOID __imp_VirtualProtect;", "doc": ""}, {"name": "__imp_RtlCopyMemory", "kind": "variable", "line": "25", "signature": "extern PVOID __imp_RtlCopyMemory;", "doc": ""}, {"name": "go", "kind": "function", "line": "26", "signature": "void go(char *a,int l)", "doc": ""}], "symbolTotal": 5, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/amsibypass.c", "label": "amsibypass.c", "title": "\u003cb>amsibypass.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 5 (__imp_LoadLibraryA, __imp_GetProcAddress, __imp_VirtualProtect, __imp_RtlCopyMemory, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_LoadLibraryA", "kind": "variable", "line": "26", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": "================================ IMPORTS DIRECTOS ================================"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "27", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_VirtualProtect", "kind": "variable", "line": "28", "signature": "extern PVOID __imp_VirtualProtect;", "doc": ""}, {"name": "__imp_RtlCopyMemory", "kind": "variable", "line": "29", "signature": "extern PVOID __imp_RtlCopyMemory;", "doc": ""}, {"name": "go", "kind": "function", "line": "34", "signature": "void go(char *args, int alen)", "doc": "================================ FUNCIÓN PRINCIPAL ================================"}], "symbolTotal": 5, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/uacbypass.c", "label": "uacbypass.c", "title": "\u003cb>uacbypass.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 5 (__imp_LoadLibraryA, __imp_GetProcAddress, __imp_CloseHandle, execute_hidden_cmd, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_LoadLibraryA", "kind": "variable", "line": "26", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": "================================ IMPORTS DIRECTOS (solo si están en tu tabla) ================================"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "27", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_CloseHandle", "kind": "variable", "line": "28", "signature": "extern PVOID __imp_CloseHandle;", "doc": ""}, {"name": "execute_hidden_cmd", "kind": "function", "line": "33", "signature": "void execute_hidden_cmd(char* cmd)", "doc": "================================ FUNCIÓN AUX: EJECUTAR COMANDO OCULTO ================================"}, {"name": "go", "kind": "function", "line": "61", "signature": "void go(char *args, int alen)", "doc": "================================ FUNCIÓN PRINCIPAL ================================"}], "symbolTotal": 5, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/whoami/whoami.c", "label": "whoami.c", "title": "\u003cb>whoami.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 5 (__imp_GetModuleHandleA, __imp_GetProcAddress, __imp_LoadLibraryA, __imp_GetComputerNameA, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_GetModuleHandleA", "kind": "variable", "line": "26", "signature": "extern FARPROC __imp_GetModuleHandleA;", "doc": "================================ IMPORTS DIRECTOS ================================"}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "27", "signature": "extern FARPROC __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_LoadLibraryA", "kind": "variable", "line": "28", "signature": "extern FARPROC __imp_LoadLibraryA;", "doc": ""}, {"name": "__imp_GetComputerNameA", "kind": "variable", "line": "29", "signature": "extern FARPROC __imp_GetComputerNameA;", "doc": ""}, {"name": "go", "kind": "function", "line": "34", "signature": "void go(char *args, int alen)", "doc": "================================ FUNCIÓN PRINCIPAL ================================"}], "symbolTotal": 5, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/calc/beacon.h", "label": "beacon.h", "title": "\u003cb>beacon.h\u003c/b>\u003cbr>core | utility | h\u003cbr>symbols: 4 (BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR)", "group": "core", "language": "h", "doc": "", "symbols": [{"name": "BEACON_H", "kind": "macro", "line": "21", "signature": "#define BEACON_H", "doc": ""}, {"name": "datap", "kind": "struct", "line": "25", "signature": "", "doc": ""}, {"name": "CALLBACK_OUTPUT", "kind": "macro", "line": "41", "signature": "#define CALLBACK_OUTPUT", "doc": ""}, {"name": "CALLBACK_ERROR", "kind": "macro", "line": "42", "signature": "#define CALLBACK_ERROR", "doc": ""}], "symbolTotal": 4, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/etw/beacon.h", "label": "beacon.h", "title": "\u003cb>beacon.h\u003c/b>\u003cbr>core | utility | h\u003cbr>symbols: 4 (BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR)", "group": "core", "language": "h", "doc": "", "symbols": [{"name": "BEACON_H", "kind": "macro", "line": "21", "signature": "#define BEACON_H", "doc": ""}, {"name": "datap", "kind": "struct", "line": "25", "signature": "", "doc": ""}, {"name": "CALLBACK_OUTPUT", "kind": "macro", "line": "41", "signature": "#define CALLBACK_OUTPUT", "doc": ""}, {"name": "CALLBACK_ERROR", "kind": "macro", "line": "42", "signature": "#define CALLBACK_ERROR", "doc": ""}], "symbolTotal": 4, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/cmdwhoami.c", "label": "cmdwhoami.c", "title": "\u003cb>cmdwhoami.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 4 (__imp_LoadLibraryA, __imp_GetProcAddress, __imp_CloseHandle, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_LoadLibraryA", "kind": "variable", "line": "26", "signature": "extern PVOID __imp_LoadLibraryA;", "doc": ""}, {"name": "__imp_GetProcAddress", "kind": "variable", "line": "27", "signature": "extern PVOID __imp_GetProcAddress;", "doc": ""}, {"name": "__imp_CloseHandle", "kind": "variable", "line": "28", "signature": "extern PVOID __imp_CloseHandle;", "doc": ""}, {"name": "go", "kind": "function", "line": "43", "signature": "void go(char *args, int alen)", "doc": ""}], "symbolTotal": 4, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/persist.c", "label": "persist.c", "title": "\u003cb>persist.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 4 (__imp_RegOpenKeyExA, __imp_RegSetValueExA, __imp_RegCloseKey, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_RegOpenKeyExA", "kind": "variable", "line": "23", "signature": "extern PVOID __imp_RegOpenKeyExA;", "doc": ""}, {"name": "__imp_RegSetValueExA", "kind": "variable", "line": "24", "signature": "extern PVOID __imp_RegSetValueExA;", "doc": ""}, {"name": "__imp_RegCloseKey", "kind": "variable", "line": "25", "signature": "extern PVOID __imp_RegCloseKey;", "doc": ""}, {"name": "go", "kind": "function", "line": "27", "signature": "void go(char *args, int alen)", "doc": ""}], "symbolTotal": 4, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/whoami/beacon.h", "label": "beacon.h", "title": "\u003cb>beacon.h\u003c/b>\u003cbr>core | utility | h\u003cbr>symbols: 4 (BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR)", "group": "core", "language": "h", "doc": "", "symbols": [{"name": "BEACON_H", "kind": "macro", "line": "21", "signature": "#define BEACON_H", "doc": ""}, {"name": "datap", "kind": "struct", "line": "25", "signature": "", "doc": ""}, {"name": "CALLBACK_OUTPUT", "kind": "macro", "line": "41", "signature": "#define CALLBACK_OUTPUT", "doc": ""}, {"name": "CALLBACK_ERROR", "kind": "macro", "line": "42", "signature": "#define CALLBACK_ERROR", "doc": ""}], "symbolTotal": 4, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/shellcode.c", "label": "shellcode.c", "title": "\u003cb>shellcode.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 3 (__imp_VirtualAlloc, __imp_RtlCopyMemory, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_VirtualAlloc", "kind": "variable", "line": "23", "signature": "extern PVOID __imp_VirtualAlloc;", "doc": ""}, {"name": "__imp_RtlCopyMemory", "kind": "variable", "line": "24", "signature": "extern PVOID __imp_RtlCopyMemory;", "doc": ""}, {"name": "go", "kind": "function", "line": "26", "signature": "void go(char *args, int alen)", "doc": ""}], "symbolTotal": 3, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/getenv.c", "label": "getenv.c", "title": "\u003cb>getenv.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 2 (__imp_GetEnvironmentVariableA, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_GetEnvironmentVariableA", "kind": "variable", "line": "23", "signature": "extern PVOID __imp_GetEnvironmentVariableA;", "doc": ""}, {"name": "go", "kind": "function", "line": "25", "signature": "void go(char *args, int alen)", "doc": ""}], "symbolTotal": 2, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/winver.c", "label": "winver.c", "title": "\u003cb>winver.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 2 (__imp_GetVersionExA, go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "__imp_GetVersionExA", "kind": "variable", "line": "23", "signature": "extern PVOID __imp_GetVersionExA;", "doc": ""}, {"name": "go", "kind": "function", "line": "25", "signature": "void go(char *args, int alen)", "doc": ""}], "symbolTotal": 2, "community": 0, "communityLabel": "bof/test"}, {"id": "COFFLoader.h", "label": "COFFLoader.h", "title": "\u003cb>COFFLoader.h\u003c/b>\u003cbr>core | utility | h\u003cbr>symbols: 1 (COFFLOADER_H)", "group": "core", "language": "h", "doc": "", "symbols": [{"name": "COFFLOADER_H", "kind": "macro", "line": "21", "signature": "#define COFFLOADER_H", "doc": ""}], "symbolTotal": 1, "community": 1, "communityLabel": "root"}, {"id": "bof/test/Test.c", "label": "Test.c", "title": "\u003cb>Test.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 1 (go)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "go", "kind": "function", "line": "3", "signature": "void go(char *args, int alen)", "doc": ""}], "symbolTotal": 1, "community": 0, "communityLabel": "bof/test"}, {"id": "bof/test/tel.py", "label": "tel.py", "title": "\u003cb>tel.py\u003c/b>\u003cbr>test | testing | py\u003cbr>symbols: 6 (get_machine_id, get_version, to_numbers, to_hex, decrypt_cookie)", "group": "test", "language": "py", "doc": "", "symbols": [{"name": "get_machine_id", "kind": "function", "line": "8", "signature": "def get_machine_id()", "doc": ""}, {"name": "get_version", "kind": "function", "line": "20", "signature": "def get_version()", "doc": ""}, {"name": "to_numbers", "kind": "function", "line": "31", "signature": "def to_numbers(hex_str)", "doc": "Simula la función toNumbers de JavaScript"}, {"name": "to_hex", "kind": "function", "line": "35", "signature": "def to_hex(byte_list)", "doc": "Simula la función toHex de JavaScript"}, {"name": "decrypt_cookie", "kind": "function", "line": "39", "signature": "def decrypt_cookie(encrypted, key, iv)", "doc": "Descifra usando AES en modo CBC (como slowAES.decrypt(c,2,a,b))"}, {"name": "main", "kind": "function", "line": "45", "signature": "def main()", "doc": "Sistema de telemetría de uso por instalación no invasiva."}], "symbolTotal": 6, "community": -1, "communityLabel": ""}, {"id": "generate_hashs.py", "label": "generate_hashs.py", "title": "\u003cb>generate_hashs.py\u003c/b>\u003cbr>test | testing | py\u003cbr>BOF Bindings Generator for Cobalt Strike Author: Gris Iscomeback Email: grisiscomeback@gmail.com Creation Date: 13/08/2024 License: AGPL v3  Generates: - COFFLo...\u003cbr>symbols: 4 (djb2, generate_coff_loader, generate_bof_test, main)", "group": "test", "language": "py", "doc": "BOF Bindings Generator for Cobalt Strike Author: Gris Iscomeback Email: grisiscomeback@gmail.com Creation Date: 13/08/2024 License: AGPL v3  Generates: - COFFLoader3.c: full COFF loader with DJB2 hash table - bof_test.c: ready-to-compile BOF with all imports and example", "symbols": [{"name": "djb2", "kind": "function", "line": "23", "signature": "def djb2(s)", "doc": ""}, {"name": "generate_coff_loader", "kind": "function", "line": "223", "signature": "def generate_coff_loader()", "doc": ""}, {"name": "generate_bof_test", "kind": "function", "line": "491", "signature": "def generate_bof_test()", "doc": ""}, {"name": "main", "kind": "function", "line": "553", "signature": "def main()", "doc": ""}], "symbolTotal": 4, "community": -1, "communityLabel": ""}, {"id": "gen_beacon.sh", "label": "gen_beacon.sh", "title": "\u003cb>gen_beacon.sh\u003c/b>\u003cbr>test | testing | sh\u003cbr>=== beacon-GEN v1.2 ===\u003cbr>symbols: 3 (show_help, xor_string, crc32)", "group": "test", "language": "sh", "doc": "=== beacon-GEN v1.2 ===", "symbols": [{"name": "show_help", "kind": "function", "line": "46", "signature": "", "doc": "=== FUNCIONES ==="}, {"name": "xor_string", "kind": "function", "line": "194", "signature": "", "doc": "=== XOR STRING TO BYTES ==="}, {"name": "crc32", "kind": "function", "line": "5979", "signature": "", "doc": ""}], "symbolTotal": 3, "community": -1, "communityLabel": ""}, {"id": "bof/test/make_table.c", "label": "make_table.c", "title": "\u003cb>make_table.c\u003c/b>\u003cbr>test | testing | c\u003cbr>symbols: 2 (Copyright, main)", "group": "test", "language": "c", "doc": "", "symbols": [{"name": "Copyright", "kind": "function", "line": "17", "signature": "Copyright (c) LazyOwn RedTeam 2025. All rights reserved.\n*/\n\n#include \u003cstdint.h>\n#include \u003cstdio....", "doc": ""}, {"name": "main", "kind": "function", "line": "34", "signature": "void main()", "doc": ""}], "symbolTotal": 2, "community": -1, "communityLabel": ""}, {"id": "gen_module.sh", "label": "gen_module.sh", "title": "\u003cb>gen_module.sh\u003c/b>\u003cbr>test | testing | sh\u003cbr>=== gen_cmd_dll.sh v1.0 === Genera DLL y shellcode ofuscado para ejecutar un comando Uso: ./gen_cmd_dll.sh --cmd &quot;powershell...&quot; [--key 0x33] [--output payload]\u003cbr>symbols: 2 (show_help, xor_obfuscate)", "group": "test", "language": "sh", "doc": "=== gen_cmd_dll.sh v1.0 === Genera DLL y shellcode ofuscado para ejecutar un comando Uso: ./gen_cmd_dll.sh --cmd \"powershell...\" [--key 0x33] [--output payload]", "symbols": [{"name": "show_help", "kind": "function", "line": "18", "signature": "", "doc": "=== FUNCIONES ==="}, {"name": "xor_obfuscate", "kind": "function", "line": "35", "signature": "", "doc": "Función para ofuscar binario con XOR y convertir a \\x.."}], "symbolTotal": 2, "community": -1, "communityLabel": ""}, {"id": "gen_dll_rev.sh", "label": "gen_dll_rev.sh", "title": "\u003cb>gen_dll_rev.sh\u003c/b>\u003cbr>test | testing | sh\u003cbr>=== CONFIGURACIÓN POR DEFECTO ===\u003cbr>symbols: 1 (usage)", "group": "test", "language": "sh", "doc": "=== CONFIGURACIÓN POR DEFECTO ===", "symbols": [{"name": "usage", "kind": "function", "line": "12", "signature": "", "doc": "=== USO ==="}], "symbolTotal": 1, "community": -1, "communityLabel": ""}, {"id": "gen_dll_ss.sh", "label": "gen_dll_ss.sh", "title": "\u003cb>gen_dll_ss.sh\u003c/b>\u003cbr>test | testing | sh\u003cbr>=== CONFIGURACIÓN POR DEFECTO ===\u003cbr>symbols: 1 (usage)", "group": "test", "language": "sh", "doc": "=== CONFIGURACIÓN POR DEFECTO ===", "symbols": [{"name": "usage", "kind": "function", "line": "10", "signature": "", "doc": "=== USO ==="}], "symbolTotal": 1, "community": -1, "communityLabel": ""}, {"id": "gen_key.sh", "label": "gen_key.sh", "title": "\u003cb>gen_key.sh\u003c/b>\u003cbr>test | testing | sh\u003cbr>=== CONFIGURACIÓN POR DEFECTO ===\u003cbr>symbols: 1 (usage)", "group": "test", "language": "sh", "doc": "=== CONFIGURACIÓN POR DEFECTO ===", "symbols": [{"name": "usage", "kind": "function", "line": "10", "signature": "", "doc": "=== USO ==="}], "symbolTotal": 1, "community": -1, "communityLabel": ""}, {"id": "app.py", "label": "app.py", "title": "\u003cb>app.py\u003c/b>\u003cbr>test | testing | py\u003cbr>This file is part of Black Basalt Beacon.  Black Basalt Beacon is free software: you can redistribute it and/or modify it under the terms of the GNU General Pub...\u003cbr>symbols: 0", "group": "test", "language": "py", "doc": "This file is part of Black Basalt Beacon.  Black Basalt Beacon is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.  Black Basalt Beacon is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Black Basalt Beacon.  If not, see \u003chttps://www.gnu.org/licenses/>.  Copyright (c) LazyOwn RedTeam 2025. All rights reserved.", "symbols": [], "symbolTotal": 0, "community": -1, "communityLabel": ""}, {"id": "gen_dll.sh", "label": "gen_dll.sh", "title": "\u003cb>gen_dll.sh\u003c/b>\u003cbr>test | testing | sh\u003cbr>1. Generar DLL\u003cbr>symbols: 0", "group": "test", "language": "sh", "doc": "1. Generar DLL", "symbols": [], "symbolTotal": 0, "community": -1, "communityLabel": ""}, {"id": "install.sh", "label": "install.sh", "title": "\u003cb>install.sh\u003c/b>\u003cbr>test | testing | sh\u003cbr>symbols: 0", "group": "test", "language": "sh", "doc": "", "symbols": [], "symbolTotal": 0, "community": -1, "communityLabel": ""}]</script>
+<script type="application/json" id="vis-edges">[{"from": "COFFLoader3.c", "to": "beacon.h", "title": "transitions", "dashes": false}, {"from": "aes.c", "to": "aes.h", "title": "transitions", "dashes": false}, {"from": "beacon.c", "to": "COFFLoader.h", "title": "transitions", "dashes": false}, {"from": "beacon.c", "to": "aes.h", "title": "transitions", "dashes": false}, {"from": "beacon.c", "to": "beacon.h", "title": "transitions", "dashes": false}, {"from": "beacon.c", "to": "cJSON.h", "title": "transitions", "dashes": false}, {"from": "bof/calc/calc.c", "to": "bof/calc/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/etw/etw.c", "to": "bof/etw/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/Test.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/amsibypass.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/cmdwhoami.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/disablelog.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/getenv.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/loadvnc.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/persist.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/persistsvc.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/scan_shellcode.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/shellcode.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/sock5.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/uacbypass.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/upload.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/vncrelay.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/test/winver.c", "to": "bof/test/beacon.h", "title": "transitions", "dashes": false}, {"from": "bof/whoami/whoami.c", "to": "bof/whoami/beacon.h", "title": "transitions", "dashes": false}, {"from": "cJSON.c", "to": "cJSON.h", "title": "transitions", "dashes": false}]</script>
+<script type="application/json" id="vis-views">[{"id": "primary-path", "title": "Primary path", "focus": ["bof/test/beacon.h", "beacon.c", "cJSON.h", "aes.h", "beacon.h", "COFFLoader3.c"], "description": "Follow the dominant authored path first."}, {"id": "happy-path", "title": "Happy path", "focus": ["bof/test/beacon.h", "bof/calc/beacon.h", "install.sh"], "description": "Trace the shortest authored route end to end."}, {"id": "hub-focus", "title": "Hub focus", "focus": ["beacon.c"], "description": "Inspect the most connected authored hub."}, {"id": "side-branches", "title": "Side branches", "focus": ["app.py", "gen_dll.sh", "install.sh"], "description": "Review supporting detail without losing orientation."}, {"id": "full-map", "title": "Full map", "focus": ["bof/test/beacon.h", "beacon.c", "cJSON.h", "aes.h", "beacon.h", "COFFLoader3.c", "cJSON.c", "aes.c", "bof/test/sock5.c", "bof/test/upload.c", "bof/test/persistsvc.c", "bof/test/disablelog.c", "bof/test/scan_shellcode.c", "bof/test/loadvnc.c", "bof/test/vncrelay.c", "bof/calc/calc.c", "bof/etw/etw.c", "bof/test/amsibypass.c", "bof/test/uacbypass.c", "bof/whoami/whoami.c", "bof/calc/beacon.h", "bof/etw/beacon.h", "bof/test/cmdwhoami.c", "bof/test/persist.c", "bof/whoami/beacon.h", "bof/test/shellcode.c", "bof/test/getenv.c", "bof/test/winver.c", "COFFLoader.h", "bof/test/Test.c", "bof/test/tel.py", "generate_hashs.py", "gen_beacon.sh", "bof/test/make_table.c", "gen_module.sh", "gen_dll_rev.sh", "gen_dll_ss.sh", "gen_key.sh", "app.py", "gen_dll.sh", "install.sh"], "description": "Restore the complete authored context."}]</script>
+<script type="application/json" id="vis-meta">{"kind": "lifecycle", "title": "Change Lifecycle", "nodeCount": 41, "edgeCount": 25, "totalFiles": "41", "neighbors": 8, "communities": [{"id": 0, "label": "bof/test", "color": "#22d3ee", "size": 24}, {"id": 1, "label": "root", "color": "#f472b6", "size": 6}], "labelTopN": 25}</script>
+<script type="application/json" id="vis-physics">{"enabled": true, "solver": "forceAtlas2Based", "forceAtlas2Based": {"gravitationalConstant": -90.0, "centralGravity": 0.012, "springLength": 120.0, "springConstant": 0.06, "damping": 0.55, "avoidOverlap": 0.6}, "stabilization": {"iterations": 250}}</script>
+<script type="application/json" id="vis-roles">{"frontend": "#22d3ee", "backend": "#34d399", "database": "#a78bfa", "cloud": "#fbbf24", "security": "#fb7185", "messagebus": "#fb923c", "external": "#94a3b8", "core": "#38bdf8", "test": "#64748b"}</script>
+<script>function readmenatorPayload(id,fallback){
+  var el=document.getElementById(id),text=el?el.textContent:"";
+  if(!text||!text.trim())return Promise.resolve(fallback===undefined?null:fallback);
+  if(el.getAttribute("data-encoding")!=="gzip+base64")return Promise.resolve(JSON.parse(text));
+  if(typeof DecompressionStream==="undefined")return Promise.reject(new Error("This browser cannot decompress the embedded data (DecompressionStream missing). Open the page in a current Chrome, Edge, Firefox or Safari."));
+  var bin=atob(text.replace(/\s+/g,"")),bytes=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+  return new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).text().then(JSON.parse);
+}
+function readmenatorPayloads(specs){
+  return Promise.all(specs.map(function(spec){return readmenatorPayload(spec[0],spec[1]);}));
+}
+function readmenatorPayloadError(err){
+  var box=document.createElement("pre");box.setAttribute("role","alert");
+  box.style.cssText="position:relative;z-index:9999;margin:24px;padding:16px;border:1px solid #f87171;border-radius:8px;background:#1f1115;color:#fecaca;white-space:pre-wrap";
+  box.textContent="Could not load the embedded data: "+(err&&err.message?err.message:String(err));
+  document.body.insertBefore(box,document.body.firstChild);
+}</script>
+<div class="peek" id="peek" role="tooltip"></div>
+<script>
+readmenatorPayloads([["vis-nodes",[]],["vis-edges",[]],["vis-views",[]],["vis-meta",{}],["vis-physics",{}],["vis-roles",{}]]).then(function(__rmPayload){
+"use strict";
+var rawNodes=__rmPayload[0];
+var rawEdges=__rmPayload[1];
+var views=__rmPayload[2];
+var meta=__rmPayload[3];
+var physics=__rmPayload[4];
+var roleColors=__rmPayload[5];
+var root=document.documentElement;
+var container=document.getElementById("network");
+var search=document.getElementById("search");
+var passportTitle=document.getElementById("passport-title");
+var passportMeta=document.getElementById("passport-meta");
+var journey=document.getElementById("journey");
+var receipt=document.getElementById("receipt");
+var chapters=document.getElementById("chapters");
+var roleCounts=document.getElementById("role-counts");
+var nodeSymbols=document.getElementById("node-symbols");
+var guide=document.getElementById("guide");
+var exportsDialog=document.getElementById("exports");
+var state={focus:null,reach:null,lens:null,view:-1,physicsOn:true,edge:null};
+var reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function themeBox(){return root.getAttribute("data-theme")==="light"?{box:"#ffffff",ink:"#0f172a"}:{box:"#0f172a",ink:"#ffffff"};}
+var communities=meta.communities||[];
+var communityColor={};communities.forEach(function(c){communityColor[c.id]=c.color;});
+state.colorMode=communities.length?"community":"role";
+var degree={};rawNodes.forEach(function(n){degree[n.id]=0;});
+rawEdges.forEach(function(e){if(e.from in degree){degree[e.from]++;}if(e.to in degree){degree[e.to]++;}});
+var ranked=rawNodes.slice().sort(function(a,b){return (degree[b.id]-degree[a.id])||(a.id<b.id?-1:1);});
+var labelled={};ranked.slice(0,meta.labelTopN||25).forEach(function(n){labelled[n.id]=true;});
+function colorFor(n){if(state.colorMode==="community"&&n.community>=0&&communityColor[n.community]){return communityColor[n.community];}return roleColors[n.group]||"#94a3b8";}
+var dimSet=null;
+function paintNodes(){
+var palette=themeBox();
+var update=rawNodes.map(function(n){var dim=dimSet&&!dimSet[n.id];var c=dim?"rgba(100,116,139,0.18)":colorFor(n);
+return {id:n.id,color:{background:c,border:dim?"rgba(100,116,139,0.25)":palette.box,highlight:{background:colorFor(n),border:palette.ink},hover:{background:colorFor(n),border:palette.ink}},
+font:{color:dim?"rgba(148,163,184,0.35)":palette.ink,size:labelled[n.id]||(dimSet&&!dim)?22:14,face:"monospace",strokeWidth:5,strokeColor:palette.box},
+label:(labelled[n.id]||allLabels||(dimSet&&!dim))?n.label:" "};});
+visNodes.update(update);
+if(typeof visEdges!=="undefined"){visEdges.update(rawEdges.map(function(e,index){var on=dimSet&&dimSet[e.from]&&dimSet[e.to];
+return {id:"e"+index,width:on?2.2:1,color:{color:on?"#22d3ee":"#64748b",opacity:dimSet?(on?0.95:0.08):0.28,highlight:"#22d3ee",hover:"#22d3ee",inherit:false}};}));}
+renderLegend();}
+function setDim(allowed){dimSet=allowed;paintNodes();}
+var allLabels=false;
+var visNodes=new vis.DataSet(rawNodes.map(function(n){return {id:n.id,label:labelled[n.id]?n.label:" ",group:n.group,shape:"dot",value:1+degree[n.id]};}));
+function syncLabels(scale){var want=scale>=1.1;if(want===allLabels){return;}allLabels=want;
+visNodes.update(rawNodes.filter(function(n){return !labelled[n.id]&&!(dimSet&&dimSet[n.id]);}).map(function(n){return {id:n.id,label:want?n.label:" "};}));}
+var visEdges=new vis.DataSet(rawEdges.map(function(e,index){return {id:"e"+index,from:e.from,to:e.to,arrows:{to:{enabled:true,scaleFactor:0.45}},dashes:!!e.dashes,smooth:{type:"continuous"},color:{color:"#64748b",opacity:0.28,highlight:"#22d3ee",hover:"#22d3ee",inherit:false},width:1,selectionWidth:2,hoverWidth:1.5};}));
+var network=new vis.Network(container,{nodes:visNodes,edges:visEdges},{
+physics:physics,
+interaction:{hover:true,hoverConnectedEdges:true,selectConnectedEdges:true,navigationButtons:false,keyboard:false,tooltipDelay:120},
+nodes:{shape:"dot",borderWidth:2,scaling:{min:7,max:38,label:{enabled:false}}},
+edges:{smooth:{type:"continuous"}}});
+paintNodes();
+if(reduced&&physics.enabled){try{network.stabilize(50);}catch(e){}}
+function outgoing(id){return rawEdges.filter(function(e){return e.from===id;});}
+function incoming(id){return rawEdges.filter(function(e){return e.to===id;});}
+function nodeById(id){for(var i=0;i<rawNodes.length;i++){if(rawNodes[i].id===id){return rawNodes[i];}}return null;}
+function escapeHtml(text){
+return String(text==null?"":text).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function mk(tag,attrs,text){var e=document.createElement(tag);if(attrs){for(var k in attrs){if(k==="class"){e.className=attrs[k];}else{e.setAttribute(k,attrs[k]);}}}if(text!==undefined&&text!==null){e.textContent=text;}return e;}
+function svgEl(tag,attrs){var e=document.createElementNS("http://www.w3.org/2000/svg",tag);if(attrs){for(var k in attrs){e.setAttribute(k,attrs[k]);}}return e;}
+function clearEl(el){if(el.replaceChildren){el.replaceChildren();}else{while(el.firstChild){el.removeChild(el.firstChild);}}}
+function neighborNames(ids){
+var cap=(meta.neighbors||8);
+return ids.slice().sort().slice(0,cap).map(function(id){var n=nodeById(id);return (n?n.label:id);});}
+var detailHistory=[];
+function uniq(list){var seen={};return list.filter(function(x){if(seen[x]){return false;}seen[x]=true;return true;});}
+function short(text,n){text=String(text||"");return text.length>n?text.slice(0,n-1)+"…":text;}
+function egoSvgEl(node,ins,outs){
+var cap=7,rowH=26,leftL=ins.slice(0,cap),rightL=outs.slice(0,cap);
+var rows=Math.max(1,leftL.length,rightL.length);var h=Math.max(120,rows*rowH+46);var w=288,cx=w/2,cy=h/2+6;
+var svg=svgEl("svg",{class:"ego",viewBox:"0 0 "+w+" "+h,role:"img","aria-label":"Neighbourhood of "+node.label});
+var cap1=svgEl("text",{class:"cap",x:"8",y:"14"});cap1.textContent="USED BY "+ins.length;svg.appendChild(cap1);
+var cap2=svgEl("text",{class:"cap",x:String(w-8),y:"14","text-anchor":"end"});cap2.textContent="IMPORTS "+outs.length;svg.appendChild(cap2);
+function col(list,x,anchor,dir){var top=cy-((list.length-1)*rowH)/2;
+list.forEach(function(id){var n=nodeById(id);var y=top+list.indexOf(id)*rowH;var c=n?colorFor(n):"#94a3b8";
+var yy=top+list.slice(0,list.indexOf(id)).length*rowH;
+var path=svgEl("path",{d:"M"+(dir<0?x+6:cx+16)+" "+(dir<0?yy:cy)+" C"+(cx+(dir<0?-60:60)*0.5)+" "+(dir<0?yy:cy)+" "+(cx+(dir<0?-60:60)*0.5)+" "+(dir<0?cy:yy)+" "+(dir<0?cx-16:x-6)+" "+(dir<0?cy:yy),fill:"none",stroke:c,"stroke-opacity":"0.55","stroke-width":"1.4"});svg.appendChild(path);
+var g=svgEl("g",{"data-node":id});var title=svgEl("title",{});title.textContent=id;g.appendChild(title);
+var circle=svgEl("circle",{cx:String(x),cy:String(yy),r:"6",fill:c,stroke:"var(--canvas)","stroke-width":"2"});g.appendChild(circle);
+var label=svgEl("text",{x:String(anchor==="end"?x-10:x+10),y:String(yy+3.5),"text-anchor":anchor});var nn=nodeById(id);label.textContent=short(nn?nn.label:id,12);g.appendChild(label);svg.appendChild(g);});}
+col(leftL,94,"end",-1);col(rightL,w-94,"start",1);
+if(ins.length>cap){var m1=svgEl("text",{class:"cap",x:"8",y:String(h-6)});m1.textContent="+"+(ins.length-cap)+" more";svg.appendChild(m1);}
+if(outs.length>cap){var m2=svgEl("text",{class:"cap",x:String(w-8),y:String(h-6),"text-anchor":"end"});m2.textContent="+"+(outs.length-cap)+" more";svg.appendChild(m2);}
+var hub=svgEl("circle",{cx:String(cx),cy:String(cy),r:"14",fill:colorFor(node),stroke:"#22d3ee","stroke-width":"2.5"});svg.appendChild(hub);
+var hubLabel=svgEl("text",{x:String(cx),y:String(cy-22),"text-anchor":"middle",style:"font-weight:700"});hubLabel.textContent=short(node.label,18);svg.appendChild(hubLabel);
+return svg;}
+function nbButtonEl(id,meta){var n=nodeById(id);if(!n){return null;}var b=mk("button",{type:"button",class:"nb","data-node":id,title:(n.file||n.label)});var dot=mk("i",{});dot.style.background=colorOf(n);b.appendChild(dot);var nm=mk("span",{},n.label);b.appendChild(nm);if(meta){var em=mk("em",{},meta);b.appendChild(em);}return b;}
+function chipListEl(ids){
+var cap=(meta.neighbors||8)*3;
+var wrap=mk("div",{class:"nbs"});
+ids.slice(0,cap).forEach(function(id){var n=nodeById(id);var b=mk("button",{type:"button","data-goto":id,title:id});var dot=mk("i",{});dot.style.background=(n?colorFor(n):"#94a3b8");b.appendChild(dot);b.appendChild(mk("span",{},(n?n.label:id)));wrap.appendChild(b);});
+if(ids.length>cap){wrap.appendChild(mk("span",{class:"sublabel"},"+"+(ids.length-cap)+" more"));}
+return wrap;}
+function renderNodeDetail(node){
+if(!nodeSymbols){return;}
+clearEl(nodeSymbols);
+var ins=uniq(incoming(node.id).map(function(e){return e.from;})).sort(function(a,b){return degree[b]-degree[a]||(a<b?-1:1);});
+var outs=uniq(outgoing(node.id).map(function(e){return e.to;})).sort(function(a,b){return degree[b]-degree[a]||(a<b?-1:1);});
+var rank=ranked.indexOf(node)+1;
+var nav=mk("div",{class:"detail-nav"});
+var back=mk("button",{type:"button","data-detail":"back",title:"Previous node (Backspace)"},"← Back");if(!detailHistory.length){back.disabled=true;}nav.appendChild(back);
+nav.appendChild(mk("button",{type:"button","data-detail":"fit",title:"Zoom to this neighbourhood"},"Fit"));
+nav.appendChild(mk("button",{type:"button","data-detail":"clear",title:"Clear focus (Esc)"},"Clear"));
+nodeSymbols.appendChild(nav);
+if(node.communityLabel){var cw=mk("div",{class:"nbs"});var cb=mk("button",{type:"button","data-community":String(node.community),title:"Isolate this community"});var ci=mk("i",{});ci.style.background=(communityColor[node.community]||"#94a3b8");cb.appendChild(ci);cb.appendChild(mk("span",{},node.communityLabel));cw.appendChild(cb);nodeSymbols.appendChild(cw);}
+var tiles=mk("div",{class:"tiles"});
+[[String(node.symbolTotal||0),"symbols"],[String(ins.length),"used by"],[String(outs.length),"imports"],["#"+rank,"by links"]].forEach(function(pair){var t=mk("div",{class:"tile"});t.appendChild(mk("b",{},pair[0]));t.appendChild(mk("span",{},pair[1]));tiles.appendChild(t);});
+nodeSymbols.appendChild(tiles);
+if(node.doc){var doc=mk("p",{class:"filedoc clamp",title:"Click to expand","data-clamp":"1"},node.doc);nodeSymbols.appendChild(doc);}
+nodeSymbols.appendChild(egoSvgEl(node,ins,outs));
+function sublist(title,ids){if(!ids.length){return;}nodeSymbols.appendChild(mk("div",{class:"sublabel"},title));nodeSymbols.appendChild(chipListEl(ids));}
+sublist("Used by",ins);sublist("Imports",outs);
+var symbols=node.symbols||[];
+if(symbols.length){
+nodeSymbols.appendChild(mk("div",{class:"sublabel"},"Symbols"));
+var filter=mk("input",{class:"symfilter",id:"symfilter",type:"search",placeholder:"filter symbols","aria-label":"Filter symbols"});nodeSymbols.appendChild(filter);
+var table=mk("table",{});var thead=mk("thead",{});var hr=mk("tr",{});hr.appendChild(mk("th",{},"Symbol"));hr.appendChild(mk("th",{},"Kind"));hr.appendChild(mk("th",{},"Line"));thead.appendChild(hr);table.appendChild(thead);
+var tbody=mk("tbody",{id:"symrows"});
+symbols.forEach(function(s){
+var tr=mk("tr",{});
+tr.setAttribute("data-name",String(s.name).toLowerCase());
+var td=mk("td",{});var wrap2=mk("span",{});
+if(s.doc){wrap2.setAttribute("title",s.doc);}
+wrap2.appendChild(mk("b",{},s.name));td.appendChild(wrap2);
+if(s.signature){td.appendChild(mk("code",{},s.signature));}
+if(s.doc){var dd=mk("div",{class:"filedoc"},"");dd.style.margin="2px 0 0";dd.textContent=s.doc;td.appendChild(dd);}
+tr.appendChild(td);tr.appendChild(mk("td",{},s.kind));tr.appendChild(mk("td",{},s.line));tbody.appendChild(tr);});
+table.appendChild(tbody);nodeSymbols.appendChild(table);
+var hidden=(node.symbolTotal||symbols.length)-symbols.length;
+if(hidden>0){nodeSymbols.appendChild(mk("p",{class:"filedoc"},"+"+hidden+" more symbols in source."));}
+filter.addEventListener("input",function(){var q=filter.value.trim().toLowerCase();nodeSymbols.querySelectorAll("#symrows tr").forEach(function(tr){tr.style.display=!q||tr.getAttribute("data-name").indexOf(q)>=0?"":"none";});});
+}
+else{nodeSymbols.appendChild(mk("p",{class:"filedoc"},"No symbols extracted."));}}
+function clearNodeDetail(){
+if(nodeSymbols){clearEl(nodeSymbols);}
+passportTitle.textContent="Diagram guide";}
+function clearNodeDetailSilent(){
+if(nodeSymbols){clearEl(nodeSymbols);}}
+function bfsReach(start,direction){
+var seen={};seen[start]=0;var queue=[start];var order=[start];
+while(queue.length){var current=queue.shift();var nexts=direction==="downstream"?outgoing(current):incoming(current);
+for(var i=0;i<nexts.length;i++){var nid=direction==="downstream"?nexts[i].to:nexts[i].from;
+if(!(nid in seen)){seen[nid]=seen[current]+1;queue.push(nid);order.push(nid);}}}
+return {members:order,hops:seen};}
+function bfsRoute(from,to){
+if(from===to){return [from];}
+var prev={};var seen={};seen[from]=true;var queue=[from];
+while(queue.length){var current=queue.shift();var nexts=outgoing(current);
+for(var i=0;i<nexts.length;i++){var nid=nexts[i].to;
+if(!(nid in seen)){seen[nid]=true;prev[nid]=current;
+if(nid===to){var path=[to];var c=to;while(c!==from){c=prev[c];path.unshift(c);}return path;}
+queue.push(nid);}}}
+return [];}
+function showOnly(allowed){
+var nodeUpdate=rawNodes.map(function(n){return {id:n.id,hidden:!allowed[n.id]};});
+visNodes.update(nodeUpdate);
+var edgeUpdate=rawEdges.map(function(e,index){return {id:"e"+index,hidden:!(allowed[e.from]&&allowed[e.to])};});
+visEdges.update(edgeUpdate);}
+function showAll(){
+var pp=document.querySelector(".passport");if(pp){pp.classList.remove("focused");}
+if(dimSet){dimSet=null;paintNodes();}
+var nodeUpdate=rawNodes.map(function(n){return {id:n.id,hidden:false};});
+visNodes.update(nodeUpdate);
+var edgeUpdate=rawEdges.map(function(e,index){return {id:"e"+index,hidden:false};});
+visEdges.update(edgeUpdate);}
+function setHash(value){try{history.replaceState(null,"",value);}catch(e){location.hash=value;}}
+function focusNode(id,reach,fromHistory){
+var node=nodeById(id);if(!node){return;}
+if(state.focus&&state.focus!==id&&!fromHistory){detailHistory.push(state.focus);}
+state.focus=id;state.reach=reach||null;state.edge=null;
+var allowed={};allowed[id]=true;
+if(state.reach){var found=bfsReach(id,state.reach);found.members.forEach(function(m){allowed[m]=true;});
+var hops=0;for(var k in found.hops){if(found.hops[k]>hops){hops=found.hops[k];}}
+receipt.textContent=(state.reach==="downstream"?"Downstream":"Upstream")+" reach: "+found.members.length+" nodes, "+hops+" max hops. Authored relationships only.";}
+else{receipt.textContent="In: "+incoming(id).length+" | Out: "+outgoing(id).length+" | Views: "+views.length;
+incoming(id).forEach(function(e){allowed[e.from]=true;});outgoing(id).forEach(function(e){allowed[e.to]=true;});}
+if(state.reach){setDim(null);showOnly(allowed);}else{showAll();setDim(allowed);}
+document.querySelector(".passport").classList.add("focused");
+network.selectNodes([id]);
+try{network.fit({nodes:Object.keys(allowed),animation:reduced?false:{duration:600,easingFunction:"easeInOutQuad"}});}catch(e){}
+setTimeout(function(){if(state.focus===id&&dimSet){try{network.fit({nodes:Object.keys(dimSet),animation:reduced?false:{duration:500}});}catch(e){}}},1600);
+passportTitle.textContent=node.label;
+passportMeta.textContent=node.id+" | role "+node.group+" | "+(node.language||"")+" | "+(node.symbolTotal||0)+" symbols";
+renderNodeDetail(node);
+var hash="#focus="+encodeURIComponent(id);
+if(state.reach){hash+="&reach="+state.reach;}
+setHash(hash);}
+function relText(t){var names={resolved_imports:"imports",imports:"imports",calls:"calls into",inherits:"inherits from"};return names[t]||String(t||"links to").replace(/_/g," ");}
+function edgeByVisId(eid){var i=parseInt(String(eid).slice(1),10);return isNaN(i)||!rawEdges[i]?null:{index:i,edge:rawEdges[i]};}
+function isMutual(e){return rawEdges.some(function(x){return x.from===e.to&&x.to===e.from;});}
+function edgeIdFor(from,to){for(var i=0;i<rawEdges.length;i++){if(rawEdges[i].from===from&&rawEdges[i].to===to){return "e"+i;}}return null;}
+function focusEdge(eid){
+var hit=edgeByVisId(eid);if(!hit){return;}var e=hit.edge,a=nodeById(e.from),b=nodeById(e.to);if(!a||!b){return;}
+if(state.focus){detailHistory.push(state.focus);}
+state.focus=null;state.reach=null;state.edge=eid;
+var allowed={};allowed[e.from]=true;allowed[e.to]=true;showAll();setDim(allowed);
+document.querySelector(".passport").classList.add("focused");
+try{network.selectEdges([eid]);}catch(x){}
+try{network.fit({nodes:[e.from,e.to],animation:reduced?false:{duration:600,easingFunction:"easeInOutQuad"}});}catch(x){}
+passportTitle.textContent=a.label+" -> "+b.label;
+passportMeta.textContent="link | "+relText(e.title)+" | "+a.group+" -> "+b.group;
+receipt.textContent="Link focus: "+a.label+" -> "+b.label+". Click an endpoint to walk on.";
+renderEdgeDetail(e);
+setHash("#edge="+encodeURIComponent(e.from)+"~"+encodeURIComponent(e.to));}
+function renderEdgeDetail(e){
+if(!nodeSymbols){return;}clearEl(nodeSymbols);
+var a=nodeById(e.from),b=nodeById(e.to);
+var nav=mk("div",{class:"detail-nav"});
+var back=mk("button",{type:"button","data-detail":"back",title:"Previous node (Backspace)"},"Back");if(!detailHistory.length){back.disabled=true;}nav.appendChild(back);
+nav.appendChild(mk("button",{type:"button","data-detail":"fitedge",title:"Zoom to both ends"},"Fit"));
+nav.appendChild(mk("button",{type:"button","data-detail":"edgehood",title:"Highlight everything linked to either end"},"Both neighbourhoods"));
+nav.appendChild(mk("button",{type:"button","data-detail":"clear",title:"Clear focus (Esc)"},"Clear"));
+nodeSymbols.appendChild(nav);
+var sentence=mk("p",{class:"filedoc"});sentence.appendChild(mk("b",{},a.label));sentence.appendChild(document.createTextNode(" "+relText(e.title)+" "));sentence.appendChild(mk("b",{},b.label));sentence.appendChild(document.createTextNode("."));nodeSymbols.appendChild(sentence);
+nodeSymbols.appendChild(mk("div",{class:"sublabel"},"Endpoints"));nodeSymbols.appendChild(chipListEl([e.from,e.to]));
+var notes=[];
+if(isMutual(e)){notes.push(["bad","Mutual dependency: "+b.label+" also links back to "+a.label+". Two nodes that need each other form the smallest possible cycle."]);}
+if(a.community!==b.community&&a.communityLabel&&b.communityLabel){notes.push(["","Bridges communities "+a.communityLabel+" and "+b.communityLabel+". Bridges are where responsibilities leak between modules."]);}
+if(a.group!==b.group){notes.push(["","Crosses roles: "+a.group+" -> "+b.group+"."]);}
+if(notes.length){nodeSymbols.appendChild(mk("div",{class:"sublabel"},"Insights"));notes.forEach(function(n){nodeSymbols.appendChild(mk("p",{class:"insight"+(n[0]?" "+n[0]:"")},n[1]));});}
+var others=rawEdges.filter(function(x){return x!==e&&((x.from===e.from&&x.to===e.to)||(x.from===e.to&&x.to===e.from));});
+if(others.length){nodeSymbols.appendChild(mk("div",{class:"sublabel"},"Other links between them"));var w=mk("div",{class:"nbs"});others.forEach(function(x){var id=edgeIdFor(x.from,x.to);var bt=mk("button",{type:"button","data-edge":id||"",title:"Inspect this link"},(x.from===e.from?"-> ":"<- ")+relText(x.title));w.appendChild(bt);});nodeSymbols.appendChild(w);}}
+function probeRoute(){
+var from=document.getElementById("route-from").value.trim();
+var to=document.getElementById("route-to").value.trim();
+if(!from||!to){return;}
+var path=bfsRoute(from,to);
+if(!path.length){journey.textContent="No authored directed route from "+from+" to "+to+".";receipt.textContent="Route probe: 0 links.";return;}
+var allowed={};path.forEach(function(n){allowed[n]=true;});
+showOnly(allowed);
+network.selectNodes(path);
+try{network.fit({nodes:path,animation:reduced?false:{duration:600}});}catch(e){}
+var names=path.map(function(n){var node=nodeById(n);return node?node.label:n;});
+journey.textContent="Journey: "+names.join(" -> ")+" ("+(path.length-1)+" hops).";
+receipt.textContent="Route probe: "+path.length+" nodes, "+(path.length-1)+" links.";
+setHash("#route="+encodeURIComponent(from)+"~"+encodeURIComponent(to));}
+function applyLens(role){
+state.lens=role;
+if(!role){showAll();clearNodeDetail();receipt.textContent="Lens cleared.";setHash("#");return;}
+var counts={};rawNodes.forEach(function(n){counts[n.group]=(counts[n.group]||0)+1;});
+var allowed={};rawNodes.forEach(function(n){if(n.group===role){allowed[n.id]=true;}});
+showOnly(allowed);
+var parts=[];for(var k in counts){parts.push(k+": "+counts[k]);}
+receipt.textContent="Lens "+role+": "+(counts[role]||0)+" of "+rawNodes.length+" nodes. "+parts.join(" | ");
+setHash("#lens="+encodeURIComponent(role));}
+function showView(index){
+if(!views.length){return;}
+state.view=(index+views.length)%views.length;
+var view=views[state.view];
+chapters.querySelectorAll("button").forEach(function(b,i){b.disabled=(i===state.view);});
+passportTitle.textContent=view.title;
+passportMeta.textContent=view.description||"";
+clearNodeDetailSilent();
+if(!view.focus.length){showAll();}
+else{var allowed={};view.focus.forEach(function(n){allowed[n]=true;});showOnly(allowed);network.selectNodes(view.focus);}
+journey.textContent=view.focus.length?("Chapter focus: "+view.focus.join(", ")):"";
+receipt.textContent="Chapter "+(state.view+1)+" of "+views.length+".";
+setHash("#view="+encodeURIComponent(view.id));}
+function renderChapters(){
+clearEl(chapters);
+views.forEach(function(view,index){var b=document.createElement("button");b.type="button";b.textContent=view.title;b.setAttribute("aria-label","Show chapter "+view.title);b.setAttribute("title","Focus the "+view.title+" chapter");b.addEventListener("click",function(){showView(index);});chapters.appendChild(b);});}
+function renderLegend(){
+if(!roleCounts){return;}
+clearEl(roleCounts);
+var title=document.createElement("div");title.className="legend-title";
+title.textContent=state.colorMode==="community"?"Communities (click to isolate)":"Roles (click to isolate)";roleCounts.appendChild(title);
+var items=[];
+if(state.colorMode==="community"){communities.forEach(function(c){items.push({key:"c"+c.id,label:c.label,color:c.color,count:c.size,pick:function(){isolateCommunity(c.id,c.label);}});});}
+else{var counts={};rawNodes.forEach(function(n){counts[n.group]=(counts[n.group]||0)+1;});
+Object.keys(counts).sort().forEach(function(role){items.push({key:role,label:role,color:roleColors[role]||"#94a3b8",count:counts[role],pick:function(){applyLens(role);}});});}
+items.forEach(function(item){var b=document.createElement("button");b.type="button";b.className="legend-item";
+var sw=document.createElement("span");sw.className="swatch";sw.style.background=item.color;b.appendChild(sw);
+var tx=document.createElement("span");tx.textContent=item.label+" ("+item.count+")";b.appendChild(tx);
+b.setAttribute("title","Show only "+item.label);b.addEventListener("click",item.pick);roleCounts.appendChild(b);});}
+function isolateCommunity(cid,label){
+var allowed={};var count=0;rawNodes.forEach(function(n){if(n.community===cid){allowed[n.id]=true;count++;}});
+showOnly(allowed);try{network.fit({nodes:Object.keys(allowed),animation:reduced?false:{duration:600}});}catch(e){}
+receipt.textContent="Community "+label+": "+count+" of "+rawNodes.length+" nodes. Press Esc or Show all to reset.";
+setHash("#community="+cid);}
+function toggleColorMode(){state.colorMode=state.colorMode==="community"?"role":"community";if(!communities.length){state.colorMode="role";}paintNodes();}
+function renderRoleCounts(){renderLegend();return;
+var counts={};rawNodes.forEach(function(n){counts[n.group]=(counts[n.group]||0)+1;});
+clearEl(roleCounts);
+Object.keys(counts).sort().forEach(function(role){var s=document.createElement("button");s.type="button";s.className="chip";s.textContent=role+": "+counts[role];s.setAttribute("aria-label","Filter role "+role);s.setAttribute("title","Highlight the "+role+" role");s.addEventListener("click",function(){applyLens(role);});roleCounts.appendChild(s);});}
+function cyclePreset(){
+var presets=["classic","flow","blueprint","editorial"];
+var current=root.getAttribute("data-preset")||"classic";
+root.setAttribute("data-preset",presets[(presets.indexOf(current)+1)%presets.length]);}
+function toggleTheme(){
+var current=root.getAttribute("data-theme")||"dark";
+root.setAttribute("data-theme",current==="dark"?"light":"dark");
+paintNodes();}
+function togglePhysics(){
+state.physicsOn=!state.physicsOn;
+try{network.setOptions({physics:{enabled:state.physicsOn}});}catch(e){}
+receipt.textContent=state.physicsOn?"Physics resumed.":"Physics frozen; nodes stay draggable.";}
+function exportPNG(){
+try{
+var link=document.createElement("a");
+link.href=network.canvas.frame.canvas.toDataURL("image/png");
+link.download="system-map-"+(meta.kind||"map")+".png";
+document.body.appendChild(link);link.click();
+setTimeout(function(){link.remove();},400);
+receipt.textContent="PNG snapshot downloaded.";
+}catch(e){receipt.textContent="PNG export unavailable in this browser.";}}
+function exportJSON(){
+var payload={kind:meta.kind,title:meta.title,nodes:rawNodes,edges:rawEdges,views:views};
+var blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+var link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download="system-map-"+(meta.kind||"map")+".json";document.body.appendChild(link);link.click();
+setTimeout(function(){URL.revokeObjectURL(link.href);link.remove();},400);}
+function readHash(){
+var hash=location.hash||"";
+if(hash.indexOf("#route=")===0){var parts=hash.slice(7).split("~");if(parts.length===2){document.getElementById("route-from").value=decodeURIComponent(parts[0]);document.getElementById("route-to").value=decodeURIComponent(parts[1]);probeRoute();}return;}
+if(hash.indexOf("#lens=")===0){applyLens(decodeURIComponent(hash.slice(6)));return;}
+if(hash.indexOf("#community=")===0){var cid=parseInt(hash.slice(11),10);communities.forEach(function(c){if(c.id===cid){isolateCommunity(c.id,c.label);}});return;}
+if(hash.indexOf("#view=")===0){var id=decodeURIComponent(hash.slice(6));for(var i=0;i<views.length;i++){if(views[i].id===id){showView(i);return;}}return;}
+if(hash.indexOf("#edge=")===0){var ends=hash.slice(6).split("~");if(ends.length===2){var eid=edgeIdFor(decodeURIComponent(ends[0]),decodeURIComponent(ends[1]));if(eid){focusEdge(eid);}}return;}
+if(hash.indexOf("#focus=")===0){var rest=hash.slice(7).split("&reach=");focusNode(decodeURIComponent(rest[0]),rest[1]?decodeURIComponent(rest[1]):null);return;}}
+network.on("click",function(params){
+if(params.nodes.length>0){focusNode(params.nodes[0]);}
+else if(params.edges.length>0){focusEdge(params.edges[0]);}
+else if((state.focus&&!state.reach)||state.edge){showAll();state.focus=null;state.edge=null;clearNodeDetail();setHash("#");}});
+var peek=document.getElementById("peek");
+network.on("hoverNode",function(params){
+var n=nodeById(params.node);if(!n||!peek){return;}
+var ins=incoming(n.id).length,outs=outgoing(n.id).length;
+clearEl(peek);
+var head=mk("b",{});var sw=mk("span",{class:"sw"});sw.style.background=colorFor(n);head.appendChild(sw);head.appendChild(mk("span",{},n.label));peek.appendChild(head);
+peek.appendChild(mk("div",{class:"m"},n.id));
+peek.appendChild(mk("div",{},(n.symbolTotal||0)+" symbols · used by "+ins+" · imports "+outs));
+peek.appendChild(mk("div",{class:"m"},(n.communityLabel?n.communityLabel+" · "+n.group:n.group)));
+if(n.doc){var pd=mk("div",{},short(n.doc,220));pd.style.marginTop="4px";peek.appendChild(pd);}
+var syms=(n.symbols||[]).slice(0,4);
+if(syms.length){var ul=mk("ul",{});syms.forEach(function(s){var li=mk("li",{});li.appendChild(mk("span",{},s.kind+" "));li.appendChild(mk("b",{},s.name));li.appendChild(mk("span",{}," L"+s.line));ul.appendChild(li);});peek.appendChild(ul);}
+var hint=mk("div",{class:"m"},"click to open passport");hint.style.marginTop="4px";peek.appendChild(hint);
+placePeek(params);});
+function placePeek(params){
+var p=params.event&&params.event.center?params.event.center:{x:params.pointer.DOM.x+container.getBoundingClientRect().left,y:params.pointer.DOM.y+container.getBoundingClientRect().top};
+peek.style.display="block";
+var left=Math.min(window.innerWidth-peek.offsetWidth-12,p.x+16),top=Math.min(window.innerHeight-peek.offsetHeight-12,p.y+16);
+peek.style.left=Math.max(8,left)+"px";peek.style.top=Math.max(8,top)+"px";}
+network.on("hoverEdge",function(params){
+var hit=edgeByVisId(params.edge);if(!hit||!peek){return;}
+var e=hit.edge,a=nodeById(e.from),b=nodeById(e.to);if(!a||!b){return;}
+clearEl(peek);
+var head=mk("div",{});head.appendChild(mk("b",{},a.label));head.appendChild(mk("span",{class:"m"}," "+relText(e.title)+" "));head.appendChild(mk("b",{},b.label));peek.appendChild(head);
+if(isMutual(e)){peek.appendChild(mk("div",{class:"warn"},"mutual dependency"));}
+peek.appendChild(mk("div",{class:"m"},a.group+" -> "+b.group+(a.community!==b.community&&a.communityLabel&&b.communityLabel?" | bridges communities":"")));
+var eh=mk("div",{class:"m"},"click to inspect the link");eh.style.marginTop="4px";peek.appendChild(eh);
+placePeek(params);});
+network.on("blurEdge",function(){if(peek){peek.style.display="none";}});
+network.on("blurNode",function(){if(peek){peek.style.display="none";}});
+network.on("dragStart",function(){if(peek){peek.style.display="none";}});
+nodeSymbols.addEventListener("click",function(ev){
+var clamp=ev.target.closest?ev.target.closest("[data-clamp]"):null;if(clamp){clamp.classList.toggle("clamp");return;}
+var t=ev.target.closest?ev.target.closest("[data-goto],[data-node],[data-detail],[data-community],[data-edge]"):null;if(!t){return;}
+var go=t.getAttribute("data-goto")||t.getAttribute("data-node");
+if(go){focusNode(go);return;}
+var eg=t.getAttribute("data-edge");if(eg){focusEdge(eg);return;}
+var cid=t.getAttribute("data-community");
+if(cid!==null){communities.forEach(function(c){if(String(c.id)===cid){isolateCommunity(c.id,c.label);}});return;}
+var act=t.getAttribute("data-detail");
+if(act==="back"){var prev=detailHistory.pop();if(prev){focusNode(prev,null,true);}}
+else if(act==="fit"){var ids=[state.focus];incoming(state.focus).forEach(function(e){ids.push(e.from);});outgoing(state.focus).forEach(function(e){ids.push(e.to);});try{network.fit({nodes:ids,animation:reduced?false:{duration:500}});}catch(e){}}
+else if(act==="clear"){showAll();state.focus=null;state.edge=null;detailHistory=[];clearNodeDetail();setHash("#");}
+else if(act==="fitedge"&&state.edge){var fe=edgeByVisId(state.edge);if(fe){try{network.fit({nodes:[fe.edge.from,fe.edge.to],animation:reduced?false:{duration:500}});}catch(e){}}}
+else if(act==="edgehood"&&state.edge){var he=edgeByVisId(state.edge);if(he){var hood={};[he.edge.from,he.edge.to].forEach(function(id){hood[id]=true;incoming(id).forEach(function(x){hood[x.from]=true;});outgoing(id).forEach(function(x){hood[x.to]=true;});});setDim(hood);try{network.fit({nodes:Object.keys(hood),animation:reduced?false:{duration:500}});}catch(e){}}}});
+network.on("zoom",function(p){syncLabels(p.scale);});
+network.on("stabilized",function(){receipt.textContent="Physics stabilized: "+rawNodes.length+" nodes placed.";
+if(state.focus&&dimSet){try{network.fit({nodes:Object.keys(dimSet),animation:reduced?false:{duration:500}});}catch(e){}}});
+document.querySelectorAll("[data-action]").forEach(function(btn){
+btn.addEventListener("click",function(){
+var action=btn.getAttribute("data-action");
+if(action==="reach-up"&&state.focus){focusNode(state.focus,"upstream");}
+else if(action==="reach-down"&&state.focus){focusNode(state.focus,"downstream");}
+else if(action==="route"){probeRoute();}
+else if(action==="lens"){applyLens(state.lens?null:"backend");}
+else if(action==="color"){toggleColorMode();}
+else if(action==="show-all"){showAll();state.focus=null;try{network.fit({animation:reduced?false:{duration:500}});}catch(e){}receipt.textContent="Showing all "+rawNodes.length+" nodes.";setHash("#");}
+else if(action==="views-prev"){showView(state.view-1);}
+else if(action==="views-next"){showView(state.view+1);}
+else if(action==="play"){var i=0;var step=function(){if(i>=views.length){return;}showView(i);i++;if(!reduced){setTimeout(step,1400);}};step();}
+else if(action==="stabilize"){try{network.stabilize();}catch(e){}receipt.textContent="Stabilizing physics...";}
+else if(action==="physics"){togglePhysics();}
+else if(action==="present"){document.body.classList.toggle("present");}
+else if(action==="style"){cyclePreset();}
+else if(action==="theme"){toggleTheme();}
+else if(action==="export"){if(typeof exportsDialog.showModal==="function"){exportsDialog.showModal();}}
+else if(action==="help"){if(typeof guide.showModal==="function"){guide.showModal();}}
+else if(action==="close-guide"){guide.close();}
+else if(action==="close-exports"){exportsDialog.close();}
+else if(action==="export-png"){exportPNG();}
+else if(action==="export-json"){exportJSON();}});});
+search.addEventListener("input",function(){
+var term=search.value.trim().toLowerCase();
+if(!term){showAll();return;}
+var allowed={};rawNodes.forEach(function(n){
+if(n.label.toLowerCase().indexOf(term)>=0||n.id.toLowerCase().indexOf(term)>=0){allowed[n.id]=true;}});
+showOnly(allowed);});
+document.addEventListener("keydown",function(ev){
+if(ev.target&&(ev.target.tagName==="INPUT"||ev.target.tagName==="TEXTAREA")){return;}
+if(ev.key==="/"){ev.preventDefault();search.focus();}
+else if(ev.key==="R"||ev.key==="r"){var f=document.getElementById("route-from");if(f){f.focus();}}
+else if(ev.key==="L"||ev.key==="l"){applyLens(state.lens?null:"backend");}
+else if(ev.key==="P"||ev.key==="p"){showView(state.view+1);}
+else if(ev.key==="["){showView(state.view-1);}
+else if(ev.key==="]"){showView(state.view+1);}
+else if(ev.key==="B"||ev.key==="b"){togglePhysics();}
+else if(ev.key==="F"||ev.key==="f"){document.body.classList.toggle("present");}
+else if(ev.key==="S"||ev.key==="s"){cyclePreset();}
+else if(ev.key==="T"||ev.key==="t"){toggleTheme();}
+else if(ev.key==="E"||ev.key==="e"){if(typeof exportsDialog.showModal==="function"){exportsDialog.showModal();}}
+else if(ev.key==="?"){if(typeof guide.showModal==="function"){guide.showModal();}}
+else if(ev.key==="+"){try{network.zoomIn();}catch(e){}}
+else if(ev.key==="-"){try{network.zoomOut();}catch(e){}}
+else if(ev.key==="0"){try{network.fit();}catch(e){}}
+else if(ev.key==="C"||ev.key==="c"){toggleColorMode();}
+else if(ev.key==="Backspace"){var prev=detailHistory.pop();if(prev){ev.preventDefault();focusNode(prev,null,true);}}
+else if(ev.key==="Escape"){showAll();state.focus=null;state.edge=null;detailHistory=[];clearNodeDetail();setHash("#");}});
+passportMeta.textContent=(meta.nodeCount||rawNodes.length)+" of "+(meta.totalFiles||rawNodes.length)+" files | "+(meta.edgeCount||rawEdges.length)+" links | "+views.length+" chapters. Primary scope only; full listing lives in the knowledge base.";
+receipt.textContent="Live physics network. Drag nodes, search, focus, trace reach, probe routes, compare roles, or play chapters.";
+renderChapters();renderRoleCounts();readHash();
+},readmenatorPayloadError);
+</script>
+</body>
+</html>

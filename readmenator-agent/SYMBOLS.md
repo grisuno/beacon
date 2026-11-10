@@ -326,175 +326,175 @@ Pages: [SYMBOLS.md](SYMBOLS.md), [SYMBOLS_p2.md](SYMBOLS_p2.md)
 | `CTR` | macro | `aes.h:15` | `#define CTR` |
 | `ECB` | macro | `aes.h:12` | `#define ECB` |
 | `_AES_H_` | macro | `aes.h:2` | `#define _AES_H_` |
-| `BeaconDataSerializeString` | function | `beacon.c:4712` | `void BeaconDataSerializeString(char* buffer, int* offset, const char* str)` |
-| `C2_HOST` | macro | `beacon.c:82` | `#define C2_HOST` |
-| `C2_PASS` | macro | `beacon.c:85` | `#define C2_PASS` |
-| `C2_PATH` | macro | `beacon.c:88` | `#define C2_PATH` |
-| `C2_PORT` | macro | `beacon.c:86` | `#define C2_PORT` |
-| `C2_URL` | macro | `beacon.c:75` | `#define C2_URL` |
-| `C2_USER` | macro | `beacon.c:84` | `#define C2_USER` |
-| `CHECK_ERROR` | macro | `beacon.c:126` | `#define CHECK_ERROR(cond, msg)` |
-| `CLIENT_ID` | macro | `beacon.c:77` | `#define CLIENT_ID` |
-| `CONFIG_PATH` | macro | `beacon.c:87` | `#define CONFIG_PATH` |
-| `DEBUG` | macro | `beacon.c:72` | `#define DEBUG` |
-| `DecryptPacket` | function | `beacon.c:2911` | `BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len)` |
-| `DownloadFromURL` | function | `beacon.c:4423` | `BOOL DownloadFromURL(const char* url, const char* filepath)` |
-| `DownloadToBuffer` | function | `beacon.c:4347` | `unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize)` |
-| `EarlyBirdInject` | function | `beacon.c:3729` | `BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)` |
-| `ExceptionFilter` | function | `beacon.c:253` | `static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo)` |
-| `ExecuteModule` | function | `beacon.c:706` | `BOOL ExecuteModule(PVOID moduleBase)` |
-| `ExecuteTLSCallbacks` | function | `beacon.c:600` | `void ExecuteTLSCallbacks(PVOID moduleBase)` |
-| `ExitStatus` | type_alias | `beacon.c:127` | `typedef struct _PROCESS_BASIC_INFORMATION { LONG ExitStatus;` |
-| `FileExistsA` | function | `beacon.c:2301` | `BOOL FileExistsA(const char* filePath)` |
-| `GetC2Command` | function | `beacon.c:4200` | `char* GetC2Command(const char* host, const char* path)` |
-| `GetHostname` | function | `beacon.c:3041` | `char* GetHostname()` |
-| `GetIPs` | function | `beacon.c:3007` | `char* GetIPs()` |
-| `GetJitteredSleep` | function | `beacon.c:1587` | `DWORD GetJitteredSleep(DWORD base_ms)` |
-| `GetNtdllBase` | function | `beacon.c:1184` | `HMODULE GetNtdllBase()` |
-| `GetProcessIdByName` | function | `beacon.c:582` | `DWORD GetProcessIdByName(const char* processName)` |
-| `GetSyscallNumber` | function | `beacon.c:549` | `DWORD GetSyscallNumber(PVOID func_addr)` |
-| `GetUsefulSoftware` | function | `beacon.c:1592` | `char* GetUsefulSoftware()` |
-| `GetUsername` | function | `beacon.c:3057` | `char* GetUsername()` |
-| `HellsGate` | function | `beacon.c:561` | `DWORD HellsGate(DWORD ssn)` |
-| `IMAGE_DOS_SIGNATURE` | macro | `beacon.c:101` | `#define IMAGE_DOS_SIGNATURE` |
-| `IMAGE_NT_OPTIONAL_HDR32_MAGIC` | macro | `beacon.c:103` | `#define IMAGE_NT_OPTIONAL_HDR32_MAGIC` |
-| `IMAGE_NT_OPTIONAL_HDR64_MAGIC` | macro | `beacon.c:104` | `#define IMAGE_NT_OPTIONAL_HDR64_MAGIC` |
-| `IMAGE_NT_SIGNATURE` | macro | `beacon.c:102` | `#define IMAGE_NT_SIGNATURE` |
-| `INVALID_SOCKET` | macro | `beacon.c:97` | `#define INVALID_SOCKET` |
-| `InMemoryOrderLinks` | type_alias | `beacon.c:267` | `typedef struct _LDR_DATA_TABLE_ENTRY { LIST_ENTRY InMemoryOrderLinks;` |
-| `LC2_HOST` | macro | `beacon.c:83` | `#define LC2_HOST` |
-| `LC2_PATH` | macro | `beacon.c:89` | `#define LC2_PATH` |
-| `LazyDataType` | struct | `beacon.c:168` | `` |
-| `Length` | type_alias | `beacon.c:262` | `typedef struct _UNICODE_STRING { USHORT Length;` |
-| `Length` | type_alias | `beacon.c:277` | `typedef struct _PEB_LDR_DATA { DWORD Length;` |
-| `LoadModuleFromURL` | function | `beacon.c:751` | `BOOL LoadModuleFromURL(const char* url)` |
-| `MALEABLE` | macro | `beacon.c:76` | `#define MALEABLE` |
-| `MAX_JITTER` | macro | `beacon.c:80` | `#define MAX_JITTER` |
-| `MAX_RESPONSE_SIZE` | macro | `beacon.c:74` | `#define MAX_RESPONSE_SIZE` |
-| `MAX_RETRIES` | macro | `beacon.c:81` | `#define MAX_RETRIES` |
-| `MIN_JITTER` | macro | `beacon.c:79` | `#define MIN_JITTER` |
-| `MapDllNameToModule` | function | `beacon.c:521` | `HMODULE MapDllNameToModule(char* dllName)` |
-| `MapModuleToMemory` | function | `beacon.c:617` | `PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)` |
-| `MapPEToMemory` | function | `beacon.c:2838` | `unsigned char* MapPEToMemory(unsigned char* rawPE, DWORD rawSize, DWORD* mappedSize)` |
-| `NTSTATUS` | type_alias | `beacon.c:296` | `typedef LONG NTSTATUS;` |
-| `NTSTATUS` | type_alias | `beacon.c:304` | `typedef LONG NTSTATUS;` |
-| `NT_SUCCESS` | macro | `beacon.c:300` | `#define NT_SUCCESS(Status)` |
-| `NUM_UAS` | macro | `beacon.c:247` | `#define NUM_UAS` |
-| `NUM_URLS` | macro | `beacon.c:240` | `#define NUM_URLS` |
-| `NUM_USER_AGENTS` | macro | `beacon.c:231` | `#define NUM_USER_AGENTS` |
-| `PSAPI_VERSION` | macro | `beacon.c:20` | `#define PSAPI_VERSION` |
-| `PacketEncryptionContext` | struct | `beacon.c:329` | `` |
-| `PortResult` | struct | `beacon.c:343` | `` |
-| `PortScanner` | function | `beacon.c:3661` | `void PortScanner(char* targetIP, int* ports, int numPorts)` |
-| `PortScannerArgs` | struct | `beacon.c:161` | `` |
-| `PortScannerWrapper` | function | `beacon.c:3706` | `void PortScannerWrapper(void* arg)` |
-| `ProcessBasicInformation` | macro | `beacon.c:123` | `#define ProcessBasicInformation` |
-| `ProxyListener` | struct | `beacon.c:176` | `` |
-| `ProxySession` | struct | `beacon.c:139` | `` |
-| `ProxyThreadData` | struct | `beacon.c:147` | `` |
-| `ReadFromProcess` | function | `beacon.c:1513` | `DWORD WINAPI ReadFromProcess(LPVOID lpParam)` |
-| `Reserved1` | type_alias | `beacon.c:286` | `typedef struct _PEB { BYTE Reserved1[2];` |
-| `ReverseArgs` | struct | `beacon.c:156` | `` |
-| `ReverseShell` | function | `beacon.c:1404` | `void __cdecl ReverseShell(void* arg)` |
-| `SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE` | macro | `beacon.c:106` | `#define SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE` |
-| `SECURITY_FLAG_IGNORE_INVALID_POLICY` | macro | `beacon.c:109` | `#define SECURITY_FLAG_IGNORE_INVALID_POLICY` |
-| `SECURITY_FLAG_IGNORE_REVOCATION` | macro | `beacon.c:94` | `#define SECURITY_FLAG_IGNORE_REVOCATION` |
-| `SLEEP_BASE` | macro | `beacon.c:78` | `#define SLEEP_BASE` |
-| `SerializeBeaconString` | function | `beacon.c:4703` | `void SerializeBeaconString(char* buffer, int* offset, const char* str)` |
-| `TIMEOUT` | macro | `beacon.c:73` | `#define TIMEOUT` |
-| `USER_AGENT` | macro | `beacon.c:99` | `#define USER_AGENT` |
-| `USER_AGENT_A` | macro | `beacon.c:100` | `#define USER_AGENT_A` |
-| `UTF8ToWide` | function | `beacon.c:2551` | `WCHAR* UTF8ToWide(const char* utf8)` |
-| `UploadFileToC2` | function | `beacon.c:2108` | `BOOL UploadFileToC2(const char* url, const char* filePath)` |
-| `WIN32_LEAN_AND_MEAN` | macro | `beacon.c:21` | `#define WIN32_LEAN_AND_MEAN` |
-| `XOR_KEY` | macro | `beacon.c:71` | `#define XOR_KEY` |
-| `_LDR_DATA_TABLE_ENTRY` | struct | `beacon.c:268` | `` |
-| `_PEB` | struct | `beacon.c:287` | `` |
-| `_PEB_LDR_DATA` | struct | `beacon.c:278` | `` |
-| `_PROCESS_BASIC_INFORMATION` | struct | `beacon.c:129` | `` |
-| `_PROCESS_BASIC_INFORMATION_` | macro | `beacon.c:115` | `#define _PROCESS_BASIC_INFORMATION_` |
-| `_SECURITY_PACKAGE_DEFINITION_` | macro | `beacon.c:112` | `#define _SECURITY_PACKAGE_DEFINITION_` |
-| `_SP_LSA_MODE_INITIALIZE_DEFINED_` | macro | `beacon.c:117` | `#define _SP_LSA_MODE_INITIALIZE_DEFINED_` |
-| `_UNICODE_STRING` | struct | `beacon.c:262` | `` |
-| `__attribute__` | function | `beacon.c:566` | `__attribute__((naked)) NTSTATUS HellDescent(     DWORD64 arg1, DWORD64 arg2, DWORD64 arg3,     DW...` |
-| `__declspec` | function | `beacon.c:417` | `__declspec(dllexport) void BeaconDataParse(datap * parser, char * buffer, int size)` |
-| `__declspec` | function | `beacon.c:423` | `__declspec(dllexport) char * BeaconDataPtr(datap * parser, int size)` |
-| `__declspec` | function | `beacon.c:431` | `__declspec(dllexport) int BeaconDataInt(datap * parser)` |
-| `__declspec` | function | `beacon.c:436` | `__declspec(dllexport) short BeaconDataShort(datap * parser)` |
-| `__declspec` | function | `beacon.c:441` | `__declspec(dllexport) int BeaconDataLength(datap * parser)` |
-| `__declspec` | function | `beacon.c:446` | `__declspec(dllexport) char * BeaconDataExtract(datap * parser, int * size)` |
-| `__declspec` | function | `beacon.c:456` | `__declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...)` |
-| `__declspec` | function | `beacon.c:504` | `__declspec(dllexport) void BeaconOutput(int type, const char * data, int len)` |
-| `anti_analysis` | function | `beacon.c:922` | `BOOL anti_analysis()` |
-| `base64_decode` | function | `beacon.c:1663` | `char* base64_decode(const char* input, size_t* out_len)` |
-| `base64_encode` | function | `beacon.c:1627` | `char* base64_encode(const unsigned char* data, size_t inputLen)` |
-| `checkDebuggers` | function | `beacon.c:2776` | `BOOL checkDebuggers()` |
-| `cleanSystemLogs` | function | `beacon.c:3384` | `void cleanSystemLogs()` |
-| `cleanupProxy` | function | `beacon.c:2062` | `void cleanupProxy()` |
-| `compressDirectory` | function | `beacon.c:2094` | `BOOL compressDirectory(const char* dirPath)` |
-| `create_suspended_process` | function | `beacon.c:3149` | `BOOL create_suspended_process(char* path, PROCESS_INFORMATION* pi)` |
-| `deleteFilesDelay` | function | `beacon.c:4537` | `void deleteFilesDelay(void* arg)` |
-| `discoverLocalHosts` | function | `beacon.c:1696` | `void discoverLocalHosts()` |
-| `downloadAndExecute` | function | `beacon.c:2861` | `BOOL downloadAndExecute(const char* url, const char* targetProcess)` |
-| `encrypt_data` | function | `beacon.c:4454` | `char* encrypt_data(const char* data)` |
-| `ensurePersistence` | function | `beacon.c:3421` | `BOOL ensurePersistence()` |
-| `exec_cmd` | function | `beacon.c:4172` | `char* exec_cmd(const char* cmd)` |
-| `executeCommand` | function | `beacon.c:4551` | `void executeCommand(void* cmdPtr)` |
-| `executeLoader` | function | `beacon.c:1348` | `void executeLoader(void *arg)` |
-| `executeUACBypass` | function | `beacon.c:3557` | `BOOL executeUACBypass(const char* payloadPath)` |
-| `extract_shellcode` | function | `beacon.c:1303` | `int extract_shellcode(const char* input, size_t len, unsigned char** out)` |
-| `getNetworkConfig` | function | `beacon.c:2104` | `char* getNetworkConfig()` |
-| `get_entry_point_rva` | function | `beacon.c:3113` | `DWORD get_entry_point_rva(BYTE* buffer)` |
-| `get_image_size` | function | `beacon.c:3107` | `DWORD get_image_size(BYTE* buffer)` |
-| `get_nt_headers` | function | `beacon.c:3092` | `PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer)` |
-| `get_remote_image_base` | function | `beacon.c:3156` | `ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target)` |
-| `get_shell_cmd` | function | `beacon.c:335` | `const char* get_shell_cmd()` |
-| `go` | function | `beacon.c:4720` | `void go(unsigned char * bof_data, int bof_size, char * args, int args_len)` |
-| `handleAdversary` | function | `beacon.c:4738` | `void handleAdversary(char* command)` |
-| `handleAtomic` | function | `beacon.c:4560` | `void handleAtomic(char* command)` |
-| `handleDownload` | function | `beacon.c:4683` | `BOOL handleDownload(const char* command)` |
-| `handleUpload` | function | `beacon.c:2280` | `BOOL handleUpload(const char* command)` |
-| `hex_char_to_byte` | function | `beacon.c:1334` | `BYTE hex_char_to_byte(char c)` |
-| `hex_to_bytes` | function | `beacon.c:1341` | `void hex_to_bytes(const char* hex, BYTE* output, size_t len)` |
-| `initProxy` | function | `beacon.c:1753` | `void initProxy()` |
-| `init_aes_context` | function | `beacon.c:3900` | `PacketEncryptionContext* init_aes_context(const char* key_hex)` |
-| `isSandboxEnvironment` | function | `beacon.c:3482` | `BOOL isSandboxEnvironment()` |
-| `isSensitiveFile` | function | `beacon.c:2378` | `int isSensitiveFile(const char* filename)` |
-| `isVMByMAC` | function | `beacon.c:1232` | `BOOL isVMByMAC()` |
-| `isValidUUID` | function | `beacon.c:4512` | `BOOL isValidUUID(const char* uuid)` |
-| `is_64bit` | function | `beacon.c:3101` | `BOOL is_64bit(BYTE* buffer)` |
-| `load_lazyconf` | function | `beacon.c:946` | `BOOL load_lazyconf()` |
-| `main` | function | `beacon.c:5233` | `int main()` |
-| `min` | macro | `beacon.c:91` | `#define min(a,b)` |
-| `obfuscateFileTimestamp` | function | `beacon.c:2562` | `BOOL obfuscateFileTimestamp(const char* filepath)` |
-| `obfuscateFileTimestamps` | function | `beacon.c:2592` | `void obfuscateFileTimestamps(const char* basePath, int depth)` |
-| `overWrite` | function | `beacon.c:3277` | `void overWrite(const char* targetPath, const char* payloadPath)` |
-| `patchAMSI` | function | `beacon.c:3074` | `BOOL patchAMSI(void)` |
-| `pe_buffer_to_virtual_image` | function | `beacon.c:3119` | `BYTE* pe_buffer_to_virtual_image(BYTE* raw_buffer, DWORD* out_size)` |
-| `proxy_accept_thread` | function | `beacon.c:1855` | `void WINAPI proxy_accept_thread(void* param)` |
-| `proxy_thread` | function | `beacon.c:1784` | `void WINAPI proxy_thread(void* param)` |
-| `relay_thread` | function | `beacon.c:1763` | `void WINAPI relay_thread(void* param)` |
-| `restartClient` | function | `beacon.c:2735` | `void restartClient()` |
-| `retry_http_request` | function | `beacon.c:3918` | `char* retry_http_request(const char* url, const char* method, const char* data, int max_retries)` |
-| `scanPort` | function | `beacon.c:3610` | `void scanPort(void* arg)` |
-| `searchCredentials` | function | `beacon.c:2425` | `char* searchCredentials(const char* basePath)` |
-| `selfDestruct` | function | `beacon.c:2306` | `void selfDestruct()` |
-| `simulateLegitimateTraffic` | function | `beacon.c:2656` | `void simulateLegitimateTraffic(void* param)` |
-| `startProxy` | function | `beacon.c:1923` | `BOOL startProxy(const char* listenAddr, const char* targetAddr)` |
-| `stopProxy` | function | `beacon.c:2010` | `BOOL stopProxy(const char* listenAddr)` |
-| `stristr` | function | `beacon.c:2362` | `char* stristr(const char* str, const char* pattern)` |
-| `tryPrivilegeEscalation` | function | `beacon.c:3552` | `void tryPrivilegeEscalation()` |
-| `update_remote_entry_point` | function | `beacon.c:3250` | `BOOL update_remote_entry_point(PROCESS_INFORMATION* pi, ULONGLONG entry_point_va, BOOL is_32bit)` |
-| `xor_string` | function | `beacon.c:915` | `void xor_string(char* data, size_t len, char key)` |
-| `BEACON_H` | macro | `beacon.h:21` | `#define BEACON_H` |
-| `CALLBACK_ERROR` | macro | `beacon.h:42` | `#define CALLBACK_ERROR` |
-| `CALLBACK_OUTPUT` | macro | `beacon.h:41` | `#define CALLBACK_OUTPUT` |
-| `datap` | struct | `beacon.h:25` | `` |
-| `BEACON_H` | macro | `bof/calc/beacon.h:21` | `#define BEACON_H` |
-| `CALLBACK_ERROR` | macro | `bof/calc/beacon.h:42` | `#define CALLBACK_ERROR` |
-| `CALLBACK_OUTPUT` | macro | `bof/calc/beacon.h:41` | `#define CALLBACK_OUTPUT` |
-| `datap` | struct | `bof/calc/beacon.h:25` | `` |
-| `__imp_CloseHandle` | variable | `bof/calc/calc.c:30` | `extern FARPROC __imp_CloseHandle;` |
-| `__imp_GetComputerNameA` | variable | `bof/calc/calc.c:29` | `extern FARPROC __imp_GetComputerNameA;` |
+| `BeaconDataSerializeString` | function | `beacon.c:5040` | `void BeaconDataSerializeString(char* buffer, int* offset, const char* str)` |
+| `C2_HOST` | macro | `beacon.c:136` | `#define C2_HOST` |
+| `C2_PASS` | macro | `beacon.c:139` | `#define C2_PASS` |
+| `C2_PATH` | macro | `beacon.c:142` | `#define C2_PATH` |
+| `C2_PORT` | macro | `beacon.c:140` | `#define C2_PORT` |
+| `C2_URL` | macro | `beacon.c:129` | `#define C2_URL` |
+| `C2_USER` | macro | `beacon.c:138` | `#define C2_USER` |
+| `CHECK_ERROR` | macro | `beacon.c:180` | `#define CHECK_ERROR(cond, msg)` |
+| `CLIENT_ID` | macro | `beacon.c:131` | `#define CLIENT_ID` |
+| `CONFIG_PATH` | macro | `beacon.c:141` | `#define CONFIG_PATH` |
+| `CreateFileA_Unhooked` | function | `beacon.c:557` | `HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURI...` |
+| `DEBUG` | macro | `beacon.c:126` | `#define DEBUG` |
+| `DecryptPacket` | function | `beacon.c:3201` | `BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len)` |
+| `DownloadFromURL` | function | `beacon.c:4751` | `BOOL DownloadFromURL(const char* url, const char* filepath)` |
+| `DownloadToBuffer` | function | `beacon.c:4675` | `unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize)` |
+| `EarlyBirdInject` | function | `beacon.c:4019` | `BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)` |
+| `ExceptionFilter` | function | `beacon.c:665` | `static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo)` |
+| `ExecuteModule` | function | `beacon.c:1124` | `BOOL ExecuteModule(PVOID moduleBase)` |
+| `ExecuteTLSCallbacks` | function | `beacon.c:1018` | `void ExecuteTLSCallbacks(PVOID moduleBase)` |
+| `ExitStatus` | type_alias | `beacon.c:181` | `typedef struct _PROCESS_BASIC_INFORMATION { LONG ExitStatus;` |
+| `FILE_DIRECTORY_FILE` | macro | `beacon.c:82` | `#define FILE_DIRECTORY_FILE` |
+| `FILE_NON_DIRECTORY_FILE` | macro | `beacon.c:81` | `#define FILE_NON_DIRECTORY_FILE` |
+| `FILE_SYNCHRONOUS_IO_NONALERT` | macro | `beacon.c:79` | `#define FILE_SYNCHRONOUS_IO_NONALERT` |
+| `FileExistsA` | function | `beacon.c:2599` | `BOOL FileExistsA(const char* filePath)` |
+| `GetC2Command` | function | `beacon.c:4528` | `char* GetC2Command(const char* host, const char* path)` |
+| `GetHostname` | function | `beacon.c:3331` | `char* GetHostname()` |
+| `GetIPs` | function | `beacon.c:3297` | `char* GetIPs()` |
+| `GetJitteredSleep` | function | `beacon.c:1885` | `DWORD GetJitteredSleep(DWORD base_ms)` |
+| `GetNtdllBase` | function | `beacon.c:1482` | `HMODULE GetNtdllBase()` |
+| `GetProcessIdByName` | function | `beacon.c:1000` | `DWORD GetProcessIdByName(const char* processName)` |
+| `GetSyscallNumber` | function | `beacon.c:967` | `DWORD GetSyscallNumber(PVOID func_addr)` |
+| `GetSyscallStub` | function | `beacon.c:340` | `BOOL GetSyscallStub(     LPCSTR functionName,     PIMAGE_EXPORT_DIRECTORY exportDirectory,     LP...` |
+| `GetUsefulSoftware` | function | `beacon.c:1890` | `char* GetUsefulSoftware()` |
+| `GetUsername` | function | `beacon.c:3347` | `char* GetUsername()` |
+| `HellsGate` | function | `beacon.c:979` | `DWORD HellsGate(DWORD ssn)` |
+| `IMAGE_DOS_SIGNATURE` | macro | `beacon.c:155` | `#define IMAGE_DOS_SIGNATURE` |
+| `IMAGE_NT_OPTIONAL_HDR32_MAGIC` | macro | `beacon.c:157` | `#define IMAGE_NT_OPTIONAL_HDR32_MAGIC` |
+| `IMAGE_NT_OPTIONAL_HDR64_MAGIC` | macro | `beacon.c:158` | `#define IMAGE_NT_OPTIONAL_HDR64_MAGIC` |
+| `IMAGE_NT_SIGNATURE` | macro | `beacon.c:156` | `#define IMAGE_NT_SIGNATURE` |
+| `INVALID_SOCKET` | macro | `beacon.c:151` | `#define INVALID_SOCKET` |
+| `InMemoryOrderLinks` | type_alias | `beacon.c:674` | `typedef struct _LDR_DATA_TABLE_ENTRY { LIST_ENTRY InMemoryOrderLinks;` |
+| `InitializeUnhookedSyscalls` | function | `beacon.c:375` | `BOOL InitializeUnhookedSyscalls()` |
+| `LC2_HOST` | macro | `beacon.c:137` | `#define LC2_HOST` |
+| `LC2_PATH` | macro | `beacon.c:143` | `#define LC2_PATH` |
+| `LazyDataType` | struct | `beacon.c:222` | `` |
+| `Length` | type_alias | `beacon.c:53` | `typedef struct _UNICODE_STRING { USHORT Length;` |
+| `Length` | type_alias | `beacon.c:59` | `typedef struct _OBJECT_ATTRIBUTES { ULONG Length;` |
+| `Length` | type_alias | `beacon.c:685` | `typedef struct _PEB_LDR_DATA { DWORD Length;` |
+| `LoadModuleFromURL` | function | `beacon.c:1169` | `BOOL LoadModuleFromURL(const char* url)` |
+| `MALEABLE` | macro | `beacon.c:130` | `#define MALEABLE` |
+| `MAX_JITTER` | macro | `beacon.c:134` | `#define MAX_JITTER` |
+| `MAX_RESPONSE_SIZE` | macro | `beacon.c:128` | `#define MAX_RESPONSE_SIZE` |
+| `MAX_RETRIES` | macro | `beacon.c:135` | `#define MAX_RETRIES` |
+| `MIN_JITTER` | macro | `beacon.c:133` | `#define MIN_JITTER` |
+| `MapDllNameToModule` | function | `beacon.c:939` | `HMODULE MapDllNameToModule(char* dllName)` |
+| `MapModuleToMemory` | function | `beacon.c:1035` | `PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)` |
+| `MapPEToMemory` | function | `beacon.c:3128` | `unsigned char* MapPEToMemory(unsigned char* rawPE, DWORD rawSize, DWORD* mappedSize)` |
+| `NTSTATUS` | type_alias | `beacon.c:36` | `typedef LONG NTSTATUS;` |
+| `NTSTATUS` | type_alias | `beacon.c:42` | `typedef LONG NTSTATUS;` |
+| `NTSTATUS` | type_alias | `beacon.c:704` | `typedef LONG NTSTATUS;` |
+| `NTSTATUS` | type_alias | `beacon.c:712` | `typedef LONG NTSTATUS;` |
+| `NT_SUCCESS` | macro | `beacon.c:46` | `#define NT_SUCCESS(Status)` |
+| `NT_SUCCESS` | macro | `beacon.c:708` | `#define NT_SUCCESS(Status)` |
+| `NUM_UAS` | macro | `beacon.c:659` | `#define NUM_UAS` |
+| `NUM_URLS` | macro | `beacon.c:652` | `#define NUM_URLS` |
+| `NUM_USER_AGENTS` | macro | `beacon.c:643` | `#define NUM_USER_AGENTS` |
+| `OBJ_CASE_INSENSITIVE` | macro | `beacon.c:77` | `#define OBJ_CASE_INSENSITIVE` |
+| `PSAPI_VERSION` | macro | `beacon.c:1` | `#define PSAPI_VERSION` |
+| `PacketEncryptionContext` | struct | `beacon.c:737` | `` |
+| `PortResult` | struct | `beacon.c:751` | `` |
+| `PortScanner` | function | `beacon.c:3951` | `void PortScanner(char* targetIP, int* ports, int numPorts)` |
+| `PortScannerArgs` | struct | `beacon.c:215` | `` |
+| `PortScannerWrapper` | function | `beacon.c:3996` | `void PortScannerWrapper(void* arg)` |
+| `ProcessBasicInformation` | macro | `beacon.c:177` | `#define ProcessBasicInformation` |
+| `ProxyListener` | struct | `beacon.c:230` | `` |
+| `ProxySession` | struct | `beacon.c:193` | `` |
+| `ProxyThreadData` | struct | `beacon.c:201` | `` |
+| `RVAtoRawOffset` | function | `beacon.c:334` | `PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)` |
+| `ReadFromProcess` | function | `beacon.c:1811` | `DWORD WINAPI ReadFromProcess(LPVOID lpParam)` |
+| `Reserved1` | type_alias | `beacon.c:694` | `typedef struct _PEB { BYTE Reserved1[2];` |
+| `ReverseArgs` | struct | `beacon.c:210` | `` |
+| `ReverseShell` | function | `beacon.c:1702` | `void __cdecl ReverseShell(void* arg)` |
+| `SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE` | macro | `beacon.c:160` | `#define SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE` |
+| `SECURITY_FLAG_IGNORE_INVALID_POLICY` | macro | `beacon.c:163` | `#define SECURITY_FLAG_IGNORE_INVALID_POLICY` |
+| `SECURITY_FLAG_IGNORE_REVOCATION` | macro | `beacon.c:148` | `#define SECURITY_FLAG_IGNORE_REVOCATION` |
+| `SLEEP_BASE` | macro | `beacon.c:132` | `#define SLEEP_BASE` |
+| `SYSCALL_STUB_SIZE` | macro | `beacon.c:280` | `#define SYSCALL_STUB_SIZE` |
+| `SerializeBeaconString` | function | `beacon.c:5031` | `void SerializeBeaconString(char* buffer, int* offset, const char* str)` |
+| `Status` | type_alias | `beacon.c:68` | `typedef struct _IO_STATUS_BLOCK { union { NTSTATUS Status;` |
+| `TIMEOUT` | macro | `beacon.c:127` | `#define TIMEOUT` |
+| `USER_AGENT` | macro | `beacon.c:153` | `#define USER_AGENT` |
+| `USER_AGENT_A` | macro | `beacon.c:154` | `#define USER_AGENT_A` |
+| `UTF8ToWide` | function | `beacon.c:94` | `WCHAR* UTF8ToWide(const char* utf8)` |
+| `UploadFileToC2` | function | `beacon.c:2406` | `BOOL UploadFileToC2(const char* url, const char* filePath)` |
+| `WIN32_LEAN_AND_MEAN` | macro | `beacon.c:2` | `#define WIN32_LEAN_AND_MEAN` |
+| `WriteProcessMemory_Unhooked` | function | `beacon.c:609` | `BOOL WriteProcessMemory_Unhooked(     HANDLE hProcess,     LPVOID lpBaseAddress,     LPCVOID lpBu...` |
+| `XOR_KEY` | macro | `beacon.c:125` | `#define XOR_KEY` |
+| `_IO_STATUS_BLOCK` | struct | `beacon.c:69` | `` |
+| `_LDR_DATA_TABLE_ENTRY` | struct | `beacon.c:676` | `` |
+| `_NTSTATUS_DEFINED` | macro | `beacon.c:41` | `#define _NTSTATUS_DEFINED` |
+| `_OBJECT_ATTRIBUTES` | struct | `beacon.c:60` | `` |
+| `_PEB` | struct | `beacon.c:695` | `` |
+| `_PEB_LDR_DATA` | struct | `beacon.c:686` | `` |
+| `_PROCESS_BASIC_INFORMATION` | struct | `beacon.c:183` | `` |
+| `_PROCESS_BASIC_INFORMATION_` | macro | `beacon.c:169` | `#define _PROCESS_BASIC_INFORMATION_` |
+| `_SECURITY_PACKAGE_DEFINITION_` | macro | `beacon.c:166` | `#define _SECURITY_PACKAGE_DEFINITION_` |
+| `_SP_LSA_MODE_INITIALIZE_DEFINED_` | macro | `beacon.c:171` | `#define _SP_LSA_MODE_INITIALIZE_DEFINED_` |
+| `_UNICODE_STRING` | struct | `beacon.c:54` | `` |
+| `__attribute__` | function | `beacon.c:984` | `__attribute__((naked)) NTSTATUS HellDescent(     DWORD64 arg1, DWORD64 arg2, DWORD64 arg3,     DW...` |
+| `__declspec` | function | `beacon.c:824` | `__declspec(dllexport) void BeaconDataParse(datap *parser, char *buffer, int size)` |
+| `__declspec` | function | `beacon.c:841` | `__declspec(dllexport) char * BeaconDataPtr(datap * parser, int size)` |
+| `__declspec` | function | `beacon.c:849` | `__declspec(dllexport) int BeaconDataInt(datap * parser)` |
+| `__declspec` | function | `beacon.c:854` | `__declspec(dllexport) short BeaconDataShort(datap * parser)` |
+| `__declspec` | function | `beacon.c:859` | `__declspec(dllexport) int BeaconDataLength(datap * parser)` |
+| `__declspec` | function | `beacon.c:864` | `__declspec(dllexport) char * BeaconDataExtract(datap * parser, int * size)` |
+| `__declspec` | function | `beacon.c:874` | `__declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...)` |
+| `__declspec` | function | `beacon.c:922` | `__declspec(dllexport) void BeaconOutput(int type, const char * data, int len)` |
+| `anti_analysis` | function | `beacon.c:1220` | `BOOL anti_analysis()` |
+| `base64_decode` | function | `beacon.c:1961` | `char* base64_decode(const char* input, size_t* out_len)` |
+| `base64_encode` | function | `beacon.c:1925` | `char* base64_encode(const unsigned char* data, size_t inputLen)` |
+| `checkDebuggers` | function | `beacon.c:3066` | `BOOL checkDebuggers()` |
+| `cleanSystemLogs` | function | `beacon.c:3674` | `void cleanSystemLogs()` |
+| `cleanupProxy` | function | `beacon.c:2360` | `void cleanupProxy()` |
+| `compressDirectory` | function | `beacon.c:2392` | `BOOL compressDirectory(const char* dirPath)` |
+| `create_suspended_process` | function | `beacon.c:3439` | `BOOL create_suspended_process(char* path, PROCESS_INFORMATION* pi)` |
+| `deleteFilesDelay` | function | `beacon.c:4865` | `void deleteFilesDelay(void* arg)` |
+| `discoverLocalHosts` | function | `beacon.c:1994` | `void discoverLocalHosts()` |
+| `downloadAndExecute` | function | `beacon.c:3151` | `BOOL downloadAndExecute(const char* url, const char* targetProcess)` |
+| `encrypt_data` | function | `beacon.c:4782` | `char* encrypt_data(const char* data)` |
+| `ensurePersistence` | function | `beacon.c:3711` | `BOOL ensurePersistence()` |
+| `exec_cmd` | function | `beacon.c:4500` | `char* exec_cmd(const char* cmd)` |
+| `executeCommand` | function | `beacon.c:4879` | `void executeCommand(void* cmdPtr)` |
+| `executeLoader` | function | `beacon.c:1646` | `void executeLoader(void *arg)` |
+| `executeUACBypass` | function | `beacon.c:3847` | `BOOL executeUACBypass(const char* payloadPath)` |
+| `extract_shellcode` | function | `beacon.c:1601` | `int extract_shellcode(const char* input, size_t len, unsigned char** out)` |
+| `getNetworkConfig` | function | `beacon.c:2402` | `char* getNetworkConfig()` |
+| `get_entry_point_rva` | function | `beacon.c:3403` | `DWORD get_entry_point_rva(BYTE* buffer)` |
+| `get_image_size` | function | `beacon.c:3397` | `DWORD get_image_size(BYTE* buffer)` |
+| `get_nt_headers` | function | `beacon.c:3382` | `PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer)` |
+| `get_remote_image_base` | function | `beacon.c:3446` | `ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target)` |
+| `get_shell_cmd` | function | `beacon.c:743` | `const char* get_shell_cmd()` |
+| `go` | function | `beacon.c:5048` | `void go(unsigned char * bof_data, int bof_size, char * args, int args_len)` |
+| `handleAdversary` | function | `beacon.c:5132` | `void handleAdversary(char* command)` |
+| `handleAtomic` | function | `beacon.c:4888` | `void handleAtomic(char* command)` |
+| `handleDownload` | function | `beacon.c:5011` | `BOOL handleDownload(const char* command)` |
+| `handleUpload` | function | `beacon.c:2578` | `BOOL handleUpload(const char* command)` |
+| `hex_char_to_byte` | function | `beacon.c:1632` | `BYTE hex_char_to_byte(char c)` |
+| `hex_to_bytes` | function | `beacon.c:1639` | `void hex_to_bytes(const char* hex, BYTE* output, size_t len)` |
+| `hooked` | function | `beacon.c:5065` | `int hooked()` |
+| `initProxy` | function | `beacon.c:2051` | `void initProxy()` |
+| `init_aes_context` | function | `beacon.c:4228` | `PacketEncryptionContext* init_aes_context(const char* key_hex)` |
+| `isSandboxEnvironment` | function | `beacon.c:3772` | `BOOL isSandboxEnvironment()` |
+| `isSensitiveFile` | function | `beacon.c:2676` | `int isSensitiveFile(const char* filename)` |
+| `isVMByMAC` | function | `beacon.c:1530` | `BOOL isVMByMAC()` |
+| `isValidUUID` | function | `beacon.c:4840` | `BOOL isValidUUID(const char* uuid)` |
+| `is_64bit` | function | `beacon.c:3391` | `BOOL is_64bit(BYTE* buffer)` |
+| `load_lazyconf` | function | `beacon.c:1244` | `BOOL load_lazyconf()` |
+| `main` | function | `beacon.c:5633` | `int main()` |
+| `min` | macro | `beacon.c:145` | `#define min(a,b)` |
+| `obfuscateFileTimestamp` | function | `beacon.c:2852` | `BOOL obfuscateFileTimestamp(const char* filepath)` |
+| `obfuscateFileTimestamps` | function | `beacon.c:2882` | `void obfuscateFileTimestamps(const char* basePath, int depth)` |
+| `overWrite` | function | `beacon.c:3567` | `void overWrite(const char* targetPath, const char* payloadPath)` |
+| `patchAMSI` | function | `beacon.c:3364` | `BOOL patchAMSI(void)` |
+| `pe_buffer_to_virtual_image` | function | `beacon.c:3409` | `BYTE* pe_buffer_to_virtual_image(BYTE* raw_buffer, DWORD* out_size)` |
+| `proxy_accept_thread` | function | `beacon.c:2153` | `void WINAPI proxy_accept_thread(void* param)` |
+| `proxy_thread` | function | `beacon.c:2082` | `void WINAPI proxy_thread(void* param)` |
+| `relay_thread` | function | `beacon.c:2061` | `void WINAPI relay_thread(void* param)` |
+| `restartClient` | function | `beacon.c:3025` | `void restartClient()` |
+| `retry_http_request` | function | `beacon.c:4246` | `char* retry_http_request(const char* url, const char* method, const char* data, int max_retries)` |
+| `scanPort` | function | `beacon.c:3900` | `void scanPort(void* arg)` |
 
 Next: [SYMBOLS_p2.md](SYMBOLS_p2.md)

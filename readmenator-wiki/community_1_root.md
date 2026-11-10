@@ -4,7 +4,7 @@
 
 ## Definition
 
-This community groups 6 file(s) rooted at `root` with dominant language h (cohesion 0.83). Central symbols: `AES256`, `AES_BLOCKLEN`, `AES_CBC_decrypt_buffer`, `AES_CBC_encrypt_buffer`, `AES_CTR_xcrypt_buffer`, `AES_ECB_decrypt`, `AES_ECB_encrypt`, `AES_KEYLEN`. Core file: `beacon.c` (160 symbols). Documented purpose: tiny-AES-c (https://github.com/kokke/tiny-AES-c).
+This community groups 6 file(s) rooted at `root` with dominant language h (cohesion 0.83). Central symbols: `AES256`, `AES_BLOCKLEN`, `AES_CBC_decrypt_buffer`, `AES_CBC_encrypt_buffer`, `AES_CTR_xcrypt_buffer`, `AES_ECB_decrypt`, `AES_ECB_encrypt`, `AES_KEYLEN`. Core file: `beacon.c` (179 symbols). Documented purpose: tiny-AES-c (https://github.com/kokke/tiny-AES-c).
 
 ## Files
 
@@ -13,7 +13,7 @@ This community groups 6 file(s) rooted at `root` with dominant language h (cohes
 | `COFFLoader.h` | h | utility | 1 | no |
 | `aes.c` | c | utility | 43 | yes |
 | `aes.h` | h | utility | 21 | yes |
-| `beacon.c` | c | utility | 160 | no |
+| `beacon.c` | c | utility | 179 | no |
 | `cJSON.c` | c | utility | 125 | no |
 | `cJSON.h` | h | utility | 37 | no |
 
@@ -67,13 +67,13 @@ This community groups 6 file(s) rooted at `root` with dominant language h (cohes
 
 ## Risks
 
-- [dataflow UNCHECKED_ALLOC] `beacon.c:1305` `extract_shellcode` `sc`: Result of allocator stored in `sc` is never checked against NULL.
-- [dataflow UNCHECKED_ALLOC] `beacon.c:1429` `ReverseShell` `s`: Result of allocator stored in `s` is never checked against NULL.
-- [dataflow UNCHECKED_ALLOC] `beacon.c:1730` `discoverLocalHosts` `reply`: Result of allocator stored in `reply` is never checked against NULL.
-- [dataflow UNCHECKED_ALLOC] `beacon.c:1788` `proxy_thread` `server`: Result of allocator stored in `server` is never checked against NULL.
-- [dataflow UNCHECKED_ALLOC] `beacon.c:1968` `startProxy` `listenSock`: Result of allocator stored in `listenSock` is never checked against NULL.
-- [dataflow DEAD_STORE] `beacon.c:3570` `executeUACBypass` `maliciousCmd`: `maliciousCmd` assigned at line 3570 but never read afterwards.
-- [dataflow UNCHECKED_ALLOC] `beacon.c:3621` `scanPort` `s`: Result of allocator stored in `s` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `beacon.c:1603` `extract_shellcode` `sc`: Result of allocator stored in `sc` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `beacon.c:1727` `ReverseShell` `s`: Result of allocator stored in `s` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `beacon.c:2028` `discoverLocalHosts` `reply`: Result of allocator stored in `reply` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `beacon.c:2086` `proxy_thread` `server`: Result of allocator stored in `server` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `beacon.c:2266` `startProxy` `listenSock`: Result of allocator stored in `listenSock` is never checked against NULL.
+- [dataflow DEAD_STORE] `beacon.c:3860` `executeUACBypass` `maliciousCmd`: `maliciousCmd` assigned at line 3860 but never read afterwards.
+- [dataflow UNCHECKED_ALLOC] `beacon.c:3911` `scanPort` `s`: Result of allocator stored in `s` is never checked against NULL.
 - [dataflow DEAD_STORE] `cJSON.c:1654` `print_array` `output_pointer`: `output_pointer` assigned at line 1654 but never read afterwards.
 - [dataflow DEAD_STORE] `cJSON.c:1887` `print_object` `output_pointer`: `output_pointer` assigned at line 1887 but never read afterwards.
 

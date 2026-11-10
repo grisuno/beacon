@@ -5,7 +5,7 @@ Second-brain semantic layer: nouns map atomically to file sets (EXTRACTED); verb
 | Concept | Files | Mentions | Top Files |
 |---------|-------|----------|-----------|
 | `bof` | 25 | 30 | `bof/calc/beacon.h`, `bof/calc/calc.c`, `bof/etw/beacon.h`, `bof/etw/etw.c`, `bof/test/Test.c` |
-| `get` | 20 | 98 | `COFFLoader3.c`, `aes.c`, `beacon.c`, `bof/calc/calc.c`, `bof/etw/etw.c` |
+| `get` | 20 | 99 | `COFFLoader3.c`, `aes.c`, `beacon.c`, `bof/calc/calc.c`, `bof/etw/etw.c` |
 | `imp` | 18 | 286 | `COFFLoader3.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c` |
 | `address` | 15 | 15 | `COFFLoader3.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c` |
 | `load` | 14 | 16 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/test/amsibypass.c`, `bof/test/cmdwhoami.c` |
@@ -25,10 +25,10 @@ Second-brain semantic layer: nouns map atomically to file sets (EXTRACTED); verb
 | `buffer` | 7 | 94 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/sock5.c` |
 | `module` | 7 | 17 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/disablelog.c` |
 | `gen` | 7 | 16 | `COFFLoader3.c`, `gen_beacon.sh`, `gen_dll.sh`, `gen_dll_rev.sh`, `gen_dll_ss.sh` |
-| `virtual` | 7 | 14 | `COFFLoader3.c`, `beacon.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/shellcode.c` |
+| `virtual` | 7 | 15 | `COFFLoader3.c`, `beacon.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/shellcode.c` |
 | `set` | 6 | 42 | `COFFLoader3.c`, `aes.c`, `aes.h`, `bof/test/persist.c`, `bof/test/sock5.c` |
-| `define` | 6 | 25 | `aes.h`, `beacon.c`, `bof/test/loadvnc.c`, `bof/test/sock5.c`, `cJSON.c` |
-| `size` | 6 | 24 | `COFFLoader3.c`, `aes.h`, `beacon.c`, `bof/test/loadvnc.c`, `bof/test/sock5.c` |
+| `define` | 6 | 26 | `aes.h`, `beacon.c`, `bof/test/loadvnc.c`, `bof/test/sock5.c`, `cJSON.c` |
+| `size` | 6 | 25 | `COFFLoader3.c`, `aes.h`, `beacon.c`, `bof/test/loadvnc.c`, `bof/test/sock5.c` |
 | `name` | 6 | 18 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/test/sock5.c`, `bof/test/upload.c` |
 | `callback` | 6 | 13 | `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/test/beacon.h`, `bof/test/sock5.c` |
 | `bytes` | 6 | 10 | `aes.c`, `beacon.c`, `bof/test/sock5.c`, `bof/test/upload.c`, `cJSON.c` |
@@ -39,19 +39,19 @@ Second-brain semantic layer: nouns map atomically to file sets (EXTRACTED); verb
 | `win32` | 6 | 7 | `beacon.c`, `bof/test/disablelog.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c` |
 | `aes` | 5 | 44 | `aes.c`, `aes.h`, `beacon.c`, `bof/test/tel.py`, `bof/test/upload.c` |
 | `string` | 5 | 41 | `COFFLoader3.c`, `beacon.c`, `cJSON.c`, `cJSON.h`, `gen_beacon.sh` |
+| `process` | 5 | 22 | `COFFLoader3.c`, `beacon.c`, `bof/test/disablelog.c`, `bof/test/scan_shellcode.c`, `cJSON.c` |
 | `value` | 5 | 22 | `COFFLoader3.c`, `aes.c`, `bof/test/persist.c`, `cJSON.c`, `cJSON.h` |
-| `process` | 5 | 20 | `COFFLoader3.c`, `beacon.c`, `bof/test/disablelog.c`, `bof/test/scan_shellcode.c`, `cJSON.c` |
 | `free` | 5 | 19 | `COFFLoader3.c`, `app.py`, `bof/test/sock5.c`, `bof/test/vncrelay.c`, `cJSON.c` |
+| `memory` | 5 | 15 | `COFFLoader3.c`, `beacon.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/shellcode.c` |
 | `dll` | 5 | 14 | `beacon.c`, `gen_dll.sh`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_module.sh` |
-| `memory` | 5 | 12 | `COFFLoader3.c`, `beacon.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/shellcode.c` |
 | `decrypt` | 5 | 9 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/tel.py` |
 | `encrypt` | 5 | 7 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/upload.c` |
 | `datap` | 5 | 5 | `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/test/beacon.h`, `bof/whoami/beacon.h` |
 | `por` | 5 | 5 | `COFFLoader3.c`, `bof/test/tel.py`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_key.sh` |
 | `uso` | 5 | 5 | `bof/test/tel.py`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_key.sh`, `gen_module.sh` |
+| `create` | 4 | 24 | `COFFLoader3.c`, `beacon.c`, `bof/test/scan_shellcode.c`, `cJSON.c` |
 | `char` | 4 | 22 | `COFFLoader3.c`, `beacon.c`, `bof/test/sock5.c`, `cJSON.c` |
-| `create` | 4 | 20 | `COFFLoader3.c`, `beacon.c`, `bof/test/scan_shellcode.c`, `cJSON.c` |
-| `defined` | 4 | 15 | `aes.c`, `aes.h`, `beacon.c`, `cJSON.c` |
+| `defined` | 4 | 18 | `aes.c`, `aes.h`, `beacon.c`, `cJSON.c` |
 | `number` | 4 | 11 | `aes.c`, `beacon.c`, `cJSON.c`, `cJSON.h` |
 | `open` | 4 | 10 | `COFFLoader3.c`, `bof/test/disablelog.c`, `bof/test/persist.c`, `bof/test/scan_shellcode.c` |
 

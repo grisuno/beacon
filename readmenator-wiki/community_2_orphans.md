@@ -32,9 +32,9 @@ This community groups 11 file(s) rooted at `root` with dominant language sh (coh
 - `to_hex` (function, `bof/test/tel.py:35`) `def to_hex(byte_list)` - Simula la función toHex de JavaScript
 - `decrypt_cookie` (function, `bof/test/tel.py:39`) `def decrypt_cookie(encrypted, key, iv)` - Descifra usando AES en modo CBC (como slowAES.decrypt(c,2,a,b))
 - `main` (function, `bof/test/tel.py:45`) `def main()` - Sistema de telemetría de uso por instalación no invasiva.
-- `show_help` (function, `gen_beacon.sh:34`) - === FUNCIONES ===
-- `xor_string` (function, `gen_beacon.sh:138`) - === XOR STRING TO BYTES ===
-- `crc32` (function, `gen_beacon.sh:5916`)
+- `show_help` (function, `gen_beacon.sh:46`) - === FUNCIONES ===
+- `xor_string` (function, `gen_beacon.sh:194`) - === XOR STRING TO BYTES ===
+- `crc32` (function, `gen_beacon.sh:5979`)
 - `usage` (function, `gen_dll_rev.sh:12`) - === USO ===
 - `usage` (function, `gen_dll_ss.sh:10`) - === USO ===
 - `usage` (function, `gen_key.sh:10`) - === USO ===
@@ -57,12 +57,12 @@ This community groups 11 file(s) rooted at `root` with dominant language sh (coh
 ## Risks
 
 - [taint medium] `bof/test/tel.py` -> `bof/test/tel.py` via `requests` (0 hops)
-- [dataflow DEAD_STORE] `gen_beacon.sh:4053` `xor_string` `maliciousCmd`: `maliciousCmd` assigned at line 4053 but never read afterwards.
-- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:1796` `xor_string` `sc`: Result of allocator stored in `sc` is never checked against NULL.
-- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:4104` `xor_string` `s`: Result of allocator stored in `s` is never checked against NULL.
-- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:2221` `xor_string` `reply`: Result of allocator stored in `reply` is never checked against NULL.
-- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:2279` `xor_string` `server`: Result of allocator stored in `server` is never checked against NULL.
-- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:2459` `xor_string` `listenSock`: Result of allocator stored in `listenSock` is never checked against NULL.
+- [dataflow DEAD_STORE] `gen_beacon.sh:4116` `xor_string` `maliciousCmd`: `maliciousCmd` assigned at line 4116 but never read afterwards.
+- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:1859` `xor_string` `sc`: Result of allocator stored in `sc` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:4167` `xor_string` `s`: Result of allocator stored in `s` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:2284` `xor_string` `reply`: Result of allocator stored in `reply` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:2342` `xor_string` `server`: Result of allocator stored in `server` is never checked against NULL.
+- [dataflow UNCHECKED_ALLOC] `gen_beacon.sh:2522` `xor_string` `listenSock`: Result of allocator stored in `listenSock` is never checked against NULL.
 
 ## Open Questions
 

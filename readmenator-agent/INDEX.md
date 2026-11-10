@@ -7,7 +7,7 @@
 | `aes.c` | tiny-AES-c (https://github.com/kokke/tiny-AES-c) | root | 43 | 0 |
 | `aes.h` | #define the macros below to 1/0 to enable/disable the mode of operation. | root | 21 | 2 |
 | `app.py` | This file is part of Black Basalt Beacon. | root | 0 | 0 |
-| `beacon.c` | MapDllNameToModule: === MAP DLL NAME TO REAL DLL === | root | 160 | 0 |
+| `beacon.c` | UTF8ToWide: Convierte UTF-8 a wide string | root | 179 | 0 |
 | `beacon.h` | - | root | 4 | 2 |
 | `bof/calc/beacon.h` | - | calc | 4 | 1 |
 | `bof/calc/calc.c` | - | calc | 6 | 0 |

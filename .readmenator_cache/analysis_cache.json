@@ -1,0 +1,179 @@
+{
+  "analysis_v2": {
+    "god_nodes": [
+      [
+        "beacon.h",
+        40.4
+      ],
+      [
+        "bof/test/beacon.h",
+        30.4
+      ],
+      [
+        "COFFLoader3.c",
+        27.8
+      ],
+      [
+        "beacon.c",
+        25.900000000000002
+      ],
+      [
+        "cJSON.c",
+        14.5
+      ],
+      [
+        "bof/test/sock5.c",
+        8.100000000000001
+      ],
+      [
+        "bof/test/upload.c",
+        8.100000000000001
+      ],
+      [
+        "cJSON.h",
+        7.7
+      ],
+      [
+        "aes.c",
+        6.3
+      ],
+      [
+        "aes.h",
+        6.1
+      ]
+    ],
+    "communities": [
+      {
+        "id": 0,
+        "label": "bof/test",
+        "file_ids": [
+          "bof/test/cmdwhoami.c",
+          "bof/test/vncrelay.c",
+          "bof/whoami/beacon.h",
+          "bof/test/amsibypass.c",
+          "bof/test/uacbypass.c",
+          "bof/calc/beacon.h",
+          "bof/test/loadvnc.c",
+          "bof/test/disablelog.c",
+          "bof/test/persist.c",
+          "bof/calc/calc.c",
+          "bof/test/Test.c",
+          "bof/etw/etw.c",
+          "bof/whoami/whoami.c",
+          "bof/test/beacon.h",
+          "bof/test/shellcode.c",
+          "bof/test/persistsvc.c",
+          "bof/test/scan_shellcode.c",
+          "bof/test/getenv.c",
+          "COFFLoader3.c",
+          "bof/test/winver.c",
+          "bof/test/upload.c",
+          "bof/test/sock5.c",
+          "beacon.h",
+          "bof/etw/beacon.h"
+        ],
+        "cohesion": 0.9736842105263158,
+        "size": 24
+      },
+      {
+        "id": 1,
+        "label": "root",
+        "file_ids": [
+          "aes.c",
+          "COFFLoader.h",
+          "cJSON.h",
+          "beacon.c",
+          "aes.h",
+          "cJSON.c"
+        ],
+        "cohesion": 0.8333333333333334,
+        "size": 6
+      }
+    ],
+    "surprising_connections": [
+      [
+        "aes.c",
+        "bof/calc/beacon.h",
+        5,
+        "{0, 1}"
+      ],
+      [
+        "aes.c",
+        "bof/etw/beacon.h",
+        5,
+        "{0, 1}"
+      ],
+      [
+        "aes.c",
+        "bof/test/beacon.h",
+        5,
+        "{0, 1}"
+      ],
+      [
+        "aes.c",
+        "bof/whoami/beacon.h",
+        5,
+        "{0, 1}"
+      ],
+      [
+        "bof/calc/beacon.h",
+        "cJSON.c",
+        5,
+        "{0, 1}"
+      ]
+    ],
+    "suggested_questions": [
+      "What does beacon.h depend on, and what depends on it? (20 connections)",
+      "What does beacon.h depend on, and what depends on it? (15 connections)",
+      "What does COFFLoader3.c depend on, and what depends on it? (1 connections)",
+      "How are the 24 files in 'bof/test' related to each other?",
+      "Why are aes.c and beacon.h connected through 5 hops across 2 communities?"
+    ]
+  },
+  "layers": {
+    "COFFLoader.h": "utility",
+    "COFFLoader3.c": "utility",
+    "aes.c": "utility",
+    "aes.h": "utility",
+    "app.py": "utility",
+    "beacon.c": "utility",
+    "beacon.h": "utility",
+    "bof/calc/beacon.h": "utility",
+    "bof/calc/calc.c": "utility",
+    "bof/etw/beacon.h": "utility",
+    "bof/etw/etw.c": "utility",
+    "bof/test/Test.c": "testing",
+    "bof/test/amsibypass.c": "testing",
+    "bof/test/beacon.h": "testing",
+    "bof/test/cmdwhoami.c": "testing",
+    "bof/test/disablelog.c": "testing",
+    "bof/test/getenv.c": "testing",
+    "bof/test/loadvnc.c": "testing",
+    "bof/test/make_table.c": "testing",
+    "bof/test/persist.c": "testing",
+    "bof/test/persistsvc.c": "testing",
+    "bof/test/scan_shellcode.c": "testing",
+    "bof/test/shellcode.c": "testing",
+    "bof/test/sock5.c": "testing",
+    "bof/test/tel.py": "testing",
+    "bof/test/uacbypass.c": "testing",
+    "bof/test/upload.c": "testing",
+    "bof/test/vncrelay.c": "testing",
+    "bof/test/winver.c": "testing",
+    "bof/whoami/beacon.h": "utility",
+    "bof/whoami/whoami.c": "utility",
+    "cJSON.c": "utility",
+    "cJSON.h": "utility",
+    "gen_beacon.sh": "utility",
+    "gen_dll.sh": "utility",
+    "gen_dll_rev.sh": "utility",
+    "gen_dll_ss.sh": "utility",
+    "gen_key.sh": "utility",
+    "gen_module.sh": "utility",
+    "generate_hashs.py": "utility",
+    "install.sh": "utility"
+  },
+  "security": {
+    "findings": []
+  }
+}

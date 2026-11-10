@@ -3,6 +3,25 @@ Previous: [SYMBOLS.md](SYMBOLS.md)
 
 | Symbol | Kind | File:Line | Signature |
 |--------|------|-----------|-----------|
+| `searchCredentials` | function | `beacon.c:2723` | `char* searchCredentials(const char* basePath)` |
+| `selfDestruct` | function | `beacon.c:2604` | `void selfDestruct()` |
+| `simulateLegitimateTraffic` | function | `beacon.c:2946` | `void simulateLegitimateTraffic(void* param)` |
+| `startProxy` | function | `beacon.c:2221` | `BOOL startProxy(const char* listenAddr, const char* targetAddr)` |
+| `stopProxy` | function | `beacon.c:2308` | `BOOL stopProxy(const char* listenAddr)` |
+| `stristr` | function | `beacon.c:2660` | `char* stristr(const char* str, const char* pattern)` |
+| `tryPrivilegeEscalation` | function | `beacon.c:3842` | `void tryPrivilegeEscalation()` |
+| `update_remote_entry_point` | function | `beacon.c:3540` | `BOOL update_remote_entry_point(PROCESS_INFORMATION* pi, ULONGLONG entry_point_va, BOOL is_32bit)` |
+| `xor_string` | function | `beacon.c:1213` | `void xor_string(char* data, size_t len, char key)` |
+| `BEACON_H` | macro | `beacon.h:21` | `#define BEACON_H` |
+| `CALLBACK_ERROR` | macro | `beacon.h:42` | `#define CALLBACK_ERROR` |
+| `CALLBACK_OUTPUT` | macro | `beacon.h:41` | `#define CALLBACK_OUTPUT` |
+| `datap` | struct | `beacon.h:25` | `` |
+| `BEACON_H` | macro | `bof/calc/beacon.h:21` | `#define BEACON_H` |
+| `CALLBACK_ERROR` | macro | `bof/calc/beacon.h:42` | `#define CALLBACK_ERROR` |
+| `CALLBACK_OUTPUT` | macro | `bof/calc/beacon.h:41` | `#define CALLBACK_OUTPUT` |
+| `datap` | struct | `bof/calc/beacon.h:25` | `` |
+| `__imp_CloseHandle` | variable | `bof/calc/calc.c:30` | `extern FARPROC __imp_CloseHandle;` |
+| `__imp_GetComputerNameA` | variable | `bof/calc/calc.c:29` | `extern FARPROC __imp_GetComputerNameA;` |
 | `__imp_GetModuleHandleA` | variable | `bof/calc/calc.c:26` | `extern FARPROC __imp_GetModuleHandleA;` |
 | `__imp_GetProcAddress` | variable | `bof/calc/calc.c:27` | `extern FARPROC __imp_GetProcAddress;` |
 | `__imp_LoadLibraryA` | variable | `bof/calc/calc.c:28` | `extern FARPROC __imp_LoadLibraryA;` |
@@ -354,9 +373,9 @@ Previous: [SYMBOLS.md](SYMBOLS.md)
 | `cJSON_bool` | type_alias | `cJSON.h:120` | `typedef int cJSON_bool;` |
 | `next` | variable | `cJSON.h:27` | `extern "C" { #endif #if !defined(__WINDOWS__) && (defined(WIN32) \|\| defined(WIN64) \|\| defined(_MSC_VER) \|\|...` |
 | `sensitive` | function | `cJSON.h:249` | `* case_sensitive determines if object keys are treated case sensitive (1) or case insensitive (0) */...` |
-| `crc32` | function | `gen_beacon.sh:5916` | `` |
-| `show_help` | function | `gen_beacon.sh:34` | `` |
-| `xor_string` | function | `gen_beacon.sh:138` | `` |
+| `crc32` | function | `gen_beacon.sh:5979` | `` |
+| `show_help` | function | `gen_beacon.sh:46` | `` |
+| `xor_string` | function | `gen_beacon.sh:194` | `` |
 | `usage` | function | `gen_dll_rev.sh:12` | `` |
 | `usage` | function | `gen_dll_ss.sh:10` | `` |
 | `usage` | function | `gen_key.sh:10` | `` |

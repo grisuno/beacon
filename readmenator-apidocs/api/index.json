@@ -1,0 +1,303 @@
+{
+ "schema_version": 1,
+ "format": "jsonl",
+ "meta": {
+  "modules": 23,
+  "entities": 662,
+  "languages": {
+   "c": 7,
+   "h": 7,
+   "py": 2,
+   "sh": 7
+  },
+  "kinds": {
+   "function": 207,
+   "macro": 145,
+   "module": 23,
+   "struct": 30,
+   "type_alias": 12,
+   "variable": 245
+  },
+  "truncated": false,
+  "skipped_files": 18,
+  "privacy_mode": false
+ },
+ "coverage": {
+  "overall": {
+   "documented": 96,
+   "total": 417,
+   "percent": 23.0
+  },
+  "by_kind": {
+   "function": {
+    "documented": 62,
+    "total": 207,
+    "percent": 30.0
+   },
+   "macro": {
+    "documented": 17,
+    "total": 145,
+    "percent": 11.7
+   },
+   "module": {
+    "documented": 10,
+    "total": 23,
+    "percent": 43.5
+   },
+   "struct": {
+    "documented": 2,
+    "total": 30,
+    "percent": 6.7
+   },
+   "type_alias": {
+    "documented": 5,
+    "total": 12,
+    "percent": 41.7
+   }
+  },
+  "by_module": {
+   "COFFLoader.h": {
+    "documented": 0,
+    "total": 1,
+    "percent": 0.0
+   },
+   "COFFLoader3.c": {
+    "documented": 3,
+    "total": 25,
+    "percent": 12.0
+   },
+   "aes.c": {
+    "documented": 8,
+    "total": 24,
+    "percent": 33.3
+   },
+   "aes.h": {
+    "documented": 5,
+    "total": 21,
+    "percent": 23.8
+   },
+   "app.py": {
+    "documented": 1,
+    "total": 1,
+    "percent": 100.0
+   },
+   "beacon.c": {
+    "documented": 49,
+    "total": 177,
+    "percent": 27.7
+   },
+   "beacon.h": {
+    "documented": 0,
+    "total": 4,
+    "percent": 0.0
+   },
+   "bof/calc/beacon.h": {
+    "documented": 0,
+    "total": 4,
+    "percent": 0.0
+   },
+   "bof/calc/calc.c": {
+    "documented": 1,
+    "total": 2,
+    "percent": 50.0
+   },
+   "bof/etw/beacon.h": {
+    "documented": 0,
+    "total": 4,
+    "percent": 0.0
+   },
+   "bof/etw/etw.c": {
+    "documented": 0,
+    "total": 2,
+    "percent": 0.0
+   },
+   "bof/whoami/beacon.h": {
+    "documented": 0,
+    "total": 4,
+    "percent": 0.0
+   },
+   "bof/whoami/whoami.c": {
+    "documented": 1,
+    "total": 2,
+    "percent": 50.0
+   },
+   "cJSON.c": {
+    "documented": 6,
+    "total": 89,
+    "percent": 6.7
+   },
+   "cJSON.h": {
+    "documented": 8,
+    "total": 37,
+    "percent": 21.6
+   },
+   "gen_beacon.sh": {
+    "documented": 3,
+    "total": 4,
+    "percent": 75.0
+   },
+   "gen_dll.sh": {
+    "documented": 1,
+    "total": 1,
+    "percent": 100.0
+   },
+   "gen_dll_rev.sh": {
+    "documented": 2,
+    "total": 2,
+    "percent": 100.0
+   },
+   "gen_dll_ss.sh": {
+    "documented": 2,
+    "total": 2,
+    "percent": 100.0
+   },
+   "gen_key.sh": {
+    "documented": 2,
+    "total": 2,
+    "percent": 100.0
+   },
+   "gen_module.sh": {
+    "documented": 3,
+    "total": 3,
+    "percent": 100.0
+   },
+   "generate_hashs.py": {
+    "documented": 1,
+    "total": 5,
+    "percent": 20.0
+   },
+   "install.sh": {
+    "documented": 0,
+    "total": 1,
+    "percent": 0.0
+   }
+  }
+ },
+ "modules": [
+  {
+   "uid": "COFFLoader.h",
+   "path": "modules/COFFLoader.h.jsonl",
+   "entities": 1
+  },
+  {
+   "uid": "COFFLoader3.c",
+   "path": "modules/COFFLoader3.c.jsonl",
+   "entities": 256
+  },
+  {
+   "uid": "aes.c",
+   "path": "modules/aes.c.jsonl",
+   "entities": 24
+  },
+  {
+   "uid": "aes.h",
+   "path": "modules/aes.h.jsonl",
+   "entities": 21
+  },
+  {
+   "uid": "app.py",
+   "path": "modules/app.py.jsonl",
+   "entities": 1
+  },
+  {
+   "uid": "beacon.c",
+   "path": "modules/beacon.c.jsonl",
+   "entities": 177
+  },
+  {
+   "uid": "beacon.h",
+   "path": "modules/beacon.h.jsonl",
+   "entities": 4
+  },
+  {
+   "uid": "bof/calc/beacon.h",
+   "path": "modules/bof.calc.beacon.h.jsonl",
+   "entities": 4
+  },
+  {
+   "uid": "bof/calc/calc.c",
+   "path": "modules/bof.calc.calc.c.jsonl",
+   "entities": 7
+  },
+  {
+   "uid": "bof/etw/beacon.h",
+   "path": "modules/bof.etw.beacon.h.jsonl",
+   "entities": 4
+  },
+  {
+   "uid": "bof/etw/etw.c",
+   "path": "modules/bof.etw.etw.c.jsonl",
+   "entities": 6
+  },
+  {
+   "uid": "bof/whoami/beacon.h",
+   "path": "modules/bof.whoami.beacon.h.jsonl",
+   "entities": 4
+  },
+  {
+   "uid": "bof/whoami/whoami.c",
+   "path": "modules/bof.whoami.whoami.c.jsonl",
+   "entities": 6
+  },
+  {
+   "uid": "cJSON.c",
+   "path": "modules/cJSON.c.jsonl",
+   "entities": 89
+  },
+  {
+   "uid": "cJSON.h",
+   "path": "modules/cJSON.h.jsonl",
+   "entities": 38
+  },
+  {
+   "uid": "gen_beacon.sh",
+   "path": "modules/gen_beacon.sh.jsonl",
+   "entities": 4
+  },
+  {
+   "uid": "gen_dll.sh",
+   "path": "modules/gen_dll.sh.jsonl",
+   "entities": 1
+  },
+  {
+   "uid": "gen_dll_rev.sh",
+   "path": "modules/gen_dll_rev.sh.jsonl",
+   "entities": 2
+  },
+  {
+   "uid": "gen_dll_ss.sh",
+   "path": "modules/gen_dll_ss.sh.jsonl",
+   "entities": 2
+  },
+  {
+   "uid": "gen_key.sh",
+   "path": "modules/gen_key.sh.jsonl",
+   "entities": 2
+  },
+  {
+   "uid": "gen_module.sh",
+   "path": "modules/gen_module.sh.jsonl",
+   "entities": 3
+  },
+  {
+   "uid": "generate_hashs.py",
+   "path": "modules/generate_hashs.py.jsonl",
+   "entities": 5
+  },
+  {
+   "uid": "install.sh",
+   "path": "modules/install.sh.jsonl",
+   "entities": 1
+  }
+ ],
+ "warnings": {
+  "path": "warnings.jsonl",
+  "total": 321
+ },
+ "usage": [
+  "grep -h '\"name\":\"<Name>\"' readmenator-apidocs/api/modules/*.jsonl",
+  "grep -h '\"qualname\":\"<Owner.method>\"' readmenator-apidocs/api/modules/*.jsonl",
+  "cat readmenator-apidocs/api/modules/<module-slug>.jsonl",
+  "grep -h '\"code\":\"DOC001\"' readmenator-apidocs/api/warnings.jsonl"
+ ]
+}

@@ -1,6 +1,6 @@
 # Second Brain
 
-*Last synthesized: 2026-10-07 | 41 files | 3 concept pages | offline, zero tokens*
+*Last synthesized: 2026-11-09 | 41 files | 3 concept pages | offline, zero tokens*
 
 > Raw sources -> readmenator wiki -> links (Karpathy LLM Wiki Pattern, deterministic).
 > Start here, then open one community page. Prefer grep over full reads.
@@ -18,13 +18,13 @@ Open work clusters around documentation (29% file coverage), 0 security findings
 | Metric | Value |
 |--------|-------|
 | Files | 41 |
-| Symbols | 856 |
+| Symbols | 875 |
 | Resolved imports | 25 |
 | Languages | c, h, py, sh |
 | Communities | 3 |
 | Doc coverage | 29% (12/41 files) |
 | Security findings | 0 |
-| Estimated read cost | ~8823 tokens (chars/4, offline so $0) |
+| Estimated read cost | ~9028 tokens (chars/4, offline so $0) |
 
 ## Reading Order
 
@@ -34,7 +34,7 @@ Open work clusters around documentation (29% file coverage), 0 security findings
 
 ```
 grep -rn '<keyword>' index.md community_*.md
-readmenator query "<question>" --target readmenator_beacon_6rdotks8
+readmenator query "<question>" --target beacon
 ```
 
 ## Concept Wiki
@@ -50,7 +50,7 @@ readmenator query "<question>" --target readmenator_beacon_6rdotks8
 | `beacon.h` | 40.4 |
 | `bof/test/beacon.h` | 30.4 |
 | `COFFLoader3.c` | 27.8 |
-| `beacon.c` | 24.0 |
+| `beacon.c` | 25.9 |
 | `cJSON.c` | 14.5 |
 
 ## Strongest Connections

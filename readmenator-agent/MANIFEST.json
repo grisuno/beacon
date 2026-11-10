@@ -1,16 +1,16 @@
 {
   "tool": "readmenator",
   "schema_version": 2,
-  "generated_at": "2026-10-08T00:34:41Z",
+  "generated_at": "2026-11-10T02:50:27Z",
   "project_root": ".",
-  "project_name": "push_beacon_20261007_212737",
-  "git_commit": "9eae1077455a0ece825f10d102d45ca0d88ce34f",
-  "git_branch": "security-export",
-  "source_fingerprint": "dba70b0c64a669b6310e91af3ac3561754b9e65909edd62b53f85f3e71019403",
+  "project_name": "beacon",
+  "git_commit": "0cda7db121d336364c17ed74cc3efabfc5a55b6b",
+  "git_branch": "main",
+  "source_fingerprint": "00e75fdbc41b046253f209a0f0177086136aa2aed7515fc2e488d47f7c593130",
   "freshness_check": "readmenator . fresh  # exit 0 = docs match sources, exit 1 = run: readmenator . --rebuild",
   "files": 41,
-  "symbols": 856,
-  "imports": 107,
+  "symbols": 875,
+  "imports": 108,
   "calls": 96,
   "inherits": 0,
   "resolved_imports": 25,
@@ -33,6 +33,7 @@
   ],
   "start_here": "INDEX.md",
   "read_order": [
+    "readmenator-agent/MEMORY.md  # rules, workflow, done criteria, session log",
     "readmenator-wiki/index.md  # big picture, communities, god nodes",
     "readmenator-agent/INDEX.md  # file -> purpose -> used-by count",
     "readmenator-agent/GOTCHAS.md  # blast radius before editing",
@@ -41,19 +42,20 @@
   "workflow": [
     "ls *.md readmenator-*/  # orient: docs first, ignore build noise",
     "grep -n '<keyword>' INDEX*.md SYMBOLS*.md",
+    "readmenator . ask '<question>'  # GraphRAG context (--global for overviews)",
     "cat KB_<subsystem>.md",
     "grep -n '<file>' ARCHITECTURE*.md API*.md"
   ],
   "documents": [
     {
       "path": "API.md",
-      "lines": 293,
-      "approx_tokens": 7954
+      "lines": 305,
+      "approx_tokens": 8204
     },
     {
       "path": "ARCHITECTURE.md",
       "lines": 65,
-      "approx_tokens": 669
+      "approx_tokens": 671
     },
     {
       "path": "CONCEPTS.md",
@@ -68,7 +70,7 @@
     {
       "path": "INDEX.md",
       "lines": 45,
-      "approx_tokens": 679
+      "approx_tokens": 677
     },
     {
       "path": "KB_calc.md",
@@ -87,8 +89,8 @@
     },
     {
       "path": "KB_root_p2.md",
-      "lines": 416,
-      "approx_tokens": 7820
+      "lines": 441,
+      "approx_tokens": 8227
     },
     {
       "path": "KB_test.md",
@@ -108,12 +110,12 @@
     {
       "path": "SYMBOLS.md",
       "lines": 500,
-      "approx_tokens": 11496
+      "approx_tokens": 11532
     },
     {
       "path": "SYMBOLS_p2.md",
-      "lines": 369,
-      "approx_tokens": 9020
+      "lines": 388,
+      "approx_tokens": 9438
     },
     {
       "path": "recipes/add-function.md",
