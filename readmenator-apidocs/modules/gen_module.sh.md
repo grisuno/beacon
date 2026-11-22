@@ -2,7 +2,7 @@
 
 > Source: [gen_module.sh:1](../../gen_module.sh#L1) | language `sh` | coverage 100.0% | [API index](../index.md)
 
-=== gen_cmd_dll.sh v1.0 === Genera DLL y shellcode ofuscado para ejecutar un comando Uso: ./gen_cmd_dll.sh --cmd "powershell..." [--key 0x33] [--output payload]
+=== gen_cmd_dll.sh v1.0 === Generates DLL and obfuscated shellcode to run a command Usage: ./gen_cmd_dll.sh --cmd "powershell..." [--key 0x33] [--output payload]
 
 ## Contents
 
@@ -20,7 +20,7 @@
 show_help()
 ```
 
-=== FUNCIONES ===
+=== FUNCTIONS ===
 
 ---
 
@@ -34,6 +34,6 @@ show_help()
 xor_obfuscate()
 ```
 
-Función para ofuscar binario con XOR y convertir a \x..
+Function to obfuscate binary with XOR and convert to \x..
 
 ---

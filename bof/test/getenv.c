@@ -39,7 +39,7 @@ void go(char *args, int alen) {
         DWORD result = ((DWORD(WINAPI*)(LPCSTR, LPSTR, DWORD))__imp_GetEnvironmentVariableA)(vars[i], value, sizeof(value));
 
         if (result == 0) {
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] %-15s = [NO DISPONIBLE]\n", vars[i]);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] %-15s = [NOT AVAILABLE]\n", vars[i]);
         } else {
             BeaconPrintf(CALLBACK_OUTPUT, "[BOF] %-15s = %s\n", vars[i], value);
         }

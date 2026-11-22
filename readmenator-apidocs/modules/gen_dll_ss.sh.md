@@ -2,7 +2,7 @@
 
 > Source: [gen_dll_ss.sh:1](../../gen_dll_ss.sh#L1) | language `sh` | coverage 100.0% | [API index](../index.md)
 
-=== CONFIGURACIÓN POR DEFECTO ===
+=== DEFAULT CONFIGURATION ===
 
 ## Contents
 
@@ -20,6 +20,6 @@
 usage()
 ```
 
-=== USO ===
+=== USAGE ===
 
 ---

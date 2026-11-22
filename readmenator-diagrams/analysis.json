@@ -1,7 +1,7 @@
 {
  "metadata": {
-  "generated_at": "2026-11-10T02:52:03.128320+00:00",
-  "source_tree_hash": "00e75fdbc41b046253f209a0f0177086136aa2aed7515fc2e488d47f7c593130",
+  "generated_at": "2026-11-22T05:57:53.278685+00:00",
+  "source_tree_hash": "a5dba5fa165e7cddf396028e42847f826209456369da7c8ae7c02681024d6d35",
   "repo_name": "beacon",
   "depth_level": 2,
   "depth_cap": 3,
@@ -21,7 +21,7 @@
   },
   "COFFLoader3.c": {
    "language": "c",
-   "symbols": 258
+   "symbols": 259
   },
   "aes.c": {
    "language": "c",
@@ -111,10 +111,6 @@
    "language": "c",
    "symbols": 41
   },
-  "bof/test/tel.py": {
-   "language": "py",
-   "symbols": 6
-  },
   "bof/test/uacbypass.c": {
    "language": "c",
    "symbols": 5
@@ -178,6 +174,10 @@
   "install.sh": {
    "language": "sh",
    "symbols": 0
+  },
+  "stub.c": {
+   "language": "c",
+   "symbols": 19
   }
  },
  "methods_index": {
@@ -189,2069 +189,2077 @@
    "type": "FUNCTION",
    "content_hash": "abef3153059f804a"
   },
+  "COFFLoader3.c|COFFLoader3.c::COFF": {
+   "file_path": "COFFLoader3.c",
+   "qualified_name": "COFFLoader3.c::COFF",
+   "start_line": 6,
+   "end_line": 311,
+   "type": "FUNCTION",
+   "content_hash": "7450e15cd20c875f"
+  },
   "COFFLoader3.c|COFFLoader3.c::__imp_BeaconPrintf": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_BeaconPrintf",
-   "start_line": 332,
-   "end_line": 332,
+   "start_line": 312,
+   "end_line": 312,
    "type": "FUNCTION",
-   "content_hash": "cc959cd3cc2a2835"
+   "content_hash": "0a9b89206cd92ea4"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_BeaconOutput": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_BeaconOutput",
-   "start_line": 333,
-   "end_line": 333,
+   "start_line": 313,
+   "end_line": 313,
    "type": "FUNCTION",
-   "content_hash": "c3f98892a4e6b315"
+   "content_hash": "9e988158af39a620"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_BeaconDataParse": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_BeaconDataParse",
-   "start_line": 334,
-   "end_line": 334,
+   "start_line": 314,
+   "end_line": 314,
    "type": "FUNCTION",
-   "content_hash": "e34264d0fa5dc93f"
+   "content_hash": "5ebea4e13990276a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_BeaconDataInt": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_BeaconDataInt",
-   "start_line": 335,
-   "end_line": 335,
+   "start_line": 315,
+   "end_line": 315,
    "type": "FUNCTION",
-   "content_hash": "4e45855afbec6329"
+   "content_hash": "3393283b313e2a6a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_BeaconDataShort": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_BeaconDataShort",
-   "start_line": 336,
-   "end_line": 336,
+   "start_line": 316,
+   "end_line": 316,
    "type": "FUNCTION",
-   "content_hash": "80e08fb2ec157161"
+   "content_hash": "5cceb16e368939e5"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_BeaconDataExtract": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_BeaconDataExtract",
-   "start_line": 337,
-   "end_line": 337,
+   "start_line": 317,
+   "end_line": 317,
    "type": "FUNCTION",
-   "content_hash": "36c11d1bf2645984"
+   "content_hash": "9e936f933e56c862"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_LoadLibraryA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_LoadLibraryA",
-   "start_line": 338,
-   "end_line": 338,
+   "start_line": 318,
+   "end_line": 318,
    "type": "FUNCTION",
-   "content_hash": "276cf981ec4a9275"
+   "content_hash": "40323f7d6e4a2fcf"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_LoadLibraryW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_LoadLibraryW",
-   "start_line": 339,
-   "end_line": 339,
+   "start_line": 319,
+   "end_line": 319,
    "type": "FUNCTION",
-   "content_hash": "2faf4ea10c62ee75"
+   "content_hash": "2e9e73cad6ea2729"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetModuleHandleA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetModuleHandleA",
-   "start_line": 340,
-   "end_line": 340,
+   "start_line": 320,
+   "end_line": 320,
    "type": "FUNCTION",
-   "content_hash": "283bee15de520a71"
+   "content_hash": "b31abb204964d344"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetModuleHandleW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetModuleHandleW",
-   "start_line": 341,
-   "end_line": 341,
+   "start_line": 321,
+   "end_line": 321,
    "type": "FUNCTION",
-   "content_hash": "2fe0101a08288be9"
+   "content_hash": "cb0109f60e903dc3"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetProcAddress": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetProcAddress",
-   "start_line": 342,
-   "end_line": 342,
+   "start_line": 322,
+   "end_line": 322,
    "type": "FUNCTION",
-   "content_hash": "8fc87ce7d2bb8dbc"
+   "content_hash": "7ebc168a549cf6be"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetLastError": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetLastError",
-   "start_line": 343,
-   "end_line": 343,
+   "start_line": 323,
+   "end_line": 323,
    "type": "FUNCTION",
-   "content_hash": "551227888564d196"
+   "content_hash": "dc0e7da4eca6c59a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CloseHandle": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CloseHandle",
-   "start_line": 344,
-   "end_line": 344,
+   "start_line": 324,
+   "end_line": 324,
    "type": "FUNCTION",
-   "content_hash": "7d809a390708a224"
+   "content_hash": "71e128f815a98456"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ExitProcess": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ExitProcess",
-   "start_line": 345,
-   "end_line": 345,
+   "start_line": 325,
+   "end_line": 325,
    "type": "FUNCTION",
-   "content_hash": "157457feebd763c9"
+   "content_hash": "7124031737e912fe"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ExitThread": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ExitThread",
-   "start_line": 346,
-   "end_line": 346,
+   "start_line": 326,
+   "end_line": 326,
    "type": "FUNCTION",
-   "content_hash": "6b283e23f08d2ef2"
+   "content_hash": "ba875141a695fc37"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_Sleep": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_Sleep",
-   "start_line": 347,
-   "end_line": 347,
+   "start_line": 327,
+   "end_line": 327,
    "type": "FUNCTION",
-   "content_hash": "c37e86472a375b30"
+   "content_hash": "56e523bb9a994973"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateThread": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateThread",
-   "start_line": 348,
-   "end_line": 348,
+   "start_line": 328,
+   "end_line": 328,
    "type": "FUNCTION",
-   "content_hash": "2e5491e5e6cd029b"
+   "content_hash": "1952d68a6e8ff5c2"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetCurrentProcess": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetCurrentProcess",
-   "start_line": 349,
-   "end_line": 349,
+   "start_line": 329,
+   "end_line": 329,
    "type": "FUNCTION",
-   "content_hash": "657325a1ad299a31"
+   "content_hash": "77c8c07b04b8e9b7"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetCurrentProcessId": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetCurrentProcessId",
-   "start_line": 350,
-   "end_line": 350,
+   "start_line": 330,
+   "end_line": 330,
    "type": "FUNCTION",
-   "content_hash": "535ab44dcc9cd418"
+   "content_hash": "7308c6e92af4b142"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetCurrentThreadId": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetCurrentThreadId",
-   "start_line": 351,
-   "end_line": 351,
+   "start_line": 331,
+   "end_line": 331,
    "type": "FUNCTION",
-   "content_hash": "d8ced7d5c4a716b1"
+   "content_hash": "f0908077a79b5690"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetTickCount": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetTickCount",
-   "start_line": 352,
-   "end_line": 352,
+   "start_line": 332,
+   "end_line": 332,
    "type": "FUNCTION",
-   "content_hash": "26e45f45e920f684"
+   "content_hash": "ca2717703a7e0bc0"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetTickCount64": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetTickCount64",
-   "start_line": 353,
-   "end_line": 353,
+   "start_line": 333,
+   "end_line": 333,
    "type": "FUNCTION",
-   "content_hash": "d51eab9f2a90bca5"
+   "content_hash": "c40814334b4da483"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateFileA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateFileA",
-   "start_line": 354,
-   "end_line": 354,
+   "start_line": 334,
+   "end_line": 334,
    "type": "FUNCTION",
-   "content_hash": "8b080e82c5a681c9"
+   "content_hash": "d3d36a85005fdc2f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateFileW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateFileW",
-   "start_line": 355,
-   "end_line": 355,
+   "start_line": 335,
+   "end_line": 335,
    "type": "FUNCTION",
-   "content_hash": "43922fc3485a542c"
+   "content_hash": "53c5a833db89b88e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ReadFile": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ReadFile",
-   "start_line": 356,
-   "end_line": 356,
+   "start_line": 336,
+   "end_line": 336,
    "type": "FUNCTION",
-   "content_hash": "3ac4a8f1aa4bd8a6"
+   "content_hash": "4c417dc6d13e4bab"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WriteFile": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WriteFile",
-   "start_line": 357,
-   "end_line": 357,
+   "start_line": 337,
+   "end_line": 337,
    "type": "FUNCTION",
-   "content_hash": "2f8d514b2152d64e"
+   "content_hash": "fa473f7c5c786a6c"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SetFilePointer": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SetFilePointer",
-   "start_line": 358,
-   "end_line": 358,
+   "start_line": 338,
+   "end_line": 338,
    "type": "FUNCTION",
-   "content_hash": "9aef1689c71e568c"
+   "content_hash": "ef15a4f659cf24a2"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SetEndOfFile": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SetEndOfFile",
-   "start_line": 359,
-   "end_line": 359,
+   "start_line": 339,
+   "end_line": 339,
    "type": "FUNCTION",
-   "content_hash": "cb1f9b106e08467c"
+   "content_hash": "dd70f9808d7b990c"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_DeleteFileA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_DeleteFileA",
-   "start_line": 360,
-   "end_line": 360,
+   "start_line": 340,
+   "end_line": 340,
    "type": "FUNCTION",
-   "content_hash": "4cc18e81b8f1219c"
+   "content_hash": "9fa7aaa67411bb8a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_DeleteFileW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_DeleteFileW",
-   "start_line": 361,
-   "end_line": 361,
+   "start_line": 341,
+   "end_line": 341,
    "type": "FUNCTION",
-   "content_hash": "2a0800aaff879a72"
+   "content_hash": "a7c0cac8cc760f22"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_MoveFileA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_MoveFileA",
-   "start_line": 362,
-   "end_line": 362,
+   "start_line": 342,
+   "end_line": 342,
    "type": "FUNCTION",
-   "content_hash": "b5572894095a885c"
+   "content_hash": "d5d5882340d6b17b"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_MoveFileW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_MoveFileW",
-   "start_line": 363,
-   "end_line": 363,
+   "start_line": 343,
+   "end_line": 343,
    "type": "FUNCTION",
-   "content_hash": "aa60523cd840d314"
+   "content_hash": "c77ec05e0a71c8e3"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CopyFileA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CopyFileA",
-   "start_line": 364,
-   "end_line": 364,
+   "start_line": 344,
+   "end_line": 344,
    "type": "FUNCTION",
-   "content_hash": "837688f0e99fe394"
+   "content_hash": "0db189671a72bdf6"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CopyFileW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CopyFileW",
-   "start_line": 365,
-   "end_line": 365,
+   "start_line": 345,
+   "end_line": 345,
    "type": "FUNCTION",
-   "content_hash": "2fb1d64501f4c286"
+   "content_hash": "9886fda08bf92456"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetFileSize": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetFileSize",
-   "start_line": 366,
-   "end_line": 366,
+   "start_line": 346,
+   "end_line": 346,
    "type": "FUNCTION",
-   "content_hash": "f9ae931619e29b5a"
+   "content_hash": "948bd43c8aef5e6c"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetFileSizeEx": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetFileSizeEx",
-   "start_line": 367,
-   "end_line": 367,
+   "start_line": 347,
+   "end_line": 347,
    "type": "FUNCTION",
-   "content_hash": "4231b440d4a5470f"
+   "content_hash": "579cc2ad072628e6"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateDirectoryA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateDirectoryA",
-   "start_line": 368,
-   "end_line": 368,
+   "start_line": 348,
+   "end_line": 348,
    "type": "FUNCTION",
-   "content_hash": "77c5ed5fff7476d7"
+   "content_hash": "46efd12ba00f886a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateDirectoryW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateDirectoryW",
-   "start_line": 369,
-   "end_line": 369,
+   "start_line": 349,
+   "end_line": 349,
    "type": "FUNCTION",
-   "content_hash": "0b2a47496728a8fa"
+   "content_hash": "696d0d73faa1cdad"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RemoveDirectoryA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RemoveDirectoryA",
-   "start_line": 370,
-   "end_line": 370,
+   "start_line": 350,
+   "end_line": 350,
    "type": "FUNCTION",
-   "content_hash": "0a73e85318d8c500"
+   "content_hash": "269dbd651e9cb1ea"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RemoveDirectoryW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RemoveDirectoryW",
-   "start_line": 371,
-   "end_line": 371,
+   "start_line": 351,
+   "end_line": 351,
    "type": "FUNCTION",
-   "content_hash": "fd1fd5177b04f8a5"
+   "content_hash": "7ad1413e34a2b03e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FindFirstFileA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FindFirstFileA",
-   "start_line": 372,
-   "end_line": 372,
+   "start_line": 352,
+   "end_line": 352,
    "type": "FUNCTION",
-   "content_hash": "12f9b6d0ad85ef3b"
+   "content_hash": "033b370e442914be"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FindFirstFileW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FindFirstFileW",
-   "start_line": 373,
-   "end_line": 373,
+   "start_line": 353,
+   "end_line": 353,
    "type": "FUNCTION",
-   "content_hash": "1945daeee14023f4"
+   "content_hash": "a97689d7fe64a78c"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FindNextFileA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FindNextFileA",
-   "start_line": 374,
-   "end_line": 374,
+   "start_line": 354,
+   "end_line": 354,
    "type": "FUNCTION",
-   "content_hash": "0d4f06e5a00c84da"
+   "content_hash": "e706bf78c9e21c02"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FindNextFileW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FindNextFileW",
-   "start_line": 375,
-   "end_line": 375,
+   "start_line": 355,
+   "end_line": 355,
    "type": "FUNCTION",
-   "content_hash": "3463b9a889e8d3d8"
+   "content_hash": "76feaf9370ad3cbe"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FindClose": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FindClose",
-   "start_line": 376,
-   "end_line": 376,
+   "start_line": 356,
+   "end_line": 356,
    "type": "FUNCTION",
-   "content_hash": "b3f097e1ba6cbe7f"
+   "content_hash": "65ac558be62f9cb3"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetFileAttributesA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetFileAttributesA",
-   "start_line": 377,
-   "end_line": 377,
+   "start_line": 357,
+   "end_line": 357,
    "type": "FUNCTION",
-   "content_hash": "6153db1abdffcfac"
+   "content_hash": "9ec1e5e3fa9aaeb5"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetFileAttributesW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetFileAttributesW",
-   "start_line": 378,
-   "end_line": 378,
+   "start_line": 358,
+   "end_line": 358,
    "type": "FUNCTION",
-   "content_hash": "40aaf7e7d3c68576"
+   "content_hash": "aaf0c4e965f540be"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SetFileAttributesA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SetFileAttributesA",
-   "start_line": 379,
-   "end_line": 379,
+   "start_line": 359,
+   "end_line": 359,
    "type": "FUNCTION",
-   "content_hash": "72f57a9ac58a1cf6"
+   "content_hash": "be5874a669100e04"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SetFileAttributesW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SetFileAttributesW",
-   "start_line": 380,
-   "end_line": 380,
+   "start_line": 360,
+   "end_line": 360,
    "type": "FUNCTION",
-   "content_hash": "4b3b7e7e0ddf4567"
+   "content_hash": "a09fff99ebb17ba5"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetSystemDirectoryA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetSystemDirectoryA",
-   "start_line": 381,
-   "end_line": 381,
+   "start_line": 361,
+   "end_line": 361,
    "type": "FUNCTION",
-   "content_hash": "e8b83106b441e2af"
+   "content_hash": "2a1bbb907f4b92ce"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetSystemDirectoryW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetSystemDirectoryW",
-   "start_line": 382,
-   "end_line": 382,
+   "start_line": 362,
+   "end_line": 362,
    "type": "FUNCTION",
-   "content_hash": "a2168a7c0b119665"
+   "content_hash": "aae4d8db20f233a1"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetWindowsDirectoryA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetWindowsDirectoryA",
-   "start_line": 383,
-   "end_line": 383,
+   "start_line": 363,
+   "end_line": 363,
    "type": "FUNCTION",
-   "content_hash": "e92fe660ea93f499"
+   "content_hash": "b36b580021e489c3"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetWindowsDirectoryW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetWindowsDirectoryW",
-   "start_line": 384,
-   "end_line": 384,
+   "start_line": 364,
+   "end_line": 364,
    "type": "FUNCTION",
-   "content_hash": "99264c9bd4e1ade7"
+   "content_hash": "185d4a85d2f1b0f2"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetTempPathA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetTempPathA",
-   "start_line": 385,
-   "end_line": 385,
+   "start_line": 365,
+   "end_line": 365,
    "type": "FUNCTION",
-   "content_hash": "e08ac90fd0784536"
+   "content_hash": "c83918476eb84718"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetTempPathW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetTempPathW",
-   "start_line": 386,
-   "end_line": 386,
+   "start_line": 366,
+   "end_line": 366,
    "type": "FUNCTION",
-   "content_hash": "456b63ab9927ebd5"
+   "content_hash": "c7644c2cc93b26ca"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetComputerNameA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetComputerNameA",
-   "start_line": 387,
-   "end_line": 387,
+   "start_line": 367,
+   "end_line": 367,
    "type": "FUNCTION",
-   "content_hash": "c63962fdd7019d8a"
+   "content_hash": "538eacd6f052a846"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetComputerNameW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetComputerNameW",
-   "start_line": 388,
-   "end_line": 388,
+   "start_line": 368,
+   "end_line": 368,
    "type": "FUNCTION",
-   "content_hash": "1fc09bd48f3a7220"
+   "content_hash": "e0256cad05a8e84a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetUserNameA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetUserNameA",
-   "start_line": 389,
-   "end_line": 389,
+   "start_line": 369,
+   "end_line": 369,
    "type": "FUNCTION",
-   "content_hash": "42c81de981066e61"
+   "content_hash": "08bba858f1c58956"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetUserNameW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetUserNameW",
-   "start_line": 390,
-   "end_line": 390,
+   "start_line": 370,
+   "end_line": 370,
    "type": "FUNCTION",
-   "content_hash": "442a5e7b893f6a24"
+   "content_hash": "c97cdace4d858fe0"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetVersionExA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetVersionExA",
-   "start_line": 391,
-   "end_line": 391,
+   "start_line": 371,
+   "end_line": 371,
    "type": "FUNCTION",
-   "content_hash": "b05591dc947c8bc4"
+   "content_hash": "2d1a6f1aa33b7bcb"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetVersionExW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetVersionExW",
-   "start_line": 392,
-   "end_line": 392,
+   "start_line": 372,
+   "end_line": 372,
    "type": "FUNCTION",
-   "content_hash": "0d1fc64bc56ea35d"
+   "content_hash": "98b361f7a3a372b0"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetNativeSystemInfo": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetNativeSystemInfo",
-   "start_line": 393,
-   "end_line": 393,
+   "start_line": 373,
+   "end_line": 373,
    "type": "FUNCTION",
-   "content_hash": "b9a6a8d68652bb83"
+   "content_hash": "6c76032af6cc7e96"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_VirtualAlloc": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_VirtualAlloc",
-   "start_line": 394,
-   "end_line": 394,
+   "start_line": 374,
+   "end_line": 374,
    "type": "FUNCTION",
-   "content_hash": "3e9ac9f9f40e4042"
+   "content_hash": "78cefb1a495b6997"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_VirtualFree": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_VirtualFree",
-   "start_line": 395,
-   "end_line": 395,
+   "start_line": 375,
+   "end_line": 375,
    "type": "FUNCTION",
-   "content_hash": "23fb6e00bbc45fd7"
+   "content_hash": "a608fdaa66d0c060"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_VirtualProtect": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_VirtualProtect",
-   "start_line": 396,
-   "end_line": 396,
+   "start_line": 376,
+   "end_line": 376,
    "type": "FUNCTION",
-   "content_hash": "61acd80dd6754f14"
+   "content_hash": "69efbd81beb95793"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_VirtualQuery": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_VirtualQuery",
-   "start_line": 397,
-   "end_line": 397,
+   "start_line": 377,
+   "end_line": 377,
    "type": "FUNCTION",
-   "content_hash": "91a1ed67938b9253"
+   "content_hash": "06a120346fd3b426"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_HeapAlloc": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_HeapAlloc",
-   "start_line": 398,
-   "end_line": 398,
+   "start_line": 378,
+   "end_line": 378,
    "type": "FUNCTION",
-   "content_hash": "a15800a47a1b3b41"
+   "content_hash": "f772082f6f597dcc"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_HeapFree": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_HeapFree",
-   "start_line": 399,
-   "end_line": 399,
+   "start_line": 379,
+   "end_line": 379,
    "type": "FUNCTION",
-   "content_hash": "a1cda286d9b7bb38"
+   "content_hash": "e14cc3b464c3b876"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_LocalAlloc": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_LocalAlloc",
-   "start_line": 400,
-   "end_line": 400,
+   "start_line": 380,
+   "end_line": 380,
    "type": "FUNCTION",
-   "content_hash": "de4c38b6923347c3"
+   "content_hash": "1eaddd36e977b0ad"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_LocalFree": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_LocalFree",
-   "start_line": 401,
-   "end_line": 401,
+   "start_line": 381,
+   "end_line": 381,
    "type": "FUNCTION",
-   "content_hash": "dbe87d0ece954984"
+   "content_hash": "c750f62788f495c6"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GlobalAlloc": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GlobalAlloc",
-   "start_line": 402,
-   "end_line": 402,
+   "start_line": 382,
+   "end_line": 382,
    "type": "FUNCTION",
-   "content_hash": "9c540dfc3b6b3259"
+   "content_hash": "463d7669a66795dd"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GlobalFree": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GlobalFree",
-   "start_line": 403,
-   "end_line": 403,
+   "start_line": 383,
+   "end_line": 383,
    "type": "FUNCTION",
-   "content_hash": "1483385dea56599a"
+   "content_hash": "7714aa416fae263f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RtlMoveMemory": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RtlMoveMemory",
-   "start_line": 404,
-   "end_line": 404,
+   "start_line": 384,
+   "end_line": 384,
    "type": "FUNCTION",
-   "content_hash": "81f579633ac4e576"
+   "content_hash": "fab0bc0593d15bd1"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RtlCopyMemory": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RtlCopyMemory",
-   "start_line": 405,
-   "end_line": 405,
+   "start_line": 385,
+   "end_line": 385,
    "type": "FUNCTION",
-   "content_hash": "523de2f6933cb796"
+   "content_hash": "8e6469c66f14e1fc"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RtlFillMemory": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RtlFillMemory",
-   "start_line": 406,
-   "end_line": 406,
+   "start_line": 386,
+   "end_line": 386,
    "type": "FUNCTION",
-   "content_hash": "ebb491c3d04de710"
+   "content_hash": "c1ec39160429bb8d"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RtlZeroMemory": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RtlZeroMemory",
-   "start_line": 407,
-   "end_line": 407,
+   "start_line": 387,
+   "end_line": 387,
    "type": "FUNCTION",
-   "content_hash": "215bb863eb1973bd"
+   "content_hash": "f60b89aa04a45c41"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrlenA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrlenA",
-   "start_line": 408,
-   "end_line": 408,
+   "start_line": 388,
+   "end_line": 388,
    "type": "FUNCTION",
-   "content_hash": "8a336ef322609d84"
+   "content_hash": "c5bdaa7eee340342"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrlenW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrlenW",
-   "start_line": 409,
-   "end_line": 409,
+   "start_line": 389,
+   "end_line": 389,
    "type": "FUNCTION",
-   "content_hash": "6e230cfe5c6c256e"
+   "content_hash": "cd4f27f5a2a8e0d7"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrcpyA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrcpyA",
-   "start_line": 410,
-   "end_line": 410,
+   "start_line": 390,
+   "end_line": 390,
    "type": "FUNCTION",
-   "content_hash": "2f60f24d1d31725b"
+   "content_hash": "5ac80fb5840ca4b9"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrcpyW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrcpyW",
-   "start_line": 411,
-   "end_line": 411,
+   "start_line": 391,
+   "end_line": 391,
    "type": "FUNCTION",
-   "content_hash": "97b02d76662ffb35"
+   "content_hash": "3a89943952ab655e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrcatA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrcatA",
-   "start_line": 412,
-   "end_line": 412,
+   "start_line": 392,
+   "end_line": 392,
    "type": "FUNCTION",
-   "content_hash": "848d5fc7de0983d4"
+   "content_hash": "6b12ca7305f0b4f9"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrcatW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrcatW",
-   "start_line": 413,
-   "end_line": 413,
+   "start_line": 393,
+   "end_line": 393,
    "type": "FUNCTION",
-   "content_hash": "9406e6d8a006a7dc"
+   "content_hash": "d4bba6cd92c96224"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrcmpA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrcmpA",
-   "start_line": 414,
-   "end_line": 414,
+   "start_line": 394,
+   "end_line": 394,
    "type": "FUNCTION",
-   "content_hash": "e27039eebb5439ec"
+   "content_hash": "a2d859b122615239"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrcmpW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrcmpW",
-   "start_line": 415,
-   "end_line": 415,
+   "start_line": 395,
+   "end_line": 395,
    "type": "FUNCTION",
-   "content_hash": "64c6e2c3885a1d76"
+   "content_hash": "fe3707043f489617"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrcmpiA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrcmpiA",
-   "start_line": 416,
-   "end_line": 416,
+   "start_line": 396,
+   "end_line": 396,
    "type": "FUNCTION",
-   "content_hash": "f753d3334e09602f"
+   "content_hash": "b311508a16716669"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_lstrcmpiW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_lstrcmpiW",
-   "start_line": 417,
-   "end_line": 417,
+   "start_line": 397,
+   "end_line": 397,
    "type": "FUNCTION",
-   "content_hash": "02d6f3fe4c5ebeb1"
+   "content_hash": "8a97cc18b3489bbb"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_MultiByteToWideChar": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_MultiByteToWideChar",
-   "start_line": 418,
-   "end_line": 418,
+   "start_line": 398,
+   "end_line": 398,
    "type": "FUNCTION",
-   "content_hash": "aae6b47fddb11172"
+   "content_hash": "f7763a895efab6d1"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WideCharToMultiByte": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WideCharToMultiByte",
-   "start_line": 419,
-   "end_line": 419,
+   "start_line": 399,
+   "end_line": 399,
    "type": "FUNCTION",
-   "content_hash": "dcf5f5261538b396"
+   "content_hash": "bf6ade9afd78272d"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FormatMessageA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FormatMessageA",
-   "start_line": 420,
-   "end_line": 420,
+   "start_line": 400,
+   "end_line": 400,
    "type": "FUNCTION",
-   "content_hash": "987b8e5967ef93c5"
+   "content_hash": "be0f5a8d7599ea39"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FormatMessageW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FormatMessageW",
-   "start_line": 421,
-   "end_line": 421,
+   "start_line": 401,
+   "end_line": 401,
    "type": "FUNCTION",
-   "content_hash": "2af59b3485f3de2c"
+   "content_hash": "bd55cf6fd7a5ec8e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetEnvironmentVariableA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetEnvironmentVariableA",
-   "start_line": 422,
-   "end_line": 422,
+   "start_line": 402,
+   "end_line": 402,
    "type": "FUNCTION",
-   "content_hash": "02060ddb3323374f"
+   "content_hash": "03f0798d96f46bdf"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetEnvironmentVariableW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetEnvironmentVariableW",
-   "start_line": 423,
-   "end_line": 423,
+   "start_line": 403,
+   "end_line": 403,
    "type": "FUNCTION",
-   "content_hash": "b927edc6eb4db550"
+   "content_hash": "ea6b97907958da37"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SetEnvironmentVariableA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SetEnvironmentVariableA",
-   "start_line": 424,
-   "end_line": 424,
+   "start_line": 404,
+   "end_line": 404,
    "type": "FUNCTION",
-   "content_hash": "679931daedd92670"
+   "content_hash": "1e4f8de8c91fa748"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SetEnvironmentVariableW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SetEnvironmentVariableW",
-   "start_line": 425,
-   "end_line": 425,
+   "start_line": 405,
+   "end_line": 405,
    "type": "FUNCTION",
-   "content_hash": "92f8398188a8d5f0"
+   "content_hash": "50b1f2c93395fe52"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ExpandEnvironmentStringsA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ExpandEnvironmentStringsA",
-   "start_line": 426,
-   "end_line": 426,
+   "start_line": 406,
+   "end_line": 406,
    "type": "FUNCTION",
-   "content_hash": "2d8277f23a3bda99"
+   "content_hash": "44ab1207a929f259"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ExpandEnvironmentStringsW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ExpandEnvironmentStringsW",
-   "start_line": 427,
-   "end_line": 427,
+   "start_line": 407,
+   "end_line": 407,
    "type": "FUNCTION",
-   "content_hash": "43221fc9f568d2d2"
+   "content_hash": "075562d48df7e082"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetCommandLineA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetCommandLineA",
-   "start_line": 428,
-   "end_line": 428,
+   "start_line": 408,
+   "end_line": 408,
    "type": "FUNCTION",
-   "content_hash": "fa23efc3704ecb32"
+   "content_hash": "f2bcd7c24219d7e5"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetCommandLineW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetCommandLineW",
-   "start_line": 429,
-   "end_line": 429,
+   "start_line": 409,
+   "end_line": 409,
    "type": "FUNCTION",
-   "content_hash": "c6f1b220205a8eb1"
+   "content_hash": "2246c305131138c5"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetModuleFileNameA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetModuleFileNameA",
-   "start_line": 430,
-   "end_line": 430,
+   "start_line": 410,
+   "end_line": 410,
    "type": "FUNCTION",
-   "content_hash": "1df16c72f29cb67d"
+   "content_hash": "5e9831df1d49af5a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetModuleFileNameW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetModuleFileNameW",
-   "start_line": 431,
-   "end_line": 431,
+   "start_line": 411,
+   "end_line": 411,
    "type": "FUNCTION",
-   "content_hash": "fb5c3592c2e5e579"
+   "content_hash": "f4aadab34483f316"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetStartupInfoA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetStartupInfoA",
-   "start_line": 432,
-   "end_line": 432,
+   "start_line": 412,
+   "end_line": 412,
    "type": "FUNCTION",
-   "content_hash": "ac6b51be00453ddc"
+   "content_hash": "fd90d75977b57d34"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetStartupInfoW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetStartupInfoW",
-   "start_line": 433,
-   "end_line": 433,
+   "start_line": 413,
+   "end_line": 413,
    "type": "FUNCTION",
-   "content_hash": "5134cc57dba9defd"
+   "content_hash": "348c65b492d4bf41"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FreeLibrary": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FreeLibrary",
-   "start_line": 434,
-   "end_line": 434,
+   "start_line": 414,
+   "end_line": 414,
    "type": "FUNCTION",
-   "content_hash": "a376adec1855ad9f"
+   "content_hash": "30ed1a4c6012e653"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetConsoleWindow": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetConsoleWindow",
-   "start_line": 435,
-   "end_line": 435,
+   "start_line": 415,
+   "end_line": 415,
    "type": "FUNCTION",
-   "content_hash": "161893ac6910a2d3"
+   "content_hash": "fb3e0a34f322662f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_AllocConsole": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_AllocConsole",
-   "start_line": 436,
-   "end_line": 436,
+   "start_line": 416,
+   "end_line": 416,
    "type": "FUNCTION",
-   "content_hash": "d4ff69bd9f1cded9"
+   "content_hash": "0864084f284428d2"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FreeConsole": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FreeConsole",
-   "start_line": 437,
-   "end_line": 437,
+   "start_line": 417,
+   "end_line": 417,
    "type": "FUNCTION",
-   "content_hash": "0dca31f2757ff399"
+   "content_hash": "cc9f81036305c86f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_AttachConsole": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_AttachConsole",
-   "start_line": 438,
-   "end_line": 438,
+   "start_line": 418,
+   "end_line": 418,
    "type": "FUNCTION",
-   "content_hash": "4f79c72fadc7935a"
+   "content_hash": "b7b45799a27ff1a9"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_IsDebuggerPresent": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_IsDebuggerPresent",
-   "start_line": 439,
-   "end_line": 439,
+   "start_line": 419,
+   "end_line": 419,
    "type": "FUNCTION",
-   "content_hash": "6616a07181d8e464"
+   "content_hash": "aac24143ab789087"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CheckRemoteDebuggerPresent": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CheckRemoteDebuggerPresent",
-   "start_line": 440,
-   "end_line": 440,
+   "start_line": 420,
+   "end_line": 420,
    "type": "FUNCTION",
-   "content_hash": "6a3357d429d124c3"
+   "content_hash": "a2d06aa700cf0e54"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_OutputDebugStringA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_OutputDebugStringA",
-   "start_line": 441,
-   "end_line": 441,
+   "start_line": 421,
+   "end_line": 421,
    "type": "FUNCTION",
-   "content_hash": "81dfe1578ed89d7a"
+   "content_hash": "e0771c299da5590c"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_OutputDebugStringW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_OutputDebugStringW",
-   "start_line": 442,
-   "end_line": 442,
+   "start_line": 422,
+   "end_line": 422,
    "type": "FUNCTION",
-   "content_hash": "89cba5460e279eb7"
+   "content_hash": "f5199a3580a0bd99"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_OpenProcess": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_OpenProcess",
-   "start_line": 443,
-   "end_line": 443,
+   "start_line": 423,
+   "end_line": 423,
    "type": "FUNCTION",
-   "content_hash": "f210103e4fc38517"
+   "content_hash": "cfb22342534bd4ec"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_OpenProcessToken": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_OpenProcessToken",
-   "start_line": 444,
-   "end_line": 444,
+   "start_line": 424,
+   "end_line": 424,
    "type": "FUNCTION",
-   "content_hash": "e0050be32225581d"
+   "content_hash": "60c41f98de181d0e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_DuplicateTokenEx": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_DuplicateTokenEx",
-   "start_line": 445,
-   "end_line": 445,
+   "start_line": 425,
+   "end_line": 425,
    "type": "FUNCTION",
-   "content_hash": "045cb353de35bd6d"
+   "content_hash": "37d0c58c2a4c0e6e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ImpersonateLoggedOnUser": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ImpersonateLoggedOnUser",
-   "start_line": 446,
-   "end_line": 446,
+   "start_line": 426,
+   "end_line": 426,
    "type": "FUNCTION",
-   "content_hash": "045dca01bff7b91d"
+   "content_hash": "4b4dc4c56013bd74"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RevertToSelf": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RevertToSelf",
-   "start_line": 447,
-   "end_line": 447,
+   "start_line": 427,
+   "end_line": 427,
    "type": "FUNCTION",
-   "content_hash": "7ef0a2a31ee0d3a7"
+   "content_hash": "52b1f8152da2d635"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_LookupPrivilegeValueA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_LookupPrivilegeValueA",
-   "start_line": 448,
-   "end_line": 448,
+   "start_line": 428,
+   "end_line": 428,
    "type": "FUNCTION",
-   "content_hash": "c5a0338a52defcfb"
+   "content_hash": "6c1ae1da3ca886d8"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_LookupPrivilegeValueW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_LookupPrivilegeValueW",
-   "start_line": 449,
-   "end_line": 449,
+   "start_line": 429,
+   "end_line": 429,
    "type": "FUNCTION",
-   "content_hash": "8f41fcdbf6a112ca"
+   "content_hash": "adb0a348081917ec"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_AdjustTokenPrivileges": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_AdjustTokenPrivileges",
-   "start_line": 450,
-   "end_line": 450,
+   "start_line": 430,
+   "end_line": 430,
    "type": "FUNCTION",
-   "content_hash": "f5934afeba4af0a8"
+   "content_hash": "73ec4168cd07cad9"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateProcessAsUserA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateProcessAsUserA",
-   "start_line": 451,
-   "end_line": 451,
+   "start_line": 431,
+   "end_line": 431,
    "type": "FUNCTION",
-   "content_hash": "d48d4bab0a6903c8"
+   "content_hash": "de804021492e544d"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateProcessAsUserW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateProcessAsUserW",
-   "start_line": 452,
-   "end_line": 452,
+   "start_line": 432,
+   "end_line": 432,
    "type": "FUNCTION",
-   "content_hash": "3bc2721c882a469d"
+   "content_hash": "2fcd2fc2748378d0"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegOpenKeyExA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegOpenKeyExA",
-   "start_line": 453,
-   "end_line": 453,
+   "start_line": 433,
+   "end_line": 433,
    "type": "FUNCTION",
-   "content_hash": "9588ccdb9e24f1d7"
+   "content_hash": "00fa00121577644b"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegOpenKeyExW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegOpenKeyExW",
-   "start_line": 454,
-   "end_line": 454,
+   "start_line": 434,
+   "end_line": 434,
    "type": "FUNCTION",
-   "content_hash": "49501e798d8077e9"
+   "content_hash": "4c9ad9e99b6e7d2c"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegCreateKeyExA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegCreateKeyExA",
-   "start_line": 455,
-   "end_line": 455,
+   "start_line": 435,
+   "end_line": 435,
    "type": "FUNCTION",
-   "content_hash": "13a3b5ab6e6cc6c2"
+   "content_hash": "fb3642b5bd178499"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegCreateKeyExW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegCreateKeyExW",
-   "start_line": 456,
-   "end_line": 456,
+   "start_line": 436,
+   "end_line": 436,
    "type": "FUNCTION",
-   "content_hash": "b24e265d130285ee"
+   "content_hash": "91f44f9718da6d75"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegSetValueExA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegSetValueExA",
-   "start_line": 457,
-   "end_line": 457,
+   "start_line": 437,
+   "end_line": 437,
    "type": "FUNCTION",
-   "content_hash": "f78823df77a72574"
+   "content_hash": "ef45077bedc3ec97"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegSetValueExW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegSetValueExW",
-   "start_line": 458,
-   "end_line": 458,
+   "start_line": 438,
+   "end_line": 438,
    "type": "FUNCTION",
-   "content_hash": "a0505e883795ea48"
+   "content_hash": "762ef4adeb806972"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegQueryValueExA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegQueryValueExA",
-   "start_line": 459,
-   "end_line": 459,
+   "start_line": 439,
+   "end_line": 439,
    "type": "FUNCTION",
-   "content_hash": "767c5a0480cadcf4"
+   "content_hash": "66bcac3c64bda6dd"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegQueryValueExW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegQueryValueExW",
-   "start_line": 460,
-   "end_line": 460,
+   "start_line": 440,
+   "end_line": 440,
    "type": "FUNCTION",
-   "content_hash": "e6a47cc7ba46cb60"
+   "content_hash": "dcdfc474d7721218"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegDeleteValueA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegDeleteValueA",
-   "start_line": 461,
-   "end_line": 461,
+   "start_line": 441,
+   "end_line": 441,
    "type": "FUNCTION",
-   "content_hash": "6547920c70f4ffc6"
+   "content_hash": "3640020199e3c8a1"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegDeleteValueW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegDeleteValueW",
-   "start_line": 462,
-   "end_line": 462,
+   "start_line": 442,
+   "end_line": 442,
    "type": "FUNCTION",
-   "content_hash": "e1e8e8a3ec895bbf"
+   "content_hash": "621af8f4af200b45"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegCloseKey": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegCloseKey",
-   "start_line": 463,
-   "end_line": 463,
+   "start_line": 443,
+   "end_line": 443,
    "type": "FUNCTION",
-   "content_hash": "32031495337864fc"
+   "content_hash": "96ef0611440658c6"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegEnumKeyExA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegEnumKeyExA",
-   "start_line": 464,
-   "end_line": 464,
+   "start_line": 444,
+   "end_line": 444,
    "type": "FUNCTION",
-   "content_hash": "a22d8f008586d0b2"
+   "content_hash": "5efd72dfea8e5229"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegEnumKeyExW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegEnumKeyExW",
-   "start_line": 465,
-   "end_line": 465,
+   "start_line": 445,
+   "end_line": 445,
    "type": "FUNCTION",
-   "content_hash": "58e51c723f7bbed5"
+   "content_hash": "d694191c1c3f35e7"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegEnumValueA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegEnumValueA",
-   "start_line": 466,
-   "end_line": 466,
+   "start_line": 446,
+   "end_line": 446,
    "type": "FUNCTION",
-   "content_hash": "fc743d07216a96f9"
+   "content_hash": "d5d209a3f6a44259"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_RegEnumValueW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_RegEnumValueW",
-   "start_line": 467,
-   "end_line": 467,
+   "start_line": 447,
+   "end_line": 447,
    "type": "FUNCTION",
-   "content_hash": "fa55f305ce6489fc"
+   "content_hash": "15b895c6a5293b57"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptAcquireContextA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptAcquireContextA",
-   "start_line": 468,
-   "end_line": 468,
+   "start_line": 448,
+   "end_line": 448,
    "type": "FUNCTION",
-   "content_hash": "466e55d8a7eafd73"
+   "content_hash": "b8e147cf7e140853"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptAcquireContextW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptAcquireContextW",
-   "start_line": 469,
-   "end_line": 469,
+   "start_line": 449,
+   "end_line": 449,
    "type": "FUNCTION",
-   "content_hash": "11ae2bddafb64ec8"
+   "content_hash": "7e339ac2b07c36d2"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptCreateHash": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptCreateHash",
-   "start_line": 470,
-   "end_line": 470,
+   "start_line": 450,
+   "end_line": 450,
    "type": "FUNCTION",
-   "content_hash": "908d0eeebf4a4924"
+   "content_hash": "979421072ef9704f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptHashData": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptHashData",
-   "start_line": 471,
-   "end_line": 471,
+   "start_line": 451,
+   "end_line": 451,
    "type": "FUNCTION",
-   "content_hash": "994ca48fa376ca72"
+   "content_hash": "7a36f2701bd31757"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptDeriveKey": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptDeriveKey",
-   "start_line": 472,
-   "end_line": 472,
+   "start_line": 452,
+   "end_line": 452,
    "type": "FUNCTION",
-   "content_hash": "e1687cb3e79916ce"
+   "content_hash": "557c4fd7b9daa577"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptEncrypt": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptEncrypt",
-   "start_line": 473,
-   "end_line": 473,
+   "start_line": 453,
+   "end_line": 453,
    "type": "FUNCTION",
-   "content_hash": "b46ed0b87b96f8b7"
+   "content_hash": "76c5f9543abb65c4"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptDecrypt": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptDecrypt",
-   "start_line": 474,
-   "end_line": 474,
+   "start_line": 454,
+   "end_line": 454,
    "type": "FUNCTION",
-   "content_hash": "95cdf8473172722c"
+   "content_hash": "3273007d50520882"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptReleaseContext": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptReleaseContext",
-   "start_line": 475,
-   "end_line": 475,
+   "start_line": 455,
+   "end_line": 455,
    "type": "FUNCTION",
-   "content_hash": "5802fbc4e5aa18aa"
+   "content_hash": "bff88409be86007d"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptDestroyHash": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptDestroyHash",
-   "start_line": 476,
-   "end_line": 476,
+   "start_line": 456,
+   "end_line": 456,
    "type": "FUNCTION",
-   "content_hash": "5ce32165f981079e"
+   "content_hash": "598379f10058d56f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptDestroyKey": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptDestroyKey",
-   "start_line": 477,
-   "end_line": 477,
+   "start_line": 457,
+   "end_line": 457,
    "type": "FUNCTION",
-   "content_hash": "94f4676aba5f5c22"
+   "content_hash": "f8e3abc90e1848dd"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CryptGenRandom": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CryptGenRandom",
-   "start_line": 478,
-   "end_line": 478,
+   "start_line": 458,
+   "end_line": 458,
    "type": "FUNCTION",
-   "content_hash": "af31d5dabaa69867"
+   "content_hash": "59b98b62bacc10f4"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CoInitializeEx": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CoInitializeEx",
-   "start_line": 479,
-   "end_line": 479,
+   "start_line": 459,
+   "end_line": 459,
    "type": "FUNCTION",
-   "content_hash": "6ce2d395f64e7091"
+   "content_hash": "79adcc2ac6b629fa"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CoUninitialize": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CoUninitialize",
-   "start_line": 480,
-   "end_line": 480,
+   "start_line": 460,
+   "end_line": 460,
    "type": "FUNCTION",
-   "content_hash": "b7f99c4ea853b3f9"
+   "content_hash": "60dd17339853aff6"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CoCreateInstance": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CoCreateInstance",
-   "start_line": 481,
-   "end_line": 481,
+   "start_line": 461,
+   "end_line": 461,
    "type": "FUNCTION",
-   "content_hash": "e67c566b75939c41"
+   "content_hash": "cd77298b7ccff1b7"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CoTaskMemFree": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CoTaskMemFree",
-   "start_line": 482,
-   "end_line": 482,
+   "start_line": 462,
+   "end_line": 462,
    "type": "FUNCTION",
-   "content_hash": "650cef28252f1554"
+   "content_hash": "74a52dabaaeb1ae0"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_IIDFromString": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_IIDFromString",
-   "start_line": 483,
-   "end_line": 483,
+   "start_line": 463,
+   "end_line": 463,
    "type": "FUNCTION",
-   "content_hash": "7c3c82e31556968e"
+   "content_hash": "1e5ff9f960e4be33"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_StringFromGUID2": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_StringFromGUID2",
-   "start_line": 484,
-   "end_line": 484,
+   "start_line": 464,
+   "end_line": 464,
    "type": "FUNCTION",
-   "content_hash": "eb33d79d7f03116c"
+   "content_hash": "36c7918632a2998b"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_VariantInit": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_VariantInit",
-   "start_line": 485,
-   "end_line": 485,
+   "start_line": 465,
+   "end_line": 465,
    "type": "FUNCTION",
-   "content_hash": "3901c26ce3231528"
+   "content_hash": "a42ba6e8c0c26381"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_VariantClear": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_VariantClear",
-   "start_line": 486,
-   "end_line": 486,
+   "start_line": 466,
+   "end_line": 466,
    "type": "FUNCTION",
-   "content_hash": "60ebfd7e0e7114b0"
+   "content_hash": "2cf7fb9e241a92f4"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_VariantChangeType": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_VariantChangeType",
-   "start_line": 487,
-   "end_line": 487,
+   "start_line": 467,
+   "end_line": 467,
    "type": "FUNCTION",
-   "content_hash": "4dfe2a5a1702085d"
+   "content_hash": "561596619c127fef"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SysAllocString": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SysAllocString",
-   "start_line": 488,
-   "end_line": 488,
+   "start_line": 468,
+   "end_line": 468,
    "type": "FUNCTION",
-   "content_hash": "c3b70a6f2230d2ad"
+   "content_hash": "1cc855fc9d35726f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SysFreeString": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SysFreeString",
-   "start_line": 489,
-   "end_line": 489,
+   "start_line": 469,
+   "end_line": 469,
    "type": "FUNCTION",
-   "content_hash": "b97d2246ee177b01"
+   "content_hash": "e186b2a05d4a446f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SysStringLen": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SysStringLen",
-   "start_line": 490,
-   "end_line": 490,
+   "start_line": 470,
+   "end_line": 470,
    "type": "FUNCTION",
-   "content_hash": "358c6807d4386d89"
+   "content_hash": "296d08bf47033617"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SHGetFolderPathA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SHGetFolderPathA",
-   "start_line": 491,
-   "end_line": 491,
+   "start_line": 471,
+   "end_line": 471,
    "type": "FUNCTION",
-   "content_hash": "d6d33bcffdce82b8"
+   "content_hash": "f0e3c720c7bfa6c6"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SHGetFolderPathW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SHGetFolderPathW",
-   "start_line": 492,
-   "end_line": 492,
+   "start_line": 472,
+   "end_line": 472,
    "type": "FUNCTION",
-   "content_hash": "e5a7821b1cf21682"
+   "content_hash": "71bc721edffac309"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SHGetKnownFolderPath": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SHGetKnownFolderPath",
-   "start_line": 493,
-   "end_line": 493,
+   "start_line": 473,
+   "end_line": 473,
    "type": "FUNCTION",
-   "content_hash": "9caabbf76b16c38f"
+   "content_hash": "c160a37ffbc78fdd"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_PathFileExistsA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_PathFileExistsA",
-   "start_line": 494,
-   "end_line": 494,
+   "start_line": 474,
+   "end_line": 474,
    "type": "FUNCTION",
-   "content_hash": "84a23079d1c34ec2"
+   "content_hash": "5682d96e44312fb8"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_PathFileExistsW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_PathFileExistsW",
-   "start_line": 495,
-   "end_line": 495,
+   "start_line": 475,
+   "end_line": 475,
    "type": "FUNCTION",
-   "content_hash": "f41d1f48211aeca5"
+   "content_hash": "a16e42778b70e118"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_PathCombineA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_PathCombineA",
-   "start_line": 496,
-   "end_line": 496,
+   "start_line": 476,
+   "end_line": 476,
    "type": "FUNCTION",
-   "content_hash": "a85fa3dcc23d8114"
+   "content_hash": "ab59c4f5eb700eda"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_PathCombineW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_PathCombineW",
-   "start_line": 497,
-   "end_line": 497,
+   "start_line": 477,
+   "end_line": 477,
    "type": "FUNCTION",
-   "content_hash": "8f7ce50a0bdf1c7c"
+   "content_hash": "bd497d099577e55f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetDesktopWindow": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetDesktopWindow",
-   "start_line": 498,
-   "end_line": 498,
+   "start_line": 478,
+   "end_line": 478,
    "type": "FUNCTION",
-   "content_hash": "7ce14a8ddd22586e"
+   "content_hash": "c8a7c86682628534"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetShellWindow": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetShellWindow",
-   "start_line": 499,
-   "end_line": 499,
+   "start_line": 479,
+   "end_line": 479,
    "type": "FUNCTION",
-   "content_hash": "01389d4ecfad7358"
+   "content_hash": "c9b38efc1584547f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FindWindowA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FindWindowA",
-   "start_line": 500,
-   "end_line": 500,
+   "start_line": 480,
+   "end_line": 480,
    "type": "FUNCTION",
-   "content_hash": "ad3980ac66d544bb"
+   "content_hash": "bba6481d38f1fb1e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_FindWindowW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_FindWindowW",
-   "start_line": 501,
-   "end_line": 501,
+   "start_line": 481,
+   "end_line": 481,
    "type": "FUNCTION",
-   "content_hash": "4906626de97c56ec"
+   "content_hash": "16ef96b0f7539722"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_EnumWindows": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_EnumWindows",
-   "start_line": 502,
-   "end_line": 502,
+   "start_line": 482,
+   "end_line": 482,
    "type": "FUNCTION",
-   "content_hash": "1321672d6c7c6fbe"
+   "content_hash": "4a8cfec63d1baa9e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetWindowTextA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetWindowTextA",
-   "start_line": 503,
-   "end_line": 503,
+   "start_line": 483,
+   "end_line": 483,
    "type": "FUNCTION",
-   "content_hash": "0d10de0413bde6a3"
+   "content_hash": "8f35135fe309ddec"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetWindowTextW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetWindowTextW",
-   "start_line": 504,
-   "end_line": 504,
+   "start_line": 484,
+   "end_line": 484,
    "type": "FUNCTION",
-   "content_hash": "2186035ed0fdab25"
+   "content_hash": "b27dbcf7dc181257"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetClassNameA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetClassNameA",
-   "start_line": 505,
-   "end_line": 505,
+   "start_line": 485,
+   "end_line": 485,
    "type": "FUNCTION",
-   "content_hash": "7a0a06377326717d"
+   "content_hash": "7e29f7f1449f66a3"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetClassNameW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetClassNameW",
-   "start_line": 506,
-   "end_line": 506,
+   "start_line": 486,
+   "end_line": 486,
    "type": "FUNCTION",
-   "content_hash": "2e5d6e2d83e4c887"
+   "content_hash": "5c570a6c1a46a29e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SendMessageA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SendMessageA",
-   "start_line": 507,
-   "end_line": 507,
+   "start_line": 487,
+   "end_line": 487,
    "type": "FUNCTION",
-   "content_hash": "8f920303771914d5"
+   "content_hash": "cd4bff0163975533"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SendMessageW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SendMessageW",
-   "start_line": 508,
-   "end_line": 508,
+   "start_line": 488,
+   "end_line": 488,
    "type": "FUNCTION",
-   "content_hash": "d20a9c305ceb7e96"
+   "content_hash": "c2cf9b946b0c719f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_EnumProcesses": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_EnumProcesses",
-   "start_line": 509,
-   "end_line": 509,
+   "start_line": 489,
+   "end_line": 489,
    "type": "FUNCTION",
-   "content_hash": "808d94db49750e0d"
+   "content_hash": "c407ddaef45007ed"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_EnumProcessModules": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_EnumProcessModules",
-   "start_line": 510,
-   "end_line": 510,
+   "start_line": 490,
+   "end_line": 490,
    "type": "FUNCTION",
-   "content_hash": "b4f392cdb4c2892a"
+   "content_hash": "78f09c663091ea99"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetModuleBaseNameA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetModuleBaseNameA",
-   "start_line": 511,
-   "end_line": 511,
+   "start_line": 491,
+   "end_line": 491,
    "type": "FUNCTION",
-   "content_hash": "896f9e67b006c412"
+   "content_hash": "ca82c863975fa1af"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetModuleBaseNameW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetModuleBaseNameW",
-   "start_line": 512,
-   "end_line": 512,
+   "start_line": 492,
+   "end_line": 492,
    "type": "FUNCTION",
-   "content_hash": "29a00ebc9fdb9361"
+   "content_hash": "dc917992ec629020"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_GetModuleInformation": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_GetModuleInformation",
-   "start_line": 513,
-   "end_line": 513,
+   "start_line": 493,
+   "end_line": 493,
    "type": "FUNCTION",
-   "content_hash": "c900a7f54a9bcd51"
+   "content_hash": "049727c986f76a3d"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WSASocketA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WSASocketA",
-   "start_line": 514,
-   "end_line": 514,
+   "start_line": 494,
+   "end_line": 494,
    "type": "FUNCTION",
-   "content_hash": "fe82873b37beceec"
+   "content_hash": "93c272d05dc6947a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WSASocketW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WSASocketW",
-   "start_line": 515,
-   "end_line": 515,
+   "start_line": 495,
+   "end_line": 495,
    "type": "FUNCTION",
-   "content_hash": "2fd722503ed30b2e"
+   "content_hash": "edf333e2e7478477"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WSAStartup": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WSAStartup",
-   "start_line": 516,
-   "end_line": 516,
+   "start_line": 496,
+   "end_line": 496,
    "type": "FUNCTION",
-   "content_hash": "a6580554755094a1"
+   "content_hash": "7fc3e8373163546a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WSACleanup": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WSACleanup",
-   "start_line": 517,
-   "end_line": 517,
+   "start_line": 497,
+   "end_line": 497,
    "type": "FUNCTION",
-   "content_hash": "a4b2967679824fa9"
+   "content_hash": "01541183e296204d"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_bind": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_bind",
-   "start_line": 518,
-   "end_line": 518,
+   "start_line": 498,
+   "end_line": 498,
    "type": "FUNCTION",
-   "content_hash": "2a08782fde31a39b"
+   "content_hash": "fa60bb4bb6ff4cba"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_listen": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_listen",
-   "start_line": 519,
-   "end_line": 519,
+   "start_line": 499,
+   "end_line": 499,
    "type": "FUNCTION",
-   "content_hash": "a1703e75c29f8dcc"
+   "content_hash": "21c15aacd7bf44c7"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_accept": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_accept",
-   "start_line": 520,
-   "end_line": 520,
+   "start_line": 500,
+   "end_line": 500,
    "type": "FUNCTION",
-   "content_hash": "fa01f6a21132a351"
+   "content_hash": "fe61c4fd339d3f7c"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_connect": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_connect",
-   "start_line": 521,
-   "end_line": 521,
+   "start_line": 501,
+   "end_line": 501,
    "type": "FUNCTION",
-   "content_hash": "e0ea93e06f1f8309"
+   "content_hash": "5bf15b43e485828a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_send": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_send",
-   "start_line": 522,
-   "end_line": 522,
+   "start_line": 502,
+   "end_line": 502,
    "type": "FUNCTION",
-   "content_hash": "4efa34d9d47e6a69"
+   "content_hash": "d0f440e6088536c8"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_recv": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_recv",
-   "start_line": 523,
-   "end_line": 523,
+   "start_line": 503,
+   "end_line": 503,
    "type": "FUNCTION",
-   "content_hash": "3f2e63a98f4f3498"
+   "content_hash": "5328d2a14f6e884b"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_closesocket": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_closesocket",
-   "start_line": 524,
-   "end_line": 524,
+   "start_line": 504,
+   "end_line": 504,
    "type": "FUNCTION",
-   "content_hash": "7cecc74666cfe0b5"
+   "content_hash": "63afacc97b0fdf3e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ioctlsocket": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ioctlsocket",
-   "start_line": 525,
-   "end_line": 525,
+   "start_line": 505,
+   "end_line": 505,
    "type": "FUNCTION",
-   "content_hash": "d1702b4c8ff775c0"
+   "content_hash": "3678a09aa2c56f78"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_gethostname": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_gethostname",
-   "start_line": 526,
-   "end_line": 526,
+   "start_line": 506,
+   "end_line": 506,
    "type": "FUNCTION",
-   "content_hash": "0a84e7fc9ee90fe2"
+   "content_hash": "00f9cf11d3b9424f"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_gethostbyname": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_gethostbyname",
-   "start_line": 527,
-   "end_line": 527,
+   "start_line": 507,
+   "end_line": 507,
    "type": "FUNCTION",
-   "content_hash": "b9909aba81e2be56"
+   "content_hash": "3a0e8a0404eb0fc8"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_getaddrinfo": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_getaddrinfo",
-   "start_line": 528,
-   "end_line": 528,
+   "start_line": 508,
+   "end_line": 508,
    "type": "FUNCTION",
-   "content_hash": "52e196ab6352bc2f"
+   "content_hash": "621fe8b5838ac161"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_freeaddrinfo": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_freeaddrinfo",
-   "start_line": 529,
-   "end_line": 529,
+   "start_line": 509,
+   "end_line": 509,
    "type": "FUNCTION",
-   "content_hash": "fefd970d4522d8af"
+   "content_hash": "8cac18e41c369cb5"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_htons": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_htons",
-   "start_line": 530,
-   "end_line": 530,
+   "start_line": 510,
+   "end_line": 510,
    "type": "FUNCTION",
-   "content_hash": "2d6e8ab6ba95816f"
+   "content_hash": "5b5c08c06c4e129c"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ntohs": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ntohs",
-   "start_line": 531,
-   "end_line": 531,
+   "start_line": 511,
+   "end_line": 511,
    "type": "FUNCTION",
-   "content_hash": "fc0653e873e927f3"
+   "content_hash": "35a2f91895592485"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_htonl": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_htonl",
-   "start_line": 532,
-   "end_line": 532,
+   "start_line": 512,
+   "end_line": 512,
    "type": "FUNCTION",
-   "content_hash": "cef043b5e5a1ca52"
+   "content_hash": "19e6cef3f6f59701"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_ntohl": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_ntohl",
-   "start_line": 533,
-   "end_line": 533,
+   "start_line": 513,
+   "end_line": 513,
    "type": "FUNCTION",
-   "content_hash": "80b001eb2d74561f"
+   "content_hash": "8d05d1499682ba4e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_NetUserEnum": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_NetUserEnum",
-   "start_line": 534,
-   "end_line": 534,
+   "start_line": 514,
+   "end_line": 514,
    "type": "FUNCTION",
-   "content_hash": "0c55d520d2ac30c1"
+   "content_hash": "9afde4978a8f555a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_NetLocalGroupEnum": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_NetLocalGroupEnum",
-   "start_line": 535,
-   "end_line": 535,
+   "start_line": 515,
+   "end_line": 515,
    "type": "FUNCTION",
-   "content_hash": "4ce55c0dce771fb0"
+   "content_hash": "bec72dd0dc9324d7"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_NetShareEnum": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_NetShareEnum",
-   "start_line": 536,
-   "end_line": 536,
+   "start_line": 516,
+   "end_line": 516,
    "type": "FUNCTION",
-   "content_hash": "996e8b869f122e10"
+   "content_hash": "f8ee09a5f574db05"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_NetWkstaUserEnum": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_NetWkstaUserEnum",
-   "start_line": 537,
-   "end_line": 537,
+   "start_line": 517,
+   "end_line": 517,
    "type": "FUNCTION",
-   "content_hash": "dc3e5bf6a0559c08"
+   "content_hash": "237ec73ca14aaf1d"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_NetSessionEnum": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_NetSessionEnum",
-   "start_line": 538,
-   "end_line": 538,
+   "start_line": 518,
+   "end_line": 518,
    "type": "FUNCTION",
-   "content_hash": "388a48d0ef51b8e1"
+   "content_hash": "11fd462d4f3f0be4"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_NetApiBufferFree": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_NetApiBufferFree",
-   "start_line": 539,
-   "end_line": 539,
+   "start_line": 519,
+   "end_line": 519,
    "type": "FUNCTION",
-   "content_hash": "bf6278c6c3494b83"
+   "content_hash": "e1abba86d9a3a293"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WNetOpenEnumA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WNetOpenEnumA",
-   "start_line": 540,
-   "end_line": 540,
+   "start_line": 520,
+   "end_line": 520,
    "type": "FUNCTION",
-   "content_hash": "0cb8d65e421d0745"
+   "content_hash": "a75c385224e7ca6d"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WNetOpenEnumW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WNetOpenEnumW",
-   "start_line": 541,
-   "end_line": 541,
+   "start_line": 521,
+   "end_line": 521,
    "type": "FUNCTION",
-   "content_hash": "f521a396a0d3833a"
+   "content_hash": "e5ef79012a952dca"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WNetEnumResourceA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WNetEnumResourceA",
-   "start_line": 542,
-   "end_line": 542,
+   "start_line": 522,
+   "end_line": 522,
    "type": "FUNCTION",
-   "content_hash": "b27a87fd1b650046"
+   "content_hash": "3e724c0bb1c4f262"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WNetEnumResourceW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WNetEnumResourceW",
-   "start_line": 543,
-   "end_line": 543,
+   "start_line": 523,
+   "end_line": 523,
    "type": "FUNCTION",
-   "content_hash": "eb93d086230623ec"
+   "content_hash": "250fef5339d64bf0"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_WNetCloseEnum": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_WNetCloseEnum",
-   "start_line": 544,
-   "end_line": 544,
+   "start_line": 524,
+   "end_line": 524,
    "type": "FUNCTION",
-   "content_hash": "de3b04b5855a5342"
+   "content_hash": "f148a6a0ef6417aa"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp__stricmp": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp__stricmp",
-   "start_line": 545,
-   "end_line": 545,
+   "start_line": 525,
+   "end_line": 525,
    "type": "FUNCTION",
-   "content_hash": "352ef47ab5398d25"
+   "content_hash": "8871acbe2dccfad7"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_Process32Next": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_Process32Next",
-   "start_line": 546,
-   "end_line": 546,
+   "start_line": 526,
+   "end_line": 526,
    "type": "FUNCTION",
-   "content_hash": "e49422e35268546c"
+   "content_hash": "0ec849d7b1b35248"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_IsWow64Process": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_IsWow64Process",
-   "start_line": 547,
-   "end_line": 547,
+   "start_line": 527,
+   "end_line": 527,
    "type": "FUNCTION",
-   "content_hash": "202fcb18c135d3be"
+   "content_hash": "99bb248c3f03ba88"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_Process32First": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_Process32First",
-   "start_line": 548,
-   "end_line": 548,
+   "start_line": 528,
+   "end_line": 528,
    "type": "FUNCTION",
-   "content_hash": "72f578bf71edeca9"
+   "content_hash": "ff4b05c549221f94"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateToolhelp32Snapshot": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateToolhelp32Snapshot",
-   "start_line": 549,
-   "end_line": 549,
+   "start_line": 529,
+   "end_line": 529,
    "type": "FUNCTION",
-   "content_hash": "00097e6392b27228"
+   "content_hash": "add25a15c7bb2fb9"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_select": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_select",
-   "start_line": 550,
-   "end_line": 550,
+   "start_line": 530,
+   "end_line": 530,
    "type": "FUNCTION",
-   "content_hash": "00114218f92ef159"
+   "content_hash": "192b3905d839ad4b"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateProcessA": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateProcessA",
-   "start_line": 551,
-   "end_line": 551,
+   "start_line": 531,
+   "end_line": 531,
    "type": "FUNCTION",
-   "content_hash": "b7f8113c60f503e6"
+   "content_hash": "3a51df5837d562df"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_CreateProcessW": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_CreateProcessW",
-   "start_line": 552,
-   "end_line": 552,
+   "start_line": 532,
+   "end_line": 532,
    "type": "FUNCTION",
-   "content_hash": "6c39cfe44bcf77c3"
+   "content_hash": "82f0cacb5a34a970"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_SuspendThread": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_SuspendThread",
-   "start_line": 553,
-   "end_line": 553,
+   "start_line": 533,
+   "end_line": 533,
    "type": "FUNCTION",
-   "content_hash": "ee9fd4421c604d32"
+   "content_hash": "1d89d6bbe0cf6910"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_OpenThread": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_OpenThread",
-   "start_line": 554,
-   "end_line": 554,
+   "start_line": 534,
+   "end_line": 534,
    "type": "FUNCTION",
-   "content_hash": "5ddc4187ab06fdb6"
+   "content_hash": "e67103e74ea1e29e"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_Thread32First": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_Thread32First",
-   "start_line": 555,
-   "end_line": 555,
+   "start_line": 535,
+   "end_line": 535,
    "type": "FUNCTION",
-   "content_hash": "90146f4b19830960"
+   "content_hash": "6100b3f2c6bc4e1a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_Thread32Next": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_Thread32Next",
-   "start_line": 556,
-   "end_line": 556,
+   "start_line": 536,
+   "end_line": 536,
    "type": "FUNCTION",
-   "content_hash": "d42ddc616ccb82c6"
+   "content_hash": "d70eca1fca69910a"
   },
   "COFFLoader3.c|COFFLoader3.c::__imp_NtQueryInformationThread": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__imp_NtQueryInformationThread",
-   "start_line": 557,
-   "end_line": 560,
+   "start_line": 537,
+   "end_line": 540,
    "type": "FUNCTION",
-   "content_hash": "904df46972c30b8a"
+   "content_hash": "735e98ea52e78576"
   },
   "COFFLoader3.c|COFFLoader3.c::g_pNtCreateFileUnhooked": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::g_pNtCreateFileUnhooked",
-   "start_line": 561,
-   "end_line": 561,
+   "start_line": 541,
+   "end_line": 541,
    "type": "FUNCTION",
-   "content_hash": "62421dc8dd43c32d"
+   "content_hash": "9b6fe22666d3da90"
   },
   "COFFLoader3.c|COFFLoader3.c::g_pNtWriteVirtualMemoryUnhooked": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::g_pNtWriteVirtualMemoryUnhooked",
-   "start_line": 562,
-   "end_line": 562,
+   "start_line": 542,
+   "end_line": 542,
    "type": "FUNCTION",
-   "content_hash": "7de7836f8994e624"
+   "content_hash": "e06904ad4533fe31"
   },
   "COFFLoader3.c|COFFLoader3.c::g_pNtProtectVirtualMemoryUnhooked": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::g_pNtProtectVirtualMemoryUnhooked",
-   "start_line": 563,
-   "end_line": 563,
+   "start_line": 543,
+   "end_line": 543,
    "type": "FUNCTION",
-   "content_hash": "d4d09d63f06de4c8"
+   "content_hash": "67af34e648d9ba4b"
   },
   "COFFLoader3.c|COFFLoader3.c::g_pNtResumeThreadUnhooked": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::g_pNtResumeThreadUnhooked",
-   "start_line": 564,
-   "end_line": 564,
+   "start_line": 544,
+   "end_line": 544,
    "type": "FUNCTION",
-   "content_hash": "0073f6729c2325f8"
+   "content_hash": "606e8f687bd72ea0"
   },
   "COFFLoader3.c|COFFLoader3.c::g_pNtCreateThreadExUnhooked": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::g_pNtCreateThreadExUnhooked",
-   "start_line": 565,
-   "end_line": 567,
+   "start_line": 545,
+   "end_line": 547,
    "type": "FUNCTION",
-   "content_hash": "46fbdbf903fc9186"
+   "content_hash": "f51a54ec096d96f6"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_ABSOLUTE": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_ABSOLUTE",
-   "start_line": 568,
-   "end_line": 568,
+   "start_line": 548,
+   "end_line": 548,
    "type": "FUNCTION",
-   "content_hash": "bc626aead77d65cd"
+   "content_hash": "68e7f1ef4b455ea7"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_ADDR64": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_ADDR64",
-   "start_line": 569,
-   "end_line": 569,
+   "start_line": 549,
+   "end_line": 549,
    "type": "FUNCTION",
-   "content_hash": "fd25de1e68159087"
+   "content_hash": "0f68bbb48c23e6fa"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_ADDR32": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_ADDR32",
-   "start_line": 570,
-   "end_line": 570,
+   "start_line": 550,
+   "end_line": 550,
    "type": "FUNCTION",
-   "content_hash": "c1f7f4640777557a"
+   "content_hash": "eb601a4878b10c51"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_ADDR32NB": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_ADDR32NB",
-   "start_line": 571,
-   "end_line": 571,
+   "start_line": 551,
+   "end_line": 551,
    "type": "FUNCTION",
-   "content_hash": "8d523d1ed83404bd"
+   "content_hash": "5d30c59e4ed707f9"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_REL32": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_REL32",
-   "start_line": 572,
-   "end_line": 572,
+   "start_line": 552,
+   "end_line": 552,
    "type": "FUNCTION",
-   "content_hash": "11dca3c638faeb24"
+   "content_hash": "355ad2c9c7b08808"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_REL32_1": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_REL32_1",
-   "start_line": 573,
-   "end_line": 573,
+   "start_line": 553,
+   "end_line": 553,
    "type": "FUNCTION",
-   "content_hash": "5e81fb0f9d262e32"
+   "content_hash": "058f01e71599fc96"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_REL32_2": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_REL32_2",
-   "start_line": 574,
-   "end_line": 574,
+   "start_line": 554,
+   "end_line": 554,
    "type": "FUNCTION",
-   "content_hash": "663461497af7fd10"
+   "content_hash": "432dd03173eb7900"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_REL32_3": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_REL32_3",
-   "start_line": 575,
-   "end_line": 575,
+   "start_line": 555,
+   "end_line": 555,
    "type": "FUNCTION",
-   "content_hash": "9404bf4eb0141da0"
+   "content_hash": "ca06c6a9e756fe58"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_REL32_4": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_REL32_4",
-   "start_line": 576,
-   "end_line": 576,
+   "start_line": 556,
+   "end_line": 556,
    "type": "FUNCTION",
-   "content_hash": "1a4d530fe418cc41"
+   "content_hash": "3778804329b806db"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_REL32_5": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_REL32_5",
-   "start_line": 577,
-   "end_line": 577,
+   "start_line": 557,
+   "end_line": 557,
    "type": "FUNCTION",
-   "content_hash": "32f8e0458e81a9d4"
+   "content_hash": "f492357ade23bc34"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_SECTION": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_SECTION",
-   "start_line": 578,
-   "end_line": 578,
+   "start_line": 558,
+   "end_line": 558,
    "type": "FUNCTION",
-   "content_hash": "082af3f6737b6085"
+   "content_hash": "9d6521f853820b8c"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_SECREL": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_SECREL",
-   "start_line": 579,
-   "end_line": 579,
+   "start_line": 559,
+   "end_line": 559,
    "type": "FUNCTION",
-   "content_hash": "deba3bf131cda36b"
+   "content_hash": "bbdf9de4e680da6a"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_SECREL7": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_SECREL7",
-   "start_line": 580,
-   "end_line": 580,
+   "start_line": 560,
+   "end_line": 560,
    "type": "FUNCTION",
-   "content_hash": "05c071581b9e3a08"
+   "content_hash": "e9534b5c8ed38a27"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_TOKEN": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_TOKEN",
-   "start_line": 581,
-   "end_line": 581,
+   "start_line": 561,
+   "end_line": 561,
    "type": "FUNCTION",
-   "content_hash": "a5a9a0af81fe90a2"
+   "content_hash": "2119ed73c6f2a5ad"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_SREL32": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_SREL32",
-   "start_line": 582,
-   "end_line": 582,
+   "start_line": 562,
+   "end_line": 562,
    "type": "FUNCTION",
-   "content_hash": "e5343ccad0226105"
+   "content_hash": "857c24a60d6003af"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_PAIR": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_PAIR",
-   "start_line": 583,
-   "end_line": 583,
+   "start_line": 563,
+   "end_line": 563,
    "type": "FUNCTION",
-   "content_hash": "f198d76e9f948d5d"
+   "content_hash": "919eefc8e04a84d2"
   },
   "COFFLoader3.c|COFFLoader3.c::IMAGE_REL_AMD64_SSPAN32": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::IMAGE_REL_AMD64_SSPAN32",
-   "start_line": 584,
-   "end_line": 585,
+   "start_line": 564,
+   "end_line": 565,
    "type": "FUNCTION",
-   "content_hash": "24efa748292a0585"
+   "content_hash": "3df8a54b8ce21cf0"
   },
   "COFFLoader3.c|COFFLoader3.c::COFFSection": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::COFFSection",
-   "start_line": 586,
-   "end_line": 598,
+   "start_line": 566,
+   "end_line": 578,
    "type": "CLASS",
-   "content_hash": "f6d0043b5b0cf2e6"
+   "content_hash": "c80a519ddfdf02a4"
   },
   "COFFLoader3.c|COFFLoader3.c::COFFRelocation": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::COFFRelocation",
-   "start_line": 599,
-   "end_line": 619,
+   "start_line": 579,
+   "end_line": 599,
    "type": "CLASS",
-   "content_hash": "84df26d18608ba1e"
+   "content_hash": "1f7e7acbedc960f6"
   },
   "COFFLoader3.c|COFFLoader3.c::COFFHeader": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::COFFHeader",
-   "start_line": 620,
-   "end_line": 631,
+   "start_line": 600,
+   "end_line": 611,
    "type": "CLASS",
-   "content_hash": "9f18a1f437a99b2b"
+   "content_hash": "ec3b59a04121b26b"
   },
   "COFFLoader3.c|COFFLoader3.c::djb2_hash": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::djb2_hash",
-   "start_line": 632,
-   "end_line": 641,
+   "start_line": 612,
+   "end_line": 621,
    "type": "FUNCTION",
-   "content_hash": "48c20c339c255c52"
+   "content_hash": "0155b195f98f7cc2"
   },
   "COFFLoader3.c|COFFLoader3.c::SymbolHash": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::SymbolHash",
-   "start_line": 642,
-   "end_line": 912,
+   "start_line": 622,
+   "end_line": 892,
    "type": "CLASS",
-   "content_hash": "d9cde89d1d540f1b"
+   "content_hash": "5c78bd1808ee232a"
   },
   "COFFLoader3.c|COFFLoader3.c::create_trampoline": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::create_trampoline",
-   "start_line": 913,
-   "end_line": 939,
+   "start_line": 893,
+   "end_line": 919,
    "type": "FUNCTION",
-   "content_hash": "2582642acc1a25d4"
+   "content_hash": "a4e19e7924a03424"
   },
   "COFFLoader3.c|COFFLoader3.c::handle_relocation": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::handle_relocation",
-   "start_line": 940,
-   "end_line": 1079,
+   "start_line": 920,
+   "end_line": 1059,
    "type": "FUNCTION",
-   "content_hash": "c1fafcd05b36cd65"
+   "content_hash": "c52084e6394db9af"
   },
   "COFFLoader3.c|COFFLoader3.c::get_symbol_name": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::get_symbol_name",
-   "start_line": 1080,
-   "end_line": 1102,
+   "start_line": 1060,
+   "end_line": 1082,
    "type": "FUNCTION",
-   "content_hash": "11d312c96d58852f"
+   "content_hash": "8363fec61895e467"
   },
   "COFFLoader3.c|COFFLoader3.c::__attribute__": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::__attribute__",
-   "start_line": 1103,
-   "end_line": 1111,
+   "start_line": 1083,
+   "end_line": 1091,
    "type": "FUNCTION",
-   "content_hash": "319daabc2c6eedaa"
+   "content_hash": "5494527a99f82fe1"
   },
   "COFFLoader3.c|COFFLoader3.c::RunCOFF": {
    "file_path": "COFFLoader3.c",
    "qualified_name": "COFFLoader3.c::RunCOFF",
-   "start_line": 1112,
-   "end_line": 1386,
+   "start_line": 1092,
+   "end_line": 1366,
    "type": "FUNCTION",
-   "content_hash": "ed9a1cefeadfa5b0"
+   "content_hash": "826a88d0dce6dc94"
   },
   "aes.c|aes.c::Nb": {
    "file_path": "aes.c",
@@ -5013,54 +5021,6 @@
    "type": "FUNCTION",
    "content_hash": "bc257364b787dccb"
   },
-  "bof/test/tel.py|bof/test/tel.py::get_machine_id": {
-   "file_path": "bof/test/tel.py",
-   "qualified_name": "bof/test/tel.py::get_machine_id",
-   "start_line": 8,
-   "end_line": 19,
-   "type": "FUNCTION",
-   "content_hash": "a790eec222991b54"
-  },
-  "bof/test/tel.py|bof/test/tel.py::get_version": {
-   "file_path": "bof/test/tel.py",
-   "qualified_name": "bof/test/tel.py::get_version",
-   "start_line": 20,
-   "end_line": 30,
-   "type": "FUNCTION",
-   "content_hash": "a5f72941a9b58070"
-  },
-  "bof/test/tel.py|bof/test/tel.py::to_numbers": {
-   "file_path": "bof/test/tel.py",
-   "qualified_name": "bof/test/tel.py::to_numbers",
-   "start_line": 31,
-   "end_line": 34,
-   "type": "FUNCTION",
-   "content_hash": "88b5fbc7ee4d6545"
-  },
-  "bof/test/tel.py|bof/test/tel.py::to_hex": {
-   "file_path": "bof/test/tel.py",
-   "qualified_name": "bof/test/tel.py::to_hex",
-   "start_line": 35,
-   "end_line": 38,
-   "type": "FUNCTION",
-   "content_hash": "cf87be6ba0b76401"
-  },
-  "bof/test/tel.py|bof/test/tel.py::decrypt_cookie": {
-   "file_path": "bof/test/tel.py",
-   "qualified_name": "bof/test/tel.py::decrypt_cookie",
-   "start_line": 39,
-   "end_line": 44,
-   "type": "FUNCTION",
-   "content_hash": "7e7c03eb41e70a4c"
-  },
-  "bof/test/tel.py|bof/test/tel.py::main": {
-   "file_path": "bof/test/tel.py",
-   "qualified_name": "bof/test/tel.py::main",
-   "start_line": 45,
-   "end_line": 91,
-   "type": "FUNCTION",
-   "content_hash": "b092576523feaa81"
-  },
   "bof/test/uacbypass.c|bof/test/uacbypass.c::__imp_LoadLibraryA": {
    "file_path": "bof/test/uacbypass.c",
    "qualified_name": "bof/test/uacbypass.c::__imp_LoadLibraryA",
@@ -6289,17 +6249,17 @@
    "file_path": "gen_beacon.sh",
    "qualified_name": "gen_beacon.sh::xor_string",
    "start_line": 194,
-   "end_line": 5978,
+   "end_line": 5976,
    "type": "FUNCTION",
    "content_hash": "90568042e107742b"
   },
   "gen_beacon.sh|gen_beacon.sh::crc32": {
    "file_path": "gen_beacon.sh",
    "qualified_name": "gen_beacon.sh::crc32",
-   "start_line": 5979,
-   "end_line": 6360,
+   "start_line": 5977,
+   "end_line": 6358,
    "type": "FUNCTION",
-   "content_hash": "5468011bc6ec8434"
+   "content_hash": "96b1ab035d91201a"
   },
   "gen_dll_rev.sh|gen_dll_rev.sh::usage": {
    "file_path": "gen_dll_rev.sh",
@@ -6372,12 +6332,156 @@
    "end_line": 596,
    "type": "FUNCTION",
    "content_hash": "7ab555d6d3179fff"
+  },
+  "stub.c|stub.c::C2_URL": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::C2_URL",
+   "start_line": 11,
+   "end_line": 11,
+   "type": "FUNCTION",
+   "content_hash": "f6289a5816f64fb2"
+  },
+  "stub.c|stub.c::XOR_KEY": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::XOR_KEY",
+   "start_line": 12,
+   "end_line": 12,
+   "type": "FUNCTION",
+   "content_hash": "9a33e78681d1103e"
+  },
+  "stub.c|stub.c::MAX_PAYLOAD_SIZE": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::MAX_PAYLOAD_SIZE",
+   "start_line": 13,
+   "end_line": 15,
+   "type": "FUNCTION",
+   "content_hash": "98f3edbccdb6442a"
+  },
+  "stub.c|stub.c::Length": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::Length",
+   "start_line": 31,
+   "end_line": 31,
+   "type": "FUNCTION",
+   "content_hash": "0e9756f0a38c50df"
+  },
+  "stub.c|stub.c::_UNICODE_STRING": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::_UNICODE_STRING",
+   "start_line": 16,
+   "end_line": 20,
+   "type": "CLASS",
+   "content_hash": "9498946fe5444041"
+  },
+  "stub.c|stub.c::InMemoryOrderLinks": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::InMemoryOrderLinks",
+   "start_line": 21,
+   "end_line": 21,
+   "type": "FUNCTION",
+   "content_hash": "246c2708e6c44215"
+  },
+  "stub.c|stub.c::_LDR_DATA_TABLE_ENTRY": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::_LDR_DATA_TABLE_ENTRY",
+   "start_line": 22,
+   "end_line": 30,
+   "type": "CLASS",
+   "content_hash": "5c713778f978aa3b"
+  },
+  "stub.c|stub.c::_PEB_LDR_DATA": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::_PEB_LDR_DATA",
+   "start_line": 32,
+   "end_line": 39,
+   "type": "CLASS",
+   "content_hash": "f5a74a671ff2b0fb"
+  },
+  "stub.c|stub.c::Reserved1": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::Reserved1",
+   "start_line": 40,
+   "end_line": 40,
+   "type": "FUNCTION",
+   "content_hash": "9b03dca86e6489da"
+  },
+  "stub.c|stub.c::_PEB": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::_PEB",
+   "start_line": 41,
+   "end_line": 50,
+   "type": "CLASS",
+   "content_hash": "95fad80081555b51"
+  },
+  "stub.c|stub.c::selfDestruct": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::selfDestruct",
+   "start_line": 51,
+   "end_line": 106,
+   "type": "FUNCTION",
+   "content_hash": "d56d5bf3d6c7e518"
+  },
+  "stub.c|stub.c::GetNtdllBase": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::GetNtdllBase",
+   "start_line": 107,
+   "end_line": 141,
+   "type": "FUNCTION",
+   "content_hash": "9c9b8ff0ce9b3751"
+  },
+  "stub.c|stub.c::anti_analysis": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::anti_analysis",
+   "start_line": 142,
+   "end_line": 167,
+   "type": "FUNCTION",
+   "content_hash": "2d6f9f14005005d6"
+  },
+  "stub.c|stub.c::xor_data": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::xor_data",
+   "start_line": 168,
+   "end_line": 173,
+   "type": "FUNCTION",
+   "content_hash": "e8fb202f4ac5ce4a"
+  },
+  "stub.c|stub.c::base64_decode": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::base64_decode",
+   "start_line": 174,
+   "end_line": 177,
+   "type": "FUNCTION",
+   "content_hash": "0ee0391adff1bb7b"
+  },
+  "stub.c|stub.c::CryptStringToBinaryA": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::CryptStringToBinaryA",
+   "start_line": 178,
+   "end_line": 181,
+   "type": "FUNCTION",
+   "content_hash": "d172b557e0a4f8db"
+  },
+  "stub.c|stub.c::download_payload": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::download_payload",
+   "start_line": 182,
+   "end_line": 227,
+   "type": "FUNCTION",
+   "content_hash": "d671a43e0fa5364f"
+  },
+  "stub.c|stub.c::main": {
+   "file_path": "stub.c",
+   "qualified_name": "stub.c::main",
+   "start_line": 228,
+   "end_line": 293,
+   "type": "FUNCTION",
+   "content_hash": "b9113a6e214c261e"
   }
  },
  "components": [
   {
    "name": "bof/test",
-   "description": "bof/test groups 24 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, BEACON_H. SymbolHash: === Tabla de símbolos por hash ===",
+   "description": "bof/test groups 24 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, BEACON_H. SymbolHash: === Symbol table by hash ===",
    "key_entities": [
     {
      "qualified_name": "bof/test/beacon.h::BEACON_H",
@@ -6433,6 +6537,7 @@
     {
      "file_path": "COFFLoader3.c",
      "methods": [
+      "COFFLoader3.c::COFF",
       "COFFLoader3.c::__imp_BeaconPrintf",
       "COFFLoader3.c::__imp_BeaconOutput",
       "COFFLoader3.c::__imp_BeaconDataParse",
@@ -7380,7 +7485,7 @@
     },
     {
      "name": "root",
-     "description": "root groups 2 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, __imp_BeaconPrintf. SymbolHash: === Tabla de símbolos por hash ===",
+     "description": "root groups 2 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, COFF. SymbolHash: === Symbol table by hash ===",
      "key_entities": [
       {
        "qualified_name": "beacon.h::BEACON_H",
@@ -7407,28 +7512,28 @@
        "reference_end_line": 44
       },
       {
+       "qualified_name": "COFFLoader3.c::COFF",
+       "reference_file": "COFFLoader3.c",
+       "reference_start_line": 6,
+       "reference_end_line": 311
+      },
+      {
        "qualified_name": "COFFLoader3.c::__imp_BeaconPrintf",
        "reference_file": "COFFLoader3.c",
-       "reference_start_line": 332,
-       "reference_end_line": 332
+       "reference_start_line": 312,
+       "reference_end_line": 312
       },
       {
        "qualified_name": "COFFLoader3.c::__imp_BeaconOutput",
        "reference_file": "COFFLoader3.c",
-       "reference_start_line": 333,
-       "reference_end_line": 333
+       "reference_start_line": 313,
+       "reference_end_line": 313
       },
       {
        "qualified_name": "COFFLoader3.c::__imp_BeaconDataParse",
        "reference_file": "COFFLoader3.c",
-       "reference_start_line": 334,
-       "reference_end_line": 334
-      },
-      {
-       "qualified_name": "COFFLoader3.c::__imp_BeaconDataInt",
-       "reference_file": "COFFLoader3.c",
-       "reference_start_line": 335,
-       "reference_end_line": 335
+       "reference_start_line": 314,
+       "reference_end_line": 314
       }
      ],
      "source_cluster_ids": [],
@@ -7436,6 +7541,7 @@
       {
        "file_path": "COFFLoader3.c",
        "methods": [
+        "COFFLoader3.c::COFF",
         "COFFLoader3.c::__imp_BeaconPrintf",
         "COFFLoader3.c::__imp_BeaconOutput",
         "COFFLoader3.c::__imp_BeaconDataParse",
@@ -7711,7 +7817,7 @@
      "components": [],
      "components_relations": [],
      "layer": "utility",
-     "symbol_count": 262,
+     "symbol_count": 263,
      "top_symbols": [
       {
        "n": "BEACON_H",
@@ -7726,7 +7832,7 @@
        "k": "macro"
       }
      ],
-     "top_symbols_more": 259
+     "top_symbols_more": 260
     }
    ],
    "components_relations": [
@@ -7745,7 +7851,7 @@
     }
    ],
    "layer": "testing",
-   "symbol_count": 449,
+   "symbol_count": 450,
    "top_symbols": [
     {
      "n": "BEACON_H",
@@ -7760,7 +7866,7 @@
      "k": "macro"
     }
    ],
-   "top_symbols_more": 346,
+   "top_symbols_more": 347,
    "hub": true
   },
   {

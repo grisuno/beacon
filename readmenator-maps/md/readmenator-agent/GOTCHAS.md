@@ -5,7 +5,7 @@
 These files have the most connections. Changes here have high blast radius.
 
 - `beacon.h` (score: 40.40, imported by 2 files)
-- `COFFLoader3.c` (score: 27.80)
+- `COFFLoader3.c` (score: 27.90)
 - `beacon.c` (score: 25.90)
 - `cJSON.c` (score: 14.50)
 - `cJSON.h` (score: 7.70, imported by 2 files)

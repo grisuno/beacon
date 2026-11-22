@@ -27,11 +27,11 @@ void go(char *args, int alen) {
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOA);
 
     if (!((BOOL(WINAPI*)(LPOSVERSIONINFOA))__imp_GetVersionExA)(&osvi)) {
-        BeaconPrintf(CALLBACK_ERROR, "GetVersionExA falló\n");
+        BeaconPrintf(CALLBACK_ERROR, "GetVersionExA failed\n");
         return;
     }
 
     BeaconPrintf(CALLBACK_OUTPUT, "[+] Windows Version: %lu.%lu (Build %lu)\n",
                  osvi.dwMajorVersion, osvi.dwMinorVersion, osvi.dwBuildNumber);
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] Descripción: %s\n", osvi.szCSDVersion);
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] Description: %s\n", osvi.szCSDVersion);
 }

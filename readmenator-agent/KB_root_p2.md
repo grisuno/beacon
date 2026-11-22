@@ -2,7 +2,7 @@
 Previous: [KB_root.md](KB_root.md)
 
 ## beacon.c
-- Doc: UTF8ToWide: Convierte UTF-8 a wide string
+- Doc: UTF8ToWide: Converts UTF-8 to wide string
 - Layer: utility
 - Language: c
 - Symbols:
@@ -389,7 +389,7 @@ NTSTATUS HellDescent(
 - Symbols:
   - `show_help` (function, line 46)
   - `xor_string` (function, line 194)
-  - `crc32` (function, line 5979)
+  - `crc32` (function, line 5977)
 
 ## gen_dll.sh
 - Doc: 1.
@@ -397,28 +397,28 @@ NTSTATUS HellDescent(
 - Language: sh
 
 ## gen_dll_rev.sh
-- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Doc: === DEFAULT CONFIGURATION ===
 - Layer: utility
 - Language: sh
 - Symbols:
   - `usage` (function, line 12)
 
 ## gen_dll_ss.sh
-- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Doc: === DEFAULT CONFIGURATION ===
 - Layer: utility
 - Language: sh
 - Symbols:
   - `usage` (function, line 10)
 
 ## gen_key.sh
-- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Doc: === DEFAULT CONFIGURATION ===
 - Layer: utility
 - Language: sh
 - Symbols:
   - `usage` (function, line 10)
 
 ## gen_module.sh
-- Doc: === gen_cmd_dll.sh v1.0 === Genera DLL y shellcode ofuscado para ejecutar un comando Uso...
+- Doc: === gen_cmd_dll.sh v1.0 === Generates DLL and obfuscated shellcode to run a command Usage...
 - Layer: utility
 - Language: sh
 - Symbols:
@@ -438,4 +438,29 @@ NTSTATUS HellDescent(
 ## install.sh
 - Layer: utility
 - Language: sh
+
+## stub.c
+- Doc: === CONFIGURATION ===  === STRUCTURES AND HELLGATE (for analysis evasion only) ===
+- Layer: testing
+- Language: c
+- Symbols:
+  - `_UNICODE_STRING` (struct, line 16)
+  - `_LDR_DATA_TABLE_ENTRY` (struct, line 22)
+  - `_PEB_LDR_DATA` (struct, line 32)
+  - `_PEB` (struct, line 41)
+  - `Length` (type_alias, line 16) `typedef struct _UNICODE_STRING { USHORT Length;`
+  - `InMemoryOrderLinks` (type_alias, line 21) `typedef struct _LDR_DATA_TABLE_ENTRY { LIST_ENTRY InMemoryOrderLinks;`
+  - `Length` (type_alias, line 31) `typedef struct _PEB_LDR_DATA { DWORD Length;`
+  - `Reserved1` (type_alias, line 40) `typedef struct _PEB { BYTE Reserved1[2];`
+  - `selfDestruct` (function, line 51) `void selfDestruct()`
+  - `GetNtdllBase` (function, line 107) `HMODULE GetNtdllBase()`
+  - `anti_analysis` (function, line 142) `BOOL anti_analysis()`
+  - `xor_data` (function, line 168) `void xor_data(unsigned char* data, size_t len)`
+  - `base64_decode` (function, line 174) `BOOL base64_decode(LPCSTR input, DWORD input_len, BYTE** output, DWORD* output_len)`
+  - `download_payload` (function, line 182) `HGLOBAL download_payload()`
+  - `main` (function, line 228) `int main()`
+  - `CryptStringToBinaryA` (function, line 178) `return *output && CryptStringToBinaryA(input, input_len, CRYPT_STRING_BASE64, *output, output_len, NULL, NULL);`
+  - `C2_URL` (macro, line 11) `#define C2_URL`
+  - `XOR_KEY` (macro, line 12) `#define XOR_KEY`
+  - `MAX_PAYLOAD_SIZE` (macro, line 13) `#define MAX_PAYLOAD_SIZE`
 

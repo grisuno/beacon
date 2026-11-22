@@ -1,6 +1,6 @@
 # Audit Report
 
-*Project: beacon | 2026-11-09 | offline, deterministic*
+*Project: beacon | 2026-11-22 | offline, deterministic*
 
 ## Confidence Trail
 
@@ -9,14 +9,14 @@ Every edge is tagged. Extracted means parsed from source; inferred means derived
 | Confidence | Count | Meaning |
 |------------|-------|---------|
 | EXTRACTED | 25 | Resolved import edges parsed from source |
-| EXTRACTED | 108 | Raw import statements (may include externals) |
+| EXTRACTED | 107 | Raw import statements (may include externals) |
 | INFERRED | 5 | Surprising cross-community bridges |
 | AMBIGUOUS | 0 | No uncertain edges are emitted by the static scanner |
 
 ## Coverage
 
 - Files: 41, communities: 3
-- File doc coverage: 12/41
+- File doc coverage: 13/41
 - Orphans (no docs at any level): 15
 - Layers detected: 2
 - Security findings: 0
@@ -31,7 +31,7 @@ Every edge is tagged. Extracted means parsed from source; inferred means derived
 
 ## Token Benchmark
 
-- Wiki index plus community pages estimate: ~8818 tokens (chars/4).
+- Wiki index plus community pages estimate: ~8821 tokens (chars/4).
 - Full re-read of every source file would cost strictly more on any non-trivial project; this wiki is the cheaper entry point.
 - Generation cost: $0, offline, no network calls.
 

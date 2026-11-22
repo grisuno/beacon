@@ -1,50 +1,50 @@
 #!/bin/bash
 
-# === CONFIGURACIÓN POR DEFECTO ===
+# === DEFAULT CONFIGURATION ===
 DEFAULT_FILENAME="screenshot.bmp"
 
-# Variables que pueden ser sobrescritas por argumentos
+# Variables that can be overridden by arguments
 FILENAME="$DEFAULT_FILENAME"
 
-# === USO ===
+# === USAGE ===
 usage() {
-    echo "Usage: $0 [--filename <nombre_archivo>]"
-    echo "Ejemplo:"
-    echo "  $0                        # Usa nombre por defecto: screenshot.bmp"
-    echo "  $0 --filename captura.bmp # Guarda como captura.bmp"
+    echo "Usage: $0 [--filename <filename>]"
+    echo "Example:"
+    echo "  $0                        # Use default name: screenshot.bmp"
+    echo "  $0 --filename captura.bmp # Save as captura.bmp"
     exit 1
 }
 
-# === PARSING DE ARGUMENTOS ===
+# === ARGUMENT PARSING ===
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --filename)
             if [[ -z "$2" || "$2" =~ ^-- ]]; then
-                echo "[-] Error: --filename requiere un valor."
+                echo "[-] Error: --filename requires a value."
                 usage
             fi
             FILENAME="$2"
             shift 2
             ;;
         *)
-            echo "Opción desconocida: $1"
+            echo "Unknown option: $1"
             usage
             ;;
     esac
 done
 
-# Validación mínima
+# Minimal validation
 if [[ -z "$FILENAME" ]]; then
-    echo "[-] Nombre de archivo no puede estar vacío."
+    echo "[-] Filename cannot be empty."
     exit 1
 fi
 
-# === GENERAR module.c ===
+# === GENERATE module.c ===
 cat > module.c << EOF
-// module.c - Captura de pantalla 100% API de Windows (sin CRT)
+// module.c - Screenshot capture 100% Windows API (no CRT)
 #include <windows.h>
 
-// Estructuras BMP (empaquetadas)
+// BMP structures (packed)
 #pragma pack(push, 1)
 typedef struct {
     unsigned short type;      // 'BM'
@@ -72,7 +72,7 @@ typedef struct {
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     if (ul_reason_for_call != DLL_PROCESS_ATTACH) return TRUE;
 
-    // Obtener contexto del escritorio
+    // Get desktop context
     HDC (WINAPI * pGetDC)(HWND) = (void*)GetProcAddress(GetModuleHandleA("user32.dll"), "GetDC");
     int (WINAPI * pGetSystemMetrics)(int) = (void*)GetProcAddress(GetModuleHandleA("user32.dll"), "GetSystemMetrics");
     HDC (WINAPI * pCreateCompatibleDC)(HDC) = (void*)GetProcAddress(GetModuleHandleA("gdi32.dll"), "CreateCompatibleDC");
@@ -89,21 +89,21 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         return FALSE;
     }
 
-    // Obtener métricas de pantalla
+    // Get screen metrics
     int width = pGetSystemMetrics(0);   // SM_CXSCREEN = 0
     int height = pGetSystemMetrics(1);  // SM_CYSCREEN = 1
 
     HDC hdcScreen = pGetDC(NULL);
     if (!hdcScreen) return FALSE;
 
-    // Crear contexto en memoria
+    // Create memory context
     HDC hdcMem = pCreateCompatibleDC(hdcScreen);
     if (!hdcMem) {
         pReleaseDC(NULL, hdcScreen);
         return FALSE;
     }
 
-    // Crear bitmap compatible
+    // Create compatible bitmap
     HBITMAP hBitmap = pCreateCompatibleBitmap(hdcScreen, width, height);
     if (!hBitmap) {
         pDeleteDC(hdcMem);
@@ -111,13 +111,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         return FALSE;
     }
 
-    // Seleccionar bitmap en el contexto
+    // Select bitmap into the context
     pSelectObject(hdcMem, hBitmap);
 
-    // Copiar pantalla al bitmap
+    // Copy screen to bitmap
     pBitBlt(hdcMem, 0, 0, width, height, hdcScreen, 0, 0, 0x00CC0020); // SRCCOPY
 
-    // Preparar para extraer píxeles
+    // Prepare to extract pixels
     BITMAPINFO bmi = {0};
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = width;
@@ -126,7 +126,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     bmi.bmiHeader.biBitCount = 24;
     bmi.bmiHeader.biCompression = 0;   // BI_RGB
 
-    // Reservar memoria sin CRT: usar HeapAlloc
+    // Allocate memory without CRT: use HeapAlloc
     HANDLE hHeap = GetProcessHeap();
     unsigned char* pixel_data = (unsigned char*)HeapAlloc(hHeap, 0, width * height * 3);
     if (!pixel_data) {
@@ -136,10 +136,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         return FALSE;
     }
 
-    // Obtener píxeles
+    // Get pixels
     pGetDIBits(hdcMem, hBitmap, 0, height, pixel_data, &bmi, 0); // DIB_RGB_COLORS = 0
 
-    // === GUARDAR COMO ARCHIVO BMP SIN CRT ===
+    // === SAVE AS BMP FILE WITHOUT CRT ===
     HANDLE (WINAPI * pCreateFileA)(LPCSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE) = 
         (void*)GetProcAddress(GetModuleHandleA("kernel32.dll"), "CreateFileA");
     BOOL (WINAPI * pWriteFile)(HANDLE, LPCVOID, DWORD, LPDWORD, LPOVERLAPPED) = 
@@ -164,11 +164,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         return FALSE;
     }
 
-    int row_padded = (width * 3 + 3) & (~3);  // Alineado a 4 bytes
+    int row_padded = (width * 3 + 3) & (~3);  // Aligned to 4 bytes
     int padding = row_padded - width * 3;
     int img_size = row_padded * height;
 
-    // Cabeceras BMP
+    // BMP headers
     BMPHeader bmp = {0};
     bmp.type = 0x4D42;  // 'BM'
     bmp.size = 54 + img_size;
@@ -187,7 +187,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     pWriteFile(hFile, &bmp, sizeof(BMPHeader), &written, NULL);
     pWriteFile(hFile, &dib, sizeof(DIBHeader), &written, NULL);
 
-    // Escribir píxeles (invertir orden de filas: BMP es bottom-up)
+    // Write pixels (reverse row order: BMP is bottom-up)
     for (int y = height - 1; y >= 0; y--) {
         for (int x = 0; x < width; x++) {
             int src_offset = (y * width + x) * 3;
@@ -198,7 +198,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
             pWriteFile(hFile, &g, 1, &written, NULL);
             pWriteFile(hFile, &r, 1, &written, NULL);
         }
-        // Añadir padding al final de cada fila
+        // Add padding at the end of each row
         for (int p = 0; p < padding; p++) {
             unsigned char zero = 0;
             pWriteFile(hFile, &zero, 1, &written, NULL);
@@ -207,7 +207,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
     pCloseHandle(hFile);
 
-    // Limpiar
+    // Cleanup
     HeapFree(hHeap, 0, pixel_data);
     pDeleteObject(hBitmap);
     pDeleteDC(hdcMem);
@@ -217,19 +217,19 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 }
 EOF
 
-echo "[+] Archivo C generado: module.c"
+echo "[+] C file generated: module.c"
 
-# === COMPILAR COMO DLL ===
-echo "[*] Compilando module.dll..."
+# === COMPILE AS DLL ===
+echo "[*] Compiling module.dll..."
 
 x86_64-w64-mingw32-gcc module.c -o module.dll -shared -s \
   -nostdlib -nodefaultlibs -lkernel32 -lgdi32 -luser32 \
   -e DllMain 2>/dev/null
 
 if [ $? -ne 0 ]; then
-    echo "[-] Error al compilar el código C."
+    echo "[-] Error compiling C code."
     exit 1
 fi
 
-echo "[+] Compilación exitosa: module.dll"
-echo "[*] Archivo de salida: $FILENAME"
+echo "[+] Compilation successful: module.dll"
+echo "[*] Output file: $FILENAME"

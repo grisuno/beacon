@@ -1,6 +1,6 @@
 # Documentation Coverage
 
-Overall: **23.0%** (96 of 417 public modules, types, and callables). Data members are excluded from the ratio.
+Overall: **23.5%** (103 of 438 public modules, types, and callables). Data members are excluded from the ratio.
 
 [Back to index](index.md)
 
@@ -8,11 +8,11 @@ Overall: **23.0%** (96 of 417 public modules, types, and callables). Data member
 
 | Kind | Documented | Total | Coverage |
 |---|---|---|---|
-| function | 62 | 207 | 30.0% |
-| macro | 17 | 145 | 11.7% |
-| module | 10 | 23 | 43.5% |
-| struct | 2 | 30 | 6.7% |
-| type_alias | 5 | 12 | 41.7% |
+| function | 66 | 216 | 30.6% |
+| macro | 18 | 148 | 12.2% |
+| module | 10 | 24 | 41.7% |
+| struct | 3 | 34 | 8.8% |
+| type_alias | 6 | 16 | 37.5% |
 
 ## By module (lowest first)
 
@@ -26,12 +26,13 @@ Overall: **23.0%** (96 of 417 public modules, types, and callables). Data member
 | [`bof/whoami/beacon.h`](modules/bof.whoami.beacon.h.md) | 0 | 4 | 0.0% |
 | [`install.sh`](modules/install.sh.md) | 0 | 1 | 0.0% |
 | [`cJSON.c`](modules/cJSON.c.md) | 6 | 89 | 6.7% |
-| [`COFFLoader3.c`](modules/COFFLoader3.c.md) | 3 | 25 | 12.0% |
+| [`COFFLoader3.c`](modules/COFFLoader3.c.md) | 3 | 26 | 11.5% |
 | [`generate_hashs`](modules/generate_hashs.py.md) | 1 | 5 | 20.0% |
 | [`cJSON.h`](modules/cJSON.h.md) | 8 | 37 | 21.6% |
 | [`aes.h`](modules/aes.h.md) | 5 | 21 | 23.8% |
 | [`beacon.c`](modules/beacon.c.md) | 49 | 177 | 27.7% |
 | [`aes.c`](modules/aes.c.md) | 8 | 24 | 33.3% |
+| [`stub.c`](modules/stub.c.md) | 7 | 20 | 35.0% |
 | [`bof/calc/calc.c`](modules/bof.calc.calc.c.md) | 1 | 2 | 50.0% |
 | [`bof/whoami/whoami.c`](modules/bof.whoami.whoami.c.md) | 1 | 2 | 50.0% |
 | [`gen_beacon.sh`](modules/gen_beacon.sh.md) | 3 | 4 | 75.0% |
@@ -46,31 +47,32 @@ Overall: **23.0%** (96 of 417 public modules, types, and callables). Data member
 
 DOC001 undocumented public item, DOC002 parameter not documented, DOC003 documented parameter missing from the signature (stale doc), DOC004 return value not documented, DOC005 raised exception not documented.
 
-DOC001: 321
+DOC001: 335
 
 - DOC001 `COFFLoader.h:1` module COFFLoader.h is not documented
 - DOC001 `COFFLoader3.c:1` module COFFLoader3.c is not documented
-- DOC001 `COFFLoader3.c:569` macro IMAGE_REL_AMD64_ADDR64 is not documented
-- DOC001 `COFFLoader3.c:570` macro IMAGE_REL_AMD64_ADDR32 is not documented
-- DOC001 `COFFLoader3.c:571` macro IMAGE_REL_AMD64_ADDR32NB is not documented
-- DOC001 `COFFLoader3.c:572` macro IMAGE_REL_AMD64_REL32 is not documented
-- DOC001 `COFFLoader3.c:573` macro IMAGE_REL_AMD64_REL32_1 is not documented
-- DOC001 `COFFLoader3.c:574` macro IMAGE_REL_AMD64_REL32_2 is not documented
-- DOC001 `COFFLoader3.c:575` macro IMAGE_REL_AMD64_REL32_3 is not documented
-- DOC001 `COFFLoader3.c:576` macro IMAGE_REL_AMD64_REL32_4 is not documented
-- DOC001 `COFFLoader3.c:577` macro IMAGE_REL_AMD64_REL32_5 is not documented
-- DOC001 `COFFLoader3.c:578` macro IMAGE_REL_AMD64_SECTION is not documented
-- DOC001 `COFFLoader3.c:579` macro IMAGE_REL_AMD64_SECREL is not documented
-- DOC001 `COFFLoader3.c:580` macro IMAGE_REL_AMD64_SECREL7 is not documented
-- DOC001 `COFFLoader3.c:581` macro IMAGE_REL_AMD64_TOKEN is not documented
-- DOC001 `COFFLoader3.c:582` macro IMAGE_REL_AMD64_SREL32 is not documented
-- DOC001 `COFFLoader3.c:583` macro IMAGE_REL_AMD64_PAIR is not documented
-- DOC001 `COFFLoader3.c:584` macro IMAGE_REL_AMD64_SSPAN32 is not documented
-- DOC001 `COFFLoader3.c:586` struct COFFSection is not documented
-- DOC001 `COFFLoader3.c:599` struct COFFRelocation is not documented
-- DOC001 `COFFLoader3.c:620` struct COFFHeader is not documented
-- DOC001 `COFFLoader3.c:940` function handle_relocation is not documented
-- DOC001 `COFFLoader3.c:1103` function __attribute__ is not documented
+- DOC001 `COFFLoader3.c:6` function COFF is not documented
+- DOC001 `COFFLoader3.c:549` macro IMAGE_REL_AMD64_ADDR64 is not documented
+- DOC001 `COFFLoader3.c:550` macro IMAGE_REL_AMD64_ADDR32 is not documented
+- DOC001 `COFFLoader3.c:551` macro IMAGE_REL_AMD64_ADDR32NB is not documented
+- DOC001 `COFFLoader3.c:552` macro IMAGE_REL_AMD64_REL32 is not documented
+- DOC001 `COFFLoader3.c:553` macro IMAGE_REL_AMD64_REL32_1 is not documented
+- DOC001 `COFFLoader3.c:554` macro IMAGE_REL_AMD64_REL32_2 is not documented
+- DOC001 `COFFLoader3.c:555` macro IMAGE_REL_AMD64_REL32_3 is not documented
+- DOC001 `COFFLoader3.c:556` macro IMAGE_REL_AMD64_REL32_4 is not documented
+- DOC001 `COFFLoader3.c:557` macro IMAGE_REL_AMD64_REL32_5 is not documented
+- DOC001 `COFFLoader3.c:558` macro IMAGE_REL_AMD64_SECTION is not documented
+- DOC001 `COFFLoader3.c:559` macro IMAGE_REL_AMD64_SECREL is not documented
+- DOC001 `COFFLoader3.c:560` macro IMAGE_REL_AMD64_SECREL7 is not documented
+- DOC001 `COFFLoader3.c:561` macro IMAGE_REL_AMD64_TOKEN is not documented
+- DOC001 `COFFLoader3.c:562` macro IMAGE_REL_AMD64_SREL32 is not documented
+- DOC001 `COFFLoader3.c:563` macro IMAGE_REL_AMD64_PAIR is not documented
+- DOC001 `COFFLoader3.c:564` macro IMAGE_REL_AMD64_SSPAN32 is not documented
+- DOC001 `COFFLoader3.c:566` struct COFFSection is not documented
+- DOC001 `COFFLoader3.c:579` struct COFFRelocation is not documented
+- DOC001 `COFFLoader3.c:600` struct COFFHeader is not documented
+- DOC001 `COFFLoader3.c:920` function handle_relocation is not documented
+- DOC001 `COFFLoader3.c:1083` function __attribute__ is not documented
 - DOC001 `aes.c:5` macro Nb is not documented
 - DOC001 `aes.c:9` macro KEYLEN_256 is not documented
 - DOC001 `aes.c:10` macro RKLENGTH is not documented
@@ -363,9 +365,22 @@ DOC001: 321
 - DOC001 `cJSON.h:132` macro CJSON_CIRCULAR_LIMIT is not documented
 - DOC001 `cJSON.h:249` function sensitive is not documented
 - DOC001 `cJSON.h:273` macro cJSON_SetNumberValue is not documented
-- DOC001 `gen_beacon.sh:5979` function crc32 is not documented
+- DOC001 `gen_beacon.sh:5977` function crc32 is not documented
 - DOC001 `generate_hashs.py:23` function djb2 is not documented
 - DOC001 `generate_hashs.py:223` function generate_coff_loader is not documented
 - DOC001 `generate_hashs.py:491` function generate_bof_test is not documented
 - DOC001 `generate_hashs.py:553` function main is not documented
 - DOC001 `install.sh:1` module install.sh is not documented
+- DOC001 `stub.c:1` module stub.c is not documented
+- DOC001 `stub.c:12` macro XOR_KEY is not documented
+- DOC001 `stub.c:13` macro MAX_PAYLOAD_SIZE is not documented
+- DOC001 `stub.c:21` type_alias InMemoryOrderLinks is not documented
+- DOC001 `stub.c:22` struct _LDR_DATA_TABLE_ENTRY is not documented
+- DOC001 `stub.c:31` type_alias Length is not documented
+- DOC001 `stub.c:32` struct _PEB_LDR_DATA is not documented
+- DOC001 `stub.c:40` type_alias Reserved1 is not documented
+- DOC001 `stub.c:41` struct _PEB is not documented
+- DOC001 `stub.c:51` function selfDestruct is not documented
+- DOC001 `stub.c:107` function GetNtdllBase is not documented
+- DOC001 `stub.c:174` function base64_decode is not documented
+- DOC001 `stub.c:178` function CryptStringToBinaryA is not documented

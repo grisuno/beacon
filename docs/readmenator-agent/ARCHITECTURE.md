@@ -53,7 +53,6 @@
 - `bof/test/scan_shellcode.c` -> tlhelp32.h, windows.h
 - `bof/test/shellcode.c` -> windows.h
 - `bof/test/sock5.c` -> windows.h
-- `bof/test/tel.py` -> Crypto.Cipher, datetime, json, re, requests, uuid
 - `bof/test/uacbypass.c` -> windows.h
 - `bof/test/upload.c` -> windows.h
 - `bof/test/vncrelay.c` -> windows.h, winsock2.h

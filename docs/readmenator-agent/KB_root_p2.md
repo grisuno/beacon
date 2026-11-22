@@ -372,28 +372,28 @@ NTSTATUS HellDescent(
 - Language: sh
 
 ## gen_dll_rev.sh
-- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Doc: === DEFAULT CONFIGURATION ===
 - Layer: utility
 - Language: sh
 - Symbols:
   - `usage` (function, line 12)
 
 ## gen_dll_ss.sh
-- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Doc: === DEFAULT CONFIGURATION ===
 - Layer: utility
 - Language: sh
 - Symbols:
   - `usage` (function, line 10)
 
 ## gen_key.sh
-- Doc: === CONFIGURACIÓN POR DEFECTO ===
+- Doc: === DEFAULT CONFIGURATION ===
 - Layer: utility
 - Language: sh
 - Symbols:
   - `usage` (function, line 10)
 
 ## gen_module.sh
-- Doc: === gen_cmd_dll.sh v1.0 === Genera DLL y shellcode ofuscado para ejecutar un comando Uso...
+- Doc: === gen_cmd_dll.sh v1.0 === Generates DLL and obfuscated shellcode to execute a command Usage...
 - Layer: utility
 - Language: sh
 - Symbols:

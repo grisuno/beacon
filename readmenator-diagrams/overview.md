@@ -13,7 +13,7 @@ Static architecture map of 41 files (c, h, py, sh) in 2 components: bof/test, ro
 
 ### bof/test (1)
 
-bof/test groups 24 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, BEACON_H. SymbolHash: === Tabla de símbolos por hash ===
+bof/test groups 24 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, BEACON_H. SymbolHash: === Symbol table by hash ===
 
 **Related Classes/Methods**:
 

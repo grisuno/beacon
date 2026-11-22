@@ -20,7 +20,6 @@
         "bof/test/scan_shellcode.c",
         "bof/test/shellcode.c",
         "bof/test/sock5.c",
-        "bof/test/tel.py",
         "bof/test/uacbypass.c",
         "bof/test/upload.c",
         "bof/test/vncrelay.c",
@@ -48,7 +47,6 @@
         "bof/test/persistsvc.c",
         "bof/test/scan_shellcode.c",
         "bof/test/sock5.c",
-        "bof/test/tel.py",
         "bof/test/uacbypass.c",
         "bof/test/upload.c",
         "bof/test/vncrelay.c",
@@ -196,7 +194,6 @@
         "bof/test/amsibypass.c",
         "bof/test/loadvnc.c",
         "bof/test/persistsvc.c",
-        "bof/test/tel.py",
         "bof/test/uacbypass.c",
         "bof/test/upload.c",
         "bof/test/vncrelay.c",
@@ -329,7 +326,6 @@
         "app.py",
         "beacon.c",
         "bof/test/sock5.c",
-        "bof/test/tel.py",
         "bof/test/winver.c",
         "cJSON.c",
         "cJSON.h"
@@ -557,7 +553,6 @@
         "aes.c",
         "aes.h",
         "beacon.c",
-        "bof/test/tel.py",
         "bof/test/upload.c"
       ],
       "mentions": 44,
@@ -641,8 +636,7 @@
         "COFFLoader3.c",
         "aes.c",
         "aes.h",
-        "beacon.c",
-        "bof/test/tel.py"
+        "beacon.c"
       ],
       "mentions": 9,
       "confidence": "EXTRACTED"
@@ -675,7 +669,6 @@
       "name": "por",
       "files": [
         "COFFLoader3.c",
-        "bof/test/tel.py",
         "gen_dll_rev.sh",
         "gen_dll_ss.sh",
         "gen_key.sh"
@@ -686,7 +679,6 @@
     {
       "name": "uso",
       "files": [
-        "bof/test/tel.py",
         "gen_dll_rev.sh",
         "gen_dll_ss.sh",
         "gen_key.sh",

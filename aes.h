@@ -15,7 +15,7 @@
   #define CTR 1
 #endif
 
-#define AES256 1  // ✅ Clave de 256 bits
+#define AES256 1  // 256-bit key
 
 #define AES_BLOCKLEN 16 // Block length in bytes - AES is 128b block only
 

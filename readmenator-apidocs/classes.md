@@ -6,11 +6,15 @@ Project types nested under the project types they derive from. External bases ar
 
 - [`_IO_STATUS_BLOCK`](modules/beacon.c.md#_io_status_block) struct in `beacon.c`
 - [`_LDR_DATA_TABLE_ENTRY`](modules/beacon.c.md#_ldr_data_table_entry) struct in `beacon.c`
+- [`_LDR_DATA_TABLE_ENTRY`](modules/stub.c.md#_ldr_data_table_entry) struct in `stub.c`
 - [`_OBJECT_ATTRIBUTES`](modules/beacon.c.md#_object_attributes) struct in `beacon.c`
 - [`_PEB`](modules/beacon.c.md#_peb) struct in `beacon.c`
+- [`_PEB`](modules/stub.c.md#_peb) struct in `stub.c`
 - [`_PEB_LDR_DATA`](modules/beacon.c.md#_peb_ldr_data) struct in `beacon.c`
+- [`_PEB_LDR_DATA`](modules/stub.c.md#_peb_ldr_data) struct in `stub.c`
 - [`_PROCESS_BASIC_INFORMATION`](modules/beacon.c.md#_process_basic_information) struct in `beacon.c`
 - [`_UNICODE_STRING`](modules/beacon.c.md#_unicode_string) struct in `beacon.c`
+- [`_UNICODE_STRING`](modules/stub.c.md#_unicode_string) struct in `stub.c`
 - [`AES_ctx`](modules/aes.h.md#aes_ctx) struct in `aes.h`
 - [`cJSON`](modules/cJSON.h.md#cjson) struct in `cJSON.h`
 - [`cJSON_bool`](modules/cJSON.h.md#cjson_bool) type_alias in `cJSON.h`
@@ -25,11 +29,14 @@ Project types nested under the project types they derive from. External bases ar
 - [`error`](modules/cJSON.c.md#error) struct in `cJSON.c`
 - [`ExitStatus`](modules/beacon.c.md#exitstatus) type_alias in `beacon.c`
 - [`InMemoryOrderLinks`](modules/beacon.c.md#inmemoryorderlinks) type_alias in `beacon.c`
+- [`InMemoryOrderLinks`](modules/stub.c.md#inmemoryorderlinks) type_alias in `stub.c`
 - [`internal_hooks`](modules/cJSON.c.md#internal_hooks) struct in `cJSON.c`
 - [`LazyDataType`](modules/beacon.c.md#lazydatatype) struct in `beacon.c`
 - [`Length`](modules/beacon.c.md#length) type_alias in `beacon.c`
 - [`Length`](modules/beacon.c.md#length) type_alias in `beacon.c`
 - [`Length`](modules/beacon.c.md#length) type_alias in `beacon.c`
+- [`Length`](modules/stub.c.md#length) type_alias in `stub.c`
+- [`Length`](modules/stub.c.md#length) type_alias in `stub.c`
 - [`NTSTATUS`](modules/beacon.c.md#ntstatus) type_alias in `beacon.c`
 - [`NTSTATUS`](modules/beacon.c.md#ntstatus) type_alias in `beacon.c`
 - [`NTSTATUS`](modules/beacon.c.md#ntstatus) type_alias in `beacon.c`
@@ -43,6 +50,7 @@ Project types nested under the project types they derive from. External bases ar
 - [`ProxySession`](modules/beacon.c.md#proxysession) struct in `beacon.c`
 - [`ProxyThreadData`](modules/beacon.c.md#proxythreaddata) struct in `beacon.c`
 - [`Reserved1`](modules/beacon.c.md#reserved1) type_alias in `beacon.c`
+- [`Reserved1`](modules/stub.c.md#reserved1) type_alias in `stub.c`
 - [`ReverseArgs`](modules/beacon.c.md#reverseargs) struct in `beacon.c`
 - [`Status`](modules/beacon.c.md#status) type_alias in `beacon.c`
 - [`SymbolHash`](modules/COFFLoader3.c.md#symbolhash) struct in `COFFLoader3.c`

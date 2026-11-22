@@ -4,9 +4,9 @@
 
 app.py
 
-Autor: Gris Iscomeback
-Correo electrónico: grisiscomeback[at]gmail[dot]com
-Fecha de creación: xx/xx/xxxx
-Licencia: AGPL v3
+Author: Gris Iscomeback
+Email: grisiscomeback[at]gmail[dot]com
+Creation date: xx/xx/xxxx
+License: AGPL v3
 
-Descripción:
+Description:

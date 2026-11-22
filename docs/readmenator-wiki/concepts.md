@@ -20,7 +20,6 @@ Second-brain semantic layer: nouns map atomically to file sets (EXTRACTED); verb
 | `output` | 9 | 37 | `COFFLoader3.c`, `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/test/beacon.h` |
 | `error` | 9 | 14 | `COFFLoader3.c`, `beacon.c`, `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h` |
 | `key` | 8 | 25 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/persist.c` |
-| `version` | 8 | 22 | `COFFLoader3.c`, `app.py`, `beacon.c`, `bof/test/sock5.c`, `bof/test/tel.py` |
 | `directos` | 8 | 9 | `bof/calc/calc.c`, `bof/test/amsibypass.c`, `bof/test/loadvnc.c`, `bof/test/persistsvc.c`, `bof/test/uacbypass.c` |
 | `buffer` | 7 | 94 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/sock5.c` |
 | `module` | 7 | 17 | `COFFLoader3.c`, `beacon.c`, `bof/calc/calc.c`, `bof/etw/etw.c`, `bof/test/disablelog.c` |
@@ -37,18 +36,14 @@ Second-brain semantic layer: nouns map atomically to file sets (EXTRACTED); verb
 | `lean` | 6 | 7 | `beacon.c`, `bof/test/disablelog.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c` |
 | `mean` | 6 | 7 | `beacon.c`, `bof/test/disablelog.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c` |
 | `win32` | 6 | 7 | `beacon.c`, `bof/test/disablelog.c`, `bof/test/persistsvc.c`, `bof/test/scan_shellcode.c`, `bof/test/sock5.c` |
-| `aes` | 5 | 44 | `aes.c`, `aes.h`, `beacon.c`, `bof/test/tel.py`, `bof/test/upload.c` |
 | `string` | 5 | 41 | `COFFLoader3.c`, `beacon.c`, `cJSON.c`, `cJSON.h`, `gen_beacon.sh` |
 | `value` | 5 | 22 | `COFFLoader3.c`, `aes.c`, `bof/test/persist.c`, `cJSON.c`, `cJSON.h` |
 | `process` | 5 | 20 | `COFFLoader3.c`, `beacon.c`, `bof/test/disablelog.c`, `bof/test/scan_shellcode.c`, `cJSON.c` |
 | `free` | 5 | 19 | `COFFLoader3.c`, `app.py`, `bof/test/sock5.c`, `bof/test/vncrelay.c`, `cJSON.c` |
 | `dll` | 5 | 14 | `beacon.c`, `gen_dll.sh`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_module.sh` |
 | `memory` | 5 | 12 | `COFFLoader3.c`, `beacon.c`, `bof/etw/etw.c`, `bof/test/amsibypass.c`, `bof/test/shellcode.c` |
-| `decrypt` | 5 | 9 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/tel.py` |
 | `encrypt` | 5 | 7 | `COFFLoader3.c`, `aes.c`, `aes.h`, `beacon.c`, `bof/test/upload.c` |
 | `datap` | 5 | 5 | `beacon.h`, `bof/calc/beacon.h`, `bof/etw/beacon.h`, `bof/test/beacon.h`, `bof/whoami/beacon.h` |
-| `por` | 5 | 5 | `COFFLoader3.c`, `bof/test/tel.py`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_key.sh` |
-| `uso` | 5 | 5 | `bof/test/tel.py`, `gen_dll_rev.sh`, `gen_dll_ss.sh`, `gen_key.sh`, `gen_module.sh` |
 | `char` | 4 | 22 | `COFFLoader3.c`, `beacon.c`, `bof/test/sock5.c`, `cJSON.c` |
 | `create` | 4 | 20 | `COFFLoader3.c`, `beacon.c`, `bof/test/scan_shellcode.c`, `cJSON.c` |
 | `defined` | 4 | 15 | `aes.c`, `aes.h`, `beacon.c`, `cJSON.c` |

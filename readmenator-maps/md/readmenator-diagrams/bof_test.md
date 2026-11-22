@@ -1,6 +1,6 @@
 # bof/test
 
-bof/test groups 24 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, BEACON_H. SymbolHash: === Tabla de símbolos por hash ===
+bof/test groups 24 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, BEACON_H. SymbolHash: === Symbol table by hash ===
 
 ```mermaid
 graph LR
@@ -15,7 +15,7 @@ bof groups 22 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERR
 
 ## root (1.2)
 
-root groups 2 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, __imp_BeaconPrintf. SymbolHash: === Tabla de símbolos por hash ===
+root groups 2 files (c, h) around BEACON_H, datap, CALLBACK_OUTPUT, CALLBACK_ERROR, COFF. SymbolHash: === Symbol table by hash ===
 
 **Files**:
 

@@ -116,7 +116,7 @@
 - Depends on: `bof/test/beacon.h`
 
 ## bof/test/scan_shellcode.c
-- Doc: __imp_LoadLibraryA: Símbolos
+- Doc: __imp_LoadLibraryA: Symbols
 - Layer: testing
 - Language: c
 - Symbols:
@@ -188,18 +188,6 @@
   - `MAX_PENDING_CONNECTIONS` (macro, line 77) `#define MAX_PENDING_CONNECTIONS`
   - `BUFFER_SIZE` (macro, line 78) `#define BUFFER_SIZE`
 - Depends on: `bof/test/beacon.h`
-
-## bof/test/tel.py
-- Doc: to_numbers: Simula la función toNumbers de JavaScript
-- Layer: testing
-- Language: py
-- Symbols:
-  - `get_machine_id` (function, line 8) `def get_machine_id()`
-  - `get_version` (function, line 20) `def get_version()`
-  - `to_numbers` (function, line 31) `def to_numbers(hex_str)`
-  - `to_hex` (function, line 35) `def to_hex(byte_list)`
-  - `decrypt_cookie` (function, line 39) `def decrypt_cookie(encrypted, key, iv)`
-  - `main` (function, line 45) `def main()`
 
 ## bof/test/uacbypass.c
 - Layer: testing

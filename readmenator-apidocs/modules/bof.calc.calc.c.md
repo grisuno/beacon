@@ -19,7 +19,7 @@
 void go(char *args, int alen)
 ```
 
-FUNCIÓN PRINCIPAL
+MAIN FUNCTION
 
 **Parameters**
 
@@ -42,7 +42,7 @@ FUNCIÓN PRINCIPAL
 extern FARPROC __imp_GetModuleHandleA;
 ```
 
-IMPORTS DIRECTOS
+DIRECT IMPORTS
 
 ---
 

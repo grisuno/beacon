@@ -2,12 +2,13 @@
 
 ## COFFLoader3.c
 Depends on: `beacon.h`
-- `djb2_hash` (function) `COFFLoader3.c:632` `static uint32_t djb2_hash(const char* str)` -- === Función hash DJB2 ===
-- `create_trampoline` (function) `COFFLoader3.c:913` `static void* create_trampoline(void* target)`
-- `handle_relocation` (function) `COFFLoader3.c:940` `BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target, 
+- `COFF` (function) `COFFLoader3.c:6` `* * PURPOSE * This module implements a custom COFF (Common Object File Format) loader * designed specifically for...`
+- `djb2_hash` (function) `COFFLoader3.c:612` `static uint32_t djb2_hash(const char* str)` -- === DJB2 hash function ===
+- `create_trampoline` (function) `COFFLoader3.c:893` `static void* create_trampoline(void* target)`
+- `handle_relocation` (function) `COFFLoader3.c:920` `BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target, 
                     ...`
-- `get_symbol_name` (function) `COFFLoader3.c:1080` `static char* get_symbol_name(COFFSymbol* s, char* strtab, uint32_t strtab_size)`
-- `RunCOFF` (function) `COFFLoader3.c:1112` `int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char*...` -- === Cargador COFF  ===
+- `get_symbol_name` (function) `COFFLoader3.c:1060` `static char* get_symbol_name(COFFSymbol* s, char* strtab, uint32_t strtab_size)`
+- `RunCOFF` (function) `COFFLoader3.c:1092` `int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char*...` -- === Cargador COFF  ===
 
 ## aes.c
 Depends on: `aes.h`
@@ -53,14 +54,14 @@ Imported by: `aes.c`, `beacon.c`
 
 ## beacon.c
 Depends on: `COFFLoader.h`, `aes.h`, `beacon.h`, `cJSON.h`
-- `UTF8ToWide` (function) `beacon.c:94` `WCHAR* UTF8ToWide(const char* utf8)` -- Convierte UTF-8 a wide string
-- `RVAtoRawOffset` (function) `beacon.c:334` `PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)` -- Convierte RVA a offset en archivo
+- `UTF8ToWide` (function) `beacon.c:94` `WCHAR* UTF8ToWide(const char* utf8)` -- Converts UTF-8 to wide string
+- `RVAtoRawOffset` (function) `beacon.c:334` `PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)` -- Converts RVA to file offset
 - `GetSyscallStub` (function) `beacon.c:340` `BOOL GetSyscallStub(
     LPCSTR functionName,
     PIMAGE_EXPORT_DIRECTORY exportDirectory,
-    LP...` -- Encuentra y copia el stub de la syscall
-- `InitializeUnhookedSyscalls` (function) `beacon.c:375` `BOOL InitializeUnhookedSyscalls()` -- Inicializa los stubs unhooked desde disco
-- `CreateFileA_Unhooked` (function) `beacon.c:557` `HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURI...` -- Wrapper para reemplazar CreateFileA con NtCreateFile unhooked
+    LP...` -- Finds and copies the syscall stub
+- `InitializeUnhookedSyscalls` (function) `beacon.c:375` `BOOL InitializeUnhookedSyscalls()` -- Initializes unhooked stubs from disk
+- `CreateFileA_Unhooked` (function) `beacon.c:557` `HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURI...` -- Wrapper to replace CreateFileA with unhooked NtCreateFile
 - `WriteProcessMemory_Unhooked` (function) `beacon.c:609` `BOOL WriteProcessMemory_Unhooked(
     HANDLE hProcess,
     LPVOID lpBaseAddress,
@@ -71,44 +72,44 @@ Depends on: `COFFLoader.h`, `aes.h`, `beacon.h`, `cJSON.h`
 - `GetSyscallNumber` (function) `beacon.c:967` `DWORD GetSyscallNumber(PVOID func_addr)`
 - `HellsGate` (function) `beacon.c:979` `DWORD HellsGate(DWORD ssn)`
 - `GetProcessIdByName` (function) `beacon.c:1000` `DWORD GetProcessIdByName(const char* processName)`
-- `ExecuteTLSCallbacks` (function) `beacon.c:1018` `void ExecuteTLSCallbacks(PVOID moduleBase)` -- === EJECUTAR TLS CALLBACKS ===
-- `MapModuleToMemory` (function) `beacon.c:1035` `PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)` -- === Carga un módulo en memoria ===
-- `ExecuteModule` (function) `beacon.c:1124` `BOOL ExecuteModule(PVOID moduleBase)` -- === Ejecuta el módulo (DllMain o EntryPoint) ===
-- `LoadModuleFromURL` (function) `beacon.c:1169` `BOOL LoadModuleFromURL(const char* url)` -- === Carga y ejecuta un módulo desde URL ===
+- `ExecuteTLSCallbacks` (function) `beacon.c:1018` `void ExecuteTLSCallbacks(PVOID moduleBase)` -- === EXECUTE TLS CALLBACKS ===
+- `MapModuleToMemory` (function) `beacon.c:1035` `PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)` -- === Load a module into memory ===
+- `ExecuteModule` (function) `beacon.c:1124` `BOOL ExecuteModule(PVOID moduleBase)` -- === Runs the module (DllMain or EntryPoint) ===
+- `LoadModuleFromURL` (function) `beacon.c:1169` `BOOL LoadModuleFromURL(const char* url)` -- === Load and run a module from URL ===
 - `xor_string` (function) `beacon.c:1213` `void xor_string(char* data, size_t len, char key)` -- === XOR ===
 - `anti_analysis` (function) `beacon.c:1220` `BOOL anti_analysis()` -- === ANTI-ANALYSIS ===
 - `load_lazyconf` (function) `beacon.c:1244` `BOOL load_lazyconf()`
 - `GetNtdllBase` (function) `beacon.c:1482` `HMODULE GetNtdllBase()`
 - `isVMByMAC` (function) `beacon.c:1530` `BOOL isVMByMAC()`
-- `extract_shellcode` (function) `beacon.c:1601` `int extract_shellcode(const char* input, size_t len, unsigned char** out)` -- === EXTRAER SHELLCODE ===
-- `hex_char_to_byte` (function) `beacon.c:1632` `BYTE hex_char_to_byte(char c)` -- Función para convertir hex a bytes
+- `extract_shellcode` (function) `beacon.c:1601` `int extract_shellcode(const char* input, size_t len, unsigned char** out)` -- === EXTRACT SHELLCODE ===
+- `hex_char_to_byte` (function) `beacon.c:1632` `BYTE hex_char_to_byte(char c)` -- Function to convert hex to bytes
 - `hex_to_bytes` (function) `beacon.c:1639` `void hex_to_bytes(const char* hex, BYTE* output, size_t len)`
 - `executeLoader` (function) `beacon.c:1646` `void executeLoader(void *arg)` -- === executeLoader ===
 - `ReverseShell` (function) `beacon.c:1702` `void __cdecl ReverseShell(void* arg)`
-- `ReadFromProcess` (function) `beacon.c:1811` `DWORD WINAPI ReadFromProcess(LPVOID lpParam)` -- === Hilo para leer salida del proceso (como en el ejemplo que funciona) ===
+- `ReadFromProcess` (function) `beacon.c:1811` `DWORD WINAPI ReadFromProcess(LPVOID lpParam)` -- === Thread to read process output (as in the working example) ===
 - `GetJitteredSleep` (function) `beacon.c:1885` `DWORD GetJitteredSleep(DWORD base_ms)`
 - `GetUsefulSoftware` (function) `beacon.c:1890` `char* GetUsefulSoftware()`
 - `base64_encode` (function) `beacon.c:1925` `char* base64_encode(const unsigned char* data, size_t inputLen)`
 - `base64_decode` (function) `beacon.c:1961` `char* base64_decode(const char* input, size_t* out_len)`
 - `discoverLocalHosts` (function) `beacon.c:1994` `void discoverLocalHosts()`
 - `initProxy` (function) `beacon.c:2051` `void initProxy()`
-- `relay_thread` (function) `beacon.c:2061` `void WINAPI relay_thread(void* param)` -- Función para reenviar datos entre sockets
-- `proxy_thread` (function) `beacon.c:2082` `void WINAPI proxy_thread(void* param)` -- Tu función proxy_thread usando tus estructuras exactas
-- `proxy_accept_thread` (function) `beacon.c:2153` `void WINAPI proxy_accept_thread(void* param)` -- Thread para aceptar conexiones
+- `relay_thread` (function) `beacon.c:2061` `void WINAPI relay_thread(void* param)` -- Function to relay data between sockets
+- `proxy_thread` (function) `beacon.c:2082` `void WINAPI proxy_thread(void* param)` -- Your proxy_thread function using your exact structures
+- `proxy_accept_thread` (function) `beacon.c:2153` `void WINAPI proxy_accept_thread(void* param)` -- Thread to accept connections
 - `startProxy` (function) `beacon.c:2221` `BOOL startProxy(const char* listenAddr, const char* targetAddr)`
 - `stopProxy` (function) `beacon.c:2308` `BOOL stopProxy(const char* listenAddr)`
 - `cleanupProxy` (function) `beacon.c:2360` `void cleanupProxy()`
-- `compressDirectory` (function) `beacon.c:2392` `BOOL compressDirectory(const char* dirPath)` -- Función simplificada para compresión de directorios
-- `getNetworkConfig` (function) `beacon.c:2402` `char* getNetworkConfig()` -- Para netconfig
+- `compressDirectory` (function) `beacon.c:2392` `BOOL compressDirectory(const char* dirPath)` -- Simplified function for directory compression
+- `getNetworkConfig` (function) `beacon.c:2402` `char* getNetworkConfig()` -- For netconfig
 - `UploadFileToC2` (function) `beacon.c:2406` `BOOL UploadFileToC2(const char* url, const char* filePath)`
-- `handleUpload` (function) `beacon.c:2578` `BOOL handleUpload(const char* command)` -- === handleUpload: envía del beacon al C2 ===
-- `FileExistsA` (function) `beacon.c:2599` `BOOL FileExistsA(const char* filePath)` -- Función para verificar si un archivo existe
+- `handleUpload` (function) `beacon.c:2578` `BOOL handleUpload(const char* command)` -- === handleUpload: sends from beacon to C2 ===
+- `FileExistsA` (function) `beacon.c:2599` `BOOL FileExistsA(const char* filePath)` -- Function to check whether a file exists
 - `selfDestruct` (function) `beacon.c:2604` `void selfDestruct()`
 - `stristr` (function) `beacon.c:2660` `char* stristr(const char* str, const char* pattern)`
 - `isSensitiveFile` (function) `beacon.c:2676` `int isSensitiveFile(const char* filename)`
 - `searchCredentials` (function) `beacon.c:2723` `char* searchCredentials(const char* basePath)`
-- `obfuscateFileTimestamp` (function) `beacon.c:2852` `BOOL obfuscateFileTimestamp(const char* filepath)` -- Ofusca los timestamps de un archivo
-- `obfuscateFileTimestamps` (function) `beacon.c:2882` `void obfuscateFileTimestamps(const char* basePath, int depth)` -- Recorre directorios buscando archivos sensibles
+- `obfuscateFileTimestamp` (function) `beacon.c:2852` `BOOL obfuscateFileTimestamp(const char* filepath)` -- Obfuscates a file's timestamps
+- `obfuscateFileTimestamps` (function) `beacon.c:2882` `void obfuscateFileTimestamps(const char* basePath, int depth)` -- Walk directories searching for sensitive files
 - `simulateLegitimateTraffic` (function) `beacon.c:2946` `void simulateLegitimateTraffic(void* param)`
 - `restartClient` (function) `beacon.c:3025` `void restartClient()`
 - `checkDebuggers` (function) `beacon.c:3066` `BOOL checkDebuggers()`
@@ -128,7 +129,7 @@ Depends on: `COFFLoader.h`, `aes.h`, `beacon.h`, `cJSON.h`
 - `get_remote_image_base` (function) `beacon.c:3446` `ULONGLONG get_remote_image_base(PROCESS_INFORMATION* pi, BOOL is_32bit_target)`
 - `update_remote_entry_point` (function) `beacon.c:3540` `BOOL update_remote_entry_point(PROCESS_INFORMATION* pi, ULONGLONG entry_point_va, BOOL is_32bit)`
 - `overWrite` (function) `beacon.c:3567` `void overWrite(const char* targetPath, const char* payloadPath)`
-- `cleanSystemLogs` (function) `beacon.c:3674` `void cleanSystemLogs()` -- Limpia el historial de comandos de la consola actual
+- `cleanSystemLogs` (function) `beacon.c:3674` `void cleanSystemLogs()` -- Clears the current console's command history
 - `ensurePersistence` (function) `beacon.c:3711` `BOOL ensurePersistence()`
 - `isSandboxEnvironment` (function) `beacon.c:3772` `BOOL isSandboxEnvironment()`
 - `tryPrivilegeEscalation` (function) `beacon.c:3842` `void tryPrivilegeEscalation()`
@@ -136,7 +137,7 @@ Depends on: `COFFLoader.h`, `aes.h`, `beacon.h`, `cJSON.h`
 - `scanPort` (function) `beacon.c:3900` `void scanPort(void* arg)`
 - `PortScanner` (function) `beacon.c:3951` `void PortScanner(char* targetIP, int* ports, int numPorts)`
 - `PortScannerWrapper` (function) `beacon.c:3996` `void PortScannerWrapper(void* arg)`
-- `EarlyBirdInject` (function) `beacon.c:4019` `BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)` -- === INYECCIÓN EARLY BIRD + SYSCALL ===
+- `EarlyBirdInject` (function) `beacon.c:4019` `BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)` -- === EARLY BIRD INJECTION + SYSCALL ===
 - `init_aes_context` (function) `beacon.c:4228` `PacketEncryptionContext* init_aes_context(const char* key_hex)`
 - `retry_http_request` (function) `beacon.c:4246` `char* retry_http_request(const char* url, const char* method, const char* data, int max_retries)`
 - `exec_cmd` (function) `beacon.c:4500` `char* exec_cmd(const char* cmd)`
@@ -148,12 +149,12 @@ Depends on: `COFFLoader.h`, `aes.h`, `beacon.h`, `cJSON.h`
 - `deleteFilesDelay` (function) `beacon.c:4865` `void deleteFilesDelay(void* arg)`
 - `executeCommand` (function) `beacon.c:4879` `void executeCommand(void* cmdPtr)`
 - `handleAtomic` (function) `beacon.c:4888` `void handleAtomic(char* command)`
-- `handleDownload` (function) `beacon.c:5011` `BOOL handleDownload(const char* command)` -- === handleDownload: descarga del C2 al beacon ===
+- `handleDownload` (function) `beacon.c:5011` `BOOL handleDownload(const char* command)` -- === handleDownload: downloads from C2 to beacon ===
 - `SerializeBeaconString` (function) `beacon.c:5031` `void SerializeBeaconString(char* buffer, int* offset, const char* str)`
 - `BeaconDataSerializeString` (function) `beacon.c:5040` `void BeaconDataSerializeString(char* buffer, int* offset, const char* str)`
 - `go` (function) `beacon.c:5048` `void go(unsigned char * bof_data, int bof_size, char * args, int args_len)`
 - `hooked` (function) `beacon.c:5065` `int hooked()`
-- `handleAdversary` (function) `beacon.c:5132` `void handleAdversary(char* command)` -- Función principal de manejo de comandos
+- `handleAdversary` (function) `beacon.c:5132` `void handleAdversary(char* command)` -- Main command handling function
 - `main` (function) `beacon.c:5633` `int main()`
 
 ## bof/calc/calc.c
@@ -283,20 +284,20 @@ Imported by: `beacon.c`, `cJSON.c`
 ## gen_beacon.sh
 - `show_help` (function) `gen_beacon.sh:46` -- === FUNCIONES ===
 - `xor_string` (function) `gen_beacon.sh:194` -- === XOR STRING TO BYTES ===
-- `crc32` (function) `gen_beacon.sh:5979`
+- `crc32` (function) `gen_beacon.sh:5977`
 
 ## gen_dll_rev.sh
-- `usage` (function) `gen_dll_rev.sh:12` -- === USO ===
+- `usage` (function) `gen_dll_rev.sh:12` -- === USAGE ===
 
 ## gen_dll_ss.sh
-- `usage` (function) `gen_dll_ss.sh:10` -- === USO ===
+- `usage` (function) `gen_dll_ss.sh:10` -- === USAGE ===
 
 ## gen_key.sh
-- `usage` (function) `gen_key.sh:10` -- === USO ===
+- `usage` (function) `gen_key.sh:10` -- === USAGE ===
 
 ## gen_module.sh
-- `show_help` (function) `gen_module.sh:18` -- === FUNCIONES ===
-- `xor_obfuscate` (function) `gen_module.sh:35` -- Función para ofuscar binario con XOR y convertir a \x..
+- `show_help` (function) `gen_module.sh:18` -- === FUNCTIONS ===
+- `xor_obfuscate` (function) `gen_module.sh:35` -- Function to obfuscate binary with XOR and convert to \x..
 
 ## generate_hashs.py
 - `djb2` (function) `generate_hashs.py:23` `def djb2(s)`

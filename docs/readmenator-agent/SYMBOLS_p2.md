@@ -121,12 +121,6 @@ Previous: [SYMBOLS.md](SYMBOLS.md)
 | `u_long` | type_alias | `bof/test/sock5.c:45` | `typedef unsigned long u_long;` |
 | `u_short` | type_alias | `bof/test/sock5.c:42` | `typedef unsigned short u_short;` |
 | `wVersion` | type_alias | `bof/test/sock5.c:16` | `typedef struct WSAData { WORD wVersion;` |
-| `decrypt_cookie` | function | `bof/test/tel.py:39` | `def decrypt_cookie(encrypted, key, iv)` |
-| `get_machine_id` | function | `bof/test/tel.py:8` | `def get_machine_id()` |
-| `get_version` | function | `bof/test/tel.py:20` | `def get_version()` |
-| `main` | function | `bof/test/tel.py:45` | `def main()` |
-| `to_hex` | function | `bof/test/tel.py:35` | `def to_hex(byte_list)` |
-| `to_numbers` | function | `bof/test/tel.py:31` | `def to_numbers(hex_str)` |
 | `__imp_CloseHandle` | variable | `bof/test/uacbypass.c:28` | `extern PVOID __imp_CloseHandle;` |
 | `__imp_GetProcAddress` | variable | `bof/test/uacbypass.c:27` | `extern PVOID __imp_GetProcAddress;` |
 | `__imp_LoadLibraryA` | variable | `bof/test/uacbypass.c:26` | `extern PVOID __imp_LoadLibraryA;` |

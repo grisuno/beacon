@@ -53,7 +53,6 @@
 - `bof/test/scan_shellcode.c` -> tlhelp32.h, windows.h
 - `bof/test/shellcode.c` -> windows.h
 - `bof/test/sock5.c` -> windows.h
-- `bof/test/tel.py` -> Crypto.Cipher, datetime, json, re, requests, uuid
 - `bof/test/uacbypass.c` -> windows.h
 - `bof/test/upload.c` -> windows.h
 - `bof/test/vncrelay.c` -> windows.h, winsock2.h
@@ -63,3 +62,4 @@
 - `cJSON.c` -> ctype.h, float.h, limits.h, locale.h, math.h, stdio.h, stdlib.h, string.h
 - `cJSON.h` -> stddef.h
 - `generate_hashs.py` -> argparse, pygments, pygments.formatters, pygments.lexers, re, sys
+- `stub.c` -> process.h, stdio.h, wincrypt.h, windows.h, wininet.h

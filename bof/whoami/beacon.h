@@ -28,7 +28,7 @@ typedef struct {
     int    length;
 } datap;
 
-// === Declaraciones Beacon ===
+// === Beacon declarations ===
 __declspec(dllexport) __attribute__((ms_abi)) void BeaconDataParse(datap * parser, char * buffer, int size);
 __declspec(dllexport) __attribute__((ms_abi)) char * BeaconDataPtr(datap * parser, int size);
 __declspec(dllexport) __attribute__((ms_abi)) int BeaconDataInt(datap * parser);

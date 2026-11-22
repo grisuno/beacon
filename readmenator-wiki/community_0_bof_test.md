@@ -4,7 +4,7 @@
 
 ## Definition
 
-This community groups 24 file(s) rooted at `bof/test` with dominant language c (cohesion 0.97). Central symbols: `AES256_KEYLEN`, `AES_BLOCKLEN`, `AES_CFB_encrypt_buffer`, `AES_ctx`, `AES_init_ctx`, `AF_INET`, `AddRoundKey`, `BEACON_H`. Core file: `COFFLoader3.c` (258 symbols).
+This community groups 24 file(s) rooted at `bof/test` with dominant language c (cohesion 0.97). Central symbols: `AES256_KEYLEN`, `AES_BLOCKLEN`, `AES_CFB_encrypt_buffer`, `AES_ctx`, `AES_init_ctx`, `AF_INET`, `AddRoundKey`, `BEACON_H`. Core file: `COFFLoader3.c` (259 symbols).
 
 ## Files
 
@@ -29,7 +29,7 @@ This community groups 24 file(s) rooted at `bof/test` with dominant language c (
 
 | File | Language | Layer | Symbols | Doc |
 |------|----------|-------|---------|-----|
-| `COFFLoader3.c` | c | utility | 258 | no |
+| `COFFLoader3.c` | c | utility | 259 | no |
 | `beacon.h` | h | utility | 4 | no |
 
 ### `bof/calc` (2 files)
@@ -58,36 +58,36 @@ This community groups 24 file(s) rooted at `bof/test` with dominant language c (
 
 ## Key Symbols
 
-- `__imp_BeaconPrintf` (variable, `COFFLoader3.c:332`) `extern PVOID __imp_BeaconPrintf;`
-- `__imp_BeaconOutput` (variable, `COFFLoader3.c:333`) `extern PVOID __imp_BeaconOutput;`
-- `__imp_BeaconDataParse` (variable, `COFFLoader3.c:334`) `extern PVOID __imp_BeaconDataParse;`
-- `__imp_BeaconDataInt` (variable, `COFFLoader3.c:335`) `extern PVOID __imp_BeaconDataInt;`
-- `__imp_BeaconDataShort` (variable, `COFFLoader3.c:336`) `extern PVOID __imp_BeaconDataShort;`
-- `__imp_BeaconDataExtract` (variable, `COFFLoader3.c:337`) `extern PVOID __imp_BeaconDataExtract;`
-- `__imp_LoadLibraryA` (variable, `COFFLoader3.c:338`) `extern PVOID __imp_LoadLibraryA;`
-- `__imp_LoadLibraryW` (variable, `COFFLoader3.c:339`) `extern PVOID __imp_LoadLibraryW;`
-- `__imp_GetModuleHandleA` (variable, `COFFLoader3.c:340`) `extern PVOID __imp_GetModuleHandleA;`
-- `__imp_GetModuleHandleW` (variable, `COFFLoader3.c:341`) `extern PVOID __imp_GetModuleHandleW;`
-- `__imp_GetProcAddress` (variable, `COFFLoader3.c:342`) `extern PVOID __imp_GetProcAddress;`
-- `__imp_GetLastError` (variable, `COFFLoader3.c:343`) `extern PVOID __imp_GetLastError;`
-- `__imp_CloseHandle` (variable, `COFFLoader3.c:344`) `extern PVOID __imp_CloseHandle;`
-- `__imp_ExitProcess` (variable, `COFFLoader3.c:345`) `extern PVOID __imp_ExitProcess;`
-- `__imp_ExitThread` (variable, `COFFLoader3.c:346`) `extern PVOID __imp_ExitThread;`
-- `__imp_Sleep` (variable, `COFFLoader3.c:347`) `extern PVOID __imp_Sleep;`
-- `__imp_CreateThread` (variable, `COFFLoader3.c:348`) `extern PVOID __imp_CreateThread;`
-- `__imp_GetCurrentProcess` (variable, `COFFLoader3.c:349`) `extern PVOID __imp_GetCurrentProcess;`
-- `__imp_GetCurrentProcessId` (variable, `COFFLoader3.c:350`) `extern PVOID __imp_GetCurrentProcessId;`
-- `__imp_GetCurrentThreadId` (variable, `COFFLoader3.c:351`) `extern PVOID __imp_GetCurrentThreadId;`
-- `__imp_GetTickCount` (variable, `COFFLoader3.c:352`) `extern PVOID __imp_GetTickCount;`
-- `__imp_GetTickCount64` (variable, `COFFLoader3.c:353`) `extern PVOID __imp_GetTickCount64;`
-- `__imp_CreateFileA` (variable, `COFFLoader3.c:354`) `extern PVOID __imp_CreateFileA;`
-- `__imp_CreateFileW` (variable, `COFFLoader3.c:355`) `extern PVOID __imp_CreateFileW;`
-- `__imp_ReadFile` (variable, `COFFLoader3.c:356`) `extern PVOID __imp_ReadFile;`
-- `__imp_WriteFile` (variable, `COFFLoader3.c:357`) `extern PVOID __imp_WriteFile;`
-- `__imp_SetFilePointer` (variable, `COFFLoader3.c:358`) `extern PVOID __imp_SetFilePointer;`
-- `__imp_SetEndOfFile` (variable, `COFFLoader3.c:359`) `extern PVOID __imp_SetEndOfFile;`
-- `__imp_DeleteFileA` (variable, `COFFLoader3.c:360`) `extern PVOID __imp_DeleteFileA;`
-- `__imp_DeleteFileW` (variable, `COFFLoader3.c:361`) `extern PVOID __imp_DeleteFileW;`
+- `COFF` (function, `COFFLoader3.c:6`) `* * PURPOSE * This module implements a custom COFF (Common Object File Format) l`
+- `__imp_BeaconPrintf` (variable, `COFFLoader3.c:312`) `extern PVOID __imp_BeaconPrintf;`
+- `__imp_BeaconOutput` (variable, `COFFLoader3.c:313`) `extern PVOID __imp_BeaconOutput;`
+- `__imp_BeaconDataParse` (variable, `COFFLoader3.c:314`) `extern PVOID __imp_BeaconDataParse;`
+- `__imp_BeaconDataInt` (variable, `COFFLoader3.c:315`) `extern PVOID __imp_BeaconDataInt;`
+- `__imp_BeaconDataShort` (variable, `COFFLoader3.c:316`) `extern PVOID __imp_BeaconDataShort;`
+- `__imp_BeaconDataExtract` (variable, `COFFLoader3.c:317`) `extern PVOID __imp_BeaconDataExtract;`
+- `__imp_LoadLibraryA` (variable, `COFFLoader3.c:318`) `extern PVOID __imp_LoadLibraryA;`
+- `__imp_LoadLibraryW` (variable, `COFFLoader3.c:319`) `extern PVOID __imp_LoadLibraryW;`
+- `__imp_GetModuleHandleA` (variable, `COFFLoader3.c:320`) `extern PVOID __imp_GetModuleHandleA;`
+- `__imp_GetModuleHandleW` (variable, `COFFLoader3.c:321`) `extern PVOID __imp_GetModuleHandleW;`
+- `__imp_GetProcAddress` (variable, `COFFLoader3.c:322`) `extern PVOID __imp_GetProcAddress;`
+- `__imp_GetLastError` (variable, `COFFLoader3.c:323`) `extern PVOID __imp_GetLastError;`
+- `__imp_CloseHandle` (variable, `COFFLoader3.c:324`) `extern PVOID __imp_CloseHandle;`
+- `__imp_ExitProcess` (variable, `COFFLoader3.c:325`) `extern PVOID __imp_ExitProcess;`
+- `__imp_ExitThread` (variable, `COFFLoader3.c:326`) `extern PVOID __imp_ExitThread;`
+- `__imp_Sleep` (variable, `COFFLoader3.c:327`) `extern PVOID __imp_Sleep;`
+- `__imp_CreateThread` (variable, `COFFLoader3.c:328`) `extern PVOID __imp_CreateThread;`
+- `__imp_GetCurrentProcess` (variable, `COFFLoader3.c:329`) `extern PVOID __imp_GetCurrentProcess;`
+- `__imp_GetCurrentProcessId` (variable, `COFFLoader3.c:330`) `extern PVOID __imp_GetCurrentProcessId;`
+- `__imp_GetCurrentThreadId` (variable, `COFFLoader3.c:331`) `extern PVOID __imp_GetCurrentThreadId;`
+- `__imp_GetTickCount` (variable, `COFFLoader3.c:332`) `extern PVOID __imp_GetTickCount;`
+- `__imp_GetTickCount64` (variable, `COFFLoader3.c:333`) `extern PVOID __imp_GetTickCount64;`
+- `__imp_CreateFileA` (variable, `COFFLoader3.c:334`) `extern PVOID __imp_CreateFileA;`
+- `__imp_CreateFileW` (variable, `COFFLoader3.c:335`) `extern PVOID __imp_CreateFileW;`
+- `__imp_ReadFile` (variable, `COFFLoader3.c:336`) `extern PVOID __imp_ReadFile;`
+- `__imp_WriteFile` (variable, `COFFLoader3.c:337`) `extern PVOID __imp_WriteFile;`
+- `__imp_SetFilePointer` (variable, `COFFLoader3.c:338`) `extern PVOID __imp_SetFilePointer;`
+- `__imp_SetEndOfFile` (variable, `COFFLoader3.c:339`) `extern PVOID __imp_SetEndOfFile;`
+- `__imp_DeleteFileA` (variable, `COFFLoader3.c:340`) `extern PVOID __imp_DeleteFileA;`
 
 ## Internal vs External Edges
 

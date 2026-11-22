@@ -26,7 +26,7 @@ def djb2(s: str) -> int:
         h = ((h << 5) + h) + ord(c)
     return h & 0xFFFFFFFF
 
-# ---------- LISTA DE FUNCIONES ----------
+# ---------- FUNCTION LIST ----------
 imp_functions = [
     "__imp_BeaconPrintf",
     "__imp_BeaconOutput",
@@ -75,7 +75,7 @@ imp_functions = [
     "__imp_wsprintfA",
 ]
 
-# ---------- FIRMAS (solo para BOF) ----------
+# ---------- SIGNATURES (BOF only) ----------
 function_signatures = {
     "__imp_BeaconPrintf": {
         "type": "void(WINAPI*)(int, const char*, ...)",
@@ -219,7 +219,7 @@ function_signatures = {
     },
 }
 
-# ---------- GENERADOR DE COFFLoader3.c ----------
+# ---------- COFFLoader3.c GENERATOR ----------
 def generate_coff_loader():
     lines = []
     lines.append("""#include <windows.h>
@@ -229,11 +229,11 @@ def generate_coff_loader():
 #include <stdint.h>
 #include "beacon.h"
 
-// === Estructuras COFF mínimas ===
+// === Minimal COFF structures ===
 #pragma pack(push, 1)
 """)
 
-    # Pragmas e imp_*
+    # Pragmas and imp_*
     for f in imp_functions:
         if f.startswith("__imp_"):
             lines.append(f'#pragma comment(linker, "/INCLUDE:{f}")')
@@ -244,7 +244,7 @@ def generate_coff_loader():
             lines.append(f"extern PVOID {f};")
     lines.append("")
 
-    # Definiciones de relocaciones x64
+    # x64 relocation definitions
     lines.append("""
 #define IMAGE_REL_AMD64_ABSOLUTE    0x0000
 #define IMAGE_REL_AMD64_ADDR64      0x0001
@@ -322,11 +322,11 @@ typedef struct {
     void* ptr;
 } SymbolHash;
 
-// === TABLA DE SÍMBOLOS (AUTO-GENERADA) ===
+// === SYMBOL TABLE (AUTO-GENERATED) ===
 static SymbolHash g_symbol_table[] = {
 """)
 
-    # Agregar símbolos Beacon
+    # Add Beacon symbols
     beacon_syms = [
         ("BeaconDataParse", "BeaconDataParse"),
         ("BeaconDataInt", "BeaconDataInt"),
@@ -339,12 +339,12 @@ static SymbolHash g_symbol_table[] = {
         h = djb2(name)
         lines.append(f'    {{ 0x{h:08X}, {sym} }},')
 
-    # Agregar __imp_*
+    # Add __imp_*
     for f in imp_functions:
         h = djb2(f)
         lines.append(f'    {{ 0x{h:08X}, (void*)&{f} }},')
 
-    # Agregar alias sin __imp_
+    # Add aliases without __imp_
     for f in imp_functions:
         if f.startswith("__imp_"):
             alias = f.replace("__imp_", "")
@@ -354,7 +354,7 @@ static SymbolHash g_symbol_table[] = {
     lines.append("    {0, NULL}")
     lines.append("};")
 
-    # Resto del loader (truncado por brevedad, pero incluye handle_relocation, RunCOFF, etc.)
+    # Rest of the loader (truncated for brevity, but includes handle_relocation, RunCOFF, etc.)
     lines.append("""
 // === TRAMPOLINES ===
 static void* create_trampoline(void* target) {
@@ -487,14 +487,14 @@ cleanup:
 """)
     return "\n".join(lines)
 
-# ---------- GENERADOR DE bof_test.c ----------
+# ---------- bof_test.c GENERATOR ----------
 def generate_bof_test():
     lines = []
     lines.append("""#include <windows.h>
 #include "beacon.h"
 
 // ================================
-// IMPORTS DIRECTOS (AUTO-GENERADO)
+// DIRECT IMPORTS (AUTO-GENERATED)
 // ================================
 """)
     for f in imp_functions:
@@ -503,15 +503,15 @@ def generate_bof_test():
 
     lines.append("""
 // ================================
-// FUNCIÓN PRINCIPAL
+// MAIN FUNCTION
 // ================================
 void go(char *args, int alen) {
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] ⚡ Ejecutando BOF de prueba...\\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Running test BOF...\\n");
 
-    // Ejemplo: lanzar calc.exe
+    // Example: launch calc.exe
     HMODULE hKernel32 = (HMODULE)((HMODULE(WINAPI*)(LPCSTR))__imp_GetModuleHandleA)("kernel32.dll");
     if (!hKernel32) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ kernel32.dll no encontrada\\n");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] kernel32.dll not found\\n");
         return;
     }
 
@@ -520,7 +520,7 @@ void go(char *args, int alen) {
 
     FARPROC pCreateProcessA = pGetProcAddress(hKernel32, "CreateProcessA");
     if (!pCreateProcessA) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF] ❌ CreateProcessA no disponible\\n");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF] CreateProcessA not available\\n");
         return;
     }
 
@@ -534,17 +534,17 @@ void go(char *args, int alen) {
     si.cb = sizeof(si);
 
     if (CreateProcessA(NULL, "calc.exe", NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-        BeaconPrintf(CALLBACK_OUTPUT, "[BOF] ✅ Calculadora lanzada!\\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Calculator launched!\\n");
 
         typedef BOOL (WINAPI *CloseHandle_t)(HANDLE);
         CloseHandle_t pCloseHandle = (CloseHandle_t)__imp_CloseHandle;
         pCloseHandle(pi.hProcess);
         pCloseHandle(pi.hThread);
     } else {
-        BeaconPrintf(CALLBACK_OUTPUT, "[BOF] ❌ No se pudo lanzar calc.exe\\n");
+        BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Failed to launch calc.exe\\n");
     }
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] ✅ Finalizado\\n");
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Finished\\n");
 }
 """)
     return "\n".join(lines)
@@ -552,10 +552,10 @@ void go(char *args, int alen) {
 # ---------- MAIN ----------
 def main():
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("-o", "--output", help="Base name for output files (e.g., '-o test' → test_COFFLoader3.c, test_bof_test.c)")
-    parser.add_argument("--loader-includes", action="store_true", help="Genera symbols_loader.inc")
-    parser.add_argument("--bof-template", action="store_true", help="Genera template_bof.inc")
-    parser.add_argument("--check-orphans", action="store_true", help="Revisa símbolos huérfanos en COFFLoader.c")
+    parser.add_argument("-o", "--output", help="Base name for output files (e.g., '-o test' -> test_COFFLoader3.c, test_bof_test.c)")
+    parser.add_argument("--loader-includes", action="store_true", help="Generates symbols_loader.inc")
+    parser.add_argument("--bof-template", action="store_true", help="Generates template_bof.inc")
+    parser.add_argument("--check-orphans", action="store_true", help="Checks orphan symbols in COFFLoader.c")
 
     args = parser.parse_args()
 

@@ -17,7 +17,7 @@ flowchart TB
     end
     subgraph lane_1["Tier 2 - foundation"]
         direction LR
-        n_c0["bof/test<br/>8 files, 290 symbols<br/>Core / utility"]:::default
+        n_c0["bof/test<br/>8 files, 291 symbols<br/>Core / utility"]:::default
     end
     n_c1 -->|"1"| n_c0
     n_d__root_ ~~~ n_c0
@@ -41,6 +41,39 @@ flowchart LR
     n_cJSON_c__CJSON_PUBLIC["cJSON.CJSON_PUBLIC<br/>cJSON.c:95"]:::entry
     n_cJSON_c__CJSON_PUBLIC -.->|"recursion"| n_cJSON_c__CJSON_PUBLIC
     linkStyle 0 stroke:#f87171,stroke-width:2px;
+```
+
+### `stub.main`
+
+`stub.c:228`, score 11: `main` in a compiled-language file; entry-style name `main`.
+
+Call tree:
+
+```mermaid
+flowchart LR
+    classDef default fill:#111827,stroke:#38bdf8,color:#e5e7eb;
+    classDef entry fill:#0e7490,stroke:#22d3ee,color:#ecfeff,stroke-width:2px;
+    n_stub_c__main["stub.main<br/>=== MAIN ===<br/>stub.c:228"]:::entry
+    n_stub_c__anti_analysis["stub.anti_analysis<br/>=== ANTI-ANALYSIS ===<br/>stub.c:142"]:::default
+    n_stub_c__download_payload["stub.download_payload<br/>=== DOWNLOAD ===<br/>stub.c:182"]:::default
+    n_stub_c__base64_decode["stub.base64_decode<br/>stub.c:174"]:::default
+    n_stub_c__CryptStringToBinaryA["stub.CryptStringToBinaryA<br/>stub.c:178"]:::default
+    n_stub_c__xor_data["stub.xor_data<br/>=== XOR + BASE64 ===<br/>stub.c:168"]:::default
+    n_stub_c__selfDestruct["stub.selfDestruct<br/>stub.c:51"]:::default
+    n_stub_c__main -.->|"recursion"| n_stub_c__main
+    n_stub_c__main -->|"1"| n_stub_c__anti_analysis
+    n_stub_c__anti_analysis -.->|"recursion"| n_stub_c__anti_analysis
+    n_stub_c__main -->|"2"| n_stub_c__download_payload
+    n_stub_c__download_payload -.->|"recursion"| n_stub_c__download_payload
+    n_stub_c__main -->|"3"| n_stub_c__base64_decode
+    n_stub_c__base64_decode -.->|"recursion"| n_stub_c__base64_decode
+    n_stub_c__base64_decode -->|"1"| n_stub_c__CryptStringToBinaryA
+    n_stub_c__CryptStringToBinaryA -.->|"recursion"| n_stub_c__CryptStringToBinaryA
+    n_stub_c__main -->|"4"| n_stub_c__xor_data
+    n_stub_c__xor_data -.->|"recursion"| n_stub_c__xor_data
+    n_stub_c__main -->|"5"| n_stub_c__selfDestruct
+    n_stub_c__selfDestruct -.->|"recursion"| n_stub_c__selfDestruct
+    linkStyle 0,2,4,6,8,10,12 stroke:#f87171,stroke-width:2px;
 ```
 
 ### `generate_hashs (__main__)`

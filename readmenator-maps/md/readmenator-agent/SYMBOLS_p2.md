@@ -3,6 +3,7 @@ Previous: [SYMBOLS.md](SYMBOLS.md)
 
 | Symbol | Kind | File:Line | Signature |
 |--------|------|-----------|-----------|
+| `scanPort` | function | `beacon.c:3900` | `void scanPort(void* arg)` |
 | `searchCredentials` | function | `beacon.c:2723` | `char* searchCredentials(const char* basePath)` |
 | `selfDestruct` | function | `beacon.c:2604` | `void selfDestruct()` |
 | `simulateLegitimateTraffic` | function | `beacon.c:2946` | `void simulateLegitimateTraffic(void* param)` |
@@ -140,12 +141,6 @@ Previous: [SYMBOLS.md](SYMBOLS.md)
 | `u_long` | type_alias | `bof/test/sock5.c:45` | `typedef unsigned long u_long;` |
 | `u_short` | type_alias | `bof/test/sock5.c:42` | `typedef unsigned short u_short;` |
 | `wVersion` | type_alias | `bof/test/sock5.c:16` | `typedef struct WSAData { WORD wVersion;` |
-| `decrypt_cookie` | function | `bof/test/tel.py:39` | `def decrypt_cookie(encrypted, key, iv)` |
-| `get_machine_id` | function | `bof/test/tel.py:8` | `def get_machine_id()` |
-| `get_version` | function | `bof/test/tel.py:20` | `def get_version()` |
-| `main` | function | `bof/test/tel.py:45` | `def main()` |
-| `to_hex` | function | `bof/test/tel.py:35` | `def to_hex(byte_list)` |
-| `to_numbers` | function | `bof/test/tel.py:31` | `def to_numbers(hex_str)` |
 | `__imp_CloseHandle` | variable | `bof/test/uacbypass.c:28` | `extern PVOID __imp_CloseHandle;` |
 | `__imp_GetProcAddress` | variable | `bof/test/uacbypass.c:27` | `extern PVOID __imp_GetProcAddress;` |
 | `__imp_LoadLibraryA` | variable | `bof/test/uacbypass.c:26` | `extern PVOID __imp_LoadLibraryA;` |
@@ -373,7 +368,7 @@ Previous: [SYMBOLS.md](SYMBOLS.md)
 | `cJSON_bool` | type_alias | `cJSON.h:120` | `typedef int cJSON_bool;` |
 | `next` | variable | `cJSON.h:27` | `extern "C" { #endif #if !defined(__WINDOWS__) && (defined(WIN32) \|\| defined(WIN64) \|\| defined(_MSC_VER) \|\|...` |
 | `sensitive` | function | `cJSON.h:249` | `* case_sensitive determines if object keys are treated case sensitive (1) or case insensitive (0) */...` |
-| `crc32` | function | `gen_beacon.sh:5979` | `` |
+| `crc32` | function | `gen_beacon.sh:5977` | `` |
 | `show_help` | function | `gen_beacon.sh:46` | `` |
 | `xor_string` | function | `gen_beacon.sh:194` | `` |
 | `usage` | function | `gen_dll_rev.sh:12` | `` |
@@ -385,4 +380,23 @@ Previous: [SYMBOLS.md](SYMBOLS.md)
 | `generate_bof_test` | function | `generate_hashs.py:491` | `def generate_bof_test()` |
 | `generate_coff_loader` | function | `generate_hashs.py:223` | `def generate_coff_loader()` |
 | `main` | function | `generate_hashs.py:553` | `def main()` |
+| `C2_URL` | macro | `stub.c:11` | `#define C2_URL` |
+| `CryptStringToBinaryA` | function | `stub.c:178` | `return *output && CryptStringToBinaryA(input, input_len, CRYPT_STRING_BASE64, *output, output_len, NULL, NULL);` |
+| `GetNtdllBase` | function | `stub.c:107` | `HMODULE GetNtdllBase()` |
+| `InMemoryOrderLinks` | type_alias | `stub.c:21` | `typedef struct _LDR_DATA_TABLE_ENTRY { LIST_ENTRY InMemoryOrderLinks;` |
+| `Length` | type_alias | `stub.c:16` | `typedef struct _UNICODE_STRING { USHORT Length;` |
+| `Length` | type_alias | `stub.c:31` | `typedef struct _PEB_LDR_DATA { DWORD Length;` |
+| `MAX_PAYLOAD_SIZE` | macro | `stub.c:13` | `#define MAX_PAYLOAD_SIZE` |
+| `Reserved1` | type_alias | `stub.c:40` | `typedef struct _PEB { BYTE Reserved1[2];` |
+| `XOR_KEY` | macro | `stub.c:12` | `#define XOR_KEY` |
+| `_LDR_DATA_TABLE_ENTRY` | struct | `stub.c:22` | `` |
+| `_PEB` | struct | `stub.c:41` | `` |
+| `_PEB_LDR_DATA` | struct | `stub.c:32` | `` |
+| `_UNICODE_STRING` | struct | `stub.c:16` | `` |
+| `anti_analysis` | function | `stub.c:142` | `BOOL anti_analysis()` |
+| `base64_decode` | function | `stub.c:174` | `BOOL base64_decode(LPCSTR input, DWORD input_len, BYTE** output, DWORD* output_len)` |
+| `download_payload` | function | `stub.c:182` | `HGLOBAL download_payload()` |
+| `main` | function | `stub.c:228` | `int main()` |
+| `selfDestruct` | function | `stub.c:51` | `void selfDestruct()` |
+| `xor_data` | function | `stub.c:168` | `void xor_data(unsigned char* data, size_t len)` |
 

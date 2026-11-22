@@ -34,6 +34,7 @@
 - [`AES_KEYLEN`](modules/aes.h.md#aes_keylen) macro in `aes.h`
 - [`AES_KEYLEN`](modules/aes.h.md#aes_keylen) macro in `aes.h`
 - [`anti_analysis`](modules/beacon.c.md#anti_analysis) function in `beacon.c`
+- [`anti_analysis`](modules/stub.c.md#anti_analysis) function in `stub.c`
 - [`__attribute__`](modules/COFFLoader3.c.md#__attribute__) function in `COFFLoader3.c`
 - [`__attribute__`](modules/beacon.c.md#__attribute__) function in `beacon.c`
 
@@ -42,6 +43,7 @@
 ## B
 
 - [`base64_decode`](modules/beacon.c.md#base64_decode) function in `beacon.c`
+- [`base64_decode`](modules/stub.c.md#base64_decode) function in `stub.c`
 - [`base64_encode`](modules/beacon.c.md#base64_encode) function in `beacon.c`
 - [`BeaconDataSerializeString`](modules/beacon.c.md#beacondataserializestring) function in `beacon.c`
 - [`BLOCKLEN`](modules/aes.c.md#blocklen) macro in `aes.c`
@@ -56,6 +58,7 @@
 - [`C2_PATH`](modules/beacon.c.md#c2_path) macro in `beacon.c`
 - [`C2_PORT`](modules/beacon.c.md#c2_port) macro in `beacon.c`
 - [`C2_URL`](modules/beacon.c.md#c2_url) macro in `beacon.c`
+- [`C2_URL`](modules/stub.c.md#c2_url) macro in `stub.c`
 - [`C2_USER`](modules/beacon.c.md#c2_user) macro in `beacon.c`
 - [`CALLBACK_ERROR`](modules/beacon.h.md#callback_error) macro in `beacon.h`
 - [`CALLBACK_ERROR`](modules/bof.calc.beacon.h.md#callback_error) macro in `bof/calc/beacon.h`
@@ -177,6 +180,7 @@
 - [`cleanSystemLogs`](modules/beacon.c.md#cleansystemlogs) function in `beacon.c`
 - [`cleanupProxy`](modules/beacon.c.md#cleanupproxy) function in `beacon.c`
 - [`CLIENT_ID`](modules/beacon.c.md#client_id) macro in `beacon.c`
+- [`COFF`](modules/COFFLoader3.c.md#coff) function in `COFFLoader3.c`
 - [`COFFHeader`](modules/COFFLoader3.c.md#coffheader) struct in `COFFLoader3.c`
 - [`COFFRelocation`](modules/COFFLoader3.c.md#coffrelocation) struct in `COFFLoader3.c`
 - [`COFFSection`](modules/COFFLoader3.c.md#coffsection) struct in `COFFLoader3.c`
@@ -186,6 +190,7 @@
 - [`create_suspended_process`](modules/beacon.c.md#create_suspended_process) function in `beacon.c`
 - [`CreateFileA_Unhooked`](modules/beacon.c.md#createfilea_unhooked) function in `beacon.c`
 - [`_CRT_SECURE_NO_DEPRECATE`](modules/cJSON.c.md#_crt_secure_no_deprecate) macro in `cJSON.c`
+- [`CryptStringToBinaryA`](modules/stub.c.md#cryptstringtobinarya) function in `stub.c`
 - [`CTR`](modules/aes.h.md#ctr) macro in `aes.h`
 
 <a id="d"></a>
@@ -209,6 +214,7 @@
 - [`deleteFilesDelay`](modules/beacon.c.md#deletefilesdelay) function in `beacon.c`
 - [`discoverLocalHosts`](modules/beacon.c.md#discoverlocalhosts) function in `beacon.c`
 - [`djb2`](modules/generate_hashs.py.md#djb2) function in `generate_hashs`
+- [`download_payload`](modules/stub.c.md#download_payload) function in `stub.c`
 - [`downloadAndExecute`](modules/beacon.c.md#downloadandexecute) function in `beacon.c`
 - [`DownloadFromURL`](modules/beacon.c.md#downloadfromurl) function in `beacon.c`
 - [`DownloadToBuffer`](modules/beacon.c.md#downloadtobuffer) function in `beacon.c`
@@ -263,6 +269,7 @@
 - [`GetJitteredSleep`](modules/beacon.c.md#getjitteredsleep) function in `beacon.c`
 - [`getNetworkConfig`](modules/beacon.c.md#getnetworkconfig) function in `beacon.c`
 - [`GetNtdllBase`](modules/beacon.c.md#getntdllbase) function in `beacon.c`
+- [`GetNtdllBase`](modules/stub.c.md#getntdllbase) function in `stub.c`
 - [`GetProcessIdByName`](modules/beacon.c.md#getprocessidbyname) function in `beacon.c`
 - [`getSBoxInvert`](modules/aes.c.md#getsboxinvert) macro in `aes.c`
 - [`getSBoxValue`](modules/aes.c.md#getsboxvalue) macro in `aes.c`
@@ -557,6 +564,7 @@
 - [`InitializeUnhookedSyscalls`](modules/beacon.c.md#initializeunhookedsyscalls) function in `beacon.c`
 - [`initProxy`](modules/beacon.c.md#initproxy) function in `beacon.c`
 - [`InMemoryOrderLinks`](modules/beacon.c.md#inmemoryorderlinks) type_alias in `beacon.c`
+- [`InMemoryOrderLinks`](modules/stub.c.md#inmemoryorderlinks) type_alias in `stub.c`
 - [`internal_free`](modules/cJSON.c.md#internal_free) macro in `cJSON.c`
 - [`internal_hooks`](modules/cJSON.c.md#internal_hooks) struct in `cJSON.c`
 - [`internal_malloc`](modules/cJSON.c.md#internal_malloc) macro in `cJSON.c`
@@ -585,9 +593,12 @@
 - [`LC2_HOST`](modules/beacon.c.md#lc2_host) macro in `beacon.c`
 - [`LC2_PATH`](modules/beacon.c.md#lc2_path) macro in `beacon.c`
 - [`_LDR_DATA_TABLE_ENTRY`](modules/beacon.c.md#_ldr_data_table_entry) struct in `beacon.c`
+- [`_LDR_DATA_TABLE_ENTRY`](modules/stub.c.md#_ldr_data_table_entry) struct in `stub.c`
 - [`Length`](modules/beacon.c.md#length) type_alias in `beacon.c`
 - [`Length`](modules/beacon.c.md#length) type_alias in `beacon.c`
 - [`Length`](modules/beacon.c.md#length) type_alias in `beacon.c`
+- [`Length`](modules/stub.c.md#length) type_alias in `stub.c`
+- [`Length`](modules/stub.c.md#length) type_alias in `stub.c`
 - [`load_lazyconf`](modules/beacon.c.md#load_lazyconf) function in `beacon.c`
 - [`LoadModuleFromURL`](modules/beacon.c.md#loadmodulefromurl) function in `beacon.c`
 
@@ -597,11 +608,13 @@
 
 - [`main`](modules/beacon.c.md#main) function in `beacon.c`
 - [`main`](modules/generate_hashs.py.md#main) function in `generate_hashs`
+- [`main`](modules/stub.c.md#main) function in `stub.c`
 - [`MALEABLE`](modules/beacon.c.md#maleable) macro in `beacon.c`
 - [`MapDllNameToModule`](modules/beacon.c.md#mapdllnametomodule) function in `beacon.c`
 - [`MapModuleToMemory`](modules/beacon.c.md#mapmoduletomemory) function in `beacon.c`
 - [`MapPEToMemory`](modules/beacon.c.md#mappetomemory) function in `beacon.c`
 - [`MAX_JITTER`](modules/beacon.c.md#max_jitter) macro in `beacon.c`
+- [`MAX_PAYLOAD_SIZE`](modules/stub.c.md#max_payload_size) macro in `stub.c`
 - [`MAX_RESPONSE_SIZE`](modules/beacon.c.md#max_response_size) macro in `beacon.c`
 - [`MAX_RETRIES`](modules/beacon.c.md#max_retries) macro in `beacon.c`
 - [`min`](modules/beacon.c.md#min) macro in `beacon.c`
@@ -653,7 +666,9 @@
 - [`patchAMSI`](modules/beacon.c.md#patchamsi) function in `beacon.c`
 - [`pe_buffer_to_virtual_image`](modules/beacon.c.md#pe_buffer_to_virtual_image) function in `beacon.c`
 - [`_PEB`](modules/beacon.c.md#_peb) struct in `beacon.c`
+- [`_PEB`](modules/stub.c.md#_peb) struct in `stub.c`
 - [`_PEB_LDR_DATA`](modules/beacon.c.md#_peb_ldr_data) struct in `beacon.c`
+- [`_PEB_LDR_DATA`](modules/stub.c.md#_peb_ldr_data) struct in `stub.c`
 - [`PortResult`](modules/beacon.c.md#portresult) struct in `beacon.c`
 - [`PortScanner`](modules/beacon.c.md#portscanner) function in `beacon.c`
 - [`PortScannerArgs`](modules/beacon.c.md#portscannerargs) struct in `beacon.c`
@@ -676,6 +691,7 @@
 - [`ReadFromProcess`](modules/beacon.c.md#readfromprocess) function in `beacon.c`
 - [`relay_thread`](modules/beacon.c.md#relay_thread) function in `beacon.c`
 - [`Reserved1`](modules/beacon.c.md#reserved1) type_alias in `beacon.c`
+- [`Reserved1`](modules/stub.c.md#reserved1) type_alias in `stub.c`
 - [`restartClient`](modules/beacon.c.md#restartclient) function in `beacon.c`
 - [`retry_http_request`](modules/beacon.c.md#retry_http_request) function in `beacon.c`
 - [`ReverseArgs`](modules/beacon.c.md#reverseargs) struct in `beacon.c`
@@ -695,6 +711,7 @@
 - [`SECURITY_FLAG_IGNORE_REVOCATION`](modules/beacon.c.md#security_flag_ignore_revocation) macro in `beacon.c`
 - [`_SECURITY_PACKAGE_DEFINITION_`](modules/beacon.c.md#_security_package_definition_) macro in `beacon.c`
 - [`selfDestruct`](modules/beacon.c.md#selfdestruct) function in `beacon.c`
+- [`selfDestruct`](modules/stub.c.md#selfdestruct) function in `stub.c`
 - [`sensitive`](modules/cJSON.h.md#sensitive) function in `cJSON.h`
 - [`SerializeBeaconString`](modules/beacon.c.md#serializebeaconstring) function in `beacon.c`
 - [`show_help`](modules/gen_beacon.sh.md#show_help) function in `gen_beacon.sh`
@@ -722,6 +739,7 @@
 ## U
 
 - [`_UNICODE_STRING`](modules/beacon.c.md#_unicode_string) struct in `beacon.c`
+- [`_UNICODE_STRING`](modules/stub.c.md#_unicode_string) struct in `stub.c`
 - [`update_remote_entry_point`](modules/beacon.c.md#update_remote_entry_point) function in `beacon.c`
 - [`UploadFileToC2`](modules/beacon.c.md#uploadfiletoc2) function in `beacon.c`
 - [`usage`](modules/gen_dll_rev.sh.md#usage) function in `gen_dll_rev.sh`
@@ -743,7 +761,9 @@
 
 ## X
 
+- [`xor_data`](modules/stub.c.md#xor_data) function in `stub.c`
 - [`XOR_KEY`](modules/beacon.c.md#xor_key) macro in `beacon.c`
+- [`XOR_KEY`](modules/stub.c.md#xor_key) macro in `stub.c`
 - [`xor_obfuscate`](modules/gen_module.sh.md#xor_obfuscate) function in `gen_module.sh`
 - [`xor_string`](modules/beacon.c.md#xor_string) function in `beacon.c`
 - [`xor_string`](modules/gen_beacon.sh.md#xor_string) function in `gen_beacon.sh`

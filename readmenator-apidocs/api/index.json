@@ -2,57 +2,57 @@
  "schema_version": 1,
  "format": "jsonl",
  "meta": {
-  "modules": 23,
-  "entities": 662,
+  "modules": 24,
+  "entities": 683,
   "languages": {
-   "c": 7,
+   "c": 8,
    "h": 7,
    "py": 2,
    "sh": 7
   },
   "kinds": {
-   "function": 207,
-   "macro": 145,
-   "module": 23,
-   "struct": 30,
-   "type_alias": 12,
+   "function": 216,
+   "macro": 148,
+   "module": 24,
+   "struct": 34,
+   "type_alias": 16,
    "variable": 245
   },
   "truncated": false,
-  "skipped_files": 18,
+  "skipped_files": 17,
   "privacy_mode": false
  },
  "coverage": {
   "overall": {
-   "documented": 96,
-   "total": 417,
-   "percent": 23.0
+   "documented": 103,
+   "total": 438,
+   "percent": 23.5
   },
   "by_kind": {
    "function": {
-    "documented": 62,
-    "total": 207,
-    "percent": 30.0
+    "documented": 66,
+    "total": 216,
+    "percent": 30.6
    },
    "macro": {
-    "documented": 17,
-    "total": 145,
-    "percent": 11.7
+    "documented": 18,
+    "total": 148,
+    "percent": 12.2
    },
    "module": {
     "documented": 10,
-    "total": 23,
-    "percent": 43.5
+    "total": 24,
+    "percent": 41.7
    },
    "struct": {
-    "documented": 2,
-    "total": 30,
-    "percent": 6.7
+    "documented": 3,
+    "total": 34,
+    "percent": 8.8
    },
    "type_alias": {
-    "documented": 5,
-    "total": 12,
-    "percent": 41.7
+    "documented": 6,
+    "total": 16,
+    "percent": 37.5
    }
   },
   "by_module": {
@@ -63,8 +63,8 @@
    },
    "COFFLoader3.c": {
     "documented": 3,
-    "total": 25,
-    "percent": 12.0
+    "total": 26,
+    "percent": 11.5
    },
    "aes.c": {
     "documented": 8,
@@ -170,6 +170,11 @@
     "documented": 0,
     "total": 1,
     "percent": 0.0
+   },
+   "stub.c": {
+    "documented": 7,
+    "total": 20,
+    "percent": 35.0
    }
   }
  },
@@ -182,7 +187,7 @@
   {
    "uid": "COFFLoader3.c",
    "path": "modules/COFFLoader3.c.jsonl",
-   "entities": 256
+   "entities": 257
   },
   {
    "uid": "aes.c",
@@ -288,11 +293,16 @@
    "uid": "install.sh",
    "path": "modules/install.sh.jsonl",
    "entities": 1
+  },
+  {
+   "uid": "stub.c",
+   "path": "modules/stub.c.jsonl",
+   "entities": 20
   }
  ],
  "warnings": {
   "path": "warnings.jsonl",
-  "total": 321
+  "total": 335
  },
  "usage": [
   "grep -h '\"name\":\"<Name>\"' readmenator-apidocs/api/modules/*.jsonl",

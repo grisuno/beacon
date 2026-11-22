@@ -396,7 +396,7 @@ define CHECK_ERROR(cond, msg)     do {         if (!(cond)) {             printf
 typedef struct _LDR_DATA_TABLE_ENTRY { LIST_ENTRY InMemoryOrderLinks;
 ```
 
-=== ESTRUCTURAS NECESARIAS (MinGW-safe) ===
+=== REQUIRED STRUCTURES (MinGW-safe) ===
 
 ---
 
@@ -462,7 +462,7 @@ typedef LONG NTSTATUS;
 WCHAR* UTF8ToWide(const char* utf8)
 ```
 
-Convierte UTF-8 a wide string
+Converts UTF-8 to wide string
 
 **Parameters**
 
@@ -486,7 +486,7 @@ Convierte UTF-8 a wide string
 PVOID RVAtoRawOffset(DWORD_PTR RVA, PIMAGE_SECTION_HEADER section)
 ```
 
-Convierte RVA a offset en archivo
+Converts RVA to file offset
 
 **Parameters**
 
@@ -511,7 +511,7 @@ Convierte RVA a offset en archivo
 BOOL GetSyscallStub( LPCSTR functionName, PIMAGE_EXPORT_DIRECTORY exportDirectory, LPVOID fileData, PIMAGE_SECTION_HEADER textSection, PIMAGE_SECTION_HEADER rdataSection, LPVOID syscallStub )
 ```
 
-Encuentra y copia el stub de la syscall
+Finds and copies the syscall stub
 
 **Parameters**
 
@@ -542,7 +542,7 @@ Encuentra y copia el stub de la syscall
 BOOL InitializeUnhookedSyscalls()
 ```
 
-Inicializa los stubs unhooked desde disco
+Initializes unhooked stubs from disk
 
 **Returns:** `BOOL`
 
@@ -560,7 +560,7 @@ Inicializa los stubs unhooked desde disco
 HANDLE CreateFileA_Unhooked(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 ```
 
-Wrapper para reemplazar CreateFileA con NtCreateFile unhooked
+Wrapper to replace CreateFileA with unhooked NtCreateFile
 
 **Parameters**
 
@@ -854,7 +854,7 @@ DWORD GetProcessIdByName(const char* processName)
 void ExecuteTLSCallbacks(PVOID moduleBase)
 ```
 
-=== EJECUTAR TLS CALLBACKS ===
+=== EXECUTE TLS CALLBACKS ===
 
 **Parameters**
 
@@ -876,7 +876,7 @@ void ExecuteTLSCallbacks(PVOID moduleBase)
 PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)
 ```
 
-=== Carga un módulo en memoria ===
+=== Load a module into memory ===
 
 **Parameters**
 
@@ -903,7 +903,7 @@ PVOID MapModuleToMemory(unsigned char* fileBuffer, DWORD fileSize)
 BOOL ExecuteModule(PVOID moduleBase)
 ```
 
-=== Ejecuta el módulo (DllMain o EntryPoint) ===
+=== Runs the module (DllMain or EntryPoint) ===
 
 **Parameters**
 
@@ -929,7 +929,7 @@ BOOL ExecuteModule(PVOID moduleBase)
 BOOL LoadModuleFromURL(const char* url)
 ```
 
-=== Carga y ejecuta un módulo desde URL ===
+=== Load and run a module from URL ===
 
 **Parameters**
 
@@ -1039,7 +1039,7 @@ BOOL isVMByMAC()
 int extract_shellcode(const char* input, size_t len, unsigned char** out)
 ```
 
-=== EXTRAER SHELLCODE ===
+=== EXTRACT SHELLCODE ===
 
 **Parameters**
 
@@ -1065,7 +1065,7 @@ int extract_shellcode(const char* input, size_t len, unsigned char** out)
 BYTE hex_char_to_byte(char c)
 ```
 
-Función para convertir hex a bytes
+Function to convert hex to bytes
 
 **Parameters**
 
@@ -1133,7 +1133,7 @@ void executeLoader(void *arg)
 void __cdecl ReverseShell(void* arg)
 ```
 
-FUNCIÓN DE INYECCIÓN DE SHELL
+SHELL INJECTION FUNCTION
 
 **Parameters**
 
@@ -1155,7 +1155,7 @@ FUNCIÓN DE INYECCIÓN DE SHELL
 DWORD WINAPI ReadFromProcess(LPVOID lpParam)
 ```
 
-=== Hilo para leer salida del proceso (como en el ejemplo que funciona) ===
+=== Thread to read process output (as in the working example) ===
 
 **Parameters**
 
@@ -1243,6 +1243,8 @@ char* base64_decode(const char* input, size_t* out_len)
 
 **Returns:** `char*`
 
+*Calls:* [`CryptStringToBinaryA`](stub.c.md#cryptstringtobinarya)
+
 ---
 
 <a id="discoverlocalhosts"></a>
@@ -1283,7 +1285,7 @@ void initProxy()
 void WINAPI relay_thread(void* param)
 ```
 
-Función para reenviar datos entre sockets
+Function to relay data between sockets
 
 **Parameters**
 
@@ -1305,7 +1307,7 @@ Función para reenviar datos entre sockets
 void WINAPI proxy_thread(void* param)
 ```
 
-Tu función proxy_thread usando tus estructuras exactas
+Your proxy_thread function using your exact structures
 
 **Parameters**
 
@@ -1327,7 +1329,7 @@ Tu función proxy_thread usando tus estructuras exactas
 void WINAPI proxy_accept_thread(void* param)
 ```
 
-Thread para aceptar conexiones
+Thread to accept connections
 
 **Parameters**
 
@@ -1408,7 +1410,7 @@ void cleanupProxy()
 BOOL compressDirectory(const char* dirPath)
 ```
 
-Función simplificada para compresión de directorios
+Simplified function for directory compression
 
 **Parameters**
 
@@ -1430,7 +1432,7 @@ Función simplificada para compresión de directorios
 char* getNetworkConfig()
 ```
 
-Para netconfig
+For netconfig
 
 **Returns:** `char*`
 
@@ -1473,7 +1475,7 @@ BOOL UploadFileToC2(const char* url, const char* filePath)
 BOOL handleUpload(const char* command)
 ```
 
-=== handleUpload: envía del beacon al C2 ===
+=== handleUpload: sends from beacon to C2 ===
 
 **Parameters**
 
@@ -1497,7 +1499,7 @@ BOOL handleUpload(const char* command)
 BOOL FileExistsA(const char* filePath)
 ```
 
-Función para verificar si un archivo existe
+Function to check whether a file exists
 
 **Parameters**
 
@@ -1602,7 +1604,7 @@ char* searchCredentials(const char* basePath)
 BOOL obfuscateFileTimestamp(const char* filepath)
 ```
 
-Ofusca los timestamps de un archivo
+Obfuscates a file's timestamps
 
 **Parameters**
 
@@ -1626,7 +1628,7 @@ Ofusca los timestamps de un archivo
 void obfuscateFileTimestamps(const char* basePath, int depth)
 ```
 
-Recorre directorios buscando archivos sensibles
+Walk directories searching for sensitive files
 
 **Parameters**
 
@@ -1825,7 +1827,7 @@ BOOL patchAMSI(void)
 PIMAGE_NT_HEADERS get_nt_headers(BYTE* buffer)
 ```
 
-PE HELPERS (usando winnt.h)
+PE HELPERS (using winnt.h)
 
 **Parameters**
 
@@ -2039,7 +2041,7 @@ MAIN FUNCTION: overWrite
 void cleanSystemLogs()
 ```
 
-Limpia el historial de comandos de la consola actual
+Clears the current console's command history
 
 *Calls:* [`CreateFileA_Unhooked`](#createfilea_unhooked)
 
@@ -2183,7 +2185,7 @@ void PortScannerWrapper(void* arg)
 BOOL EarlyBirdInject(unsigned char* shellcode, int shellcode_len)
 ```
 
-=== INYECCIÓN EARLY BIRD + SYSCALL ===
+=== EARLY BIRD INJECTION + SYSCALL ===
 
 **Parameters**
 
@@ -2283,7 +2285,7 @@ exec_cmd.c
 char* GetC2Command(const char* host, const char* path)
 ```
 
-c2.c (reemplaza la función actual)
+c2.c (replaces the current function)
 
 **Parameters**
 
@@ -2444,7 +2446,7 @@ void handleAtomic(char* command)
 BOOL handleDownload(const char* command)
 ```
 
-=== handleDownload: descarga del C2 al beacon ===
+=== handleDownload: downloads from C2 to beacon ===
 
 **Parameters**
 
@@ -2541,7 +2543,7 @@ int hooked()
 void handleAdversary(char* command)
 ```
 
-Función principal de manejo de comandos
+Main command handling function
 
 **Parameters**
 
@@ -2665,7 +2667,7 @@ main.c
 #define XOR_KEY
 ```
 
-=== CONFIGURACIÓN ===
+=== CONFIGURATION ===
 
 ---
 
